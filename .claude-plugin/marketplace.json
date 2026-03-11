@@ -1,0 +1,21 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "owainlewis-blueprint",
+  "version": "1.0.0",
+  "description": "Spec-driven development workflow for AI engineering",
+  "owner": {
+    "name": "Owain Lewis"
+  },
+  "plugins": [
+    {
+      "name": "blueprint",
+      "description": "Spec-driven development workflow: requirements, architecture, planning, and git conventions.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Owain Lewis"
+      },
+      "source": "./",
+      "category": "development"
+    }
+  ]
+}
