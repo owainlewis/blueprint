@@ -1,0 +1,8 @@
+{
+  "name": "blueprint",
+  "description": "Spec-driven development workflow. Generate requirements, architecture docs, implementation plans, and manage git workflow with conventional naming.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Owain Lewis"
+  }
+}

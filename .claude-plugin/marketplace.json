@@ -1,0 +1,14 @@
+{
+  "name": "blueprint-marketplace",
+  "owner": {
+    "name": "Owain Lewis"
+  },
+  "plugins": [
+    {
+      "name": "blueprint",
+      "source": ".",
+      "description": "Spec-driven development workflow: requirements, architecture, planning, and git conventions.",
+      "version": "0.1.0"
+    }
+  ]
+}
