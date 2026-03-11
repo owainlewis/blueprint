@@ -86,20 +86,8 @@ Avoid phases like "set up project structure" or "write all models" — these don
 - Every functional requirement (FR-xx) must be covered by at least one task. Note uncovered requirements.
 - Tasks within a phase that have no dependencies on each other should be noted as parallelisable.
 
-## Linear Export Format
+## After Planning
 
-After TASKS.md, print a Linear-ready export block:
+Once TASKS.md is produced, the user will create tickets in their project management tool (e.g. Linear) from the task list. Each task should map to one ticket. The task's `<context>` and `<action>` sections provide the ticket description, and `<verify>` provides the acceptance criteria.
 
-```
-=== LINEAR EXPORT ===
-[Phase 1: Name]
-- 1.1: [title] | [verify one-liner]
-- 1.2: [title] | [verify one-liner]
-
-[Phase 2: Name]
-- 2.1: [title] | [verify one-liner]
-...
-=== END LINEAR EXPORT ===
-```
-
-This can be copied directly into Linear as task titles with acceptance criteria.
+Individual tickets can then be executed with `/blueprint:task <ticket-id>`.
