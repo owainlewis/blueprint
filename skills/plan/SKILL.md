@@ -13,7 +13,7 @@ You are a senior engineer and technical lead. Your job is to read `REQUIREMENTS.
 
 **Start by reading both `REQUIREMENTS.md` and `ARCHITECTURE.md`.** If either doesn't exist, stop and tell the user which commands to run first (`/blueprint:requirements` and/or `/blueprint:architecture`).
 
-Each task must be small enough to execute in a single focused context window — no task should touch more than 3-4 files or span more than one logical concern. If a task feels large, split it.
+Each task must be small enough to execute in a single focused context window — one logical concern per task. If a task feels large, split it.
 
 Then produce `TASKS.md` in the project root.
 
@@ -40,17 +40,17 @@ Example: 1 → 2 → 4, 1 → 3 → 4 (tasks 2 and 3 can run in parallel after 1
 
 ### Task 1: [Title]
 
-**Context:** 1-2 sentences describing the project and what module/area this task operates in.
-Enough for an agent or engineer to understand *why* this task exists without reading other docs.
+**Context:** Self-contained background. What is this project? What area does this task touch and why?
+Write 2-4 sentences — enough that an agent with zero prior context can understand and execute the task
+without reading any other document. Never reference other tasks by number — the agent won't have seen them.
 
 **Build:**
 1. Outcome-level steps — describe *what* to build, not *how* to code it
 2. Each step is a deliverable, not an implementation instruction
 3. Keep to 3-5 steps max
 
-**Files:** `path/to/file.py`, `path/to/other.py`
-
-**Verify:** One sentence — a command to run or a behaviour to observe.
+**Verify:** One concrete, automatable check — a test command, a CLI invocation with expected output,
+or a specific observable behaviour. Must be something a coding agent can actually run.
 
 ### Task 2: [Title]
 ...
@@ -73,12 +73,21 @@ Avoid phases like "set up project structure" or "write all models" — these don
 
 ## Task Rules
 
-- **Context is project-level.** Give enough background for an agent to understand the project and where this task fits. Don't restate the code about to be written.
-- **Build steps are outcomes, not implementation instructions.** Say *what* to build, not *how* to write every line. The executing agent decides the implementation details. Bad: "Use asyncio.gather to run callbacks concurrently." Good: "Emit fires all registered callbacks for that event type concurrently."
-- **Verify is one sentence.** A command to run or a behaviour to observe. Not an inline script.
+### Write tasks like tickets for a junior engineer
+Each task will be handed to a coding agent or pushed into a project tracker (Linear, Jira, etc.). Write them so that someone with no prior context can pick one up and start working. That means:
+
+- **Every task is fully self-contained.** A coding agent executes each task in a fresh context window with no memory of previous tasks. Never say "the event bus built in Task 2" or "using the provider from the previous task" — the agent doesn't know what those are. Each task's context must include everything needed to understand and execute it: what the project is, what this task's area does, why it matters, and what interfaces or conventions it should conform to.
+- **Context explains the project AND the why.** Don't just say "this project uses an event bus." Say *why* the event bus exists, what problem it solves, and where this task fits in the bigger picture. A coding agent hasn't read your architecture doc — the context is all it gets.
+- **Build steps are outcomes, not implementation instructions.** Say *what* to build, not *how* to write every line. The executing agent decides the implementation details — including which files to create or modify. Bad: "Use asyncio.gather to run callbacks concurrently." Good: "Emit fires all registered callbacks for that event type concurrently."
+- **No file paths in tasks.** The agent should discover the codebase and decide where changes belong. Hardcoded paths constrain the agent and go stale as the code evolves.
+- **Verify must be automatable.** A `pytest` command, a CLI invocation with expected output, or a specific observable behaviour the agent can check. Never "manually test" or "verify visually" — a coding agent can't do that. If the only way to verify is manual, write a test that covers it instead.
+- **One logical concern per task.** If a task spans multiple unrelated things (e.g., "build five tools and a registry"), split it. Each task should have a single clear reason to exist.
 - **Human-readable first.** The plan must be scannable by a human in under a minute. Use plain markdown — no XML tags, no verbose inline code blocks.
 - Every functional requirement (FR-xx) must be covered by at least one task. Note uncovered requirements.
+
+### Dependency graph
 - Dependencies go in the top-level dependency graph, not on individual tasks.
+- Explicitly call out which tasks can run in parallel — an agent orchestrator can use this to parallelize work.
 
 ## After Planning
 
