@@ -24,6 +24,8 @@ Good questions to consider:
 - Who are the users and what does success look like for them?
 - Are there performance, reliability or scale requirements not mentioned?
 - Are there any implicit technical constraints (language, platform, existing systems)?
+- What external services or APIs does this depend on? (AI models, databases, third-party APIs — be specific about providers and versions)
+- Where will this run? (local, cloud provider, containerized, serverless)
 - What's the MVP vs nice-to-have?
 - Are there security, auth or data privacy concerns?
 
