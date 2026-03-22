@@ -126,32 +126,6 @@ After creation, show the user the issue identifier (e.g., TEAM-123) and confirm 
 
 ---
 
-## Writing Guidelines
-
-**Focus on what and why, never how.** Do not specify file paths, package names, or implementation steps. The implementing agent will make those decisions based on the current state of the codebase. If relevant context exists in architecture or design docs, reference the doc rather than duplicating its content.
-
-**Titles** should complete "This issue will...":
-- Good: "Add Google OAuth login to signup flow"
-- Bad: "Google login" or "Auth improvements"
-
-**Acceptance criteria** should describe observable behavior, not implementation details:
-- Good: "User sees error message when email is already registered"
-- Bad: "Add a check in `src/auth/signup.ts` that queries the users table"
-
-**Scope boundaries** prevent scope creep:
-- Good: "In scope: Add login button. Out of scope: Forgot password flow"
-- Bad: Omitting the section entirely
-
-**Reproduction steps** must be specific and repeatable:
-- Good: "1. Log in as admin 2. Navigate to /settings 3. Click 'Save' without changes"
-- Bad: "Sometimes the settings page doesn't work"
-
 ## Splitting Issues
 
-If an issue has more than 3 acceptance criteria or covers multiple concerns, split it:
-
-1. Create a parent issue with a high-level summary
-2. Create child issues (using `parentId`) for each discrete piece of work
-3. Each child should be independently implementable and testable
-
-Ask the user before splitting — don't assume.
+If an issue has more than 3 acceptance criteria or covers multiple concerns, suggest splitting it into parent + child issues. Ask the user before splitting.

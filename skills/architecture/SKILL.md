@@ -33,7 +33,6 @@ High-level description of the major components and how they relate.
 Include a simple ASCII diagram if the system has more than 2 components.
 
 ## Components
-<components>
 
 ### [Component Name]
 - **Purpose**: What it does
@@ -42,37 +41,16 @@ Include a simple ASCII diagram if the system has more than 2 components.
 - **Requirements satisfied**: FR-xx, NFR-xx
 
 Repeat for each major component.
-</components>
 
 ## Data Flow
 Step-by-step description of how a request moves through the system.
-Be specific — name the components, not just "data flows through the system".
+Name the components — not just "data flows through the system".
 
 ## Key Technical Decisions
-<decisions>
 - **[Decision]**: [What was decided] — [Why] — [Alternatives considered]
-</decisions>
-
-These are the decisions a new engineer would need to understand before touching the code.
-
-## External Dependencies
-Libraries, APIs, services this system depends on.
-For each: name, purpose, version constraint if relevant.
 
 ## File & Folder Structure
 Proposed layout of the repository. Show the full tree.
-
-## Configuration
-What is configurable, how, and where config lives.
-
-## Error Handling Strategy
-How errors are caught, surfaced and recovered from across the system.
-
-## Observability
-Logging approach, log levels, what gets logged and when.
-
-## Security Considerations
-Auth, secrets management, input validation, dangerous operations.
 
 ## Testing Strategy
 How this will be tested. Unit, integration, e2e — what gets covered and how.
@@ -83,6 +61,8 @@ How this will be tested. Unit, integration, e2e — what gets covered and how.
 ## Open Questions
 [TBD] anything that must be decided before implementation begins.
 ```
+
+Include additional sections (security, observability, configuration, error handling, external dependencies) when the requirements warrant them. Not every project needs every section.
 
 ## Rules
 

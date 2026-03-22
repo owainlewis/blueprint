@@ -73,17 +73,14 @@ Avoid phases like "set up project structure" or "write all models" — these don
 
 ## Task Rules
 
-### Write tasks like tickets for a junior engineer
-Each task will be handed to a coding agent or pushed into a project tracker (Linear, Jira, etc.). Write them so that someone with no prior context can pick one up and start working. That means:
+### Write tasks like tickets
+Each task will be handed to a coding agent in a fresh context window, or pushed into a project tracker. Write them so someone with zero prior context can pick one up and start working.
 
-- **Every task is fully self-contained.** A coding agent executes each task in a fresh context window with no memory of previous tasks. Never say "the event bus built in Task 2" or "using the provider from the previous task" — the agent doesn't know what those are. Each task's context must include everything needed to understand and execute it: what the project is, what this task's area does, why it matters, and what interfaces or conventions it should conform to.
-- **Context explains the project AND the why.** Don't just say "this project uses an event bus." Say *why* the event bus exists, what problem it solves, and where this task fits in the bigger picture. A coding agent hasn't read your architecture doc — the context is all it gets.
-- **Build steps are outcomes, not implementation instructions.** Say *what* to build, not *how* to write every line. The executing agent decides the implementation details — including which files to create or modify. Bad: "Use asyncio.gather to run callbacks concurrently." Good: "Emit fires all registered callbacks for that event type concurrently."
-- **No file paths in tasks.** The agent should discover the codebase and decide where changes belong. Hardcoded paths constrain the agent and go stale as the code evolves.
-- **Verify must be automatable.** A `pytest` command, a CLI invocation with expected output, or a specific observable behaviour the agent can check. Never "manually test" or "verify visually" — a coding agent can't do that. If the only way to verify is manual, write a test that covers it instead.
-- **One logical concern per task.** If a task spans multiple unrelated things (e.g., "build five tools and a registry"), split it. Each task should have a single clear reason to exist.
-- **Human-readable first.** The plan must be scannable by a human in under a minute. Use plain markdown — no XML tags, no verbose inline code blocks.
-- Every functional requirement (FR-xx) must be covered by at least one task. Note uncovered requirements.
+- **Self-contained.** Each task includes everything needed to execute it: what the project is, what this area does, why it matters. Never reference other tasks by number — the agent won't have seen them.
+- **Outcome-focused.** Describe *what* to build, not *how* to code it. The agent decides implementation details, including which files to create or modify. Example: "Emit fires all registered callbacks concurrently" not "Use asyncio.gather to run callbacks."
+- **Automatable verification.** A test command, CLI invocation with expected output, or observable behaviour the agent can check programmatically.
+- **One concern per task.** If it spans multiple unrelated things, split it.
+- Every functional requirement (FR-xx) must be covered by at least one task.
 
 ### Dependency graph
 - Dependencies go in the top-level dependency graph, not on individual tasks.

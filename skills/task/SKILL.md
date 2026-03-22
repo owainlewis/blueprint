@@ -39,7 +39,7 @@ This can be:
    - Keep changes focused — only touch what the task requires
    - Do not refactor surrounding code unless the task asks for it
 
-6. **Verify.** Run the verification steps from the acceptance criteria. If there are tests, run them. If there's a build step, confirm it passes.
+6. **Verify.** Run the verification steps from the acceptance criteria. Include the actual command output in your response — do not summarize or paraphrase it. If tests exist, run them. If there's a build step, confirm it passes. Do not proceed to step 7 until verification output is shown.
 
 7. **Commit.** Stage and commit the changes with a conventional commit message. Reference the ticket ID if one was provided:
    ```
