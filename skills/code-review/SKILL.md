@@ -28,28 +28,26 @@ This can be:
 
 2. **Check for project-specific concerns.** Look for a `REVIEW.md` file in the project root. This file is optional — most projects won't have one. If it exists, read it and weigh those concerns alongside the general criteria below. If it doesn't exist, skip this step and move on.
 
-3. **Review the code.** Think through each change and evaluate:
+3. **Review the code.** Only flag something if ALL of the following are true:
 
-   **Correctness**
-   - Does the code do what it's supposed to do?
-   - Are edge cases handled?
-   - Are error paths correct — not just present, but right?
+   - It meaningfully impacts correctness, performance, security, or maintainability
+   - It is discrete and actionable — not a vague concern or a combination of multiple issues
+   - Fixing it does not demand a level of rigor beyond what the rest of the codebase follows
+   - It was introduced in this change — do not flag pre-existing issues
+   - The author would likely fix it if they knew about it
+   - It does not rely on unstated assumptions about the codebase or the author's intent
+   - You can identify the specific code that is affected — speculation that something "might break elsewhere" is not enough
+   - It is clearly not an intentional choice by the author
 
-   **Security**
-   - Input validation at system boundaries
-   - No secrets, credentials, or keys in code
-   - No injection vectors (SQL, command, XSS)
-   - Auth checks where needed
+   Evaluate changes against these areas:
 
-   **Simplicity**
-   - Could this be simpler and still correct?
-   - Is there unnecessary abstraction, indirection, or over-engineering?
-   - Are there dead code paths or unused variables?
+   **Correctness** — Does it do what it should? Edge cases? Error paths that are wrong, not just missing?
 
-   **Robustness**
-   - Will this break under load, concurrency, or unexpected input?
-   - Are resources properly cleaned up (connections, files, locks)?
-   - Are failure modes graceful?
+   **Security** — Input validation at boundaries. No secrets in code. No injection vectors. Auth checks where needed.
+
+   **Simplicity** — Could this be simpler and still correct? Unnecessary abstraction or dead code?
+
+   **Robustness** — Will it break under load, concurrency, or unexpected input? Are resources cleaned up?
 
 4. **Report findings.** Group your feedback into:
 
