@@ -30,7 +30,7 @@ This can be:
 
 3. **Review the code.** Only flag real problems — things the author would fix if they knew about them.
 
-   Do not flag pre-existing issues. Do not hold the code to a higher standard than the rest of the codebase. Do not speculate about what might break — if you can't point to the affected code, it's not a finding.
+   Do not flag pre-existing issues. Do not speculate about what might break — if you can't point to the affected code, it's not a finding.
 
    Evaluate changes against these areas:
 
