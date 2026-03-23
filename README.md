@@ -1,6 +1,6 @@
 # Blueprint
 
-Agentic coding best practices without the complexity.
+> Agentic coding best practices without the complexity.
 
 ## The Problem with Agentic Coding Frameworks
 
