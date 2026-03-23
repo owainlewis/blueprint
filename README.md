@@ -2,7 +2,7 @@
 
 A Claude Code plugin that encodes the software development lifecycle as executable commands.
 
-Six commands. No framework to learn. Just the workflow every good engineering team already follows.
+Seven commands. No framework to learn. Just the workflow every good engineering team already follows.
 
 ## Why Blueprint?
 
@@ -17,7 +17,8 @@ graph LR
     A[Requirements] --> B[Architecture]
     B --> C[Plan]
     C --> D[Execute]
-    D --> E[Ship]
+    D --> E[Review]
+    E --> F[Ship]
 ```
 
 ## Install
@@ -64,7 +65,37 @@ Pick up a single task and execute it. Accepts a ticket ID from any tracker (Line
 /blueprint:task "add rate limiting to the API"
 ```
 
-### 5. Branch
+### 5. Code Review
+
+Review your changes like a senior engineer before shipping. Checks correctness, security, simplicity, and robustness.
+
+```
+/blueprint:code-review
+/blueprint:code-review src/auth.py
+/blueprint:code-review security
+```
+
+If your project has a `REVIEW.md` in the root, those concerns are automatically included in every review. This is optional — the review works fine without one, but it's a good way to encode things your team has learned the hard way:
+
+```markdown
+# Review Concerns
+- All database queries must use parameterized statements
+- API responses must include a request_id for tracing
+- No synchronous HTTP calls inside request handlers
+```
+
+**When to use this vs Claude Code built-ins:**
+
+| | `/blueprint:code-review` | `/review` | `/simplify` |
+|---|---|---|---|
+| **Focus** | Correctness, security, robustness | General code review | Code clarity and maintainability |
+| **Project context** | Reads REVIEW.md for project-specific concerns | No project-specific context | No project-specific context |
+| **Output** | Grouped findings (must fix / should fix / observations) | Inline suggestions | Refactored code |
+| **Best for** | Pre-ship review of a complete change | Quick feedback on any code | Cleaning up code that works but is messy |
+
+Use them together: `/blueprint:code-review` to catch real problems, then `/simplify` to clean up what's left.
+
+### 6. Branch
 
 Create a feature branch with conventional naming.
 
@@ -73,7 +104,7 @@ Create a feature branch with conventional naming.
 /blueprint:branch fix login-redirect
 ```
 
-### 6. Commit
+### 7. Commit
 
 Stage and commit with a conventional commit message. Reviews the diff and writes the message for you.
 
