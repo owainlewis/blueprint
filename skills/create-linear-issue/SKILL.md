@@ -1,6 +1,7 @@
 ---
 name: create-linear-issue
 description: "Create a well-defined Linear issue through collaborative conversation. Use when the user wants to create, file, or write a Linear issue, ticket, or bug report."
+user-invocable: true
 ---
 
 # Create Linear Issue

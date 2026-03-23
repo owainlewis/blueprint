@@ -1,6 +1,7 @@
 ---
 name: complete-linear-issue
 description: "Pick up a Linear issue, implement it, and mark it done. Use when the user wants to work on, complete, close, or finish a Linear issue or ticket."
+user-invocable: true
 ---
 
 # Complete Linear Issue
