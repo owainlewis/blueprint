@@ -10,7 +10,7 @@
     {
       "name": "blueprint",
       "description": "Spec-driven development workflow: requirements, architecture, planning, and git conventions.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "author": {
         "name": "Owain Lewis"
       },
