@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "owainlewis-blueprint",
-  "version": "1.0.0",
+  "version": "0.1.1",
   "description": "Spec-driven development workflow for AI engineering",
   "owner": {
     "name": "Owain Lewis"
