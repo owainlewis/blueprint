@@ -2,7 +2,6 @@
 name: task
 description: "Pick up a task or ticket, execute the work, and mark it complete. Accepts a ticket ID (Linear, Jira, GitHub Issue) or a plain description."
 user-invocable: true
-allowed-tools: Read, Write, Edit, Bash, Glob, Grep
 argument-hint: "<ticket-id or description> e.g. 'LIN-123', 'GH-42', or 'add user auth endpoint'"
 ---
 

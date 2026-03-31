@@ -16,64 +16,28 @@ Pick up a Linear issue, implement the work described in it, and transition it to
 
 ### Step 1: Fetch the Issue
 
-Use `mcp__linear-server__get_issue` to retrieve the issue details.
+Use the Linear MCP tools to retrieve the issue details. `$ARGUMENTS` may be an issue identifier (e.g., TEAM-123), a title, or a description. If multiple issues match, present them and ask the user to pick one.
 
-- `$ARGUMENTS` may be an issue identifier (e.g., TEAM-123), an issue title, or a description of what to work on
-- If `$ARGUMENTS` is not a valid identifier, use `mcp__linear-server__list_issues` with `query` or `assignee: "me"` to find matching issues
-- If multiple issues match, present them and ask the user to pick one
-
-Read the full issue: title, description, acceptance criteria, labels, and any comments (`mcp__linear-server__list_comments`).
+Read the full issue: title, description, acceptance criteria, labels, and comments.
 
 ### Step 2: Confirm Understanding
 
-Before writing any code, briefly summarize:
-- **What** you're going to do (1-2 sentences)
-- **Acceptance criteria** you'll satisfy
-- **Approach** — high-level plan (files to touch, strategy)
+Before writing any code, briefly summarize what you're going to do, which acceptance criteria you'll satisfy, and your approach. Wait for confirmation.
 
-Ask: "Does this look right, or should I adjust anything?"
+### Step 3: Implement
 
-Wait for confirmation before proceeding.
+Move the issue to "In Progress". Do the work described in the issue, following the acceptance criteria as your checklist. Write clean, minimal code. Do not add scope beyond what's specified.
 
-### Step 3: Move to In Progress
+### Step 4: Verify
 
-Update the issue state:
-```
-mcp__linear-server__save_issue(id: "TEAM-123", state: "In Progress")
-```
+Before marking done, verify each acceptance criterion. Run relevant tests. If anything is ambiguous or can't be satisfied, flag it to the user.
 
-### Step 4: Implement
+### Step 5: Commit and Close
 
-Do the work described in the issue. Follow the acceptance criteria as your checklist.
-
-- Write clean, minimal code that satisfies the requirements
-- Add tests if the acceptance criteria call for them
-- Do not over-engineer or add scope beyond what's specified
-
-### Step 5: Verify
-
-Before marking done, verify each acceptance criterion:
-
-1. Run relevant tests
-2. Check that the implementation matches the "Expected Behavior" from the issue
-3. If anything is ambiguous or can't be satisfied, flag it to the user
-
-### Step 6: Commit and Close
-
-1. Stage and commit the changes with a message referencing the issue identifier (e.g., "TEAM-123: Add OAuth login to signup flow")
-2. Update the issue state to done:
-
-```
-mcp__linear-server__save_issue(id: "TEAM-123", state: "Done")
-```
-
-3. Optionally add a comment summarizing what was done:
-
-```
-mcp__linear-server__save_comment(issueId: "TEAM-123", body: "Implemented in commit abc123. ...")
-```
-
-4. Report to the user: what was done, which acceptance criteria were met, and the issue identifier.
+1. Commit with a message referencing the issue identifier
+2. Mark the issue as "Done"
+3. Optionally add a comment summarizing what was done
+4. Report to the user: what was done and which acceptance criteria were met
 
 ## Handling Problems
 

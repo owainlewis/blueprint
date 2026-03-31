@@ -2,7 +2,6 @@
 name: plan
 description: "Transform requirements and architecture docs into an atomic implementation plan with phased tasks. Use after /blueprint:architecture has produced an architecture doc."
 user-invocable: true
-allowed-tools: Read, Write, Edit, Glob, Grep
 argument-hint: "<requirements-file> <architecture-file> <output-file> e.g. 'REQUIREMENTS.md ARCHITECTURE.md TASKS.md'"
 ---
 
@@ -77,21 +76,6 @@ Phase by **working software** not by layer. Each phase should produce something 
 - Phase 4: Configuration, polish, edge cases
 
 Avoid phases like "set up project structure" or "write all models" — these don't produce working software.
-
-## Task Rules
-
-### Write tasks like tickets
-Each task will be handed to a coding agent in a fresh context window, or pushed into a project tracker. Write them so someone with zero prior context can pick one up and start working.
-
-- **Self-contained.** Each task includes everything needed to execute it: what the project is, what this area does, why it matters. Never reference other tasks by number — the agent won't have seen them.
-- **Outcome-focused.** Describe *what* to build, not *how* to code it. The agent decides implementation details, including which files to create or modify. Example: "Emit fires all registered callbacks concurrently" not "Use asyncio.gather to run callbacks."
-- **Automatable verification.** A test command, CLI invocation with expected output, or observable behaviour the agent can check programmatically.
-- **One concern per task.** If it spans multiple unrelated things, split it.
-- Every functional requirement (FR-xx) must be covered by at least one task.
-
-### Dependency graph
-- Dependencies go in the top-level dependency graph, not on individual tasks.
-- Explicitly call out which tasks can run in parallel — an agent orchestrator can use this to parallelize work.
 
 ## After Planning
 

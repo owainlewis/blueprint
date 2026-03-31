@@ -2,7 +2,6 @@
 name: architecture
 description: "Transform a requirements document into a technical architecture design. Use after /blueprint:requirements has produced a requirements doc."
 user-invocable: true
-allowed-tools: Read, Write, Edit, Glob, Grep
 argument-hint: "<requirements-file> <output-file> e.g. 'REQUIREMENTS.md ARCHITECTURE.md'"
 ---
 

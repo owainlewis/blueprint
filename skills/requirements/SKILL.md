@@ -2,7 +2,6 @@
 name: requirements
 description: "Transform rough notes into a structured requirements document. Use when starting a new feature or project and you need to capture what needs to be built."
 user-invocable: true
-allowed-tools: Read, Write, Edit, Glob, Grep
 argument-hint: "<output-file> <notes> e.g. 'REQUIREMENTS.md I need a CLI tool that parses markdown'"
 ---
 

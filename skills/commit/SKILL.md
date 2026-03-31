@@ -2,7 +2,6 @@
 name: commit
 description: "Stage and commit changes with a well-crafted commit message. Use when you're ready to commit your current work."
 user-invocable: true
-allowed-tools: Bash, Read, Glob, Grep
 argument-hint: "[optional: commit message override]"
 ---
 
