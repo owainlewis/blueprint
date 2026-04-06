@@ -34,6 +34,7 @@ This can be:
 
 5. **Execute the work.**
    - Follow the task description and acceptance criteria exactly
+   - Deliver a working vertical slice — something that runs end-to-end, even if narrow. Avoid building all models first, then all routes, then all tests. Build one complete path through the stack, verify it works, then expand.
    - Write tests where appropriate
    - Keep changes focused — only touch what the task requires
    - Do not refactor surrounding code unless the task asks for it

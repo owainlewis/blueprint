@@ -76,4 +76,5 @@ Include additional sections (security, observability, configuration, error handl
 - The file & folder structure should be complete enough that an agent could create the scaffolding from it alone.
 - Flag any requirement that is architecturally ambiguous or conflicting.
 - Do not over-engineer. Match complexity to what the requirements actually need.
+- Design interfaces knowing that every observable behavior becomes a contract — consumers will depend on it whether you intended it or not (Hyrum's Law). Prefer narrow interfaces that expose only what's intended.
 - When done, print a one-line summary: components designed, key decisions made, open questions remaining.

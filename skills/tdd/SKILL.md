@@ -43,6 +43,8 @@ This is a description of the feature or behavior to implement.
 
 Apply the same standards as `/blueprint:coverage` — every test must catch a realistic bug.
 
+If you wrote the code, you own the tests — don't leave testing as someone else's problem.
+
 **Good tests for TDD:**
 - Behaviors the user described ("it should retry 3 times")
 - Error handling ("it should return 404 when not found")
@@ -54,6 +56,16 @@ Apply the same standards as `/blueprint:coverage` — every test must catch a re
 - Tests for behavior the framework guarantees
 - Mock-heavy tests that test the mock, not the code
 
+## Don't rationalize away the tests
+
+| Temptation | Reality |
+|---|---|
+| "I'll write tests after the code works" | You won't. And tests written after the fact test implementation, not behavior. |
+| "This is too simple to test" | Simple code gets complicated. The test documents the expected behavior. |
+| "Tests slow me down" | Tests slow you down now. They speed you up every time you change the code later. |
+| "I tested it manually" | Manual testing doesn't persist. Tomorrow's change might break it with no way to know. |
+| "The code is self-explanatory" | Tests are the specification. They document what the code *should* do, not what it happens to do. |
+
 ## Rules
 
 - Tests come first. Do not write implementation code before you have a failing test for it.
@@ -61,3 +73,4 @@ Apply the same standards as `/blueprint:coverage` — every test must catch a re
 - The implementation should be the simplest thing that passes. Resist the urge to over-engineer.
 - If the requirement is too large for one pass, break it into smaller behaviors and TDD each one.
 - Commit when green — working code with passing tests is a natural commit point.
+- When fixing a bug, write a failing test that reproduces it before writing the fix. The test proves the bug existed and proves the fix works.

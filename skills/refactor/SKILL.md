@@ -17,7 +17,7 @@ You are a senior engineer refactoring code. Your goal is to make the code simple
 
 ## Process
 
-1. **Read the code.** Understand what it does before changing anything.
+1. **Read the code.** Understand what it does before changing anything. Before removing or simplifying code, understand *why* it exists — check git blame, read surrounding context. Code that looks unnecessary often exists for a reason you haven't seen yet (Chesterton's Fence).
 
 2. **Identify improvements.** Look for:
    - **Dead code** — Unused functions, variables, imports, unreachable branches. Delete them.

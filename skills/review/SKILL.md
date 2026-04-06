@@ -47,7 +47,18 @@ If everything looks good, say so. A clean review is a valid outcome.
 - Do not fix anything. Present findings only.
 - If unsure whether something is a bug, say so honestly.
 - A review with 2 real findings beats one with 15 nitpicks.
+- Ground findings in technical facts, not opinion. "This is hard to read" is opinion. "This allocates on every loop iteration when it could allocate once" is a finding.
 
 ---
 
 Present the subagent's findings to the user exactly as returned.
+
+## Don't rationalize away findings
+
+| Temptation | Reality |
+|---|---|
+| "It works, so it's fine" | Working code that's insecure or architecturally wrong creates debt that compounds. |
+| "I wrote it, so I know it's correct" | Authors are blind to their own assumptions. That's why review exists. |
+| "The tests pass" | Tests are necessary but not sufficient. They don't catch architecture problems or security issues. |
+| "It's just a small change" | Small changes cause big outages. Review effort should match risk, not line count. |
+| "AI-generated code is probably fine" | AI code needs more scrutiny, not less. It's confident and plausible, even when wrong. |

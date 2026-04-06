@@ -55,6 +55,7 @@ A test earns its place if you can describe a realistic bug it would catch. If yo
 - Prefer real dependencies over mocks. A real database call catches more than a mock.
 - One assertion per concept. A test that checks five things tests nothing well.
 - Name tests after the behavior: "rejects expired tokens" not "test_validate_token_3".
+- Prefer clarity over DRY in tests. Duplicating setup across tests is fine if it makes each test self-explanatory. A reader should understand what a test does without jumping to shared helpers.
 - If you need complex setup to test something, that's a design smell — note it, don't hide it with test infrastructure.
 
 ## Rules

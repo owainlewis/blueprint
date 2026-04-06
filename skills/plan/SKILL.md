@@ -69,13 +69,22 @@ or a specific observable behaviour. Must be something a coding agent can actuall
 
 ## Phasing Strategy
 
-Phase by **working software** not by layer. Each phase should produce something runnable:
+Phase by **working software** not by layer. Order phases by risk — put the highest-uncertainty work first. If Phase 1 fails, you learn it before investing in Phases 2-5. Each phase should be a vertical slice: one complete path through the stack, not a horizontal layer. Each phase should produce something runnable:
 - Phase 1: Skeleton that runs (CLI starts, no functionality)
 - Phase 2: Core loop working (agent takes input, calls model, returns output)
 - Phase 3: Tools working (each tool implemented and tested)
 - Phase 4: Configuration, polish, edge cases
 
 Avoid phases like "set up project structure" or "write all models" — these don't produce working software.
+
+## Don't rationalize away the process
+
+| Temptation | Reality |
+|---|---|
+| "I'll figure it out as I go" | That's how you end up with rework. 10 minutes of planning saves hours of backtracking. |
+| "The tasks are obvious" | Write them down anyway. Explicit tasks surface hidden dependencies and forgotten edge cases. |
+| "This is too small to plan" | If it touches more than two files, it benefits from a task list. |
+| "I can hold it all in context" | Context windows are finite. Written plans survive session boundaries and compaction. |
 
 ## After Planning
 
