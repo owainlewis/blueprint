@@ -1,6 +1,6 @@
 ---
 name: plan
-description: "Break a spec into phased, ordered tasks. Use after /blueprint:spec has defined what to build."
+description: "Break a spec into tasks you can give to an AI coding agent to implement. Use after /blueprint:spec."
 user-invocable: true
 argument-hint: "<feature-name> e.g. 'user-auth'"
 ---

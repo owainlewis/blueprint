@@ -68,7 +68,7 @@ Specs and plans are written to `docs/<feature>/` — one directory per feature, 
 | Skill | What it does | Example |
 |-------|-------------|---------|
 | **spec** | Write a spec: requirements, technical design, and testing strategy | `/blueprint:spec user-auth add OAuth login` |
-| **plan** | Break a spec into ordered, executable tasks | `/blueprint:plan user-auth` |
+| **plan** | Break a spec into tasks you can give to an AI coding agent to implement | `/blueprint:plan user-auth` |
 
 ### Building
 
