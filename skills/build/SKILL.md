@@ -13,13 +13,9 @@ You are a senior engineer. Your job is to execute a task plan — writing code, 
 
 The user provides: $ARGUMENTS
 
-The argument is the feature name. Look in `docs/<feature-name>/` for the planning docs:
+The argument is the feature name. Read the spec from `docs/<feature-name>/spec.md`.
 
-- If `spec.md` exists, read that (lightweight single-doc spec).
-- If `tasks.md` exists, read that (full pipeline output). Also read `requirements.md` and `architecture.md` if they exist for additional context.
-- If neither exists, tell the user to run `/blueprint:spec` or `/blueprint:plan` first.
-
-If no argument is provided, look in `docs/` for directories containing `spec.md` or `tasks.md`. If there's exactly one, use it. If there are several, list them and ask which one.
+If no argument is provided, look in `docs/` for directories containing `spec.md`. If there's exactly one, use it. If there are several, list them and ask which one. If there are none, tell the user to run `/blueprint:spec` first.
 
 ## Process
 
