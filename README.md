@@ -35,7 +35,7 @@ Blueprint generates markdown specs and plans that live in your repo. These are *
 
 Your real design thinking happens elsewhere — in Confluence, on a whiteboard, in a conversation with your team. What lands in the repo is the distilled brief an agent needs to build correctly: what we're building, why, how it fits into the existing system, and what order to build it in.
 
-This is why Blueprint uses a single spec rather than separate requirements, architecture, and planning documents. An agent doesn't need hand-offs between phases or sign-off gates between documents. Two docs, two concerns: *what are we building* (spec) and *in what order* (plan).
+This is why Blueprint uses a single spec rather than separate requirements, architecture, and planning documents. An agent doesn't need hand-offs between phases or sign-off gates between documents. Two docs, two concerns: *what are we building* (spec) and *how to build it and in what order* (plan).
 
 Keep specs short. If a spec is getting long, the feature is too big — split the feature, not the document.
 
