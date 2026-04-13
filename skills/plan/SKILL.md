@@ -53,13 +53,13 @@ Write 2-3 sentences — enough that an agent (or engineer reading a ticket) with
 can understand and execute without reading any other document.
 
 **Acceptance Criteria:**
-1. Outcome-level steps — describe *what* to build, not *how* to code it
-2. Each step is a deliverable, not an implementation instruction
-3. Keep to 3 bullet points max
+- What must be true when this task is done (not how to build it)
+- Include error behavior where relevant (what status codes, what happens on bad input)
+- Max 3 bullet points. If you need more, the task is too big — split it.
 
 **Verify:**
-A runnable command with expected output. `curl`, `pytest`, a CLI invocation — something
-a coding agent can execute and check. Never "confirm X" or "check that Y" — always a command.
+A runnable command with expected output. Fully concrete — no placeholder values.
+`curl`, `pytest`, a CLI invocation the agent can copy-paste and check.
 
 ### Task 2: [Title]
 ...
@@ -68,10 +68,27 @@ a coding agent can execute and check. Never "confirm X" or "check that Y" — al
 
 ## Phase 2: [Milestone Name]
 **Goal:** ...
-
-### Task 3: [Title]
-...
 ```
+
+## Writing Good Acceptance Criteria
+
+Acceptance criteria describe **what must be true**, not **how to build it**. The agent decides the implementation.
+
+**Wrong** (implementation steps):
+```
+1. Create a User model with fields: id, email, password_hash, created_at
+2. Create POST /api/v1/users that validates input and stores the user
+3. Add bcrypt password hashing in the service layer
+```
+
+**Right** (outcomes):
+```
+- POST /api/v1/users creates a user and returns {id, email}
+- Passwords are hashed — never stored or returned in plain text
+- Duplicate email returns 409
+```
+
+Both describe the same work. The right version tells the agent what "done" looks like. The wrong version tells it what to type.
 
 ## Slice Vertically, Not Horizontally
 
@@ -96,7 +113,9 @@ Each task delivers working, testable functionality. Order by risk — highest-un
 
 ## Rules
 
+- Acceptance criteria are outcomes, not implementation instructions. Say what must be true, not what to type.
+- Include error behavior in acceptance criteria — if the spec says "non-PDF returns 400", the task that handles uploads should have that in its criteria, not a separate error-handling task.
+- Verify commands must be fully concrete. No `"..."` placeholders — use real example values.
 - Each task's Context must be self-contained. An agent — or an engineer picking up a ticket — should execute it without reading other tasks.
 - Each phase is a milestone. After a phase, something new works end-to-end.
 - Order tasks so dependencies are satisfied and each leaves the system in a working state.
-- Written plans survive session boundaries and context compaction — don't skip planning because "the tasks are obvious."
