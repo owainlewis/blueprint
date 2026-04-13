@@ -51,10 +51,10 @@ Spec: `docs/<feature-name>/spec.md`
 Write 2-3 sentences — enough that an agent (or engineer reading a ticket) with zero prior context
 can understand and execute without reading any other document.
 
-**Build:**
+**Acceptance Criteria:**
 1. Outcome-level steps — describe *what* to build, not *how* to code it
 2. Each step is a deliverable, not an implementation instruction
-3. Keep to 3-5 steps max
+3. Keep to 3 bullet points max
 
 **Verify:** A runnable command with expected output. `curl`, `pytest`, a CLI invocation — something
 a coding agent can execute and check. Never "confirm X" or "check that Y" — always a command.
