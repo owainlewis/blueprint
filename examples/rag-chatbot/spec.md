@@ -4,14 +4,22 @@
 A Python API that lets users upload PDF documents, then ask natural language questions and get answers grounded in the uploaded content. Built for developers integrating document Q&A into their applications. Single-user, no auth.
 
 ## Requirements
+
+**Functional:**
 - Accept PDF uploads, extract text, chunk it, embed it, and store it
 - Accept chat messages, retrieve relevant chunks via vector similarity, return AI-generated answers with source references
 - List uploaded documents with metadata (name, upload time, chunk count)
-- Delete a document and all associated chunks/embeddings
-- When no relevant chunks exist for a query, say so — don't hallucinate
+- Delete a document and all associated chunks and embeddings
+- When no relevant chunks exist for a query, return a clear "no information" response — don't hallucinate
+- Non-PDF uploads return 400
+- Requests for non-existent documents return 404
+- OpenAI API failures return 502 with a useful error message
+
+**Non-functional:**
 - PDF processing completes within 30 seconds for docs under 50 pages
 - Chat responses return within 5 seconds for collections under 1000 chunks
-- Runs locally via Docker Compose with no external dependencies beyond OpenAI API
+- Runs locally via Docker Compose with no external dependencies beyond the OpenAI API
+- All API responses follow a consistent JSON structure
 
 ## Design
 
@@ -28,7 +36,7 @@ graph LR
 - **pgvector over dedicated vector DB** — one database for relational data and vectors. Sufficient at this scale. Avoids external dependency.
 - **Fixed-size chunking** — ~500 tokens with ~50 token overlap. Simple and predictable.
 - **text-embedding-3-small** — 1536 dimensions. Good balance of quality and cost.
-- **5 chunks per query** — enough context without exceeding limits.
+- **5 chunks per query** — default retrieval count. Enough context without exceeding limits.
 
 **Components:**
 - **API Layer** — REST endpoints under `/api/v1/`. Takes uploads, serves queries, returns JSON.
@@ -36,31 +44,12 @@ graph LR
 - **Retrieval Service** — Takes a query string, returns ranked chunks. Each chunk has: content, document_id, similarity score. Sorted by relevance descending.
 - **Chat Service** — Takes a message and retrieved chunks, returns an answer with source references. When given no chunks, returns a "no information" response.
 
-**File structure:**
+**Key API response shapes:**
+
 ```
-rag-api/
-├── app/
-│   ├── main.py              # FastAPI app, lifespan, router mounting
-│   ├── config.py            # Settings via pydantic-settings
-│   ├── database.py          # SQLAlchemy async engine and session
-│   ├── models/
-│   │   └── document.py      # Document and Chunk SQLAlchemy models
-│   ├── schemas/
-│   │   ├── documents.py     # Pydantic request/response schemas
-│   │   └── chat.py          # Chat request/response schemas
-│   ├── routers/
-│   │   ├── documents.py     # Document CRUD endpoints
-│   │   └── chat.py          # Chat endpoint
-│   └── services/
-│       ├── ingestion.py     # PDF processing, chunking, embedding
-│       ├── retrieval.py     # Vector similarity search
-│       └── chat.py          # Prompt building, LLM call
-├── tests/
-│   ├── test_documents.py
-│   └── test_chat.py
-├── docker-compose.yml
-├── Dockerfile
-└── pyproject.toml
+POST /api/v1/documents → {id, filename, chunk_count}
+GET  /api/v1/documents → [{id, filename, uploaded_at, chunk_count}]
+POST /api/v1/chat      → {answer, sources: [{content, document_id}]}
 ```
 
 ## Testing Strategy
