@@ -10,7 +10,7 @@ Most agentic coding frameworks are built on a flawed assumption: that AI agents 
 
 A clear 50-line skill outperforms a 500-line skill full of warnings. The agent spends its attention on your work instead of navigating rules. As models improve, heavy frameworks fight the improvement. Simple workflows ride it.
 
-11 skills. Every one under 100 lines. You can read the entire framework in 10 minutes.
+11 skills. You can read the entire framework in 15 minutes.
 
 ## How It Works
 
