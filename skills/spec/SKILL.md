@@ -1,6 +1,6 @@
 ---
 name: spec
-description: "Write a spec — what to build, why, and how it fits into the system. Use when starting new work."
+description: "Write a spec: requirements, technical design, and testing strategy. Use when starting new work."
 user-invocable: true
 argument-hint: "<feature-name> <description> e.g. 'user-auth add OAuth login with Google and GitHub'"
 ---
