@@ -63,6 +63,18 @@ rag-api/
 └── pyproject.toml
 ```
 
+## Testing Strategy
+- **Framework:** pytest with httpx AsyncClient for endpoint testing
+- **Test against real dependencies:** Use a test PostgreSQL container with pgvector for database tests. Vector similarity queries must hit real pgvector, not mocks.
+- **Mock external APIs:** Mock OpenAI embeddings and chat completion calls — return deterministic vectors and responses so tests are fast and reproducible.
+- **What to test:**
+  - Upload → chunk → embed → store pipeline (verify chunks and embeddings are persisted)
+  - Chat flow with relevant chunks (verify answer includes source references)
+  - Chat flow with no relevant chunks (verify "no information" response)
+  - Document deletion cascades (verify chunks are removed)
+  - Error cases: non-PDF upload (400), missing document (404), OpenAI failure (502)
+- **What NOT to test:** FastAPI framework routing, SQLAlchemy query building, PDF parsing library internals
+
 ## Out of Scope
 - Authentication and authorization
 - Multi-user or multi-tenant support

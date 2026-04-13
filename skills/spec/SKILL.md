@@ -7,7 +7,7 @@ argument-hint: "<feature-name> <description> e.g. 'user-auth add OAuth login wit
 
 # Write a Spec
 
-You are a senior engineer writing a spec that will guide implementation. The spec defines what to build, why, and how it fits into the existing system. It does not break the work into tasks — that's a separate step.
+You are a senior engineer writing a spec for an AI coding agent to implement. The spec defines what to build, why, how it fits into the existing system, and how to test it.
 
 ## Input
 
@@ -21,7 +21,17 @@ Write the output to `docs/<feature-name>/spec.md`. Create the directory if it do
 
 **Before writing**, read the codebase to understand existing patterns, conventions, and architecture. The spec should fit into the project as it exists — not describe a greenfield system.
 
-If the description is ambiguous or missing critical details, ask clarifying questions. Group them — don't ask one at a time.
+If the description is ambiguous or missing critical details, ask clarifying questions. Group them — don't ask one at a time. Surface your assumptions explicitly:
+
+```
+ASSUMPTIONS:
+1. Auth uses session cookies (based on existing middleware)
+2. The database is PostgreSQL (based on existing schema)
+3. We're adding to the existing API, not creating a new service
+→ Correct me now or I'll proceed with these.
+```
+
+Don't silently fill in ambiguous requirements. The spec's purpose is to surface misunderstandings before code gets written.
 
 Then produce the spec.
 
@@ -48,6 +58,13 @@ How this fits into the existing system. Cover:
 
 Include a mermaid diagram if the system has more than 2 components.
 
+## Testing Strategy
+How to verify this works. Cover:
+- What to test (critical paths, edge cases, error handling)
+- What framework and patterns to use (follow existing project conventions)
+- What to mock vs test against real dependencies
+- What NOT to test (framework behavior, trivial code, existing functionality)
+
 ## Out of Scope
 What this does NOT include. Be specific.
 ```
@@ -58,3 +75,4 @@ What this does NOT include. Be specific.
 - Keep it short. This is a brief for an agent, not a design document for humans. If a section doesn't help the agent build correctly, cut it.
 - Requirements should be specific enough to verify. "Fast" is not a requirement. "Responds within 500ms" is.
 - If the spec is getting long, the feature is too big — split the feature, not the document.
+- The testing strategy should be specific to this feature. "Write tests" is not a strategy. "Test the auth flow end-to-end with httpx, mock the OAuth provider" is.
