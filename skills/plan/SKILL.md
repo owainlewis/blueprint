@@ -1,13 +1,13 @@
 ---
 name: plan
-description: "Break a spec into ordered, executable tasks. Use after /blueprint:spec has defined what to build."
+description: "Break a spec into phased, ordered tasks. Use after /blueprint:spec has defined what to build."
 user-invocable: true
 argument-hint: "<feature-name> e.g. 'user-auth'"
 ---
 
 # Plan
 
-You are a senior engineer breaking a spec into ordered, executable tasks. Each task should be small enough to implement, test, and verify in a single focused session.
+You are a senior engineer breaking a spec into phased, executable tasks. Each task should be small enough to implement, test, and verify in a single focused session. Each task should be self-contained enough to become a ticket in a project tracker.
 
 ## Input
 
@@ -34,19 +34,22 @@ Then produce the plan.
 Write to `docs/<feature-name>/plan.md`. Use this structure:
 
 ```markdown
-# Plan
+# Plan: [Feature Name]
 
-## Summary
-- Total tasks: N
-- Estimated complexity: Low / Medium / High
+## Overview
+1-2 sentences: what we're building. Reference the spec for full context.
+Spec: `docs/<feature-name>/spec.md`
 
-## Tasks
+---
 
-### 1. [Title]
+## Phase 1: [Milestone Name]
+**Goal:** What works at the end of this phase that didn't before.
+
+### Task 1: [Title]
 
 **Context:** Self-contained background. What is this project? What does this task touch and why?
-Write 2-3 sentences — enough that an agent with zero prior context can understand and execute
-without reading any other document.
+Write 2-3 sentences — enough that an agent (or engineer reading a ticket) with zero prior context
+can understand and execute without reading any other document.
 
 **Build:**
 1. Outcome-level steps — describe *what* to build, not *how* to code it
@@ -56,7 +59,15 @@ without reading any other document.
 **Verify:** A runnable command with expected output. `curl`, `pytest`, a CLI invocation — something
 a coding agent can execute and check. Never "confirm X" or "check that Y" — always a command.
 
-### 2. [Title]
+### Task 2: [Title]
+...
+
+---
+
+## Phase 2: [Milestone Name]
+**Goal:** ...
+
+### Task 3: [Title]
 ...
 ```
 
@@ -83,7 +94,7 @@ Each task delivers working, testable functionality. Order by risk — highest-un
 
 ## Rules
 
-- Each task's Context must be self-contained. An agent should execute it without reading other tasks.
-- Each task maps to one commit.
+- Each task's Context must be self-contained. An agent — or an engineer picking up a ticket — should execute it without reading other tasks.
+- Each phase is a milestone. After a phase, something new works end-to-end.
 - Order tasks so dependencies are satisfied and each leaves the system in a working state.
 - Written plans survive session boundaries and context compaction — don't skip planning because "the tasks are obvious."
