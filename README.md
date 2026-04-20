@@ -15,7 +15,7 @@ Blueprint is agent-agnostic. The same skills can be used from Claude Code, Codex
 ## The Flow
 
 ```mermaid
-flowchart LR
+flowchart TB
     Brief["Idea / Brief"] --> Spec["Spec"]
     Spec --> Plan["Plan"]
     Plan --> Build["Build"]
@@ -27,11 +27,12 @@ flowchart LR
 For each task in the plan:
 
 ```mermaid
-flowchart LR
+flowchart TB
     Task["Planned Task"] --> Build["Build"]
     Build --> Test["Test"]
     Test --> Review["Review"]
     Review --> Commit["Commit"]
+    Review -. if changes needed .-> Build
 ```
 
 ```text
@@ -54,13 +55,19 @@ Keep specs short. If a spec is getting long, the feature is too big — split th
 
 ## Install
 
-The simplest setup is to keep Blueprint in your repo's `.agents/skills/` directory so the skills can be shared across agents that support the common project-level skills convention.
-
 ```bash
-npx skills add owainlewis/blueprint -a codex
+npx skills add owainlewis/blueprint
 ```
 
-You can also copy the folders from [`skills/`](skills/) into your shared skills directory manually.
+Install Blueprint with the `skills` CLI. This is the simplest setup and works across agents that support local skills.
+
+## Update
+
+```bash
+npx skills update
+```
+
+Run this to update Blueprint and your installed skills to the latest version.
 
 How you invoke a skill depends on the agent:
 
@@ -128,12 +135,6 @@ The [`examples/`](examples/) folder shows the planning output for a Python RAG c
 1. [input.md](examples/input.md) — rough project notes
 2. [spec.md](examples/rag-chatbot/spec.md) — the spec
 3. [plan.md](examples/rag-chatbot/plan.md) — ordered tasks
-
-## Updating
-
-```bash
-npx skills update
-```
 
 ## Releasing (for contributors)
 
