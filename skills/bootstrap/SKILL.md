@@ -1,6 +1,6 @@
 ---
 name: bootstrap
-description: "Scaffold a new project from minimal, opinionated defaults. Python uses uv, TypeScript uses bun and Next.js, PostgreSQL by default. Use when the user says bootstrap, scaffold, new project, new service, or new app."
+description: "Scaffold a new project from minimal, opinionated defaults: uv for Python, bun + Next.js for TypeScript. Use when the user says bootstrap, scaffold, new project, new service, or new app."
 user-invocable: true
 argument-hint: "<project-type> <project-name> e.g. 'python my-service' or 'nextjs my-app'"
 ---
@@ -14,26 +14,34 @@ Scaffold a new project with minimal, opinionated defaults. Stop after scaffoldin
 - **Python** → `uv`, `pydantic-settings`, PostgreSQL when a DB is needed
 - **TypeScript** → `bun`, Next.js (App Router)
 
-## Rule: Check Latest Versions
+## Input
 
-Before running any scaffolder, check the latest stable version of the tool or framework. Do not assume from memory. Pin to what's current today.
+The user provides: `$ARGUMENTS`
+
+The first argument is the project type (`python`, `nextjs`, `cli`, `library`). The second is the project name. If either is missing, ask for it. If both are provided and no deviations from the defaults are mentioned, proceed without further questions.
+
+Only ask about deviations if the user's message suggests them ("use MySQL instead of Postgres", "skip pydantic-settings", etc.).
 
 ## Process
 
-1. Check prerequisites. `just` is required for every scaffolded project. Run `command -v just`. If missing, install it before scaffolding (`brew install just` on macOS; see https://github.com/casey/just#installation otherwise).
+1. **Target directory check.** The scaffold writes to `./<project-name>/`. If that directory exists and is non-empty, stop and report — do not overwrite. Create the directory and `cd` into it.
 
-2. Ask at most three questions, grouped:
-   - What are we building? (CLI, service, library, web app)
-   - What's the project name?
-   - Any deviations from the defaults?
+2. **Prerequisites.** Every scaffold needs `just`. Check `command -v just`; if missing, `brew install just` on macOS (see https://github.com/casey/just#installation otherwise).
 
-3. Check the latest versions of the tools you're about to use.
+   Stack-specific:
+   - Python: `command -v uv` or `brew install uv`
+   - TypeScript: `command -v bun` or `brew install oven-sh/bun/bun`
 
-4. Scaffold the project using the templates below.
+3. **Pin the latest stable versions.** Don't guess from memory:
+   - Python: `uv self update && uv --version`
+   - TypeScript: `bun upgrade && bun --version`
+   - Next.js: invoke via `npx create-next-app@latest` — the `@latest` tag is the pin
 
-5. First commit: `git init && git commit -m "chore: initial scaffold"`.
+4. **Scaffold** the project using the templates below.
 
-6. Stop. Do not write features. Do not add example code.
+5. **First commit:** `git init && git commit -m "chore: initial scaffold"`.
+
+6. **Stop.** Do not write features. Do not add example code.
 
 ## Templates
 
