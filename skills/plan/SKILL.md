@@ -38,5 +38,7 @@ argument-hint: "<feature-name> e.g. 'user-auth'"
 - Call out contract changes, compatibility risks, and migrations explicitly.
 - Prefer vertical slices over layer-by-layer plans.
 - Skip planning when the change is already tiny and decision-complete.
+- Each task should carry the minimum setup context needed to execute it without hidden assumptions.
+- Every verify step must be runnable without inventing missing inputs. If it needs a fixture, payload, or prior ID, say exactly how to get it.
 - If a task needs more than a few acceptance criteria, split it.
 - Include error behavior in the task that owns it.

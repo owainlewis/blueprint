@@ -37,9 +37,10 @@ Build the ingestion path from uploaded PDF to stored chunks and embeddings. This
 - `POST /api/v1/documents` accepts a PDF, extracts text, chunks it, embeds it, and stores the result
 - Non-PDF uploads return `400`
 - The response includes the document ID, filename, and chunk count
+- A reusable fixture exists at `tests/fixtures/test.pdf` containing the sentence `Blueprint uses PostgreSQL with pgvector for embeddings.`
 
 **Verify:**
-`curl -F "file=@test.pdf" http://localhost:8000/api/v1/documents` returns `{id, filename, chunk_count}`
+`curl -F "file=@tests/fixtures/test.pdf" http://localhost:8000/api/v1/documents` returns `{id, filename, chunk_count}`
 
 ### Task 3: Document listing and deletion
 
@@ -52,7 +53,7 @@ Once documents exist, users need to inspect what has been uploaded and remove do
 - Deleting a missing document returns `404`
 
 **Verify:**
-Upload a document, run `curl http://localhost:8000/api/v1/documents`, then delete it with `curl -X DELETE http://localhost:8000/api/v1/documents/{id}`
+`DOC_ID=$(curl -s -F "file=@tests/fixtures/test.pdf" http://localhost:8000/api/v1/documents | python -c 'import json,sys; print(json.load(sys.stdin)["id"])') && curl http://localhost:8000/api/v1/documents && curl -X DELETE http://localhost:8000/api/v1/documents/$DOC_ID`
 
 ---
 
@@ -70,7 +71,7 @@ Build the question-answering flow on top of stored chunks and embeddings. The en
 - If nothing relevant is found, the response clearly says there is no information instead of hallucinating
 
 **Verify:**
-`curl -X POST http://localhost:8000/api/v1/chat -H "Content-Type: application/json" -d '{"message":"What does the document say about X?"}'`
+`curl -s -F "file=@tests/fixtures/test.pdf" http://localhost:8000/api/v1/documents >/dev/null && curl -X POST http://localhost:8000/api/v1/chat -H "Content-Type: application/json" -d '{"message":"What database is used for embeddings?"}'` returns an answer mentioning PostgreSQL with pgvector
 
 ---
 

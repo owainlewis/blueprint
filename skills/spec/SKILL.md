@@ -37,7 +37,9 @@ argument-hint: "<feature-name> <description> e.g. 'user-auth add OAuth login wit
 ## Rules
 
 - Make the smallest safe change to the system description that fully solves the problem.
+- If two reasonable implementations would behave differently, specify the default.
 - Call out interface, schema, config, CLI, or file-format changes explicitly.
+- Document public success shapes and important error shapes for external interfaces.
 - Include failure paths where they matter instead of leaving them implicit.
 - Do not write a greenfield design if the codebase already has patterns to follow.
 - Skip the spec for tiny, self-contained changes with obvious behavior.
