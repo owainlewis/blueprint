@@ -13,7 +13,6 @@ Scaffold a new project with minimal, opinionated defaults. Stop after scaffoldin
 
 - **Python** → `uv`, `pydantic-settings`, PostgreSQL when a DB is needed
 - **TypeScript** → `bun`, Next.js (App Router)
-- **Structure** → `app/` at the root
 
 ## Rule: Check Latest Versions
 
