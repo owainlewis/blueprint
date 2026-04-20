@@ -1,6 +1,6 @@
 ---
 name: bootstrap
-description: "Scaffold a new project from minimal, opinionated defaults: uv for Python, bun + Next.js for TypeScript. Use when the user says bootstrap, scaffold, new project, new service, or new app."
+description: "Scaffold a new project from minimal, opinionated defaults. Prefer uv for Python and bun + Next.js for TypeScript unless the user asks for something else. Use when the user says bootstrap, scaffold, new project, new service, or new app."
 user-invocable: true
 argument-hint: "<project-type> <project-name> e.g. 'python my-service' or 'nextjs my-app'"
 ---
@@ -18,28 +18,25 @@ Scaffold a new project with minimal, opinionated defaults. Stop after scaffoldin
 
 The user provides: `$ARGUMENTS`
 
-The first argument is the project type (`python`, `nextjs`, `cli`, `library`). The second is the project name. If either is missing, ask for it. If both are provided and no deviations from the defaults are mentioned, proceed without further questions.
+The first argument is the stack or project type. The second is the project name. If either is missing, ask for it. If both are provided and no deviations from the defaults are mentioned, proceed without further questions.
 
 Only ask about deviations if the user's message suggests them ("use MySQL instead of Postgres", "skip pydantic-settings", etc.).
+
+If the request is abstract (`cli`, `library`) and the language/runtime is not clear, ask one clarifying question before scaffolding. Do not invent a language when that choice would materially change the project.
 
 ## Process
 
 1. **Target directory check.** The scaffold writes to `./<project-name>/`. If that directory exists and is non-empty, stop and report — do not overwrite. Create the directory and `cd` into it.
 
-2. **Prerequisites.** Every scaffold needs `just`. Check `command -v just`; if missing, `brew install just` on macOS (see https://github.com/casey/just#installation otherwise).
+2. **Check prerequisites.** Inspect what tooling is already available for the requested stack.
+   - If something required is missing, tell the user what is missing or ask before installing it.
+   - Do not silently install packages, modify the user's global toolchain, or run global upgrade commands just to scaffold.
 
-   Stack-specific:
-   - Python: `command -v uv` or `brew install uv`
-   - TypeScript: `command -v bun` or `brew install oven-sh/bun/bun`
+3. **Choose the scaffold.** Prefer the ecosystem's standard stable scaffolding flow for the requested stack. Do not guess version numbers from memory. Use the official or conventional bootstrap path for the stack instead of inventing structure from scratch.
 
-3. **Pin the latest stable versions.** Don't guess from memory:
-   - Python: `uv self update && uv --version`
-   - TypeScript: `bun upgrade && bun --version`
-   - Next.js: invoke via `npx create-next-app@latest` — the `@latest` tag is the pin
+4. **Scaffold** the project using the templates below and the chosen stack conventions.
 
-4. **Scaffold** the project using the templates below.
-
-5. **First commit:** `git init && git commit -m "chore: initial scaffold"`.
+5. **Git.** Initialize git and make the first commit if the directory is not already a git repo and the user has not asked otherwise.
 
 6. **Stop.** Do not write features. Do not add example code.
 
@@ -88,26 +85,6 @@ just test
 ```
 ````
 
-### `CLAUDE.md`
-
-````markdown
-# CLAUDE.md
-
-## Core rule
-**Always use `just`, not raw commands.**
-
-## Development workflow
-1. Make changes
-2. Review your work and fix any issues you find
-3. Run tests to confirm nothing is broken
-
-## Architecture
-(Where things live. Key decisions. Grows over time.)
-
-## Corrections
-(Empty at start. Add a rule every time a mistake is made that shouldn't repeat.)
-````
-
 ### `LICENSE`
 
 Add an MIT license. Use `git config user.name` for the copyright holder and the current year.
@@ -116,9 +93,11 @@ Add an MIT license. Use `git config user.name` for the copyright holder and the 
 
 - `.env.example` — documented variables if relevant (no real `.env`)
 - `.gitignore` — appropriate to the stack
+- An agent instruction file only if the user asks for one or the project already uses a shared convention for it
 
 ## Rules
 
 - Minimal dependencies. Add nothing "just in case."
 - No example routes, no sample data, no placeholder pages.
-- If `~/.claude/STACK.md` exists, prefer its defaults over the ones here.
+- Keep the generated structure small and unsurprising.
+- If you make an assumption for an abstract request, state it clearly before scaffolding.

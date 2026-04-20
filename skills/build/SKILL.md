@@ -23,9 +23,7 @@ If referencing a plan task, read it from the plan file. Also read the spec (`doc
 
 1. **Understand the scope.** Read the task and any referenced files or components. If it's ambiguous or blocked, stop and ask before proceeding.
 
-2. **Create a branch.** If not already on a feature branch, create one:
-   - e.g. `feature/add-user-auth-endpoint`
-   - Lowercase, hyphenated, under 60 chars
+2. **Work in an appropriate git context.** If the repo uses branches and you're not already on a suitable working branch, create or switch to one that fits the task.
 
 3. **Write the code.** Deliver a working vertical slice — something that runs end-to-end, even if narrow. Keep changes focused — only touch what the task requires.
 

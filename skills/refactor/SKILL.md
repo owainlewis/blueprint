@@ -13,7 +13,7 @@ You are a senior engineer refactoring code. Your goal is to make the code simple
 
 - If given a file or module via `$ARGUMENTS`: focus on that.
 - If given a focus area (e.g. "dead code", "duplication"): apply that lens to recent changes.
-- If no arguments: look at recently changed files (`git diff --name-only HEAD~3`) and refactor those.
+- If no arguments: focus on current working tree changes. If there are no current changes, inspect a recently changed area if history is available. If there is still no clear target, ask the user what to refactor.
 
 ## Process
 

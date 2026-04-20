@@ -1,6 +1,6 @@
 ---
 name: plan
-description: "Break a spec into tasks you can give to an AI coding agent to implement. Use after /blueprint:spec."
+description: "Break a spec into tasks you can give to an AI coding agent to implement. Use after the spec skill."
 user-invocable: true
 argument-hint: "<feature-name> e.g. 'user-auth'"
 ---
@@ -15,7 +15,7 @@ The user provides: $ARGUMENTS
 
 The argument is the feature name. Read the spec from `docs/<feature-name>/spec.md`. Write the plan to `docs/<feature-name>/plan.md`.
 
-If no argument is provided, look in `docs/` for directories containing `spec.md`. If there's exactly one, use it. If there are several, list them and ask which one. If there are none, tell the user to run `/blueprint:spec` first.
+If no argument is provided, look in `docs/` for directories containing `spec.md`. If there's exactly one, use it. If there are several, list them and ask which one. If there are none, tell the user to create a spec first.
 
 ## Process
 

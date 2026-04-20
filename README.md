@@ -136,20 +136,6 @@ The [`examples/`](examples/) folder shows the planning output for a Python RAG c
 2. [spec.md](examples/rag-chatbot/spec.md) — the spec
 3. [plan.md](examples/rag-chatbot/plan.md) — ordered tasks
 
-## Releasing (for contributors)
-
-```bash
-./release.sh patch   # 0.2.0 → 0.2.1
-./release.sh minor   # 0.2.0 → 0.3.0
-./release.sh major   # 0.2.0 → 1.0.0
-```
-
-## Local Development
-
-Edit the skill files in [`skills/`](skills/).
-
-To test locally, install this repo into `.agents/skills/` or your agent's local skills directory and invoke the skills through that agent.
-
 ## Learn More
 
 https://www.skool.com/aiengineer

@@ -14,7 +14,7 @@ Evaluate whether the code has adequate test coverage. If not, write the tests th
 ## What to evaluate
 
 - If given a file or module via `$ARGUMENTS`: evaluate that.
-- If no arguments: evaluate recently changed files (`git diff --name-only HEAD~3`).
+- If no arguments: evaluate files in the current working tree or staged diff. If there are no current changes, inspect the latest commit if history is available. If there is still no clear target, ask the user what to evaluate.
 
 ## Process
 

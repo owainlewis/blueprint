@@ -41,7 +41,7 @@ A description of what to build or fix.
 
 ## What tests to write
 
-Apply the same standards as `/blueprint:coverage` — every test must catch a realistic bug.
+Apply the same standards as the coverage skill — every test must catch a realistic bug.
 
 **Good tests for TDD:**
 - Behaviors described in the requirements ("it should retry 3 times")
