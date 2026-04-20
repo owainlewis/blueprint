@@ -1,74 +1,39 @@
 ---
 name: tdd
-description: "Build test-first. Write failing tests that define the behavior, then implement until green."
+description: "Use test-first development for behavioral changes. Write a failing test, make it pass, then simplify."
 user-invocable: true
 argument-hint: "<what to build> e.g. 'user registration endpoint' or 'retry logic for API client'"
 ---
 
 # Test-Driven Development
 
-> Every test should justify its existence. A small suite that catches real bugs beats a large one that catches nothing.
+## When to use
 
-Write the tests first. The tests define what the code should do. Then write the minimum code to make them pass.
-
-## Input
-
-The user provides: $ARGUMENTS
-
-A description of what to build or fix.
+- New logic or behavior
+- Bug fixes
+- Changes that could break existing behavior
 
 ## Process
 
-1. **Understand the requirement.** Read any referenced files, existing code, or architecture docs to understand context. If the requirement is ambiguous, ask before proceeding.
+1. Understand the requirement and the relevant code.
+2. Write a failing test for the behavior you want.
+3. Write the minimum code needed to make the test pass.
+4. Simplify the code and tests while they stay green.
+5. Run the full relevant test suite before finishing.
 
-2. **Write failing tests.** Define the behavior through tests:
-   - Start with the core behavior — what must this do?
-   - Add edge cases — what happens at boundaries?
-   - Add failure modes — what should happen when things go wrong?
-   - Run the tests. They must fail. If they pass, you're not testing anything new.
+## Verification
 
-3. **Implement.** Write the minimum code to make the tests pass.
-   - Do not write code that isn't demanded by a failing test.
-   - Run tests after each meaningful change. Show the output.
-   - Stop as soon as all tests are green.
-
-4. **Simplify.** Look at the implementation and the tests together:
-   - Can the implementation be simpler while keeping tests green?
-   - Are any tests redundant now that you see the implementation?
-   - Remove anything that isn't pulling its weight.
-
-5. **Final verification.** Run the full test suite. Show output. Confirm nothing is broken.
-
-## What tests to write
-
-Apply the same standards as the coverage skill — every test must catch a realistic bug.
-
-**Good tests for TDD:**
-- Behaviors described in the requirements ("it should retry 3 times")
-- Error handling ("it should return 404 when not found")
-- Boundary conditions ("empty input", "maximum length")
-- State that matters ("after cancellation, no further events are emitted")
-
-**Skip:**
-- Tests that verify wiring or delegation without logic
-- Tests for behavior the framework guarantees
-- Mock-heavy tests that test the mock, not the code
-
-## Don't rationalize away the tests
-
-| Temptation | Reality |
-|---|---|
-| "I'll write tests after the code works" | You won't. And tests written after the fact test implementation, not behavior. |
-| "This is too simple to test" | Simple code gets complicated. The test documents the expected behavior. |
-| "Tests slow me down" | Tests slow you down now. They speed you up every time you change the code later. |
-| "I tested it manually" | Manual testing doesn't persist. Tomorrow's change might break it with no way to know. |
-| "The code is self-explanatory" | Tests are the specification. They document what the code *should* do, not what it happens to do. |
+- The new behavior has a failing-then-passing test
+- Bug fixes include a reproduction test
+- Tests describe behavior, not implementation details
+- The final test suite passes
 
 ## Rules
 
-- Tests come first. Do not write implementation code before you have a failing test for it.
-- Keep tests focused. One behavior per test.
-- The implementation should be the simplest thing that passes. Resist the urge to over-engineer.
-- If the scope is too large for one pass, break it into smaller behaviors and TDD each one.
-- Commit when green — working code with passing tests is a natural commit point.
-- When fixing a bug, write a failing test that reproduces it before writing the fix. The test proves the bug existed and proves the fix works.
+- Make the smallest safe change that satisfies the failing test.
+- Preserve existing contracts unless the task explicitly changes them.
+- Add tests for failure paths when they matter to the behavior.
+- Do not write implementation code before you have a failing test for the behavior.
+- Skip TDD for documentation, formatting, or non-behavioral scaffolding work.
+- Prefer testing behavior over internals.
+- Use mocks sparingly. Prefer real boundaries when practical.

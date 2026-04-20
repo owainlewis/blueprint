@@ -1,61 +1,39 @@
 ---
 name: debug
-description: "Systematic debugging — observe, hypothesize, test, fix. Use when something is broken and you need to find the root cause."
+description: "Debug systematically: observe, hypothesize, test, fix, verify."
 user-invocable: true
 argument-hint: "[optional: description of the bug or symptom]"
 ---
 
-# Systematic Debugging
+# Debug
 
-You are a senior engineer debugging a problem. Your job is to find the root cause and fix it — not patch symptoms.
+## When to use
 
-## Input
-
-The user provides: $ARGUMENTS
-
-This is a description of the bug or symptom. If no arguments are provided, ask the user what's broken, or check for failing tests and error logs.
+- Something is broken
+- A test is failing
+- Behavior does not match expectations
 
 ## Process
 
-### 1. Observe
+1. Reproduce the problem and read the real error or failing output.
+2. Form one hypothesis about the root cause.
+3. Run one targeted check to confirm or reject that hypothesis.
+4. Fix the root cause and add a test that proves it.
+5. Run the strongest relevant verification before finishing.
 
-Reproduce the problem first. Run the failing command, test, or request. Read the actual error output. Do not guess what the error might be — look at it.
+## Verification
 
-Gather facts:
-- What is the exact error message or unexpected behavior?
-- When did it start? (check `git log` — what changed recently?)
-- What's the smallest reproduction case?
-
-### 2. Hypothesize
-
-Based on the evidence, form a single hypothesis about the root cause. State it explicitly: "I believe the bug is X because Y."
-
-Do not form multiple hypotheses at once. One at a time.
-
-### 3. Test
-
-Design a test that would confirm or rule out your hypothesis. This could be:
-- Adding a diagnostic log or print statement
-- Running a specific test case
-- Inspecting a value at runtime
-- Reading the code path the error traces through
-
-Run the test. Show the output.
-
-### 4. Fix or iterate
-
-- If your hypothesis was correct: fix the root cause. Write a test that reproduces the bug, then make the fix. The test proves the bug existed and proves the fix works.
-- If your hypothesis was wrong: state what you learned, form a new hypothesis, and go back to step 3.
-
-### 5. Verify
-
-Run the full test suite. Show the output. Confirm the fix doesn't break anything else.
+- The problem is reproduced before the fix
+- The root cause is identified, not guessed
+- The fix is covered by a test where possible
+- The final checks pass
 
 ## Rules
 
-- Never guess. Every hypothesis must be grounded in evidence you can point to.
-- Fix the root cause, not the symptom. If a function returns the wrong value, don't patch the caller — fix the function.
-- If three distinct fix attempts fail, stop. The bug is likely not where you think it is. Step back and question your assumptions about the architecture — trace the data flow from the entry point.
-- Show actual command output at every step. Do not paraphrase results or say "it should work." If you didn't run it, you don't know.
-- One change at a time. If you change three things and the bug disappears, you don't know which one fixed it.
-- When you find the fix, check if the same bug pattern exists elsewhere in the codebase.
+- Make the smallest safe fix for the proven root cause.
+- If the bug comes from a contract mismatch or unhandled failure path, fix that explicitly.
+- If there is no concrete bug or symptom, clarify the problem before debugging.
+- One hypothesis at a time.
+- Fix root cause, not symptoms.
+- Do not hide missing evidence. If you did not run it, say so.
+- If repeated attempts fail, step back and trace the data flow from the entry point.

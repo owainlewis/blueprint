@@ -1,66 +1,38 @@
 ---
 name: coverage
-description: "Evaluate test coverage for recent code and fill gaps with high-value tests. Only adds tests worth having."
+description: "Evaluate test coverage and fill real gaps with high-value tests."
 user-invocable: true
 argument-hint: "[optional: file path or module to evaluate]"
 ---
 
-# Test Coverage
+# Coverage
 
-> Every test should justify its existence. A small suite that catches real bugs beats a large one that catches nothing.
+## When to use
 
-Evaluate whether the code has adequate test coverage. If not, write the tests that are missing — but only tests that earn their place.
-
-## What to evaluate
-
-- If given a file or module via `$ARGUMENTS`: evaluate that.
-- If no arguments: evaluate files in the current working tree or staged diff. If there are no current changes, inspect the latest commit if history is available. If there is still no clear target, ask the user what to evaluate.
+- You want to check whether recent work is tested well enough
+- A file or module looks fragile or under-tested
+- You want to add tests without changing behavior
 
 ## Process
 
-1. **Read the code.** Understand what it does, what its edge cases are, and where bugs could hide.
+1. Choose the target from `$ARGUMENTS`, current changes, or the latest commit. If there is still no clear target, ask.
+2. Read the code and the existing tests.
+3. Identify realistic gaps: edge cases, failure paths, state changes, and integration points.
+4. Add only the tests that would catch a real bug.
+5. Run the relevant tests and confirm they pass.
 
-2. **Find existing tests.** Look for test files that cover this code. Read them. Understand what's already tested.
+## Verification
 
-3. **Identify gaps.** Ask: what could break that isn't tested? Focus on:
-   - Error paths and failure modes
-   - Edge cases and boundary conditions
-   - Business logic with real consequences if wrong
-   - State transitions and side effects
-   - Integration points between components
-
-4. **Write the missing tests.** Add them to the appropriate test files (or create a test file if none exists, following the project's conventions).
-
-5. **Run the tests.** Show the actual output. All tests must pass.
-
-## What makes a good test
-
-A test earns its place if you can describe a realistic bug it would catch. If you can't, don't write it.
-
-**Write tests for:**
-- Custom logic, decisions, edge cases
-- Things that broke before or look fragile
-- Complex conditions where off-by-one or wrong-branch errors hide
-- Integration between your components
-
-**Do not write tests for:**
-- Constructors, getters, setters, or trivial field assignments
-- Framework or library behavior (they have their own tests)
-- Code that only delegates to a dependency without adding logic
-- Happy paths that are obvious and unlikely to break
-- Mock-heavy tests that verify you called a method — test outcomes, not call sequences
-
-**Testing principles:**
-- Test behavior, not implementation. Tests should survive refactoring.
-- Prefer real dependencies over mocks. A real database call catches more than a mock.
-- One assertion per concept. A test that checks five things tests nothing well.
-- Name tests after the behavior: "rejects expired tokens" not "test_validate_token_3".
-- Prefer clarity over DRY in tests. Duplicating setup across tests is fine if it makes each test self-explanatory. A reader should understand what a test does without jumping to shared helpers.
-- If you need complex setup to test something, that's a design smell — note it, don't hide it with test infrastructure.
+- The target area is clear
+- New tests cover real risk, not coverage vanity
+- The code under test was not changed
+- Tests pass
 
 ## Rules
 
-- Never write a test just to increase a coverage number.
-- Never mock something to make a test pass that wouldn't pass against the real thing.
-- If the code is well-tested, say so. Not everything has gaps.
-- Do not modify the code under test. You are adding tests, not refactoring.
+- Focus on the smallest set of tests that meaningfully improves confidence.
+- Add coverage for contract and failure-path behavior before edge-case trivia.
+- If the target is unclear and there are no current changes, ask before writing tests.
+- Do not write tests just to raise a number.
+- Do not add tests for trivial code or framework behavior.
+- If the code is already well-tested, say so.

@@ -1,87 +1,45 @@
 ---
 name: spec
-description: "Write a spec: requirements, technical design, and testing strategy. Use when starting new work."
+description: "Write a short implementation spec before coding. Use when starting new work, when requirements are unclear, or when a change needs explicit boundaries."
 user-invocable: true
 argument-hint: "<feature-name> <description> e.g. 'user-auth add OAuth login with Google and GitHub'"
 ---
 
-# Write a Spec
+# Spec
 
-You are a senior engineer writing a spec for an AI coding agent to implement. The spec defines what to build, why, how it fits into the existing system, and how to test it.
+## When to use
 
-## Input
-
-The user provides: $ARGUMENTS
-
-The first argument is the feature name. Everything after it is a description of what to build. If no arguments are provided, ask the user for both.
-
-Write the output to `docs/<feature-name>/spec.md`. Create the directory if it doesn't exist.
+- Starting a new feature or meaningful change
+- Requirements, boundaries, or success criteria are unclear
+- The change touches multiple files, components, or interfaces
 
 ## Process
 
-**Before writing**, read the codebase to understand existing patterns, conventions, and architecture. The spec should fit into the project as it exists — not describe a greenfield system.
+1. Use the first argument as the feature name and everything after it as the request.
+2. Read the codebase first so the spec fits the project as it exists.
+3. If important details are ambiguous, ask concise clarifying questions. State assumptions explicitly instead of inventing requirements silently.
+4. Write `docs/<feature-name>/spec.md` with:
+   - What
+   - Requirements
+   - Design
+   - Testing Strategy
+   - Out of Scope
+5. Keep it brief. Include error behavior, concrete success conditions, and only the design detail needed to build correctly.
 
-If the description is ambiguous or missing critical details, ask clarifying questions. Group them — don't ask one at a time. Surface your assumptions explicitly:
+## Verification
 
-```
-ASSUMPTIONS:
-1. Auth uses session cookies (based on existing middleware)
-2. The database is PostgreSQL (based on existing schema)
-3. We're adding to the existing API, not creating a new service
-→ Correct me now or I'll proceed with these.
-```
-
-Don't silently fill in ambiguous requirements. The spec's purpose is to surface misunderstandings before code gets written.
-
-Then produce the spec.
-
-## Output Format
-
-Write to `docs/<feature-name>/spec.md`. Use this structure:
-
-```markdown
-# [Feature Name]
-
-## What
-What are we building and why? 2-4 sentences. Include who it's for and what problem it solves.
-
-## Requirements
-
-**Functional:**
-- What the system must do — behaviors, inputs, outputs, error responses
-- Each requirement is testable (pass/fail, not subjective)
-- Include error behavior: what happens on bad input, missing resources, downstream failures?
-- Mark anything uncertain as [TBD] or [ASSUMED]
-
-**Non-functional:**
-- Performance, reliability, deployment constraints
-- Only include what's relevant — not every spec needs NFRs
-
-## Design
-How this fits into the existing system. Cover:
-- Which components are involved (new and existing)
-- How data flows through them
-- Key technical decisions and why
-- Key API contracts or response shapes — enough that code on both sides of an interface is compatible
-
-Include a mermaid diagram if the system has more than 2 components.
-
-## Testing Strategy
-How to verify this works. Cover:
-- What to test (critical paths, edge cases, error handling)
-- What framework and patterns to use (follow existing project conventions)
-- What to mock vs test against real dependencies
-- What NOT to test (framework behavior, trivial code, existing functionality)
-
-## Out of Scope
-What this does NOT include. Be specific.
-```
+- The spec is saved to `docs/<feature-name>/spec.md`
+- Requirements are specific and testable
+- Error behavior is covered where it matters
+- The design matches existing project patterns
+- Assumptions are marked instead of hidden
 
 ## Rules
 
-- Read the existing codebase before writing. The spec should reference real files, real patterns, real conventions — not invent new ones.
-- Keep it short. This is a brief for an agent, not a design document for humans. If a section doesn't help the agent build correctly, cut it.
-- Requirements should be specific enough to verify. "Fast" is not a requirement. "Responds within 500ms" is.
-- Don't forget error behavior. If the spec doesn't say what happens on bad input, the agent will invent it — maybe wrong.
-- If the spec is getting long, the feature is too big — split the feature, not the document.
-- The testing strategy should be specific to this feature. "Write tests" is not a strategy. "Test the auth flow end-to-end with httpx, mock the OAuth provider" is.
+- Make the smallest safe change to the system description that fully solves the problem.
+- Call out interface, schema, config, CLI, or file-format changes explicitly.
+- Include failure paths where they matter instead of leaving them implicit.
+- Do not write a greenfield design if the codebase already has patterns to follow.
+- Skip the spec for tiny, self-contained changes with obvious behavior.
+- If the request is missing a decision that would materially change the build, ask.
+- If the spec starts getting long, split the work instead of expanding the document.

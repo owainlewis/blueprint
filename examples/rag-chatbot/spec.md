@@ -1,72 +1,61 @@
 # RAG Chatbot API
 
 ## What
-A Python API that lets users upload PDF documents, then ask natural language questions and get answers grounded in the uploaded content. Built for developers integrating document Q&A into their applications. Single-user, no auth.
+
+Build a Python API that lets a user upload PDF documents and ask questions answered from those documents. Keep it simple, single-user, and grounded in retrieved content so the API returns a clear "no information" response instead of hallucinating.
 
 ## Requirements
 
-**Functional:**
-- Accept PDF uploads, extract text, chunk it, embed it, and store it
-- Accept chat messages, retrieve relevant chunks via vector similarity, return AI-generated answers with source references
-- List uploaded documents with metadata (name, upload time, chunk count)
-- Delete a document and all associated chunks and embeddings
-- When no relevant chunks exist for a query, return a clear "no information" response — don't hallucinate
-- Non-PDF uploads return 400
-- Requests for non-existent documents return 404
-- OpenAI API failures return 502 with a useful error message
+**Functional**
 
-**Non-functional:**
-- PDF processing completes within 30 seconds for docs under 50 pages
-- Chat responses return within 5 seconds for collections under 1000 chunks
-- Runs locally via Docker Compose with no external dependencies beyond the OpenAI API
-- All API responses follow a consistent JSON structure
+- Upload a PDF, extract text, chunk it, embed it, and store the document with its chunks
+- Ask a question and return an answer plus source references from the most relevant chunks
+- List uploaded documents with basic metadata
+- Delete a document and all associated chunks and embeddings
+- Return `400` for non-PDF uploads, `404` for missing documents, and `502` for upstream OpenAI failures
+
+**Non-functional**
+
+- Run locally with Docker Compose for the API and PostgreSQL
+- Use PostgreSQL with pgvector for embeddings
+- Keep configuration in environment variables
+- Keep API responses JSON and consistent across endpoints
 
 ## Design
 
 ```mermaid
-graph LR
-    Client -->|REST| FastAPI
-    FastAPI -->|SQL + vectors| PostgreSQL[PostgreSQL + pgvector]
-    FastAPI -->|embeddings + chat| OpenAI[OpenAI API]
+flowchart TB
+    Client["Client"] --> API["FastAPI API"]
+    API --> DB["PostgreSQL + pgvector"]
+    API --> OpenAI["OpenAI API"]
 ```
 
-**Stack:** FastAPI, SQLAlchemy async, PostgreSQL + pgvector, OpenAI API, UV for package management.
+- Use FastAPI for the HTTP layer, PostgreSQL + pgvector for storage and retrieval, and the OpenAI API for embeddings and answer generation.
+- Keep chunking simple: fixed-size chunks with overlap are enough for this version.
+- Store documents and chunks so listing, deletion, retrieval, and source references all work without extra services.
+- Return source references with chat responses so callers can see what grounded the answer.
 
-**Key decisions:**
-- **pgvector over dedicated vector DB** — one database for relational data and vectors. Sufficient at this scale. Avoids external dependency.
-- **Fixed-size chunking** — ~500 tokens with ~50 token overlap. Simple and predictable.
-- **text-embedding-3-small** — 1536 dimensions. Good balance of quality and cost.
-- **5 chunks per query** — default retrieval count. Enough context without exceeding limits.
+**API shapes**
 
-**Components:**
-- **API Layer** — REST endpoints under `/api/v1/`. Takes uploads, serves queries, returns JSON.
-- **Ingestion Service** — Takes an uploaded file, extracts text, chunks, embeds, stores. Caller can depend on: document is persisted with all chunks and embeddings before return.
-- **Retrieval Service** — Takes a query string, returns ranked chunks. Each chunk has: content, document_id, similarity score. Sorted by relevance descending.
-- **Chat Service** — Takes a message and retrieved chunks, returns an answer with source references. When given no chunks, returns a "no information" response.
-
-**Key API response shapes:**
-
-```
-POST /api/v1/documents → {id, filename, chunk_count}
-GET  /api/v1/documents → [{id, filename, uploaded_at, chunk_count}]
-POST /api/v1/chat      → {answer, sources: [{content, document_id}]}
+```text
+POST /api/v1/documents -> {id, filename, chunk_count}
+GET  /api/v1/documents -> [{id, filename, uploaded_at, chunk_count}]
+POST /api/v1/chat      -> {answer, sources: [{content, document_id}]}
+DELETE /api/v1/documents/{id} -> {deleted: true}
 ```
 
 ## Testing Strategy
-- **Framework:** pytest with httpx AsyncClient for endpoint testing
-- **Test against real dependencies:** Use a test PostgreSQL container with pgvector for database tests. Vector similarity queries must hit real pgvector, not mocks.
-- **Mock external APIs:** Mock OpenAI embeddings and chat completion calls — return deterministic vectors and responses so tests are fast and reproducible.
-- **What to test:**
-  - Upload → chunk → embed → store pipeline (verify chunks and embeddings are persisted)
-  - Chat flow with relevant chunks (verify answer includes source references)
-  - Chat flow with no relevant chunks (verify "no information" response)
-  - Document deletion cascades (verify chunks are removed)
-  - Error cases: non-PDF upload (400), missing document (404), OpenAI failure (502)
-- **What NOT to test:** FastAPI framework routing, SQLAlchemy query building, PDF parsing library internals
+
+- Use `pytest` with `httpx` for endpoint tests
+- Test database behavior against a real PostgreSQL + pgvector instance
+- Mock OpenAI calls so tests are deterministic and fast
+- Cover the main flows: upload, list, delete, chat with relevant chunks, chat with no relevant chunks, and the expected error cases
+- Do not spend time testing framework internals or third-party library behavior
 
 ## Out of Scope
-- Authentication and authorization
-- Multi-user or multi-tenant support
+
+- Authentication or multi-user behavior
 - Conversation history or multi-turn chat
 - Non-PDF document formats
-- Cloud deployment (Docker Compose only)
+- Fancy chunking or retrieval tuning
+- Cloud deployment beyond local Docker Compose

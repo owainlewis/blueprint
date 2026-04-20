@@ -1,42 +1,36 @@
 ---
 name: commit
-description: "Stage and commit changes with a well-crafted commit message. Use when you're ready to commit your current work."
+description: "Stage and commit the intended changes with a clear message."
 user-invocable: true
 argument-hint: "[optional: commit message override]"
 ---
 
-# Git Commit
+# Commit
 
-Create a clean, well-structured git commit for the current changes.
+## When to use
+
+- The current work is ready to record in git
+- The diff is understood and intentionally scoped
 
 ## Process
 
-1. Run `git status` to see what has changed (staged and unstaged).
-2. Run `git diff` and `git diff --cached` to understand the actual changes.
-3. Run `git log --oneline -10` to understand the commit message style of the repo.
+1. Inspect `git status`, `git diff`, and `git diff --cached`.
+2. Read recent commit messages so the new commit fits the repo.
+3. If there is nothing worth committing, stop.
+4. Stage only the intended files. Never stage secrets.
+5. Use the user's message if provided. Otherwise write a Conventional Commit message.
+6. Create the commit and report the hash and message.
 
-If there are no changes to commit, tell the user and stop.
+## Verification
 
-4. Stage the relevant files. Prefer staging specific files over `git add -A`. Never stage files that look like secrets (`.env`, credentials, keys).
+- The staged changes match the intended scope
+- The commit exists
+- `git status` confirms the expected result
 
-5. If the user provided a message via `$ARGUMENTS`, use that as the commit message.
+## Rules
 
-   Otherwise, write a commit message following **Conventional Commits** format:
-
-   ```
-   type(scope): short description
-
-   Optional body explaining why, not what.
-   ```
-
-   Types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `ci`, `perf`, `style`, `build`
-
-   Rules:
-   - Subject line under 72 characters
-   - Use imperative mood ("add feature" not "added feature")
-   - The body should explain **why** the change was made, not repeat the diff
-   - Do not include "Co-Authored-By" lines
-
-6. Create the commit.
-7. Run `git status` to confirm success.
-8. Print the commit hash and message.
+- If the change breaks a contract or requires migration, note it clearly in the commit message body.
+- If there is nothing to commit or the diff is not understood, stop.
+- Prefer staging specific files over broad adds.
+- Do not commit `.env`, credentials, or keys.
+- Keep the subject line short and in imperative mood.

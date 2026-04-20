@@ -10,7 +10,7 @@ The skills are short, focused, and opinionated. They give the agent clear goals 
 
 Blueprint is agent-agnostic. The same skills can be used from Claude Code, Codex, Cursor, OpenCode, and other agents that support local skills.
 
-10 skills. You can read the entire framework in 15 minutes.
+9 skills. You can read the entire framework in 15 minutes.
 
 ## The Flow
 
@@ -79,12 +79,6 @@ Blueprint itself is just the skill content.
 
 ## Skills
 
-### Scaffolding
-
-| Skill | What it does | Example |
-|-------|-------------|---------|
-| **bootstrap** | Scaffold a new project from minimal, opinionated defaults: uv for Python, bun + Next.js for TypeScript, PostgreSQL, `app/` structure. Always pins the latest stable versions. | `Bootstrap a new Python service called my-service` |
-
 ### Planning
 
 Specs and plans are written to `docs/<feature>/` — one directory per feature, no collisions.
@@ -125,6 +119,8 @@ Use **build** for most work. Use **tdd** when you want test-first discipline —
 **Specs are for agents.** Your design thinking happens in Confluence, on whiteboards, in conversations. What lands in markdown is the minimum an agent needs to build correctly.
 
 **Simplicity scales.** Short, focused skills that trust the model outperform heavy frameworks full of guardrails. One focused review catches more real bugs than 16 agents generating noise.
+
+**Small safe changes win.** Preserve contracts, handle failure paths explicitly, and prefer the smallest change that fully solves the problem.
 
 **Core SDLC only.** Blueprint encodes the development lifecycle — planning, building, testing, reviewing, shipping. Integrations with specific tools (Linear, Jira, Slack) are a separate concern and belong in separate plugins.
 

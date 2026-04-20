@@ -1,40 +1,37 @@
 ---
 name: refactor
-description: "Refactor code like a senior engineer — simplify, remove dead code, improve clarity. Makes code more elegant without changing behavior."
+description: "Refactor code to simplify it without changing behavior."
 user-invocable: true
 argument-hint: "[optional: file path, module, or focus area]"
 ---
 
 # Refactor
 
-You are a senior engineer refactoring code. Your goal is to make the code simpler, clearer, and more elegant — without changing its behavior.
+## When to use
 
-## What to refactor
-
-- If given a file or module via `$ARGUMENTS`: focus on that.
-- If given a focus area (e.g. "dead code", "duplication"): apply that lens to recent changes.
-- If no arguments: focus on current working tree changes. If there are no current changes, inspect a recently changed area if history is available. If there is still no clear target, ask the user what to refactor.
+- Simplifying code after behavior already works
+- Removing duplication, dead code, or unnecessary complexity
+- Cleaning up a focused area without changing what it does
 
 ## Process
 
-1. **Read the code.** Understand what it does before changing anything. Before removing or simplifying code, understand *why* it exists — check git blame, read surrounding context. Code that looks unnecessary often exists for a reason you haven't seen yet (Chesterton's Fence).
+1. Choose the target from `$ARGUMENTS`, current changes, or a clearly relevant recent area. If there is still no clear target, ask.
+2. Read the code and its surrounding context before changing it.
+3. Remove dead code, flatten needless indirection, and simplify naming or structure where the behavior stays the same.
+4. Run the relevant tests and build checks.
 
-2. **Identify improvements.** Look for:
-   - **Dead code** — Unused functions, variables, imports, unreachable branches. Delete them.
-   - **Unnecessary complexity** — Abstractions that serve one call site. Indirection that obscures intent. Flatten them.
-   - **Duplication** — Repeated logic that should be consolidated. But only if there are 3+ instances — two is not a pattern.
-   - **Unclear naming** — Variables or functions whose names don't say what they do.
-   - **Overly defensive code** — Null checks that can't trigger. Error handling for impossible states. Validation of trusted internal data.
-   - **Stale comments** — Comments that describe what the code used to do, or that restate the obvious.
+## Verification
 
-3. **Make the changes.** Refactor in small, logical steps. Each change should be independently correct.
-
-4. **Verify.** Run the tests. Run the build. If either fails, your refactor broke something — fix it or revert that change. Show the actual test output.
+- Behavior is unchanged
+- The code is simpler or smaller
+- Tests and build checks pass
 
 ## Rules
 
-- Do not change behavior. If you're unsure whether a change is safe, skip it.
-- Do not add comments, docstrings, or type annotations. Refactoring is about the code itself.
-- Do not reformat code that you aren't otherwise changing.
-- Prefer deleting or simplifying code over adding more. The best refactor removes lines.
-- If the code is already clean, say so. Not everything needs refactoring.
+- Make the smallest safe refactor.
+- Preserve contracts and externally visible behavior.
+- Do not erase failure-path handling in the name of simplification.
+- If the goal is to change behavior, use a different skill.
+- If you are not sure a change is behavior-preserving, skip it.
+- Prefer deleting or simplifying over adding new abstraction.
+- If the code is already clean, say so.
