@@ -21,18 +21,20 @@ Before running any scaffolder, check the latest stable version of the tool or fr
 
 ## Process
 
-1. Ask at most three questions, grouped:
+1. Check prerequisites. `just` is required for every scaffolded project. Run `command -v just`. If missing, install it before scaffolding (`brew install just` on macOS; see https://github.com/casey/just#installation otherwise).
+
+2. Ask at most three questions, grouped:
    - What are we building? (CLI, service, library, web app)
    - What's the project name?
    - Any deviations from the defaults?
 
-2. Check the latest versions of the tools you're about to use.
+3. Check the latest versions of the tools you're about to use.
 
-3. Scaffold the project using the templates below.
+4. Scaffold the project using the templates below.
 
-4. First commit: `git init && git commit -m "chore: initial scaffold"`.
+5. First commit: `git init && git commit -m "chore: initial scaffold"`.
 
-5. Stop. Do not write features. Do not add example code.
+6. Stop. Do not write features. Do not add example code.
 
 ## Templates
 
@@ -89,8 +91,8 @@ just test
 
 ## Development workflow
 1. Make changes
-2. Run tests: `just test`
-3. Run the app: `just dev`
+2. Review your work and fix any issues you find
+3. Run tests to confirm nothing is broken
 
 ## Architecture
 (Where things live. Key decisions. Grows over time.)
@@ -101,31 +103,7 @@ just test
 
 ### `LICENSE`
 
-Default to MIT. Use `git config user.name` for the copyright holder and the current year.
-
-````
-MIT License
-
-Copyright (c) <year> <full name>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is furnished
-to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-````
+Add an MIT license. Use `git config user.name` for the copyright holder and the current year.
 
 ### Also included
 
