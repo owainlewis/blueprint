@@ -6,7 +6,6 @@ set -euo pipefail
 
 BUMP="${1:-patch}"
 PLUGIN=".claude-plugin/plugin.json"
-MARKETPLACE=".claude-plugin/marketplace.json"
 
 # Read current version from plugin.json
 CURRENT=$(grep '"version"' "$PLUGIN" | head -1 | sed 's/[^0-9.]//g')
@@ -29,11 +28,11 @@ NEW="${MAJOR}.${MINOR}.${PATCH}"
 
 echo "Bumping version: ${CURRENT} → ${NEW}"
 
-# Update all version fields in both files
-sed -i '' "s/\"version\": \"${CURRENT}\"/\"version\": \"${NEW}\"/g" "$PLUGIN" "$MARKETPLACE"
+# Update the plugin version
+sed -i '' "s/\"version\": \"${CURRENT}\"/\"version\": \"${NEW}\"/g" "$PLUGIN"
 
 # Commit and tag
-git add "$PLUGIN" "$MARKETPLACE"
+git add "$PLUGIN"
 git commit -m "release: v${NEW}"
 git tag "v${NEW}"
 git push && git push --tags

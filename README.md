@@ -1,42 +1,45 @@
 # Blueprint
 
-> The software development lifecycle, encoded as skills for AI coding agents.
+> A collection of agent skills for running the software development lifecycle.
 
 ## Why Blueprint
 
-Good software follows a process: understand what to build (requirements, technical design), plan the work, build it in small pieces, test it, review it, ship it. Blueprint encodes that process as skills an AI agent can execute.
+Good software follows a process: understand what to build, plan the work, build it in small pieces, test it, review it, and ship it. Blueprint encodes that process as a small set of reusable agent skills.
 
 The skills are short, focused, and opinionated. They give the agent clear goals and get out of the way. As models get more capable, that approach gets better — not worse.
+
+Blueprint is agent-agnostic. The same skills can be used from Claude Code, Codex, Cursor, OpenCode, and other agents that support local skills.
 
 10 skills. You can read the entire framework in 15 minutes.
 
 ## The Flow
 
+```mermaid
+flowchart LR
+    Brief["Idea / Brief"] --> Spec["Spec"]
+    Spec --> Plan["Plan"]
+    Plan --> Build["Build"]
+    Build --> Review["Review"]
+    Review --> Commit["Commit"]
+    Commit --> Ship["Ship"]
 ```
-    Spec ──▶ Plan ──▶ Build ──▶ Review ──▶ Commit
 
-    For each task in the plan:
-    ┌───────┐   ┌──────┐   ┌────────┐   ┌────────┐
-    │ Build ├──▶│ Test ├──▶│ Review ├──▶│ Commit │
-    └───────┘   └──────┘   └────────┘   └────────┘
+For each task in the plan:
+
+```mermaid
+flowchart LR
+    Task["Planned Task"] --> Build["Build"]
+    Build --> Test["Test"]
+    Test --> Review["Review"]
+    Review --> Commit["Commit"]
 ```
 
 ```text
-Claude Code:
-/blueprint:spec user-auth add OAuth login with Google and GitHub
-/blueprint:plan user-auth
-/blueprint:build Task 1 from user-auth
-/blueprint:review
-/blueprint:commit
-```
-
-```text
-Codex:
-Use the `spec` skill from Blueprint to write a spec for `user-auth` adding OAuth login with Google and GitHub.
-Use the `plan` skill from Blueprint for `user-auth`.
-Use the `build` skill from Blueprint to implement Task 1 from `user-auth`.
-Review the current changes with the Blueprint `review` skill.
-Commit the current changes with the Blueprint `commit` skill.
+Write a spec for user-auth adding OAuth login with Google and GitHub.
+Create a plan for user-auth.
+Implement Task 1 from user-auth.
+Review the current changes.
+Commit the current changes.
 ```
 
 ## Writing Specs for Agents
@@ -51,57 +54,21 @@ Keep specs short. If a spec is getting long, the feature is too big — split th
 
 ## Install
 
-Blueprint works with Claude Code, Codex, Cursor, OpenCode, and [40+ other agents](https://github.com/vercel-labs/skills).
-
-### Shared Project Install
-
-If you want the skills committed to the repo and available to agents that use the shared project-level `.agents/skills/` convention, install them at project scope instead of globally:
+The simplest setup is to keep Blueprint in your repo's `.agents/skills/` directory so the skills can be shared across agents that support the common project-level skills convention.
 
 ```bash
 npx skills add owainlewis/blueprint -a codex
 ```
 
-For Codex, this installs into `.agents/skills/` in the current repo.
+You can also copy the folders from [`skills/`](skills/) into your shared skills directory manually.
 
-This is a good default when you want one checked-in skill setup for a team using multiple agents. It works for many agents, including Codex, Cursor, OpenCode, Cline, and others, but not literally every agent.
+How you invoke a skill depends on the agent:
 
-### Codex
+- Some agents expose slash commands
+- Some expose a skill picker
+- Some work best when you ask for a skill by name in natural language
 
-```bash
-npx skills add owainlewis/blueprint -a codex -g
-```
-
-This installs the skills into `~/.codex/skills/`.
-
-Codex does **not** expose skills as slash commands. That is expected behavior, not a bug.
-
-Use the skill by naming it in your prompt:
-
-```text
-Use the `spec` skill from Blueprint to write a spec for `user-auth` adding OAuth login.
-Use the Blueprint `plan` skill for `user-auth`.
-Use the Blueprint `review` skill on the current diff.
-```
-
-Depending on the client, you may need to restart Codex after installing new skills.
-
-### Claude Code
-
-```bash
-npx skills add owainlewis/blueprint -a claude-code -g
-```
-
-<details>
-<summary>Claude Code plugin marketplace</summary>
-
-```
-/plugin marketplace add owainlewis/blueprint
-/plugin install blueprint@owainlewis-blueprint
-```
-
-Skills are namespaced as `/blueprint:spec`, `/blueprint:plan`, etc.
-
-</details>
+Blueprint itself is just the skill content.
 
 ## Skills
 
@@ -109,7 +76,7 @@ Skills are namespaced as `/blueprint:spec`, `/blueprint:plan`, etc.
 
 | Skill | What it does | Example |
 |-------|-------------|---------|
-| **bootstrap** | Scaffold a new project from minimal, opinionated defaults: uv for Python, bun + Next.js for TypeScript, PostgreSQL, `app/` structure. Always pins the latest stable versions. | `/blueprint:bootstrap python my-service` |
+| **bootstrap** | Scaffold a new project from minimal, opinionated defaults: uv for Python, bun + Next.js for TypeScript, PostgreSQL, `app/` structure. Always pins the latest stable versions. | `Bootstrap a new Python service called my-service` |
 
 ### Planning
 
@@ -117,15 +84,15 @@ Specs and plans are written to `docs/<feature>/` — one directory per feature, 
 
 | Skill | What it does | Example |
 |-------|-------------|---------|
-| **spec** | Write a spec: requirements, technical design, and testing strategy | `/blueprint:spec user-auth add OAuth login` |
-| **plan** | Break a spec into tasks you can give to an AI coding agent to implement | `/blueprint:plan user-auth` |
+| **spec** | Write a spec: requirements, technical design, and testing strategy | `Write a spec for user-auth adding OAuth login` |
+| **plan** | Break a spec into tasks you can give to an AI coding agent to implement | `Create a plan for user-auth` |
 
 ### Building
 
 | Skill | What it does | Example |
 |-------|-------------|---------|
-| **build** | Execute a task — write code, write tests if relevant, verify it works | `/blueprint:build Task 2 from user-auth` |
-| **tdd** | Build test-first: failing tests, then implementation, then simplify | `/blueprint:tdd "retry logic for API client"` |
+| **build** | Execute a task — write code, write tests if relevant, verify it works | `Implement Task 2 from user-auth` |
+| **tdd** | Build test-first: failing tests, then implementation, then simplify | `Use TDD for retry logic in the API client` |
 
 Use **build** for most work. Use **tdd** when you want test-first discipline — the agent must write failing tests before any implementation code.
 
@@ -133,16 +100,16 @@ Use **build** for most work. Use **tdd** when you want test-first discipline —
 
 | Skill | What it does | Example |
 |-------|-------------|---------|
-| **review** | Code review — correctness, security, simplicity, robustness | `/blueprint:review` |
-| **refactor** | Simplify code without changing behavior | `/blueprint:refactor src/api/routes.py` |
-| **coverage** | Fill test gaps with tests that catch realistic bugs | `/blueprint:coverage src/auth/` |
-| **debug** | Systematic root-cause debugging: observe, hypothesize, test, fix | `/blueprint:debug "API returns 500 on POST"` |
+| **review** | Code review — correctness, security, simplicity, robustness | `Review the current diff` |
+| **refactor** | Simplify code without changing behavior | `Refactor src/api/routes.py` |
+| **coverage** | Fill test gaps with tests that catch realistic bugs | `Add high-value tests for src/auth/` |
+| **debug** | Systematic root-cause debugging: observe, hypothesize, test, fix | `Debug the API returning 500 on POST` |
 
 ### Git
 
 | Skill | What it does | Example |
 |-------|-------------|---------|
-| **commit** | Stage and commit with a conventional commit message | `/blueprint:commit` |
+| **commit** | Stage and commit with a conventional commit message | `Commit the current changes` |
 
 ## Philosophy
 
@@ -178,9 +145,9 @@ npx skills update
 
 ## Local Development
 
-```bash
-claude --plugin-dir /path/to/blueprint
-```
+Edit the skill files in [`skills/`](skills/).
+
+To test locally, install this repo into `.agents/skills/` or your agent's local skills directory and invoke the skills through that agent.
 
 ## Learn More
 
