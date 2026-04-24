@@ -4,6 +4,10 @@
 
 Build a Python API that lets a user upload PDF documents and ask questions answered from those documents. Keep it simple, single-user, and grounded in retrieved content so the API returns a clear "no information" response instead of hallucinating.
 
+## Context
+
+Greenfield FastAPI service using PostgreSQL with pgvector and the OpenAI API. The first version has no auth, no conversation history, and no non-PDF formats. Docker Compose is part of the local development surface.
+
 ## Requirements
 
 **Functional**
@@ -51,6 +55,27 @@ Important defaults:
 
 - `POST /api/v1/chat` with no relevant matches returns `{"answer":"No relevant information found in uploaded documents.","sources":[]}`
 - Error codes use `bad_request`, `not_found`, and `upstream_error`
+
+## Decisions
+
+- Storage: use PostgreSQL with pgvector, because document metadata and vector search can stay in one database.
+- Chunking: use fixed-size chunks of about 500 tokens with about 50 tokens of overlap, because simple predictable chunking is enough for V1.
+- Retrieval: use top 5 chunks per chat request, because it keeps prompts small while giving the answer generator enough context.
+- OpenAI calls in tests: mock them, because integration tests should not depend on external network calls or model variance.
+- No relevant chunks: return the fixed "No relevant information found in uploaded documents." response, because hallucination is worse than an explicit miss.
+
+## Invariants
+
+- Deleting a document also deletes its chunks and embeddings, verified by listing documents and ensuring deleted chunks cannot be retrieved.
+- API errors use `{error: {code, message}}`, verified by endpoint tests for `400`, `404`, and `502`.
+- Chat answers include source references from stored chunks, verified by a chat test against `tests/fixtures/test.pdf`.
+
+## Error Behavior
+
+- Non-PDF upload returns `400` with `bad_request`.
+- Missing document deletion returns `404` with `not_found`.
+- OpenAI embedding or chat failures return `502` with `upstream_error`.
+- No relevant chunks returns `200` with the fixed no-information answer and an empty `sources` array.
 
 ## Testing Strategy
 

@@ -1,6 +1,6 @@
 {
   "name": "blueprint",
-  "description": "Spec-driven development workflow. Generate requirements, architecture docs, implementation plans, and manage git workflow with conventional naming.",
+  "description": "Pragmatic agent workflow for shaping tasks, writing specs when decisions matter, compressing context, building, reviewing, and committing software changes.",
   "version": "0.2.0",
   "author": {
     "name": "Owain Lewis"
