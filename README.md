@@ -1,16 +1,16 @@
 # Blueprint
 
-> A collection of agent skills for starting projects and running the software development lifecycle.
+> A collection of agent skills for running the software development lifecycle with AI coding agents.
 
 ## Why Blueprint
 
-Good software follows a process: start from solid defaults, understand what to build, plan the work, build it in small pieces, test it, review it, and ship it. Blueprint encodes that process as a small set of reusable agent skills.
+Good software follows a process: understand what to build, plan the work, build it in small pieces, test it, review it, and ship it. Blueprint encodes that process as a small set of reusable agent skills.
 
 The skills are short, focused, and opinionated. They give the agent clear instructions and get out of the way. As models get more capable, that approach gets better, not worse.
 
 Blueprint is agent-agnostic. The same skills can be used from Claude Code, Codex, Cursor, OpenCode, and other agents that support local skills.
 
-11 skills. You can read the entire framework in 15 minutes.
+10 skills. You can read the entire framework in 15 minutes.
 
 ## The Flow
 
@@ -84,12 +84,6 @@ How you invoke a skill depends on the agent:
 Blueprint itself is just the skill content.
 
 ## Skills
-
-### Setup
-
-| Skill | What it does | Example |
-|-------|-------------|---------|
-| **init** | Scaffold a new repo from your standards instead of inventing setup decisions from scratch | `Initialize a new Python service for support inbox triage` |
 
 ### Planning
 
