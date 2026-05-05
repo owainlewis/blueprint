@@ -33,10 +33,15 @@ Use this skill when the user explicitly asks for a spec.
 
 ### 2. Write
 
-- For a short spec, return one concise implementation instruction in chat.
+- For a short spec, write a concise spec in chat instead of creating a file.
 - For a full spec, write `docs/<feature-slug>/spec.md`.
 - Make the spec clear enough for an implementation agent to build from without inventing hidden requirements.
 - Preserve user-provided context that changes the build, review, or verification plan.
+- For a short spec, include:
+  - What
+  - Why
+  - How
+  - Verify
 - For a full spec, include:
   - What
   - Context
@@ -70,6 +75,7 @@ Use this skill when the user explicitly asks for a spec.
 ## Rules
 
 - Make the smallest safe change to the system description that fully solves the problem.
+- A short spec is still a spec. Do not replace it with a bare implementation instruction.
 - Ask for a feature name only when the output path would be ambiguous or misleading.
 - If two reasonable implementations would behave differently, specify the default.
 - Call out interface, schema, config, CLI, or file-format changes explicitly.
