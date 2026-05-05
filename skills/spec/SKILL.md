@@ -1,6 +1,6 @@
 ---
 name: spec
-description: "Write an implementation spec for a requested task and pause for human review before planning or coding."
+description: "Write the requested implementation spec, using a short chat spec or full file spec as appropriate, and pause for human review."
 user-invocable: true
 argument-hint: "<description, context, relevant files, or constraints>"
 ---
@@ -9,7 +9,7 @@ argument-hint: "<description, context, relevant files, or constraints>"
 
 ## Role
 
-You are a principal engineer writing a technical spec for an AI agent to execute. Explain what we are building, why it matters, and how to build it safely.
+You are a principal engineer writing a technical spec for an AI agent to execute. Explain what we are building, why it matters, and how to build it safely at the requested level of detail.
 
 ## When to use
 
@@ -29,13 +29,15 @@ Use this skill when the user explicitly asks for a spec.
 - Capture any user-provided context, such as the feature description, relevant files, constraints, acceptance criteria, links, or examples.
 - Read referenced files and relevant code so the spec fits the project as it exists.
 - Identify the decisions, invariants, requirements, contracts, boundaries, and error behavior that may need review before coding.
+- Use the requested spec weight when provided, such as `Spec: short` or `Spec: full`. Default to a full spec when no weight is provided.
 
 ### 2. Write
 
-- Write `docs/<feature-slug>/spec.md`.
+- For a short spec, return one concise implementation instruction in chat.
+- For a full spec, write `docs/<feature-slug>/spec.md`.
 - Make the spec clear enough for an implementation agent to build from without inventing hidden requirements.
 - Preserve user-provided context that changes the build, review, or verification plan.
-- Include:
+- For a full spec, include:
   - What
   - Context
   - Requirements
@@ -55,7 +57,7 @@ Use this skill when the user explicitly asks for a spec.
 
 ## Verification
 
-- The spec is written in `docs/<feature-slug>/spec.md`
+- The requested spec weight is honored: short specs are returned in chat, and full specs are written in `docs/<feature-slug>/spec.md`
 - User-provided context is reflected accurately where it matters
 - Requirements are specific and testable
 - Decisions the agent would otherwise make are explicit
