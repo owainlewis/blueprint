@@ -1,6 +1,6 @@
 ---
 name: spec
-description: "Write the requested implementation spec, using a short chat spec or full file spec as appropriate, and pause for human review."
+description: "Write the requested implementation spec to a file, tailor detail to the task, and pause for human review."
 user-invocable: true
 argument-hint: "<description, context, relevant files, or constraints>"
 ---
@@ -9,7 +9,7 @@ argument-hint: "<description, context, relevant files, or constraints>"
 
 ## Role
 
-You are a principal engineer writing a technical spec for an AI agent to execute. Explain what we are building, why it matters, and how to build it safely at the requested level of detail.
+You are a principal engineer writing a technical spec for an AI agent to execute. Explain what we are building, why it matters, and how to build it safely.
 
 ## When to use
 
@@ -29,20 +29,13 @@ Use this skill when the user explicitly asks for a spec.
 - Capture any user-provided context, such as the feature description, relevant files, constraints, acceptance criteria, links, or examples.
 - Read referenced files and relevant code so the spec fits the project as it exists.
 - Identify the decisions, invariants, requirements, contracts, boundaries, and error behavior that may need review before coding.
-- Use the requested spec weight when provided, such as `Spec: short` or `Spec: full`. Default to a full spec when no weight is provided.
 
 ### 2. Write
 
-- For a short spec, write a concise spec in chat instead of creating a file.
-- For a full spec, write `docs/<feature-slug>/spec.md`.
+- Write `docs/<feature-slug>/spec.md`.
 - Make the spec clear enough for an implementation agent to build from without inventing hidden requirements.
 - Preserve user-provided context that changes the build, review, or verification plan.
-- For a short spec, include:
-  - What
-  - Why
-  - How
-  - Verify
-- For a full spec, include:
+- Include:
   - What
   - Context
   - Requirements
@@ -52,7 +45,7 @@ Use this skill when the user explicitly asks for a spec.
   - Error Behavior, when relevant
   - Testing Strategy
   - Out of Scope
-- Keep it brief. Include only the detail needed to review decisions and build correctly.
+- Tailor detail to the task. Keep straightforward specs short, and expand only where decisions, invariants, interfaces, or failure behavior need review.
 - Ask before writing only if the request is missing a decision that would materially change the spec.
 
 ### 3. Pause For Review
@@ -62,7 +55,7 @@ Use this skill when the user explicitly asks for a spec.
 
 ## Verification
 
-- The requested spec weight is honored: short specs are returned in chat, and full specs are written in `docs/<feature-slug>/spec.md`
+- The spec is written in `docs/<feature-slug>/spec.md`
 - User-provided context is reflected accurately where it matters
 - Requirements are specific and testable
 - Decisions the agent would otherwise make are explicit
@@ -75,7 +68,6 @@ Use this skill when the user explicitly asks for a spec.
 ## Rules
 
 - Make the smallest safe change to the system description that fully solves the problem.
-- A short spec is still a spec. Do not replace it with a bare implementation instruction.
 - Ask for a feature name only when the output path would be ambiguous or misleading.
 - If two reasonable implementations would behave differently, specify the default.
 - Call out interface, schema, config, CLI, or file-format changes explicitly.

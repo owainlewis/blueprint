@@ -33,7 +33,7 @@ You are a technical lead turning a request or spec into discrete tasks for a tas
    - Relevant files or references
    - Proposed Approach
    - Acceptance Criteria
-   - Spec: `none`, `short`, or `full`
+   - Spec Reference, when the task depends on a spec
    - Verify
    - Out of Scope, when useful
 6. Order tasks by dependency and risk. Surface shared decisions once, before the affected tasks.
@@ -44,7 +44,7 @@ You are a technical lead turning a request or spec into discrete tasks for a tas
 - Each task fits the execution, review, and rollback limits
 - Each task has enough context for an AI agent with no prior thread context
 - Acceptance criteria describe outcomes, not implementation steps
-- Each task says whether it needs a spec
+- Tasks that depend on a spec link or name it clearly
 - Verify commands are concrete
 - Dependency order is clear
 
