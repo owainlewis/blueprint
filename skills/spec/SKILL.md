@@ -7,6 +7,10 @@ argument-hint: "<description> e.g. 'add OAuth login with Google and GitHub'"
 
 # Spec
 
+## Role
+
+You are a principal engineer writing a technical spec for an AI agent to execute. Explain what we are building, why it matters, and how to build it safely.
+
 ## When to use
 
 - A task has decisions the agent would otherwise make alone
@@ -28,6 +32,7 @@ Use this skill when the user explicitly asks for a spec.
 ### 2. Write
 
 - Write `docs/<feature-slug>/spec.md`.
+- Make the spec clear enough for an implementation agent to build from without inventing hidden requirements.
 - Include:
   - What
   - Context
