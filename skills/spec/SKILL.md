@@ -2,7 +2,7 @@
 name: spec
 description: "Write an implementation spec for a requested task and pause for human review before planning or coding."
 user-invocable: true
-argument-hint: "<description> e.g. 'add OAuth login with Google and GitHub'"
+argument-hint: "<description, context, relevant files, or constraints>"
 ---
 
 # Spec
@@ -26,13 +26,15 @@ Use this skill when the user explicitly asks for a spec.
 
 - Treat the full argument as the request unless the user clearly provides a feature name.
 - Use the provided feature name when clear. Otherwise, derive a short kebab-case feature slug from the request.
-- Read the task and relevant code first so any spec fits the project as it exists.
+- Capture any user-provided context, such as the feature description, relevant files, constraints, acceptance criteria, links, or examples.
+- Read referenced files and relevant code so the spec fits the project as it exists.
 - Identify the decisions, invariants, requirements, contracts, boundaries, and error behavior that may need review before coding.
 
 ### 2. Write
 
 - Write `docs/<feature-slug>/spec.md`.
 - Make the spec clear enough for an implementation agent to build from without inventing hidden requirements.
+- Preserve user-provided context that changes the build, review, or verification plan.
 - Include:
   - What
   - Context
@@ -54,6 +56,7 @@ Use this skill when the user explicitly asks for a spec.
 ## Verification
 
 - The spec is written in `docs/<feature-slug>/spec.md`
+- User-provided context is reflected accurately where it matters
 - Requirements are specific and testable
 - Decisions the agent would otherwise make are explicit
 - Invariants say what must not break and how to check it
