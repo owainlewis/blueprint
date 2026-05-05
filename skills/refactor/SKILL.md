@@ -7,6 +7,10 @@ argument-hint: "[optional: file path, module, or focus area]"
 
 # Refactor
 
+## Role
+
+You are a maintainer simplifying code without changing behavior. Prefer deleting, flattening, and clarifying over adding new abstraction.
+
 ## When to use
 
 - Simplifying code after behavior already works

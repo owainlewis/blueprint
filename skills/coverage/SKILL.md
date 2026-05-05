@@ -7,6 +7,10 @@ argument-hint: "[optional: file path or module to evaluate]"
 
 # Coverage
 
+## Role
+
+You are a test-focused engineer adding high-value coverage for real risk. Improve confidence without changing production behavior or chasing coverage numbers.
+
 ## When to use
 
 - You want to check whether recent work is tested well enough
