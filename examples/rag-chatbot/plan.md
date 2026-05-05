@@ -39,9 +39,9 @@ Set up FastAPI, Docker Compose with PostgreSQL and pgvector, environment-based s
 - A health endpoint confirms the app can reach the database.
 - Configuration comes from environment variables.
 
-**Spec**
+**Spec Reference**
 
-short. The shared spec has the stack decisions; this task only needs the concrete health endpoint and config names.
+`docs/rag-chatbot/spec.md` covers the stack, Docker Compose surface, environment configuration, and consistent API error shape.
 
 **Verify**
 
@@ -78,9 +78,9 @@ Add document and chunk tables, a PDF text extraction path, fixed-size chunking, 
 - The response includes document ID, filename, and chunk count.
 - A fixture exists at `tests/fixtures/test.pdf` containing `Blueprint uses PostgreSQL with pgvector for embeddings.`
 
-**Spec**
+**Spec Reference**
 
-full. This task owns schema, chunking, embedding, upload validation, and upstream error behavior.
+`docs/rag-chatbot/spec.md` covers document storage, chunking defaults, embedding behavior, upload validation, and upstream OpenAI error behavior.
 
 **Verify**
 
@@ -110,9 +110,9 @@ Add `GET /api/v1/documents` and `DELETE /api/v1/documents/{id}`. Use database co
 - `DELETE /api/v1/documents/{id}` removes the document and its related chunks.
 - Deleting a missing document returns `404`.
 
-**Spec**
+**Spec Reference**
 
-short. The main invariant is cascade deletion; the API shapes are already in the project spec.
+`docs/rag-chatbot/spec.md` defines the document listing/deletion API shapes and the invariant that deleting a document also removes its chunks and embeddings.
 
 **Verify**
 
@@ -149,9 +149,9 @@ Add `POST /api/v1/chat`, embed the incoming message, retrieve the top 5 chunks b
 - If nothing relevant is found, the response says there is no information and returns no sources.
 - OpenAI failures return `502`.
 
-**Spec**
+**Spec Reference**
 
-full. This task owns retrieval threshold behavior, source shape, prompt construction, and upstream failure behavior.
+`docs/rag-chatbot/spec.md` covers retrieval defaults, chat response shape, source references, no-information behavior, and upstream OpenAI failure handling.
 
 **Verify**
 
@@ -187,9 +187,9 @@ Use `pytest` and `httpx` against a real PostgreSQL with pgvector test database. 
 - OpenAI calls are mocked with deterministic responses.
 - Tests run against a real PostgreSQL with pgvector database.
 
-**Spec**
+**Spec Reference**
 
-none. The behavior is already defined by the project spec and previous tasks.
+`docs/rag-chatbot/spec.md` defines the main API flows and error cases this task should cover.
 
 **Verify**
 
