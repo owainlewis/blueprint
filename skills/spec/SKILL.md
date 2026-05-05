@@ -2,7 +2,7 @@
 name: spec
 description: "Write an implementation spec for a requested task and pause for human review before planning or coding."
 user-invocable: true
-argument-hint: "<feature-name> <description> e.g. 'user-auth add OAuth login with Google and GitHub'"
+argument-hint: "<description> e.g. 'add OAuth login with Google and GitHub'"
 ---
 
 # Spec
@@ -20,13 +20,14 @@ Use this skill when the user explicitly asks for a spec.
 
 ### 1. Understand
 
-- Use the first argument as the feature name and everything after it as the request.
+- Treat the full argument as the request unless the user clearly provides a feature name.
+- Use the provided feature name when clear. Otherwise, derive a short kebab-case feature slug from the request.
 - Read the task and relevant code first so any spec fits the project as it exists.
 - Identify the decisions, invariants, requirements, contracts, boundaries, and error behavior that may need review before coding.
 
 ### 2. Write
 
-- Write `docs/<feature-name>/spec.md`.
+- Write `docs/<feature-slug>/spec.md`.
 - Include:
   - What
   - Context
@@ -47,7 +48,7 @@ Use this skill when the user explicitly asks for a spec.
 
 ## Verification
 
-- The spec is written in `docs/<feature-name>/spec.md`
+- The spec is written in `docs/<feature-slug>/spec.md`
 - Requirements are specific and testable
 - Decisions the agent would otherwise make are explicit
 - Invariants say what must not break and how to check it
@@ -59,6 +60,7 @@ Use this skill when the user explicitly asks for a spec.
 ## Rules
 
 - Make the smallest safe change to the system description that fully solves the problem.
+- Ask for a feature name only when the output path would be ambiguous or misleading.
 - If two reasonable implementations would behave differently, specify the default.
 - Call out interface, schema, config, CLI, or file-format changes explicitly.
 - Document public success shapes and important error shapes for external interfaces.
