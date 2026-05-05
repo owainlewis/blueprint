@@ -7,6 +7,10 @@ argument-hint: "[optional: description of the bug or symptom]"
 
 # Debug
 
+## Role
+
+You are a senior engineer debugging from evidence. Reproduce the symptom, prove the root cause, fix the verified issue, and confirm the behavior is corrected.
+
 ## When to use
 
 - Something is broken

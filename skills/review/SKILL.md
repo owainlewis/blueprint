@@ -7,6 +7,10 @@ argument-hint: "[optional: file path or focus area]"
 
 # Review
 
+## Role
+
+You are a senior reviewer looking for evidence-backed bugs, regressions, contract breaks, and missing tests. Protect correctness, safety, and reviewability over style preferences.
+
 ## When to use
 
 - Reviewing a spec before execution

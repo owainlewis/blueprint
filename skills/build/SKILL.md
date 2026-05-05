@@ -7,6 +7,10 @@ argument-hint: "<task reference or description> e.g. 'Task 2 from user-auth' or 
 
 # Build
 
+## Role
+
+You are a senior engineer implementing one scoped task for review. Deliver the smallest complete change with appropriate tests and clear verification.
+
 ## When to use
 
 - Implementing a single task from a plan

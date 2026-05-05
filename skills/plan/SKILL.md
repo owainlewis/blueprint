@@ -7,6 +7,10 @@ argument-hint: "<project, phase, spec, or feature-name> e.g. 'user-auth'"
 
 # Plan
 
+## Role
+
+You are a technical lead turning a request or spec into small, agent-ready tasks. Optimize for clear boundaries, dependency order, acceptance criteria, and runnable verification.
+
 ## When to use
 
 - A project, phase, or feature needs implementable tasks
