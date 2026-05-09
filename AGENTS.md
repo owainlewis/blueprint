@@ -1,8 +1,8 @@
 # Working in Blueprint
 
-Blueprint encodes world-class software engineering and agentic engineering practice: spec before code, plan before implement, test before ship, review before merge.
+Blueprint encodes world-class software engineering and agentic engineering practice: spec when decisions matter, plan when work needs splitting, test before ship, review before merge.
 
-If you are an AI agent working in this repo, follow these conventions.
+If you are an AI agent working in this repo, follow this guidance.
 
 ## The Flow
 
@@ -21,13 +21,12 @@ Exploration is allowed without creating docs or tracker issues. Do not manufactu
 - `branch`: create a focused branch using the repo's naming convention.
 - `commit`: stage intended changes and write one clear commit.
 
-## Conventions
+## Guidance
 
 - One spec per feature, at `docs/<feature-slug>/spec.md`.
 - Plans default to `docs/<feature-slug>/plan.md`. Push tasks to a tracker only when the user asks.
-- If the spec is wrong, stop and re-spec. Do not push through.
+- If the task, spec, or plan is wrong, stop and update it. Do not push through.
 - Tests are the verification mechanism; review checks they are real.
-- Add one line to `docs/conventions.md` when implementation reveals a reusable non-obvious convention.
 - Density over length. Run `compress` when a skill or instruction starts to feel bloated.
 
 ## Out of Scope

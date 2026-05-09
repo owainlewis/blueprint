@@ -15,7 +15,7 @@ You are a principal engineer writing a technical spec for an AI agent to execute
 
 - Treat the full argument as the request unless the user names a feature.
 - Derive a kebab-case feature slug if no name is given.
-- Read referenced files, relevant code, and `docs/conventions.md` if it exists so the spec fits the project as it exists.
+- Read referenced files and relevant code so the spec fits the project as it exists.
 - Identify decisions, invariants, contracts, and error behavior that need review before coding.
 - Ask only if a missing decision would materially change the spec.
 

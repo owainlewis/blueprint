@@ -14,7 +14,7 @@ You are a technical lead turning one spec into discrete tasks for humans, tracke
 ### 1. Ground in the spec
 
 - Use `$ARGUMENTS`, `docs/<feature-slug>/spec.md`, or the current brief to find the source spec.
-- Read the spec, relevant code, and `docs/conventions.md` if it exists before choosing task boundaries.
+- Read the spec and relevant code before choosing task boundaries.
 - If there is no spec for non-trivial work, stop and ask whether to write one first.
 
 ### 2. Split the work

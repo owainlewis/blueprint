@@ -2,7 +2,7 @@
 
 > World-class software engineering and agentic engineering, encoded as a workflow agents can follow.
 
-Blueprint is the SDLC done right for AI coding agents. Spec before code. Plan before implement. Test before ship. Review before merge. The practices excellent engineering teams have always followed, distilled into focused skills an agent can execute reliably.
+Blueprint is the SDLC done right for AI coding agents. Spec when decisions matter. Plan when work needs splitting. Test before ship. Review before merge. The practices excellent engineering teams have always followed, distilled into focused skills an agent can execute reliably.
 
 It is the deliberate opposite of guardrail-heavy frameworks that try to constrain agents into producing good work. Blueprint bets on the model and encodes the workflow. Every model improvement makes that bet pay off more, not less.
 
@@ -28,25 +28,28 @@ It is the deliberate opposite of guardrail-heavy frameworks that try to constrai
 
 ```mermaid
 flowchart TD
-    Start([Feature or task]) --> Spec[spec<br/>requirements + technical design<br/>one document]
+    Start([Feature or task]) --> Choice{Needs design first?}
+    Choice -->|Yes| Spec[spec<br/>requirements + technical design<br/>one document]
+    Choice -->|No| Implement[implement<br/>do the scoped work]
     Spec --> Plan[plan<br/>write portable task list]
-    Plan --> Loop{For each task}
+    Plan --> Task[select a planned task]
     Plan -. optional .-> Destination[Push tasks to<br/>the team's tracker]
-    Destination -.-> Loop
-    Loop --> Implement[implement<br/>read spec first, then do work]
+    Destination -.-> Task
+    Task --> Implement
     Implement --> Tests[tests pass<br/>tests prove acceptance criteria]
     Tests --> Review[review<br/>correctness, security, simplicity]
-    Review --> Decision{spec still right?}
+    Review --> Decision{instructions still right?}
     Decision -->|Yes| Ship[PR or merge]
-    Decision -->|No, drifted| Respec[update spec -> re-run plan]
-    Respec --> Plan
-    Ship --> Loop
-    Loop -->|All tasks done| Done([Feature shipped])
+    Decision -->|No, drifted| Update[update spec, plan,<br/>or task]
+    Update --> Choice
+    Ship --> More{More planned tasks?}
+    More -->|Yes| Task
+    More -->|No| Done([Done])
 ```
 
-**If implementation reveals the spec is wrong, stop.** Update the spec, then re-run `plan` against the updated spec. Do not push through a stale plan. Re-planning costs minutes; pushing through a wrong plan costs the rest of the feature.
+**If implementation reveals the instructions are wrong, stop.** Update the task, spec, or plan, then continue from the updated source. Do not push through stale instructions. Clarifying costs minutes; pushing through wrong instructions costs the rest of the feature.
 
-**Tests are the verification.** Blueprint does not run a separate "did the implementation match the spec?" pass. The spec defines the testing strategy. The implementation produces tests that prove the requirements. Review checks the tests are real and not theatre. If you want stronger verification, write the additional concerns into `REVIEW.md`; the review skill will pick them up.
+**Tests are the verification.** Blueprint does not run a separate "did the implementation match the instructions?" pass. The request or spec defines the testing strategy. The implementation produces tests that prove the requirements. Review checks the tests are real and not theatre. If you want stronger verification, write the additional concerns into `REVIEW.md`; the review skill will pick them up.
 
 ## Commands and Skills
 
