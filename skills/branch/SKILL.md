@@ -1,11 +1,15 @@
 ---
-description: "Create a feature branch for the current task."
+name: branch
+description: "Create or switch to a focused feature branch for the current task."
+user-invocable: true
 argument-hint: "<branch-name or task reference>"
 ---
 
 # Branch
 
-Create a focused feature branch for `$ARGUMENTS`.
+Create a focused branch for the current task.
+
+## Workflow
 
 1. Inspect the current branch and `git status`.
 2. Derive a short kebab-case branch name if the user did not provide one.
@@ -13,4 +17,8 @@ Create a focused feature branch for `$ARGUMENTS`.
 4. Create and switch to the branch.
 5. Report the branch name and any uncommitted work that was already present.
 
-Stop if the working tree state makes switching branches unsafe.
+## Rules
+
+- Stop if the working tree state makes switching branches unsafe.
+- Do not overwrite or discard uncommitted work.
+- Do not invent a branch prefix when the repo has no obvious convention.

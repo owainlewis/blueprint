@@ -18,6 +18,8 @@ Exploration is allowed without creating docs or tracker issues. Do not manufactu
 - `tdd`: test-first variant of implement.
 - `review`: pre-merge review for correctness, security, simplicity, robustness, and tests.
 - `compress`: shorten over-long instructions without changing behavior.
+- `branch`: create a focused branch using the repo's naming convention.
+- `commit`: stage intended changes and write one clear commit.
 
 ## Conventions
 

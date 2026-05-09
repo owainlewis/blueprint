@@ -60,10 +60,10 @@ Blueprint exposes two surfaces. **Slash commands** (`/blueprint:plan`, `/bluepri
 | `/blueprint:tdd` | `skills/tdd/` | Test-first variant of implement |
 | `/blueprint:review` | `skills/review/` | Local code review |
 | `/blueprint:compress` | `skills/compress/` | Shorten agent-facing instructions |
-| `/blueprint:branch` | Thin command, no skill | Create a feature branch |
-| `/blueprint:commit` | Thin command, no skill | Conventional commit |
+| `/blueprint:branch` | `skills/branch/` | Create a feature branch |
+| `/blueprint:commit` | `skills/commit/` | Conventional commit |
 
-`branch` and `commit` are mechanical enough that they do not need skills backing them. They can exist as thin commands in tools that support slash-command files.
+Branching and committing are mechanical, but they are still skills so the installer can expose the full workflow consistently.
 
 `/blueprint:build` is deprecated. Use `/blueprint:implement`; the old name was retired because "build" collides with project build steps and CI vocabulary.
 
@@ -91,10 +91,12 @@ Run this to update Blueprint and your installed skills to the latest version.
 |---|---|---|
 | `spec` | Writes `docs/<feature-slug>/spec.md`: requirements and design in one document | `Write a spec for user-auth` |
 | `plan` | Breaks a spec into tasks sized for agents, review, and rollback | `Create a plan for user-auth` |
-| `implement` | Executes one task after reading the spec first | `Implement LIN-123 from user-auth` |
+| `implement` | Executes one scoped change with tests and verification | `Implement LIN-123 from user-auth` |
 | `tdd` | Implements behavior test-first | `Use TDD for retry logic in the API client` |
 | `review` | Reviews specs or code for correctness, security, simplicity, robustness, and tests | `Review the current diff` |
 | `compress` | Shortens agent-facing instructions without changing behavior | `Compress docs/user-auth/spec.md` |
+| `branch` | Creates a focused branch using the repo's naming convention | `Create a branch for user-auth` |
+| `commit` | Stages intended changes and writes one clear commit | `Commit the current changes` |
 
 ## Agent Instructions
 
