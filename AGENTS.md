@@ -13,7 +13,7 @@ Exploration is allowed without creating docs or tracker issues. Do not manufactu
 ## Skills
 
 - `spec`: write the technical design before coding.
-- `plan`: break a spec into agent-sized tasks.
+- `plan`: break a spec, brief, or request into agent-sized tasks.
 - `implement`: execute one scoped change with tests and verification.
 - `build`: deprecated alias for `implement`; prefer `implement` in new docs and prompts.
 - `tdd`: test-first variant of implement.

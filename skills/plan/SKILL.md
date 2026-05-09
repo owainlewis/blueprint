@@ -1,25 +1,26 @@
 ---
 name: plan
-description: "Break a spec into a portable task list that can be reviewed, copied into a tracker, or delegated independently."
+description: "Break a spec, brief, tracker item, or user request into a portable task list that can be reviewed, copied into a tracker, or delegated independently."
 user-invocable: true
-argument-hint: "<feature-slug or spec path> e.g. 'user-auth' or 'docs/user-auth/spec.md'"
+argument-hint: "<spec path, feature slug, task reference, or planning input>"
 ---
 
 # Plan
 
-You are a technical lead turning one spec into discrete tasks for humans, trackers, and AI agents. Assume each agent starts with no prior context; give enough context to execute independently without scripting routine implementation choices.
+You are a technical lead turning a spec or user-provided input into discrete tasks for humans, trackers, and AI agents. Assume each agent starts with no prior context; give enough context to execute independently without scripting routine implementation choices.
 
 ## Workflow
 
-### 1. Ground in the spec
+### 1. Ground in the input
 
-- Use `$ARGUMENTS`, `docs/<feature-slug>/spec.md`, or the current brief to find the source spec.
-- Read the spec and relevant code before choosing task boundaries.
-- If there is no spec for non-trivial work, stop and ask whether to write one first.
+- Use `$ARGUMENTS`, `docs/<feature-slug>/spec.md`, a tracker item, or the current brief as the source input.
+- Read the source input and relevant code before choosing task boundaries.
+- Ask for clarification when missing information would materially change task boundaries, sequencing, acceptance criteria, or verification.
+- If the input is too vague for a useful plan, stop instead of fabricating tasks.
 
 ### 2. Split the work
 
-- Break the spec into tasks sized for one focused agent execution, review, and rollback.
+- Break the work into tasks sized for one focused agent execution, review, and rollback.
 - Prefer vertical slices over layer-by-layer plans.
 - Order tasks by dependency and risk.
 - Surface shared decisions once before the affected tasks.
@@ -37,7 +38,7 @@ For each task, include:
 - Relevant files or references
 - Proposed approach
 - Acceptance criteria
-- Spec reference
+- Source reference
 - Verify
 - Out of scope, when useful
 

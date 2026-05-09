@@ -60,7 +60,7 @@ Some plugin hosts expose namespaced slash commands such as `/blueprint:spec`. Th
 | Skill | Plugin command, when available | Purpose |
 |---|---|---|
 | `spec` | `/blueprint:spec` | Write a spec |
-| `plan` | `/blueprint:plan` | Break a spec into reviewable tasks |
+| `plan` | `/blueprint:plan` | Break input into reviewable tasks |
 | `implement` | `/blueprint:implement` | Execute a single task |
 | `tdd` | `/blueprint:tdd` | Test-first variant of implement |
 | `review` | `/blueprint:review` | Local code review |
@@ -96,7 +96,7 @@ Run this to update Blueprint and your installed skills to the latest version.
 | Skill | What it does | Example |
 |---|---|---|
 | `spec` | Writes `docs/<feature-slug>/spec.md`: requirements and design in one document | `Write a spec for user-auth` |
-| `plan` | Breaks a spec into tasks sized for agents, review, and rollback | `Create a plan for user-auth` |
+| `plan` | Breaks a spec, brief, or request into tasks sized for agents, review, and rollback | `Create a plan for user-auth` |
 | `implement` | Executes one scoped change with tests and verification | `Implement LIN-123 from user-auth` |
 | `tdd` | Implements behavior test-first | `Use TDD for retry logic in the API client` |
 | `review` | Reviews specs or code for correctness, security, simplicity, robustness, and tests | `Review the current diff` |
