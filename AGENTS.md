@@ -13,7 +13,7 @@ Exploration is allowed without creating docs or tickets. Do not manufacture fake
 ## Skills
 
 - `spec`: write the technical design before coding.
-- `plan`: break a spec into 3-5 agent-sized tasks.
+- `plan`: break a spec into agent-sized tasks.
 - `implement`: execute one task; read the spec first.
 - `tdd`: test-first variant of implement.
 - `review`: pre-merge review for correctness, security, simplicity, robustness, and tests.

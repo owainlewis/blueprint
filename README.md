@@ -19,7 +19,7 @@ It is the deliberate opposite of guardrail-heavy frameworks that try to constrai
 | Phase | Skill | What it does |
 |---|---|---|
 | **Define** | `spec` | One document with requirements and design |
-| **Plan** | `plan` | Break a spec into 3-5 agent-sized tasks |
+| **Plan** | `plan` | Break a spec into agent-sized tasks |
 | **Build** | `implement` / `tdd` | Execute one task; tests prove acceptance |
 | **Review** | `review` | Correctness, security, simplicity before merge |
 | **Maintain** | `compress` | Keep skills tight; the meta-skill |
@@ -29,7 +29,7 @@ It is the deliberate opposite of guardrail-heavy frameworks that try to constrai
 ```mermaid
 flowchart TD
     Start([Feature or task]) --> Spec[spec<br/>requirements + technical design<br/>one document]
-    Spec --> Plan[plan<br/>break into 3-5 agent-sized tasks]
+    Spec --> Plan[plan<br/>break into agent-sized tasks]
     Plan --> Linear[Push tickets to Linear<br/>tickets are the state]
     Linear --> Loop{For each ticket}
     Loop --> Implement[implement<br/>read spec first, then do work]
@@ -54,7 +54,7 @@ Blueprint exposes two surfaces. **Slash commands** (`/blueprint:plan`, `/bluepri
 | Command | Skill | Purpose |
 |---|---|---|
 | `/blueprint:spec` | `skills/spec/` | Write a spec |
-| `/blueprint:plan` | `skills/plan/` | Break a spec into 3-5 tasks |
+| `/blueprint:plan` | `skills/plan/` | Break a spec into reviewable tasks |
 | `/blueprint:implement` | `skills/implement/` | Execute a single task |
 | `/blueprint:tdd` | `skills/tdd/` | Test-first variant of implement |
 | `/blueprint:review` | `skills/review/` | Local code review |

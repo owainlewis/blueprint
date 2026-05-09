@@ -1,6 +1,6 @@
 ---
 name: plan
-description: "Break a spec into 3-5 agent-sized tasks that can be stored in a task management system and delegated independently."
+description: "Break a spec into agent-sized tasks that can be stored in a task management system and delegated independently."
 user-invocable: true
 argument-hint: "<feature-slug or spec path> e.g. 'user-auth' or 'docs/user-auth/spec.md'"
 ---
@@ -19,7 +19,7 @@ You are a technical lead turning one spec into discrete tasks for a task managem
 
 ### 2. Split the work
 
-- Break the spec into 3-5 tasks sized for one focused agent execution, review, and rollback.
+- Break the spec into tasks sized for one focused agent execution, review, and rollback.
 - Prefer vertical slices over layer-by-layer plans.
 - Order tasks by dependency and risk.
 - Surface shared decisions once before the affected tasks.
