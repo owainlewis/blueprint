@@ -2,7 +2,7 @@
 
 > World-class software engineering and agentic engineering, encoded as a workflow agents can follow.
 
-Blueprint is the SDLC done right for AI coding agents. Spec before code. Plan before implement. Test before ship. Review before merge. The practices excellent engineering teams have always followed, distilled into six skills an agent can execute reliably.
+Blueprint is the SDLC done right for AI coding agents. Spec before code. Plan before implement. Test before ship. Review before merge. The practices excellent engineering teams have always followed, distilled into focused skills an agent can execute reliably.
 
 It is the deliberate opposite of guardrail-heavy frameworks that try to constrain agents into producing good work. Blueprint bets on the model and encodes the workflow. Every model improvement makes that bet pay off more, not less.
 
@@ -12,7 +12,7 @@ It is the deliberate opposite of guardrail-heavy frameworks that try to constrai
 - **Verification is non-negotiable.** Tests prove the spec. Review checks the tests are real.
 - **Bet on the model.** Smart agents, not heavy guardrails. Every model improvement makes guardrails less necessary and more likely to conflict with the model's own judgment.
 - **Density over length.** Skills are as short as they can be while remaining clear. The `compress` skill keeps them honest.
-- **Six skills, not sixty.** Saying no is the discipline.
+- **Focused skills, not sprawling catalogues.** Saying no is the discipline.
 
 ## The Shape
 

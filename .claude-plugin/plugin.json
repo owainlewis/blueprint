@@ -1,6 +1,6 @@
 {
   "name": "blueprint",
-  "description": "Six-skill agentic engineering workflow: spec, plan, implement, tdd, review, and compress, plus thin branch and commit commands.",
+  "description": "Focused agentic engineering workflow: spec, plan, implement, tdd, review, and compress, plus thin branch and commit commands.",
   "version": "0.2.0",
   "author": {
     "name": "Owain Lewis"
