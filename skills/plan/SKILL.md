@@ -1,19 +1,19 @@
 ---
 name: plan
-description: "Break a spec, brief, tracker item, or user request into a portable task list that can be reviewed, copied into a tracker, or delegated independently."
+description: "Break a spec, brief, issue tracker item, or user request into a portable task list that can be reviewed, copied into an issue tracker, or delegated independently."
 user-invocable: true
 argument-hint: "<spec path, feature slug, task reference, or planning input>"
 ---
 
 # Plan
 
-You are a technical lead turning a spec or user-provided input into discrete tasks for humans, trackers, and AI agents. Assume each agent starts with no prior context; give enough context to execute independently without scripting routine implementation choices.
+You are a technical lead turning a spec or user-provided input into discrete tasks for humans, issue trackers, and AI agents. Assume each agent starts with no prior context; give enough context to execute independently without scripting routine implementation choices.
 
 ## Workflow
 
 ### 1. Ground in the input
 
-- Use `$ARGUMENTS`, `docs/<feature-slug>/spec.md`, a tracker item, or the current brief as the source input.
+- Use `$ARGUMENTS`, `docs/<feature-slug>/spec.md`, an issue tracker item, or the current brief as the source input.
 - Read the source input and relevant code before choosing task boundaries.
 - Ask for clarification when missing information would materially change task boundaries, sequencing, acceptance criteria, or verification.
 - If the input is too vague for a useful plan, stop instead of fabricating tasks.
@@ -29,7 +29,7 @@ You are a technical lead turning a spec or user-provided input into discrete tas
 
 Write `docs/<feature-slug>/plan.md` when there is a clear feature directory. Otherwise return the plan in chat.
 
-Do not create tracker issues unless the user explicitly asks. The plan is the portable source for whatever destination the team chooses next.
+Do not create issue tracker entries unless the user explicitly asks. The plan is the portable source for whatever destination the team chooses next.
 
 For each task, include:
 

@@ -33,7 +33,7 @@ flowchart TD
     Choice -->|No| Implement[implement<br/>do the scoped work]
     Spec --> Plan[plan<br/>write portable task list]
     Plan --> Task[select a planned task]
-    Plan -. optional .-> Destination[Push tasks to<br/>the team's tracker]
+    Plan -. optional .-> Destination[Push tasks to<br/>the team's issue tracker]
     Destination -.-> Task
     Task --> Implement
     Implement --> Tests[tests pass<br/>tests prove acceptance criteria]
@@ -103,13 +103,13 @@ Run this to update Blueprint and your installed skills to the latest version.
 
 ## Agent Instructions
 
-Blueprint creates instructions for agents. Sometimes that instruction is a one-sentence prompt. Sometimes it is a tracker issue. Sometimes it is a markdown spec in the repo. The format should match the work.
+Blueprint creates instructions for agents. Sometimes that instruction is a one-sentence prompt. Sometimes it is an issue tracker item. Sometimes it is a markdown spec in the repo. The format should match the work.
 
 One spec lives at `docs/<feature-slug>/spec.md`. External requirements flow into it; the spec is the artifact that brings context into the codebase.
 
-Plans default to `docs/<feature-slug>/plan.md`: a portable task list that can be reviewed, copied into a tracker, or used directly. If you want issues created in Linear, GitHub Issues, or another system, ask for that as the next step.
+Plans default to `docs/<feature-slug>/plan.md`: a portable task list that can be reviewed, copied into an issue tracker, or used directly. If you want issues created in Linear, GitHub Issues, or another system, ask for that as the next step.
 
-Use the full pipeline for work that touches contracts, schemas, multiple files, or invariants. For trivial changes, just do them. For exploration, explore without manufacturing fake specs, plans, or tracker issues.
+Use the full pipeline for work that touches contracts, schemas, multiple files, or invariants. For trivial changes, just do them. For exploration, explore without manufacturing fake specs, plans, or issue tracker entries.
 
 ## Philosophy
 

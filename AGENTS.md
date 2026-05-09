@@ -8,7 +8,7 @@ If you are an AI agent working in this repo, follow this guidance.
 
 Use `spec -> plan -> implement -> review` for changes that touch contracts, schemas, multiple files, user-visible behavior, or invariants. Skip stages only when explicitly told to or when the change is trivial and decision-complete.
 
-Exploration is allowed without creating docs or tracker issues. Do not manufacture fake specs, plans, or issues for spikes.
+Exploration is allowed without creating docs or issue tracker entries. Do not manufacture fake specs, plans, or issues for spikes.
 
 ## Skills
 
@@ -24,7 +24,7 @@ Exploration is allowed without creating docs or tracker issues. Do not manufactu
 ## Guidance
 
 - One spec per feature, at `docs/<feature-slug>/spec.md`.
-- Plans default to `docs/<feature-slug>/plan.md`. Push tasks to a tracker only when the user asks.
+- Plans default to `docs/<feature-slug>/plan.md`. Push tasks to an issue tracker only when the user asks.
 - If the task, spec, or plan is wrong, stop and update it. Do not push through.
 - Tests are the verification mechanism; review checks they are real.
 - Density over length. Run `compress` when a skill or instruction starts to feel bloated.

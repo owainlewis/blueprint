@@ -12,7 +12,7 @@ You are a senior reviewer protecting correctness, security, simplicity, robustne
 ## Workflow
 
 1. Choose the target from `$ARGUMENTS`, specified files, `git diff`, staged changes, or the latest commit.
-2. Read the actual target and available intent: spec, plan, tracker item, commit message, PR title, or PR description.
+2. Read the actual target and available intent: spec, plan, issue tracker item, commit message, PR title, or PR description.
 3. Read `REVIEW.md` from the repo root if it exists and apply those project-specific concerns.
 4. Check correctness, security, simplicity, robustness, contract changes, failure paths, and whether tests prove the requirements.
 5. Report focused findings only, ordered highest risk first. A clean review is a valid outcome.

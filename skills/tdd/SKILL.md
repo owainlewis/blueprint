@@ -13,7 +13,7 @@ Use this for behavioral changes where a failing test can describe the desired ou
 
 ### 1. Understand
 
-- Read the request, task, tracker item, plan, spec, and relevant code as available.
+- Read the request, task, issue tracker item, plan, spec, and relevant code as available.
 - Identify the desired behavior, existing contracts, failure paths, and verification.
 - If a spec exists, note its invariants, decisions, and testing strategy.
 - Ask before writing tests when missing information would materially change behavior, scope, safety, contracts, data shape, or verification.
