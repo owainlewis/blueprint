@@ -1,6 +1,6 @@
 {
   "name": "blueprint",
-  "description": "Focused agentic engineering workflow: spec, plan, implement, tdd, review, compress, branch, and commit, with build as a deprecated implement alias.",
+  "description": "Focused agentic engineering workflow: spec, plan, implement, tdd, review, compress, branch, and commit.",
   "version": "0.2.0",
   "author": {
     "name": "Owain Lewis"

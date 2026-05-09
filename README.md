@@ -67,13 +67,10 @@ Some plugin hosts expose namespaced slash commands such as `/blueprint:spec`. Th
 | `compress` | `/blueprint:compress` | Shorten agent-facing instructions |
 | `branch` | `/blueprint:branch` | Create a traceable Git branch |
 | `commit` | `/blueprint:commit` | Conventional commit |
-| `build` | `/blueprint:build` | Deprecated alias for `implement` |
 
 Branching and committing are mechanical, but they are still skills so the installer can expose the full workflow consistently.
 
-`build` and `/blueprint:build` are deprecated compatibility aliases for `implement`. The old name was retired because "build" collides with project build steps and CI vocabulary.
-
-The old `requirements`, `architecture`, and `task` entry points are removed. Requirements and architecture now live together in `spec`; task execution is `implement`.
+The old `requirements`, `architecture`, `task`, and `build` entry points are removed. Requirements and architecture now live together in `spec`; task execution is `implement`.
 
 ## Install
 
@@ -103,7 +100,6 @@ Run this to update Blueprint and your installed skills to the latest version.
 | `compress` | Shortens agent-facing instructions without changing behavior | `Compress docs/user-auth/spec.md` |
 | `branch` | Creates a traceable Git branch with the ticket ID when available | `Create a branch for LIN-123 user-auth` |
 | `commit` | Stages intended changes and writes one clear Conventional Commit | `Commit the current changes` |
-| `build` | Deprecated alias for `implement` | `Build Task 2 from user-auth` |
 
 ## Agent Instructions
 
