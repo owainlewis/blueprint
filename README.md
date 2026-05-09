@@ -63,7 +63,7 @@ Blueprint exposes two surfaces. **Slash commands** (`/blueprint:plan`, `/bluepri
 | `/blueprint:tdd` | `skills/tdd/` | Test-first variant of implement |
 | `/blueprint:review` | `skills/review/` | Local code review |
 | `/blueprint:compress` | `skills/compress/` | Shorten agent-facing instructions |
-| `/blueprint:branch` | `skills/branch/` | Create a feature branch |
+| `/blueprint:branch` | `skills/branch/` | Create a Git branch |
 | `/blueprint:commit` | `skills/commit/` | Conventional commit |
 
 Branching and committing are mechanical, but they are still skills so the installer can expose the full workflow consistently.
@@ -98,7 +98,7 @@ Run this to update Blueprint and your installed skills to the latest version.
 | `tdd` | Implements behavior test-first | `Use TDD for retry logic in the API client` |
 | `review` | Reviews specs or code for correctness, security, simplicity, robustness, and tests | `Review the current diff` |
 | `compress` | Shortens agent-facing instructions without changing behavior | `Compress docs/user-auth/spec.md` |
-| `branch` | Creates a focused branch using the repo's naming convention | `Create a branch for user-auth` |
+| `branch` | Creates a focused Git branch using the repo's naming convention | `Create a branch for user-auth` |
 | `commit` | Stages intended changes and writes one clear commit | `Commit the current changes` |
 
 ## Agent Instructions
