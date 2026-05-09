@@ -18,7 +18,7 @@ For compatibility with existing prompts and automation, treat this invocation as
 3. Make a short implementation plan for non-trivial work.
 4. Implement the smallest safe change that solves the request.
 5. Run the relevant tests, checks, or build command for the project.
-6. Report what changed, what passed, and that `build` has been renamed to `implement`.
+6. Report what changed and what passed.
 
 ## Rules
 
