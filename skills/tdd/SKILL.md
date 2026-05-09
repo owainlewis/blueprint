@@ -16,6 +16,7 @@ Use this for behavioral changes where a failing test can describe the desired ou
 - Read the request, task, tracker item, plan, spec, and relevant code as available.
 - Identify the desired behavior, existing contracts, failure paths, and verification.
 - If a spec exists, note its invariants, decisions, and testing strategy.
+- Ask before writing tests when missing information would materially change behavior, scope, safety, contracts, data shape, or verification.
 
 ### 2. Red
 
@@ -37,6 +38,7 @@ Use this for behavioral changes where a failing test can describe the desired ou
 ## Rules
 
 - Do not write implementation code before a failing test for the behavior.
+- If an assumption is low-risk, make it explicit and keep moving.
 - Tests describe behavior, not implementation details.
 - Prefer real boundaries over mocks when practical.
 - Skip TDD for documentation, formatting, or non-behavioral scaffolding work.
