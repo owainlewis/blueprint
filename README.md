@@ -1,63 +1,72 @@
 # Blueprint
 
-> A collection of agent skills for running the software development lifecycle with AI coding agents.
+> World-class software engineering and agentic engineering, encoded as a workflow agents can follow.
 
-## Why Blueprint
+Blueprint is the SDLC done right for AI coding agents. Spec before code. Plan before implement. Test before ship. Review before merge. The practices excellent engineering teams have always followed, distilled into six skills an agent can execute reliably.
 
-Good software follows a process: understand what to build, plan the work, build it in small pieces, test it, review it, and ship it. Blueprint encodes that process as a small set of reusable agent skills.
+It is the deliberate opposite of guardrail-heavy frameworks that try to constrain agents into producing good work. Blueprint bets on the model and encodes the workflow. Every model improvement makes that bet pay off more, not less.
 
-The skills are short, focused, and opinionated. They give the agent clear instructions and get out of the way. As models get more capable, that approach gets better, not worse.
+## Principles
 
-Blueprint is agent-agnostic. The same skills can be used from Claude Code, Codex, Cursor, OpenCode, and other agents that support local skills.
+- **Encode process, not knowledge.** Skills are workflows. Reference material lives elsewhere.
+- **Verification is non-negotiable.** Tests prove the spec. Review checks the tests are real.
+- **Bet on the model.** Smart agents, not heavy guardrails. Every model improvement makes guardrails less necessary and more likely to conflict with the model's own judgment.
+- **Density over length.** Skills are as short as they can be while remaining clear. The `compress` skill keeps them honest.
+- **Six skills, not sixty.** Saying no is the discipline.
 
-10 skills. You can read the entire framework in 15 minutes.
+## The Shape
+
+| Phase | Skill | What it does |
+|---|---|---|
+| **Define** | `spec` | One document with requirements and design |
+| **Plan** | `plan` | Break a spec into 3-5 agent-sized tasks |
+| **Build** | `implement` / `tdd` | Execute one task; tests prove acceptance |
+| **Review** | `review` | Correctness, security, simplicity before merge |
+| **Maintain** | `compress` | Keep skills tight; the meta-skill |
 
 ## The Flow
 
 ```mermaid
-flowchart TB
-    Project["Project / Brief"] --> Plan["Plan Tasks"]
-    Plan --> Task["Pick Task"]
-    Task --> Decision{"Decisions or invariants?"}
-    Decision -- yes --> Spec["Spec"]
-    Decision -- no --> Build["Build"]
-    Spec --> Build
-    Build --> Review["Review"]
-    Review --> Commit["Commit"]
-    Commit --> Ship["Ship"]
+flowchart TD
+    Start([Feature or task]) --> Spec[spec<br/>requirements + technical design<br/>one document]
+    Spec --> Plan[plan<br/>break into 3-5 agent-sized tasks]
+    Plan --> Linear[Push tickets to Linear<br/>tickets are the state]
+    Linear --> Loop{For each ticket}
+    Loop --> Implement[implement<br/>read spec first, then do work]
+    Implement --> Tests[tests pass<br/>tests prove acceptance criteria]
+    Tests --> Review[review<br/>correctness, security, simplicity]
+    Review --> Decision{spec still right?}
+    Decision -->|Yes| Ship[PR or merge]
+    Decision -->|No, drifted| Respec[update spec -> re-run plan]
+    Respec --> Plan
+    Ship --> Loop
+    Loop -->|All tickets done| Done([Feature shipped])
 ```
 
-For each task:
+**If implementation reveals the spec is wrong, stop.** Update the spec, then re-run `plan` against the updated spec. Do not push through a stale plan. Re-planning costs minutes; pushing through a wrong plan costs the rest of the feature.
 
-```mermaid
-flowchart TB
-    Task["Task"] --> Decision{"Needs spec?"}
-    Decision -- yes --> Spec["Spec"]
-    Decision -- no --> Build["Build"]
-    Spec --> Build
-    Build --> Test["Test"]
-    Test --> Review["Review"]
-    Review --> Commit["Commit"]
-    Review -. if changes needed .-> Build
-```
+**Tests are the verification.** Blueprint does not run a separate "did the implementation match the spec?" pass. The spec defines the testing strategy. The implementation produces tests that prove the requirements. Review checks the tests are real and not theatre. If you want stronger verification, write the additional concerns into `REVIEW.md`; the review skill will pick them up.
 
-```text
-Create a plan for user-auth.
-Write a spec for Task 2 if the auth flow has decisions worth surfacing.
-Implement Task 1 from user-auth.
-Review the current changes.
-Commit the current changes.
-```
+## Commands and Skills
 
-## Agent Instructions
+Blueprint exposes two surfaces. **Slash commands** (`/blueprint:plan`, `/blueprint:implement`, etc.) are what you type. **Skills** (`skills/plan/`, `skills/implement/`, etc.) are how those commands are implemented. The vocabulary is shared; the command and skill for a given verb have the same name.
 
-Blueprint creates instructions for agents. Sometimes that instruction is a one-sentence prompt. Sometimes it is a task in a tracker. Sometimes it is a markdown spec in the repo. The format should match the work.
+| Command | Skill | Purpose |
+|---|---|---|
+| `/blueprint:spec` | `skills/spec/` | Write a spec |
+| `/blueprint:plan` | `skills/plan/` | Break a spec into 3-5 tasks |
+| `/blueprint:implement` | `skills/implement/` | Execute a single task |
+| `/blueprint:tdd` | `skills/tdd/` | Test-first variant of implement |
+| `/blueprint:review` | `skills/review/` | Local code review |
+| `/blueprint:compress` | `skills/compress/` | Shorten agent-facing instructions |
+| `/blueprint:branch` | Thin command, no skill | Create a feature branch |
+| `/blueprint:commit` | Thin command, no skill | Conventional commit |
 
-Specs are not project-management documents, architecture review records, or permanent documentation. In a professional environment, that work usually lives in Jira, Linear, Confluence, GitHub, meetings, or whatever the team already uses. Blueprint only cares about the distilled instruction an agent needs to build correctly.
+`branch` and `commit` are mechanical enough that they do not need skills backing them. They can exist as thin commands in tools that support slash-command files.
 
-A spec earns its keep when it surfaces decisions before code exists: API shape, migration approach, error behavior, transaction boundary, file format, invariant to preserve. If the task has no decisions you'd want to review, skip the spec and prompt the agent directly.
+`/blueprint:build` is deprecated. Use `/blueprint:implement`; the old name was retired because "build" collides with project build steps and CI vocabulary.
 
-Keep every agent-facing instruction short. Extra words compete for model attention. If a spec is getting long, split the task. If a task is clear but verbose, compress it.
+The old `/blueprint:requirements`, `/blueprint:architecture`, and `/blueprint:task` commands are removed. Requirements and architecture now live together in `/blueprint:spec`; task execution is `/blueprint:implement`.
 
 ## Install
 
@@ -65,7 +74,9 @@ Keep every agent-facing instruction short. Extra words compete for model attenti
 npx skills add owainlewis/blueprint
 ```
 
-Install Blueprint with the `skills` CLI. This is the simplest setup and works across agents that support local skills.
+Install Blueprint with the `skills` CLI. The skills are plain Markdown and can be used from Claude Code, Codex, Cursor, Windsurf, GitHub Copilot, and other agents that support local instructions or reusable workflows.
+
+See [docs/getting-started.md](docs/getting-started.md) for the universal install path and tool-specific setup notes.
 
 ## Update
 
@@ -75,69 +86,40 @@ npx skills update
 
 Run this to update Blueprint and your installed skills to the latest version.
 
-How you invoke a skill depends on the agent:
-
-- Some agents expose slash commands
-- Some expose a skill picker
-- Some work best when you ask for a skill by name in natural language
-
-Blueprint itself is just the skill content.
-
 ## Skills
 
-### Planning
-
-Plans turn projects, phases, specs, or rough requests into agent-sized tasks. Specs are written only when a task has decisions or invariants worth surfacing.
-
 | Skill | What it does | Example |
-|-------|-------------|---------|
-| **plan** | Break work into tasks sized for agent execution, review, and rollback | `Create a plan for user-auth` |
-| **spec** | Surface decisions, invariants, requirements, design, and tests for a task | `Write a spec for Task 2 from user-auth` |
-| **compress** | Shorten agent-facing instructions without changing behavior | `Compress docs/user-auth/spec.md` |
+|---|---|---|
+| `spec` | Writes `docs/<feature-slug>/spec.md`: requirements and design in one document | `Write a spec for user-auth` |
+| `plan` | Breaks a spec into tasks sized for agents, review, and rollback | `Create a plan for user-auth` |
+| `implement` | Executes one task after reading the spec first | `Implement LIN-123 from user-auth` |
+| `tdd` | Implements behavior test-first | `Use TDD for retry logic in the API client` |
+| `review` | Reviews specs or code for correctness, security, simplicity, robustness, and tests | `Review the current diff` |
+| `compress` | Shortens agent-facing instructions without changing behavior | `Compress docs/user-auth/spec.md` |
 
-### Building
+## Agent Instructions
 
-| Skill | What it does | Example |
-|-------|-------------|---------|
-| **build** | Execute a task: write code, write tests if relevant, verify it works | `Implement Task 2 from user-auth` |
-| **tdd** | Build test-first: failing tests, then implementation, then simplify | `Use TDD for retry logic in the API client` |
+Blueprint creates instructions for agents. Sometimes that instruction is a one-sentence prompt. Sometimes it is a Linear ticket. Sometimes it is a markdown spec in the repo. The format should match the work.
 
-Use **build** for most work. Use **tdd** when you want test-first discipline: the agent must write failing tests before any implementation code.
+One spec lives at `docs/<feature-slug>/spec.md`. External requirements flow into it; the spec is the artifact that brings context into the codebase.
 
-### Quality
+State lives in Linear, not in the repo. No `state.md`, no handoff file. The ticket is the state.
 
-| Skill | What it does | Example |
-|-------|-------------|---------|
-| **review** | Spec or code review: correctness, security, simplicity, robustness | `Review the current diff` |
-| **refactor** | Simplify code without changing behavior | `Refactor src/api/routes.py` |
-| **coverage** | Fill test gaps with tests that catch realistic bugs | `Add high-value tests for src/auth/` |
-| **debug** | Systematic root-cause debugging: observe, hypothesize, test, fix | `Debug the API returning 500 on POST` |
-
-### Git
-
-| Skill | What it does | Example |
-|-------|-------------|---------|
-| **commit** | Stage and commit with a clear conventional commit message | `Commit the current changes` |
+Use the full pipeline for work that touches contracts, schemas, multiple files, or invariants. For trivial changes, just do them. For exploration, explore without manufacturing fake specs, plans, or tickets.
 
 ## Philosophy
 
-**Encode the process, not bureaucracy.** The value is in good task shape, explicit decisions when they matter, tests alongside implementation, and review before ship. Get those right and the agent does the rest.
+**Specs are prompts with weight.** A spec is an instruction with enough structure to make decisions reviewable. Once the code is right, the spec's job is done.
 
-**Specs are prompts with weight.** A spec is just an instruction with enough structure to make decisions reviewable. Once the code is right, the spec's job is done.
-
-**Do not confuse planning with prompting.** Professional teams do planning in the systems they already use: issue trackers, docs, design reviews, meetings, and PRs. Recreating that in markdown for the agent is usually noise. Feed the agent the distilled instruction it needs, not a fake project-management layer.
+**Do not confuse planning with prompting.** Professional teams do planning in the systems they already use: issue trackers, docs, design reviews, meetings, and PRs. Blueprint turns that context into the distilled instruction an agent needs.
 
 **Compress context.** Every word competes for attention. Cut restated rules, overlap, padding, and preamble. Keep constraints, exact names, commands, paths, schemas, and examples that carry meaning.
 
-**Simplicity scales.** Short, focused skills that trust the model outperform heavy frameworks full of guardrails. One focused review catches more real bugs than 16 agents generating noise.
-
-**Small safe changes win.** Preserve contracts, handle failure paths explicitly, and prefer the smallest change that fully solves the problem.
-
-**Agent inputs only.** Blueprint does not replace issue trackers, architecture review, team planning, or release process. It turns that context into high-quality instructions for coding agents.
+**Agent inputs only.** Blueprint is not an issue tracker, architecture review board, or release process. It turns external context into high-quality instructions for coding agents. That's the entire job.
 
 ## Example
 
-The [`examples/`](examples/) folder shows the planning output for a Python RAG chatbot API:
+The [examples/](examples/) folder shows the planning output for a Python RAG chatbot API:
 
 1. [input.md](examples/input.md): rough project notes
 2. [spec.md](examples/rag-chatbot/spec.md): the spec

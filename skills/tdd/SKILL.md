@@ -1,39 +1,43 @@
 ---
 name: tdd
-description: "Use test-first development for behavioral changes. Write a failing test, make it pass, then simplify."
+description: "Test-first variant of implement: read the spec, write a failing test, make it pass, then simplify."
 user-invocable: true
-argument-hint: "<what to build> e.g. 'user registration endpoint' or 'retry logic for API client'"
+argument-hint: "<task reference or behavior> e.g. 'LIN-123' or 'retry logic for API client'"
 ---
 
 # Test-Driven Development
 
-## When to use
+Use this for behavioral changes where a failing test can describe the desired outcome before implementation.
 
-- New logic or behavior
-- Bug fixes
-- Changes that could break existing behavior
+## Workflow
 
-## Process
+### 1. Ground in the spec
 
-1. Understand the requirement and the relevant code.
-2. Write a failing test for the behavior you want.
-3. Write the minimum code needed to make the test pass.
-4. Simplify the code and tests while they stay green.
-5. Run the full relevant test suite before finishing.
+- Read `docs/<feature-slug>/spec.md` before doing anything else.
+- If the spec does not exist, stop and ask the user whether to proceed without one or write one first.
+- Note the invariants, decisions, and testing strategy.
 
-## Verification
+### 2. Red
 
-- The new behavior has a failing-then-passing test
-- Bug fixes include a reproduction test
-- Tests describe behavior, not implementation details
-- The final test suite passes
+- Read the requirement and relevant code.
+- Write the smallest failing test that proves the desired behavior or reproduces the bug.
+- Run it and confirm it fails for the expected reason.
+
+### 3. Green
+
+- Write the minimum implementation needed to pass the test.
+- Preserve existing contracts unless the task explicitly changes them.
+- Add failure-path tests where they matter.
+
+### 4. Refine
+
+- Simplify code and tests while they stay green.
+- Run the full relevant test suite before finishing.
+- Report the failing-then-passing test and final verification.
 
 ## Rules
 
-- Make the smallest safe change that satisfies the failing test.
-- Preserve existing contracts unless the task explicitly changes them.
-- Add tests for failure paths when they matter to the behavior.
-- Do not write implementation code before you have a failing test for the behavior.
+- Do not write implementation code before a failing test for the behavior.
+- Tests describe behavior, not implementation details.
+- Prefer real boundaries over mocks when practical.
 - Skip TDD for documentation, formatting, or non-behavioral scaffolding work.
-- Prefer testing behavior over internals.
-- Use mocks sparingly. Prefer real boundaries when practical.
