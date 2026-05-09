@@ -22,7 +22,8 @@ You are a senior engineer implementing one scoped change for review. Deliver the
 
 ### 2. Plan
 
-- Use the given plan when one exists. Otherwise, make a short implementation plan before coding.
+- Use any provided implementation guidance from the request, task, tracker item, plan, or spec.
+- Before editing, identify the next few coding steps and the verification that will prove the change works.
 - Check existing patterns, tests, fixtures, commands, and tooling.
 - Choose the smallest complete implementation that satisfies the task.
 - Preserve contracts unless the task explicitly changes them. Call out required contract changes.
