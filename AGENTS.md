@@ -14,7 +14,7 @@ Exploration is allowed without creating docs or tracker issues. Do not manufactu
 
 - `spec`: write the technical design before coding.
 - `plan`: break a spec into agent-sized tasks.
-- `implement`: execute one task; read the spec first.
+- `implement`: execute one scoped change with tests and verification.
 - `tdd`: test-first variant of implement.
 - `review`: pre-merge review for correctness, security, simplicity, robustness, and tests.
 - `compress`: shorten over-long instructions without changing behavior.

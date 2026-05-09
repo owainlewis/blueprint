@@ -1,7 +1,6 @@
 ---
 description: "Create a feature branch for the current task."
 argument-hint: "<branch-name or task reference>"
-disable-model-invocation: true
 ---
 
 # Branch

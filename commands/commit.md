@@ -1,7 +1,6 @@
 ---
 description: "Stage the intended changes and create a conventional commit."
 argument-hint: "[optional commit message]"
-disable-model-invocation: true
 ---
 
 # Commit

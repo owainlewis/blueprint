@@ -38,4 +38,4 @@ Avoid separate verification sections unless they add behavior not already covere
 
 ## Example
 
-`skills/implement/SKILL.md` is the model: it has one role, a short ordered workflow, and a small rule set. It tells the agent to read the spec first, make the smallest complete change, test it, verify it, and report.
+`skills/implement/SKILL.md` is the model: it has one role, a short ordered workflow, and a small rule set. It tells the agent to understand the task, make the smallest complete change, test it, verify it, and report.

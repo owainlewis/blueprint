@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: "Test-first variant of implement: read the spec, write a failing test, make it pass, then simplify."
+description: "Test-first variant of implement: understand the desired behavior, write a failing test, make it pass, then simplify."
 user-invocable: true
 argument-hint: "<task reference or behavior> e.g. 'LIN-123' or 'retry logic for API client'"
 ---
@@ -11,15 +11,14 @@ Use this for behavioral changes where a failing test can describe the desired ou
 
 ## Workflow
 
-### 1. Ground in the spec
+### 1. Understand
 
-- Read `docs/<feature-slug>/spec.md` before doing anything else.
-- If the spec does not exist, stop and ask the user whether to proceed without one or write one first.
-- Note the invariants, decisions, and testing strategy.
+- Read the request, task, tracker item, plan, spec, and relevant code as available.
+- Identify the desired behavior, existing contracts, failure paths, and verification.
+- If a spec exists, note its invariants, decisions, and testing strategy.
 
 ### 2. Red
 
-- Read the requirement and relevant code.
 - Write the smallest failing test that proves the desired behavior or reproduces the bug.
 - Run it and confirm it fails for the expected reason.
 
