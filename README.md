@@ -9,7 +9,7 @@ It is the deliberate opposite of guardrail-heavy frameworks that try to constrai
 ## Principles
 
 - **Encode process, not knowledge.** Skills are workflows. Reference material lives elsewhere.
-- **Verification is non-negotiable.** Tests prove the spec. Review checks the tests are real.
+- **Verification is non-negotiable.** Tests prove the requested behavior. Review checks the tests are real.
 - **Bet on the model.** Smart agents, not heavy guardrails. Every model improvement makes guardrails less necessary and more likely to conflict with the model's own judgment.
 - **Density over length.** Skills are as short as they can be while remaining clear. The `compress` skill keeps them honest.
 - **Focused skills, not sprawling catalogues.** Saying no is the discipline.
@@ -19,7 +19,7 @@ It is the deliberate opposite of guardrail-heavy frameworks that try to constrai
 | Phase | Skill | What it does |
 |---|---|---|
 | **Define** | `spec` | One document with requirements and design |
-| **Plan** | `plan` | Break a spec into agent-sized tasks |
+| **Plan** | `plan` | Break work into agent-sized tasks |
 | **Build** | `implement` / `tdd` | Execute one task; tests prove acceptance |
 | **Review** | `review` | Correctness, security, simplicity before merge |
 | **Maintain** | `compress` | Keep skills tight; the meta-skill |
@@ -65,7 +65,7 @@ Some plugin hosts expose namespaced slash commands such as `/blueprint:spec`. Th
 | `tdd` | `/blueprint:tdd` | Test-first variant of implement |
 | `review` | `/blueprint:review` | Local code review |
 | `compress` | `/blueprint:compress` | Shorten agent-facing instructions |
-| `branch` | `/blueprint:branch` | Create a Git branch |
+| `branch` | `/blueprint:branch` | Create a traceable Git branch |
 | `commit` | `/blueprint:commit` | Conventional commit |
 | `build` | `/blueprint:build` | Deprecated alias for `implement` |
 
@@ -101,8 +101,8 @@ Run this to update Blueprint and your installed skills to the latest version.
 | `tdd` | Implements behavior test-first | `Use TDD for retry logic in the API client` |
 | `review` | Reviews specs or code for correctness, security, simplicity, robustness, and tests | `Review the current diff` |
 | `compress` | Shortens agent-facing instructions without changing behavior | `Compress docs/user-auth/spec.md` |
-| `branch` | Creates a focused Git branch using the repo's naming convention | `Create a branch for user-auth` |
-| `commit` | Stages intended changes and writes one clear commit | `Commit the current changes` |
+| `branch` | Creates a traceable Git branch with the ticket ID when available | `Create a branch for LIN-123 user-auth` |
+| `commit` | Stages intended changes and writes one clear Conventional Commit | `Commit the current changes` |
 | `build` | Deprecated alias for `implement` | `Build Task 2 from user-auth` |
 
 ## Agent Instructions

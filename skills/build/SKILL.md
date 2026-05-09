@@ -9,8 +9,19 @@ argument-hint: "<task reference or description>"
 
 `build` is deprecated. Use `implement` for new workflows.
 
-For compatibility with existing prompts and automation, treat this invocation as `implement`:
+For compatibility with existing prompts and automation, treat this invocation as `implement`.
 
-- Execute one scoped change using the `implement` workflow.
+## Workflow
+
+1. Read the request, task, ticket, plan, spec, or code needed to understand the change.
+2. Ask for clarification if missing information would materially change the implementation.
+3. Make a short implementation plan for non-trivial work.
+4. Implement the smallest safe change that solves the request.
+5. Run the relevant tests, checks, or build command for the project.
+6. Report what changed, what passed, and that `build` has been renamed to `implement`.
+
+## Rules
+
 - Do not confuse this skill with project build commands such as `npm build`, `cargo build`, or CI build steps.
-- Mention in the final report that `build` has been renamed to `implement`.
+- Preserve unrelated user changes.
+- If the change reveals the task or spec is wrong, stop and explain before continuing.
