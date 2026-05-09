@@ -74,9 +74,7 @@ The old `/blueprint:requirements`, `/blueprint:architecture`, and `/blueprint:ta
 npx skills add owainlewis/blueprint
 ```
 
-Install Blueprint with the `skills` CLI. The skills are plain Markdown and can be used from Claude Code, Codex, Cursor, Windsurf, GitHub Copilot, and other agents that support local instructions or reusable workflows.
-
-See [docs/getting-started.md](docs/getting-started.md) for the universal install path and tool-specific setup notes.
+Install Blueprint with the `skills` CLI. This is the supported setup path; Blueprint does not maintain per-tool install instructions.
 
 ## Update
 
