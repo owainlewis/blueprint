@@ -1,134 +1,145 @@
 # Plan: RAG Chatbot API
 
-## Overview
-
-A Python API for uploading PDFs and answering questions from their contents using FastAPI, PostgreSQL with pgvector, and OpenAI.
+Source input: `examples/input.md`
 
 Source spec: `docs/rag-chatbot/spec.md`
 
-## Shared Decisions
+## Shared Context
 
-- Use FastAPI, PostgreSQL with pgvector, Docker Compose, and OpenAI.
-- Use fixed-size chunks with overlap for V1.
+Build a greenfield FastAPI service for uploading PDFs, storing chunks and embeddings in PostgreSQL with pgvector, and answering questions with OpenAI using retrieved document context. Keep V1 single-user, PDF-only, and deployable locally with Docker Compose.
+
+Shared decisions:
+
+- Use FastAPI, PostgreSQL with pgvector, UV, Docker Compose, and OpenAI.
+- Use fixed-size chunks with overlap.
 - Mock OpenAI in tests.
-- Keep API errors shaped as `{error: {code, message}}`.
+- Keep errors shaped as `{error: {code, message}}`.
 
----
-
-## Phase 1: Foundation
-
-Goal: the app starts, connects to the database, and exposes a healthy API shell.
-
-### Task 1: Project setup and health check
+## Task 1: Project Foundation
 
 **Goal**
 
-Create the service scaffold, database container, configuration, and health endpoint.
+Create the application scaffold, local services, configuration, database connection, and health endpoint.
 
 **Context**
 
-This task creates the foundation for ingestion and chat. Later tasks should not need to revisit project structure or local startup.
+This task establishes the project structure and local runtime that every later task depends on. It should not implement document ingestion or chat behavior.
 
-**Proposed Approach**
+**Relevant files or references**
 
-Set up FastAPI, Docker Compose with PostgreSQL and pgvector, environment-based settings, and a health endpoint that checks database connectivity.
+- `pyproject.toml`
+- `docker-compose.yml`
+- `app/main.py`
+- `app/core/config.py`
+- `app/db/session.py`
+- `tests/`
 
-**Acceptance Criteria**
+**Proposed approach**
+
+Set up a UV-managed FastAPI project. Add Docker Compose with an API service and PostgreSQL image that supports pgvector. Add environment-backed settings, database session setup, and a health endpoint that checks API startup and database connectivity.
+
+**Acceptance criteria**
 
 - The API and database start with Docker Compose.
-- A health endpoint confirms the app can reach the database.
+- The app can connect to PostgreSQL.
+- A health endpoint returns a successful JSON response.
 - Configuration comes from environment variables.
 
-**Spec Reference**
+**Source reference**
 
-`docs/rag-chatbot/spec.md` covers the stack, Docker Compose surface, environment configuration, and consistent API error shape.
+`docs/rag-chatbot/spec.md`: Context, Requirements, Design.
 
 **Verify**
 
-`docker compose up -d && curl http://localhost:8000/health` returns `{"status":"ok"}`.
+Run `docker compose up -d` and call the health endpoint. Run the project test command.
 
-**Out of Scope**
+**Out of scope**
 
-Document upload, embeddings, retrieval, and chat.
+PDF upload, chunking, embeddings, retrieval, chat, and document listing.
 
----
-
-## Phase 2: Document Ingestion
-
-Goal: PDFs can be uploaded, processed, and stored for later retrieval.
-
-### Task 2: PDF upload and ingestion
+## Task 2: Document Upload And Ingestion
 
 **Goal**
 
-Accept a PDF upload, extract text, chunk it, embed chunks, and store everything needed for retrieval.
+Accept PDF uploads, extract text, chunk it, embed chunks, and store documents and chunks for retrieval.
 
 **Context**
 
-This is the first task that touches file handling, chunking, embeddings, schema design, and external API failure behavior.
+This is the first task that touches file handling, schema design, OpenAI embeddings, and failure behavior. It should leave enough stored data for later list, delete, and chat tasks.
 
-**Proposed Approach**
+**Relevant files or references**
 
-Add document and chunk tables, a PDF text extraction path, fixed-size chunking, an OpenAI embedding adapter, and `POST /api/v1/documents`.
+- `app/api/documents.py`
+- `app/models.py`
+- `app/services/pdf.py`
+- `app/services/chunking.py`
+- `app/services/openai.py`
+- `tests/fixtures/test.pdf`
 
-**Acceptance Criteria**
+**Proposed approach**
 
-- `POST /api/v1/documents` accepts a PDF, extracts text, chunks it, embeds it, and stores the result.
-- Non-PDF uploads return `400`.
-- The response includes document ID, filename, and chunk count.
-- A fixture exists at `tests/fixtures/test.pdf` containing `Blueprint uses PostgreSQL with pgvector for embeddings.`
+Add document and chunk tables. Implement PDF validation and text extraction. Add fixed-size chunking with overlap. Add an OpenAI embedding adapter. Implement `POST /api/v1/documents` and store document metadata, chunk content, chunk order, and embeddings.
 
-**Spec Reference**
+**Acceptance criteria**
 
-`docs/rag-chatbot/spec.md` covers document storage, chunking defaults, embedding behavior, upload validation, and upstream OpenAI error behavior.
+- `POST /api/v1/documents` accepts a PDF and returns `{id, filename, chunk_count}`.
+- Uploaded PDFs are extracted, chunked, embedded, and stored.
+- Non-PDF uploads return `400` with `bad_request`.
+- OpenAI embedding failures return `502` with `upstream_error`.
+- A deterministic PDF fixture exists for tests.
+
+**Source reference**
+
+`docs/rag-chatbot/spec.md`: Requirements, Design, Error Behavior, Testing Strategy.
 
 **Verify**
 
-`curl -F "file=@tests/fixtures/test.pdf" http://localhost:8000/api/v1/documents` returns `{id, filename, chunk_count}`.
+Run the upload endpoint test and a manual `curl -F "file=@tests/fixtures/test.pdf" http://localhost:8000/api/v1/documents`.
 
-**Out of Scope**
+**Out of scope**
 
-Document listing, deletion, retrieval, chat, auth, and non-PDF formats.
+Listing, deletion, vector retrieval, chat responses, auth, and non-PDF formats.
 
-### Task 3: Document listing and deletion
+## Task 3: Document Listing And Deletion
 
 **Goal**
 
-Let users list uploaded documents and delete a document with its chunks.
+List uploaded documents and delete a document with all related chunks.
 
 **Context**
 
-Documents and chunks exist after Task 2. This task adds read and delete behavior without changing ingestion.
+Task 2 creates stored documents and chunks. This task adds read and delete behavior while preserving the deletion invariant.
 
-**Proposed Approach**
+**Relevant files or references**
 
-Add `GET /api/v1/documents` and `DELETE /api/v1/documents/{id}`. Use database constraints or explicit deletion so chunks cannot survive after their document is removed.
+- `app/api/documents.py`
+- `app/models.py`
+- Document and chunk database tests
 
-**Acceptance Criteria**
+**Proposed approach**
 
-- `GET /api/v1/documents` returns stored documents with metadata.
-- `DELETE /api/v1/documents/{id}` removes the document and its related chunks.
-- Deleting a missing document returns `404`.
+Implement `GET /api/v1/documents` and `DELETE /api/v1/documents/{id}`. Use database cascade behavior or explicit deletion so chunks cannot survive their document. Return consistent JSON for success and errors.
 
-**Spec Reference**
+**Acceptance criteria**
 
-`docs/rag-chatbot/spec.md` defines the document listing/deletion API shapes and the invariant that deleting a document also removes its chunks and embeddings.
+- `GET /api/v1/documents` returns document metadata and chunk counts.
+- `DELETE /api/v1/documents/{id}` deletes the document and related chunks.
+- Deleting a missing document returns `404` with `not_found`.
+- Deleted chunks cannot be retrieved through later queries.
+
+**Source reference**
+
+`docs/rag-chatbot/spec.md`: Requirements, Invariants, Error Behavior.
 
 **Verify**
 
-Upload `tests/fixtures/test.pdf`, list documents, delete the returned ID, then confirm the ID no longer appears in `GET /api/v1/documents`.
+Upload the PDF fixture, list documents, delete the returned ID, list again, and assert the document and chunks are gone.
 
-**Out of Scope**
+**Out of scope**
 
-Search, chat, cross-user permissions, and soft delete.
+Search, chat, soft delete, permissions, and retention policy.
 
----
-
-## Phase 3: Chat
-
-Goal: users can ask questions and get grounded answers from uploaded documents.
-
-### Task 4: Retrieval-backed chat endpoint
+## Task 4: Retrieval-Backed Chat
 
 **Goal**
 
@@ -136,38 +147,40 @@ Answer user questions using retrieved document chunks and return source referenc
 
 **Context**
 
-This task combines vector retrieval, prompt construction, OpenAI chat completion, source formatting, and no-result behavior.
+The document and chunk data exists after Tasks 2 and 3. This task connects message embedding, vector retrieval, prompt construction, chat completion, and source formatting.
 
-**Proposed Approach**
+**Relevant files or references**
 
-Add `POST /api/v1/chat`, embed the incoming message, retrieve the top 5 chunks by vector similarity, call the chat model with retrieved context, and return `{answer, sources}`.
+- `app/api/chat.py`
+- `app/services/openai.py`
+- `app/models.py`
+- Chat endpoint tests
 
-**Acceptance Criteria**
+**Proposed approach**
+
+Implement `POST /api/v1/chat`. Embed the incoming message, retrieve the top 5 chunks by vector similarity, build a grounded prompt from the chunks, call OpenAI chat completion, and return `{answer, sources}`. If retrieval finds no relevant chunks, return the fixed no-information response.
+
+**Acceptance criteria**
 
 - `POST /api/v1/chat` accepts a message and returns `{answer, sources}`.
 - Sources include chunk content and document ID.
-- If nothing relevant is found, the response says there is no information and returns no sources.
-- OpenAI failures return `502`.
+- A question answerable from the PDF fixture returns an answer grounded in the fixture and at least one source.
+- No relevant chunks returns the fixed no-information response and no sources.
+- OpenAI chat failures return `502` with `upstream_error`.
 
-**Spec Reference**
+**Source reference**
 
-`docs/rag-chatbot/spec.md` covers retrieval defaults, chat response shape, source references, no-information behavior, and upstream OpenAI failure handling.
+`docs/rag-chatbot/spec.md`: Requirements, Design, Decisions, Error Behavior.
 
 **Verify**
 
-Upload `tests/fixtures/test.pdf`, then ask `What database is used for embeddings?`; the response mentions PostgreSQL with pgvector and includes at least one source.
+Upload the PDF fixture, ask `What database is used for embeddings?`, and assert the answer mentions PostgreSQL with pgvector and includes a source.
 
-**Out of Scope**
+**Out of scope**
 
-Conversation history, streaming responses, reranking, and retrieval tuning beyond the V1 defaults.
+Conversation history, streaming, reranking, multi-document filtering, and retrieval tuning beyond V1 defaults.
 
----
-
-## Phase 4: Test Coverage
-
-Goal: the main API flows are covered by reliable integration tests.
-
-### Task 5: Integration tests for the API
+## Task 5: End-To-End Verification
 
 **Goal**
 
@@ -175,26 +188,33 @@ Prove the main API flows and expected error paths with deterministic tests.
 
 **Context**
 
-The core behavior exists after Tasks 1-4. This task raises confidence without changing product behavior.
+The core API should exist after Tasks 1-4. This task closes coverage gaps and makes the workflow reviewable without depending on live OpenAI calls.
 
-**Proposed Approach**
+**Relevant files or references**
 
-Use `pytest` and `httpx` against a real PostgreSQL with pgvector test database. Mock OpenAI embedding and chat calls with deterministic responses.
+- `tests/`
+- `tests/fixtures/test.pdf`
+- Docker Compose test database setup
 
-**Acceptance Criteria**
+**Proposed approach**
 
-- Tests cover upload, list, delete, chat with relevant chunks, chat with no relevant chunks, and `400`, `404`, and `502` paths.
+Add endpoint and integration tests with `pytest` and `httpx`. Run database-backed tests against PostgreSQL with pgvector. Mock OpenAI embeddings and chat completions. Cover successful flows and required error responses.
+
+**Acceptance criteria**
+
+- Tests cover upload, list, delete, chat with relevant chunks, chat with no relevant chunks, non-PDF upload, missing document deletion, and OpenAI failure paths.
 - OpenAI calls are mocked with deterministic responses.
-- Tests run against a real PostgreSQL with pgvector database.
+- Tests verify the deletion invariant and error response shape.
+- The documented verification commands pass.
 
-**Spec Reference**
+**Source reference**
 
-`docs/rag-chatbot/spec.md` defines the main API flows and error cases this task should cover.
+`docs/rag-chatbot/spec.md`: Testing Strategy, Invariants, Error Behavior.
 
 **Verify**
 
-`pytest`
+Run `pytest` and any project lint/type checks introduced by the scaffold.
 
-**Out of Scope**
+**Out of scope**
 
-Changing API behavior, adding new endpoints, and testing third-party library internals.
+Changing API behavior, adding new endpoints, testing third-party internals, and live OpenAI integration tests.

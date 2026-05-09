@@ -2,31 +2,27 @@
 
 ## What
 
-Build a Python API that lets a user upload PDF documents and ask questions answered from those documents. Keep it simple, single-user, and grounded in retrieved content so the API returns a clear "no information" response instead of hallucinating.
+Build a FastAPI service that lets a single user upload PDF documents, store their embeddings in PostgreSQL with pgvector, and ask questions answered from the uploaded content with source references.
 
 ## Context
 
-Greenfield FastAPI service using PostgreSQL with pgvector and the OpenAI API. The first version has no auth, no conversation history, and no non-PDF formats. Docker Compose is part of the local development surface.
+This is a greenfield API. The input specifies FastAPI, PostgreSQL with pgvector, OpenAI for embeddings and chat completion, UV for package management, and Docker Compose for local development. The first version should stay intentionally small: PDFs only, no auth, no multi-user behavior, no conversation history, and simple fixed-size chunking.
 
 ## Requirements
 
-**Functional**
-
-- Upload a PDF, extract text, chunk it, embed it, and store the document with its chunks
-- Ask a question and return an answer plus source references from the most relevant chunks
-- List uploaded documents with basic metadata
-- Delete a document and all associated chunks and embeddings
-- Return `400` for non-PDF uploads, `404` for missing documents, and `502` for upstream OpenAI failures
-- When no relevant chunks are found, return `{"answer":"No relevant information found in uploaded documents.","sources":[]}`
-
-**Non-functional**
-
-- Run locally with Docker Compose for the API and PostgreSQL
-- Use PostgreSQL with pgvector for embeddings
-- Keep configuration in environment variables
-- Keep API responses JSON and consistent across endpoints
+- `POST /api/v1/documents` accepts a PDF, extracts text, chunks it, embeds each chunk, stores the document and chunks, and returns `{id, filename, chunk_count}`.
+- `GET /api/v1/documents` returns uploaded documents with `id`, `filename`, `uploaded_at`, and `chunk_count`.
+- `DELETE /api/v1/documents/{id}` deletes the document and its chunks, returning `{deleted: true}`.
+- `POST /api/v1/chat` accepts a message, retrieves relevant chunks, calls OpenAI chat completion with grounded context, and returns `{answer, sources}`.
+- Source references include the stored chunk content and document ID.
+- Non-PDF uploads return `400`; deleting a missing document returns `404`; OpenAI failures return `502`.
+- If no relevant chunks are found, chat returns `{"answer":"No relevant information found in uploaded documents.","sources":[]}`.
+- The service runs locally with Docker Compose for the API and PostgreSQL.
+- Configuration comes from environment variables.
 
 ## Design
+
+Use FastAPI for HTTP, PostgreSQL with pgvector for metadata and vector search, and OpenAI for embeddings and answer generation.
 
 ```mermaid
 flowchart TB
@@ -35,60 +31,65 @@ flowchart TB
     API --> OpenAI["OpenAI API"]
 ```
 
-- Use FastAPI for the HTTP layer, PostgreSQL + pgvector for storage and retrieval, and the OpenAI API for embeddings and answer generation.
-- Use fixed-size chunks of about 500 tokens with about 50 tokens of overlap.
-- Store documents and chunks so listing, deletion, retrieval, and source references all work without extra services.
-- Retrieve the top 5 chunks for each chat request and return sources ordered by relevance.
-- Return source references with chat responses so callers can see what grounded the answer.
+Suggested components:
 
-**API shapes**
+- `app/main.py`: FastAPI app and router registration.
+- `app/api/documents.py`: upload, list, and delete endpoints.
+- `app/api/chat.py`: chat endpoint.
+- `app/core/config.py`: environment-backed settings.
+- `app/db/session.py`: database engine/session setup.
+- `app/models.py`: document and chunk tables.
+- `app/services/pdf.py`: PDF text extraction.
+- `app/services/chunking.py`: fixed-size chunking with overlap.
+- `app/services/openai.py`: embedding and chat adapters.
+- `docker-compose.yml`: API and PostgreSQL with pgvector.
+
+Use fixed-size chunks of roughly 500 tokens with roughly 50 tokens of overlap. Store chunks with embeddings, document ID, text content, and position. Retrieve the top 5 chunks by vector similarity for each chat request. Build the chat prompt from retrieved chunks and instruct the model to answer only from provided context.
+
+API shapes:
 
 ```text
-POST /api/v1/documents -> {id, filename, chunk_count}
-GET  /api/v1/documents -> [{id, filename, uploaded_at, chunk_count}]
-POST /api/v1/chat      -> {answer, sources: [{content, document_id}]}
+POST   /api/v1/documents      -> {id, filename, chunk_count}
+GET    /api/v1/documents      -> [{id, filename, uploaded_at, chunk_count}]
 DELETE /api/v1/documents/{id} -> {deleted: true}
-Errors -> {error: {code, message}}
+POST   /api/v1/chat           -> {answer, sources: [{content, document_id}]}
+Errors                         -> {error: {code, message}}
 ```
-
-Important defaults:
-
-- `POST /api/v1/chat` with no relevant matches returns `{"answer":"No relevant information found in uploaded documents.","sources":[]}`
-- Error codes use `bad_request`, `not_found`, and `upstream_error`
 
 ## Decisions
 
-- Storage: use PostgreSQL with pgvector, because document metadata and vector search can stay in one database.
-- Chunking: use fixed-size chunks of about 500 tokens with about 50 tokens of overlap, because simple predictable chunking is enough for V1.
-- Retrieval: use top 5 chunks per chat request, because it keeps prompts small while giving the answer generator enough context.
-- OpenAI calls in tests: mock them, because integration tests should not depend on external network calls or model variance.
-- No relevant chunks: return the fixed "No relevant information found in uploaded documents." response, because hallucination is worse than an explicit miss.
+- Store metadata and embeddings in PostgreSQL with pgvector so the first version needs only one persistent service.
+- Use fixed-size chunking because the requested V1 does not need retrieval tuning.
+- Retrieve the top 5 chunks to keep prompts small while giving the model enough context.
+- Mock OpenAI calls in tests so verification does not depend on network access or model variance.
+- Return an explicit no-information answer when retrieval finds no useful context, because hallucination is worse than an empty result.
 
 ## Invariants
 
-- Deleting a document also deletes its chunks and embeddings, verified by listing documents and ensuring deleted chunks cannot be retrieved.
-- API errors use `{error: {code, message}}`, verified by endpoint tests for `400`, `404`, and `502`.
-- Chat answers include source references from stored chunks, verified by a chat test against `tests/fixtures/test.pdf`.
+- Deleting a document deletes its chunks and embeddings.
+- Chat answers must be grounded in retrieved chunks and include source references.
+- Error responses use `{error: {code, message}}`.
+- OpenAI API failures are surfaced as `502` with `upstream_error`.
 
 ## Error Behavior
 
-- Non-PDF upload returns `400` with `bad_request`.
-- Missing document deletion returns `404` with `not_found`.
-- OpenAI embedding or chat failures return `502` with `upstream_error`.
-- No relevant chunks returns `200` with the fixed no-information answer and an empty `sources` array.
+- Non-PDF upload: `400` with `bad_request`.
+- Missing document on delete: `404` with `not_found`.
+- OpenAI embedding or chat failure: `502` with `upstream_error`.
+- No relevant chunks: `200` with the fixed no-information answer and an empty `sources` array.
 
 ## Testing Strategy
 
-- Use `pytest` with `httpx` for endpoint tests
-- Test database behavior against a real PostgreSQL + pgvector instance
-- Mock OpenAI calls so tests are deterministic and fast
-- Cover the main flows: upload, list, delete, chat with relevant chunks, chat with no relevant chunks, and the expected error cases
-- Do not spend time testing framework internals or third-party library behavior
+- Use `pytest` and `httpx` for endpoint tests.
+- Run database tests against PostgreSQL with pgvector.
+- Mock OpenAI embeddings and chat completions with deterministic responses.
+- Cover upload, list, delete, chat with relevant chunks, chat with no relevant chunks, and `400`, `404`, and `502` errors.
+- Include a PDF fixture with text such as `Blueprint uses PostgreSQL with pgvector for embeddings.`
 
 ## Out of Scope
 
-- Authentication or multi-user behavior
-- Conversation history or multi-turn chat
-- Non-PDF document formats
-- Fancy chunking or retrieval tuning
-- Cloud deployment beyond local Docker Compose
+- Authentication and multi-user behavior.
+- Conversation history or streaming.
+- Non-PDF document formats.
+- Advanced chunking, reranking, or retrieval tuning.
+- Cloud deployment beyond local Docker Compose.
