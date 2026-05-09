@@ -1,6 +1,6 @@
 {
   "name": "blueprint",
-  "description": "Pragmatic agent workflow for shaping tasks, writing specs when decisions matter, compressing context, building, reviewing, and committing software changes.",
+  "description": "Focused agentic engineering workflow: spec, plan, implement, tdd, review, compress, branch, and commit.",
   "version": "0.2.0",
   "author": {
     "name": "Owain Lewis"

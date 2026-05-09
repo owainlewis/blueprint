@@ -1,41 +1,27 @@
 ---
 name: commit
-description: "Stage and commit the intended changes with a clear message."
+description: "Stage the intended changes and create one clear conventional commit."
 user-invocable: true
-argument-hint: "[optional: commit message override]"
+argument-hint: "[optional commit message]"
 ---
 
 # Commit
 
-## When to use
+Create one clear Conventional Commit for the intended current changes.
 
-- The current work is ready to record in git
-- The diff is understood and intentionally scoped
-
-## Process
+## Workflow
 
 1. Inspect `git status`, `git diff`, and `git diff --cached`.
-2. Read recent commit messages so the new commit fits the repo.
+2. Read recent commit messages for useful scopes and local phrasing.
 3. If there is nothing worth committing, stop.
-4. Stage only the intended files. Never stage secrets.
-5. Use the user's message if provided. Otherwise write a Conventional Commit message:
-   - Format: `type(scope): subject`
-   - Common types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`
-   - Keep the subject short, specific, and in imperative mood
-   - Use the body for why the change exists, important context, and migrations or follow-up work
-   - Good examples: `feat(auth): add GitHub OAuth login`, `fix(api): handle empty embedding results`
+4. Stage only intended files. Never stage secrets.
+5. Use the user's message if provided. Otherwise write a Conventional Commit message: `type(scope): subject`.
 6. Create the commit and report the hash and message.
-
-## Verification
-
-- The staged changes match the intended scope
-- The commit exists
-- `git status` confirms the expected result
 
 ## Rules
 
-- If the change breaks a contract or requires migration, note it clearly in the commit message body.
-- If there is nothing to commit or the diff is not understood, stop.
 - Prefer staging specific files over broad adds.
 - Do not commit `.env`, credentials, or keys.
-- The subject should say what changed. The body should explain why.
+- If the diff is not understood, stop.
+- Prefer `feat`, `fix`, `refactor`, `test`, `docs`, or `chore`.
+- The subject should say what changed. Add a body when the why, risk, or verification matters.
