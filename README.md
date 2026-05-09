@@ -51,26 +51,29 @@ flowchart TD
 
 **Tests are the verification.** Blueprint does not run a separate "did the implementation match the instructions?" pass. The request or spec defines the testing strategy. The implementation produces tests that prove the requirements. Review checks the tests are real and not theatre. If you want stronger verification, write the additional concerns into `REVIEW.md`; the review skill will pick them up.
 
-## Commands and Skills
+## Invoking Skills
 
-Blueprint exposes two surfaces. **Slash commands** (`/blueprint:plan`, `/blueprint:implement`, etc.) are what you type. **Skills** (`skills/plan/`, `skills/implement/`, etc.) are how those commands are implemented. The vocabulary is shared; the command and skill for a given verb have the same name.
+The supported install path is `npx skills add owainlewis/blueprint`. That installs standalone skills; invoke them by skill name (`spec`, `plan`, `implement`, etc.) or by the skill picker/natural-language flow your agent supports.
 
-| Command | Skill | Purpose |
+Some plugin hosts expose namespaced slash commands such as `/blueprint:spec`. Those commands are aliases for the same skill names; the standalone skill name is the stable vocabulary.
+
+| Skill | Plugin command, when available | Purpose |
 |---|---|---|
-| `/blueprint:spec` | `skills/spec/` | Write a spec |
-| `/blueprint:plan` | `skills/plan/` | Break a spec into reviewable tasks |
-| `/blueprint:implement` | `skills/implement/` | Execute a single task |
-| `/blueprint:tdd` | `skills/tdd/` | Test-first variant of implement |
-| `/blueprint:review` | `skills/review/` | Local code review |
-| `/blueprint:compress` | `skills/compress/` | Shorten agent-facing instructions |
-| `/blueprint:branch` | `skills/branch/` | Create a Git branch |
-| `/blueprint:commit` | `skills/commit/` | Conventional commit |
+| `spec` | `/blueprint:spec` | Write a spec |
+| `plan` | `/blueprint:plan` | Break a spec into reviewable tasks |
+| `implement` | `/blueprint:implement` | Execute a single task |
+| `tdd` | `/blueprint:tdd` | Test-first variant of implement |
+| `review` | `/blueprint:review` | Local code review |
+| `compress` | `/blueprint:compress` | Shorten agent-facing instructions |
+| `branch` | `/blueprint:branch` | Create a Git branch |
+| `commit` | `/blueprint:commit` | Conventional commit |
+| `build` | `/blueprint:build` | Deprecated alias for `implement` |
 
 Branching and committing are mechanical, but they are still skills so the installer can expose the full workflow consistently.
 
-`/blueprint:build` is deprecated. Use `/blueprint:implement`; the old name was retired because "build" collides with project build steps and CI vocabulary.
+`build` and `/blueprint:build` are deprecated compatibility aliases for `implement`. The old name was retired because "build" collides with project build steps and CI vocabulary.
 
-The old `/blueprint:requirements`, `/blueprint:architecture`, and `/blueprint:task` commands are removed. Requirements and architecture now live together in `/blueprint:spec`; task execution is `/blueprint:implement`.
+The old `requirements`, `architecture`, and `task` entry points are removed. Requirements and architecture now live together in `spec`; task execution is `implement`.
 
 ## Install
 
@@ -100,6 +103,7 @@ Run this to update Blueprint and your installed skills to the latest version.
 | `compress` | Shortens agent-facing instructions without changing behavior | `Compress docs/user-auth/spec.md` |
 | `branch` | Creates a focused Git branch using the repo's naming convention | `Create a branch for user-auth` |
 | `commit` | Stages intended changes and writes one clear commit | `Commit the current changes` |
+| `build` | Deprecated alias for `implement` | `Build Task 2 from user-auth` |
 
 ## Agent Instructions
 
