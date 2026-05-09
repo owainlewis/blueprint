@@ -9,7 +9,7 @@ argument-hint: "<file path or pasted instruction>"
 
 ## When to use
 
-- Compressing specs, plans, tickets, prompts, `AGENTS.md`, or skill files
+- Compressing specs, plans, tasks, prompts, `AGENTS.md`, or skill files
 - Removing redundancy from instructions before giving them to an agent
 - Tightening a document that has grown through repeated edits
 

@@ -29,9 +29,10 @@ It is the deliberate opposite of guardrail-heavy frameworks that try to constrai
 ```mermaid
 flowchart TD
     Start([Feature or task]) --> Spec[spec<br/>requirements + technical design<br/>one document]
-    Spec --> Plan[plan<br/>break into agent-sized tasks]
-    Plan --> Linear[Push tickets to Linear<br/>tickets are the state]
-    Linear --> Loop{For each ticket}
+    Spec --> Plan[plan<br/>write portable task list]
+    Plan --> Loop{For each task}
+    Plan -. optional .-> Destination[Push tasks to<br/>the team's tracker]
+    Destination -.-> Loop
     Loop --> Implement[implement<br/>read spec first, then do work]
     Implement --> Tests[tests pass<br/>tests prove acceptance criteria]
     Tests --> Review[review<br/>correctness, security, simplicity]
@@ -40,7 +41,7 @@ flowchart TD
     Decision -->|No, drifted| Respec[update spec -> re-run plan]
     Respec --> Plan
     Ship --> Loop
-    Loop -->|All tickets done| Done([Feature shipped])
+    Loop -->|All tasks done| Done([Feature shipped])
 ```
 
 **If implementation reveals the spec is wrong, stop.** Update the spec, then re-run `plan` against the updated spec. Do not push through a stale plan. Re-planning costs minutes; pushing through a wrong plan costs the rest of the feature.
@@ -97,13 +98,13 @@ Run this to update Blueprint and your installed skills to the latest version.
 
 ## Agent Instructions
 
-Blueprint creates instructions for agents. Sometimes that instruction is a one-sentence prompt. Sometimes it is a Linear ticket. Sometimes it is a markdown spec in the repo. The format should match the work.
+Blueprint creates instructions for agents. Sometimes that instruction is a one-sentence prompt. Sometimes it is a tracker issue. Sometimes it is a markdown spec in the repo. The format should match the work.
 
 One spec lives at `docs/<feature-slug>/spec.md`. External requirements flow into it; the spec is the artifact that brings context into the codebase.
 
-State lives in Linear, not in the repo. No `state.md`, no handoff file. The ticket is the state.
+Plans default to `docs/<feature-slug>/plan.md`: a portable task list that can be reviewed, copied into a tracker, or used directly. If you want issues created in Linear, GitHub Issues, or another system, ask for that as the next step.
 
-Use the full pipeline for work that touches contracts, schemas, multiple files, or invariants. For trivial changes, just do them. For exploration, explore without manufacturing fake specs, plans, or tickets.
+Use the full pipeline for work that touches contracts, schemas, multiple files, or invariants. For trivial changes, just do them. For exploration, explore without manufacturing fake specs, plans, or tracker issues.
 
 ## Philosophy
 

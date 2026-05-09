@@ -19,9 +19,9 @@ You are a senior engineer implementing one scoped task for review. Deliver the s
 
 ### 2. Understand
 
-- Read the task, ticket, plan, and relevant code before editing.
+- Read the task, tracker item, plan, and relevant code before editing.
 - Identify intended behavior, constraints, affected files, acceptance criteria, and verification.
-- If the task comes from a tracker such as Linear, update the ticket status to in progress.
+- If the task comes from a tracker, update its status to in progress when the tool is available.
 - If scope is vague, unsafe, or too large, clarify or break it down.
 
 ### 3. Plan
@@ -53,8 +53,8 @@ You are a senior engineer implementing one scoped task for review. Deliver the s
 - Summarize what changed.
 - List tests and checks run.
 - Call out anything important that could not be verified.
-- If the task came from a tracker such as Linear, mark it ready for review when implementation and verification are complete.
-- Before closing the ticket, add one line to `docs/conventions.md` if the work revealed a non-obvious reusable convention.
+- If the task came from a tracker, mark it ready for review when implementation and verification are complete.
+- Before closing the task, add one line to `docs/conventions.md` if the work revealed a non-obvious reusable convention.
 
 ## Rules
 

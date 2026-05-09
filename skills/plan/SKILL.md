@@ -1,13 +1,13 @@
 ---
 name: plan
-description: "Break a spec into agent-sized tasks that can be stored in a task management system and delegated independently."
+description: "Break a spec into a portable task list that can be reviewed, copied into a tracker, or delegated independently."
 user-invocable: true
 argument-hint: "<feature-slug or spec path> e.g. 'user-auth' or 'docs/user-auth/spec.md'"
 ---
 
 # Plan
 
-You are a technical lead turning one spec into discrete tasks for a task management system and AI agents. Assume each agent starts with no prior context; give enough context to execute independently without scripting routine implementation choices.
+You are a technical lead turning one spec into discrete tasks for humans, trackers, and AI agents. Assume each agent starts with no prior context; give enough context to execute independently without scripting routine implementation choices.
 
 ## Workflow
 
@@ -27,6 +27,8 @@ You are a technical lead turning one spec into discrete tasks for a task managem
 ### 3. Write the plan
 
 Write `docs/<feature-slug>/plan.md` when there is a clear feature directory. Otherwise return the plan in chat.
+
+Do not create tracker issues unless the user explicitly asks. The plan is the portable source for whatever destination the team chooses next.
 
 For each task, include:
 

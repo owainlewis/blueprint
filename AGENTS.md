@@ -8,7 +8,7 @@ If you are an AI agent working in this repo, follow these conventions.
 
 Use `spec -> plan -> implement -> review` for changes that touch contracts, schemas, multiple files, user-visible behavior, or invariants. Skip stages only when explicitly told to or when the change is trivial and decision-complete.
 
-Exploration is allowed without creating docs or tickets. Do not manufacture fake specs, plans, or Linear tasks for spikes.
+Exploration is allowed without creating docs or tracker issues. Do not manufacture fake specs, plans, or issues for spikes.
 
 ## Skills
 
@@ -22,7 +22,7 @@ Exploration is allowed without creating docs or tickets. Do not manufacture fake
 ## Conventions
 
 - One spec per feature, at `docs/<feature-slug>/spec.md`.
-- State lives in Linear, not in the repo. The ticket is the state.
+- Plans default to `docs/<feature-slug>/plan.md`. Push tasks to a tracker only when the user asks.
 - If the spec is wrong, stop and re-spec. Do not push through.
 - Tests are the verification mechanism; review checks they are real.
 - Add one line to `docs/conventions.md` when implementation reveals a reusable non-obvious convention.
