@@ -70,7 +70,7 @@ Some plugin hosts expose namespaced slash commands such as `/blueprint:spec`. Th
 
 Branching and committing are mechanical, but they are still skills so the installer can expose the full workflow consistently.
 
-The old `requirements`, `architecture`, `task`, and `build` entry points are removed. Requirements and architecture now live together in `spec`; task execution is `implement`.
+Removed entry points are not maintained as aliases: `requirements` and `architecture` are now `spec`; `task`, `build`, `debug`, and `refactor` are now `implement`; `coverage` is handled through `implement` when adding tests or `review` when evaluating them.
 
 ## Install
 
