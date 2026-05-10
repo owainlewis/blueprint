@@ -17,6 +17,8 @@ Exploration is allowed without creating docs or issue tracker entries. Do not ma
 - `implement`: execute one scoped change with tests and verification.
 - `tdd`: test-first variant of implement.
 - `review`: pre-merge review for correctness, security, simplicity, robustness, and tests.
+- `browser-verify`: verify browser-rendered work in a real browser.
+- `explain-visually`: create a responsive HTML explainer for a repo, spec, PR, architecture, or concept.
 - `compress`: shorten over-long instructions without changing behavior.
 - `branch`: create a traceable Git branch with the ticket ID when available.
 - `commit`: stage intended changes and write one clear Conventional Commit.

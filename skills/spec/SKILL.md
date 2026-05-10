@@ -11,13 +11,16 @@ You are a principal engineer writing a technical spec for an AI agent to execute
 
 ## Workflow
 
-### 1. Understand
+### 1. Align
 
 - Treat the full argument as the request unless the user names a feature.
 - Derive a kebab-case feature slug if no name is given.
 - Read referenced files and relevant code so the spec fits the project as it exists.
-- Identify decisions, invariants, contracts, and error behavior that need review before coding.
-- Ask only if a missing decision would materially change the spec.
+- Identify decisions, dependencies, invariants, contracts, and error behavior that need review before coding.
+- If code can answer a question, inspect the code instead of asking.
+- Ask only when a missing decision would materially change the spec.
+- Ask one question at a time, with your recommended answer.
+- Continue only when the spec can be written without guessing.
 
 ### 2. Write
 
