@@ -31,12 +31,12 @@ Write the teaching path before building:
 
 Default teaching path:
 
-- the simple version
-- the problem
-- the idea
+- the core lesson
+- why the old way fails
+- the new mental model
 - how it works
 - a concrete example
-- why it matters
+- what to do next
 
 ### 3. Build
 
@@ -74,10 +74,16 @@ Run `browser-verify` before finishing. Check desktop and mobile viewports. Fix o
 - Teach before summarizing.
 - Simple words beat abstract titles.
 - Define loaded terms before relying on them.
+- The first screen must state the core lesson in plain language.
+- Show at least one transformation: before/after, problem/solution, vague/clear, or hidden/visible.
+- Give the reader one reusable mental model.
+- Include one concrete example from the source material.
+- End with the action the reader should take next.
 - Make factual claims the source material supports.
 - Use concrete names, paths, commands, and examples when they help the reader trust the explanation.
 - Diagrams should make the idea easier to understand.
 - Diagram text must be centered, aligned, and contained inside its shapes.
 - Do not use `overflow: hidden` on content containers to hide layout problems.
+- Prefer useful clarity over clever phrasing.
 - The artifact fails if the reader cannot explain the idea back.
 - The artifact fails if text overlaps, clips, or overflows.
