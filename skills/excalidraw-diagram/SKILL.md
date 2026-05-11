@@ -36,7 +36,7 @@ Split into multiple diagrams if one diagram would need unrelated ideas.
 
 Use the official Excalidraw MCP when the client exposes it. Create or update an editable Excalidraw canvas there, then export or save a `.excalidraw` file if the tool supports it.
 
-If the MCP is unavailable, write an editable `.excalidraw` file directly. Use the requested path; otherwise write `docs/<slug>.excalidraw` when `docs/` exists, or `<slug>.excalidraw` in the current directory.
+If the MCP is unavailable or cannot export/save a file, write an editable `.excalidraw` file directly. Use the requested path; otherwise write `docs/<slug>.excalidraw` when `docs/` exists, or `<slug>.excalidraw` in the current directory.
 
 Use clear hierarchy, aligned shapes, readable labels, and generous spacing. Keep the Excalidraw hand-drawn feel: few colors, consistent shape language, and no decorative clutter.
 
