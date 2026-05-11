@@ -9,6 +9,7 @@ Source spec: `docs/rag-chatbot/spec.md`
 ## Shared Decisions
 
 - Use FastAPI, PostgreSQL with pgvector, Docker Compose, and OpenAI.
+- Use Python 3.14, PostgreSQL 18, pgvector 0.8.2 or `pgvector/pgvector:pg18`, FastAPI 0.136.1, `gpt-5.2`, and `text-embedding-3-large` unless implementation review finds a compatibility issue.
 - Use fixed-size chunks with overlap for V1.
 - Mock OpenAI in tests.
 - Keep API errors shaped as `{error: {code, message}}`.
@@ -31,17 +32,18 @@ This task creates the foundation for ingestion and chat. Later tasks should not 
 
 **Proposed Approach**
 
-Set up FastAPI, Docker Compose with PostgreSQL and pgvector, environment-based settings, and a health endpoint that checks database connectivity.
+Set up FastAPI, Docker Compose with PostgreSQL 18 and pgvector, environment-based settings, and a health endpoint that checks database connectivity.
 
 **Acceptance Criteria**
 
 - The API and database start with Docker Compose.
 - A health endpoint confirms the app can reach the database.
 - Configuration comes from environment variables.
+- The project pins the major stack versions from the spec.
 
 **Spec Reference**
 
-`docs/rag-chatbot/spec.md` covers the stack, Docker Compose surface, environment configuration, and consistent API error shape.
+`docs/rag-chatbot/spec.md` covers the stack, version choices, Docker Compose surface, environment configuration, and consistent API error shape.
 
 **Verify**
 
