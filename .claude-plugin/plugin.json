@@ -1,6 +1,6 @@
 {
   "name": "blueprint",
-  "description": "Focused agentic engineering workflow: spec, plan, implement, tdd, review, browser-verify, explain-visually, compress, branch, and commit.",
+  "description": "Delivery and engineering productivity skills for agentic software work: spec, plan, implement, tdd, review, branch, commit, browser-verify, explain-visually, excalidraw-diagram, and compress.",
   "version": "0.2.0",
   "author": {
     "name": "Owain Lewis"
