@@ -12,22 +12,16 @@ Exploration is allowed without creating docs or issue tracker entries. Do not ma
 
 ## Skills
 
-Delivery skills turn software work into shipped changes:
-
 - `spec`: write the technical design before coding.
 - `plan`: break a spec, brief, or request into agent-sized tasks.
 - `implement`: execute one scoped change with tests and verification.
 - `tdd`: test-first variant of implement.
 - `review`: pre-merge review for correctness, security, simplicity, robustness, and tests.
-- `branch`: create a traceable Git branch with the ticket ID when available.
-- `commit`: stage intended changes and write one clear Conventional Commit.
-
-Engineering productivity skills help agents and engineers work faster, understand better, and avoid quality regressions:
-
 - `browser-verify`: verify browser-rendered work in a real browser.
 - `explain-visually`: create a responsive HTML explainer for a repo, spec, PR, architecture, or concept.
-- `excalidraw-diagram`: create an editable Excalidraw diagram for a repo, spec, architecture, workflow, or concept.
 - `compress`: shorten over-long instructions without changing behavior.
+- `branch`: create a traceable Git branch with the ticket ID when available.
+- `commit`: stage intended changes and write one clear Conventional Commit.
 
 ## Guidance
 

@@ -16,12 +16,15 @@ It is the deliberate opposite of guardrail-heavy frameworks that try to constrai
 
 ## The Shape
 
-Blueprint has two kinds of skills:
-
-| Category | Skills | What they do |
+| Phase | Skill | What it does |
 |---|---|---|
-| **Delivery** | `spec`, `plan`, `implement`, `tdd`, `review`, `branch`, `commit` | Turn software work into shipped changes |
-| **Engineering Productivity** | `browser-verify`, `explain-visually`, `excalidraw-diagram`, `compress` | Help engineers and agents work faster, understand better, and avoid quality regressions |
+| **Define** | `spec` | One document with requirements and design |
+| **Plan** | `plan` | Break work into agent-sized tasks |
+| **Build** | `implement` / `tdd` | Execute one task; tests prove acceptance |
+| **Review** | `review` | Correctness, security, simplicity before merge |
+| **Browser** | `browser-verify` | Check rendered UI, HTML, and visual docs in a real browser |
+| **Explain** | `explain-visually` | Create responsive HTML explainers for humans |
+| **Maintain** | `compress` | Keep skills tight; the meta-skill |
 
 ## The Flow
 
@@ -56,19 +59,18 @@ The supported install path is `npx skills add owainlewis/blueprint`. That instal
 
 Some plugin hosts expose namespaced slash commands such as `/blueprint:spec`. Those commands are aliases for the same skill names; the standalone skill name is the stable vocabulary.
 
-| Category | Skill | Plugin command, when available | Purpose |
-|---|---|---|---|
-| Delivery | `spec` | `/blueprint:spec` | Write a spec |
-| Delivery | `plan` | `/blueprint:plan` | Break input into reviewable tasks |
-| Delivery | `implement` | `/blueprint:implement` | Execute a single task |
-| Delivery | `tdd` | `/blueprint:tdd` | Test-first variant of implement |
-| Delivery | `review` | `/blueprint:review` | Local code review |
-| Delivery | `branch` | `/blueprint:branch` | Create a traceable Git branch |
-| Delivery | `commit` | `/blueprint:commit` | Conventional commit |
-| Engineering Productivity | `browser-verify` | `/blueprint:browser-verify` | Verify browser-rendered work |
-| Engineering Productivity | `compress` | `/blueprint:compress` | Shorten agent-facing instructions |
-| Engineering Productivity | `explain-visually` | `/blueprint:explain-visually` | Create a visual HTML explanation |
-| Engineering Productivity | `excalidraw-diagram` | `/blueprint:excalidraw-diagram` | Create an editable Excalidraw diagram |
+| Skill | Plugin command, when available | Purpose |
+|---|---|---|
+| `spec` | `/blueprint:spec` | Write a spec |
+| `plan` | `/blueprint:plan` | Break input into reviewable tasks |
+| `implement` | `/blueprint:implement` | Execute a single task |
+| `tdd` | `/blueprint:tdd` | Test-first variant of implement |
+| `review` | `/blueprint:review` | Local code review |
+| `browser-verify` | `/blueprint:browser-verify` | Verify browser-rendered work |
+| `explain-visually` | `/blueprint:explain-visually` | Create a visual HTML explanation |
+| `compress` | `/blueprint:compress` | Shorten agent-facing instructions |
+| `branch` | `/blueprint:branch` | Create a traceable Git branch |
+| `commit` | `/blueprint:commit` | Conventional commit |
 
 Branching and committing are mechanical, but they are still skills so the installer can expose the full workflow consistently.
 
@@ -99,8 +101,6 @@ Run this to update Blueprint and your installed skills to the latest version.
 
 ## Skills
 
-### Delivery
-
 | Skill | What it does | Example |
 |---|---|---|
 | `spec` | Writes `docs/<feature-slug>/spec.md`: requirements and design in one document | `Write a spec for user-auth` |
@@ -108,17 +108,11 @@ Run this to update Blueprint and your installed skills to the latest version.
 | `implement` | Executes one scoped change with tests and verification | `Implement LIN-123 from user-auth` |
 | `tdd` | Implements behavior test-first | `Use TDD for retry logic in the API client` |
 | `review` | Reviews specs or code for correctness, security, simplicity, robustness, and tests | `Review the current diff` |
+| `browser-verify` | Verifies rendered UI, HTML, visual docs, and browser-facing behavior in a real browser | `Browser-verify the local HTML report` |
+| `explain-visually` | Creates a responsive HTML explanation of a repo, spec, PR, architecture, or concept | `Explain this repo visually` |
+| `compress` | Shortens agent-facing instructions without changing behavior | `Compress docs/user-auth/spec.md` |
 | `branch` | Creates a traceable Git branch with the ticket ID when available | `Create a branch for LIN-123 user-auth` |
 | `commit` | Stages intended changes and writes one clear Conventional Commit | `Commit the current changes` |
-
-### Engineering Productivity
-
-| Skill | What it does | Example |
-|---|---|---|
-| `browser-verify` | Verifies rendered UI, HTML, visual docs, and browser-facing behavior in a real browser | `Browser-verify the local HTML report` |
-| `compress` | Shortens agent-facing instructions without changing behavior | `Compress docs/user-auth/spec.md` |
-| `explain-visually` | Creates a responsive HTML explanation of a repo, spec, PR, architecture, or concept | `Explain this repo visually` |
-| `excalidraw-diagram` | Creates an editable Excalidraw diagram of a repo, spec, architecture, workflow, or concept | `Turn this architecture into an Excalidraw diagram` |
 
 ## Agent Instructions
 
