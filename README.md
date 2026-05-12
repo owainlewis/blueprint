@@ -154,7 +154,7 @@ The [examples/](examples/) folder shows sample Blueprint artifacts.
 
 Design doc example:
 
-- [blueprint-skills/design.md](examples/blueprint-skills/design.md): a design doc for expanding Blueprint's skill set
+- [dispatch-control-plane/design.md](examples/dispatch-control-plane/design.md): a design doc for Dispatch's local agent control plane architecture
 
 Spec and plan examples for a Python RAG chatbot API:
 
