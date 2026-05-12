@@ -8,6 +8,8 @@ Build a Python API that lets a user upload PDF documents and ask questions answe
 
 Greenfield FastAPI service using PostgreSQL with pgvector and the OpenAI API. The first version has no auth, no conversation history, and no non-PDF formats. Docker Compose is part of the local development surface.
 
+Related design: `docs/rag-chatbot/design.md`.
+
 ## Requirements
 
 **Functional**

@@ -152,15 +152,12 @@ Use the full pipeline for work that touches contracts, schemas, multiple files, 
 
 The [examples/](examples/) folder shows sample Blueprint artifacts.
 
-Design doc example:
-
-- [dispatch-control-plane/design.md](examples/dispatch-control-plane/design.md): a design doc for Dispatch's local agent control plane architecture
-
-Spec and plan examples for a Python RAG chatbot API:
+Python RAG chatbot API example:
 
 1. [input.md](examples/input.md): rough project notes
-2. [spec.md](examples/rag-chatbot/spec.md): the spec
-3. [plan.md](examples/rag-chatbot/plan.md): ordered tasks
+2. [design.md](examples/rag-chatbot/design.md): the architecture design doc
+3. [spec.md](examples/rag-chatbot/spec.md): the spec
+4. [plan.md](examples/rag-chatbot/plan.md): ordered tasks
 
 ## Learn More
 

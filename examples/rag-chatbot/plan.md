@@ -4,6 +4,7 @@
 
 A Python API for uploading PDFs and answering questions from their contents using FastAPI, PostgreSQL with pgvector, and OpenAI.
 
+Source design: `docs/rag-chatbot/design.md`
 Source spec: `docs/rag-chatbot/spec.md`
 
 ## Shared Decisions
