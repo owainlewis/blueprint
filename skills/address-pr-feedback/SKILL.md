@@ -1,6 +1,6 @@
 ---
 name: address-pr-feedback
-description: "Fetch GitHub PR review feedback, judge each comment, implement valid fixes, verify, and report."
+description: "Fetch GitHub PR review feedback, judge each comment, implement valid fixes, verify, and optionally reply."
 user-invocable: true
 argument-hint: "<PR URL, PR number, branch, or optional focus>"
 ---
@@ -47,13 +47,26 @@ Group related comments by underlying issue. Do not implement comments just becau
 - If a comment concerns UI or rendered output, use `browser-verify` when available.
 - If verification cannot be run, report exactly what is missing.
 
-### 5. Report
+### 5. Prepare Replies
+
+Draft a concise reply for each thread or comment using one of these statuses:
+
+- **Fixed**: code changed and verification passed. Mention the specific fix and check.
+- **Already addressed**: current code already handles it. Mention where or how.
+- **Stale**: referenced code no longer exists or the diff changed.
+- **Declined**: intentionally not changed. Give a brief engineering reason.
+- **Needs decision**: requires a product, contract, architecture, or scope choice.
+
+Post replies, resolve threads, push commits, or mark checks complete only when the user explicitly asks. If posting replies, keep them short and factual.
+
+### 6. Report
 
 Summarize:
 
 - Feedback addressed, grouped by issue
 - Feedback skipped or declined, with brief reasons
 - Feedback needing human input
+- Draft replies or posted replies
 - Files changed
 - Verification run and any remaining risk
 
@@ -61,6 +74,7 @@ Summarize:
 
 - Do not resolve threads, post replies, push, or mark checks complete unless the user asks.
 - Do not treat AI review comments as authoritative.
+- Do not post `Fixed` unless the code changed or was already correct and verification supports the claim.
 - Do not mix pre-existing issues into the fix unless they block the reviewed change.
 - If comments conflict, choose the safer option or ask.
 - A clean triage with no code changes is a valid outcome.
