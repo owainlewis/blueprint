@@ -150,7 +150,13 @@ Use the full pipeline for work that touches contracts, schemas, multiple files, 
 
 ## Example
 
-The [examples/](examples/) folder shows the planning output for a Python RAG chatbot API:
+The [examples/](examples/) folder shows sample Blueprint artifacts.
+
+Design doc example:
+
+- [blueprint-skills/design.md](examples/blueprint-skills/design.md): a design doc for expanding Blueprint's skill set
+
+Spec and plan examples for a Python RAG chatbot API:
 
 1. [input.md](examples/input.md): rough project notes
 2. [spec.md](examples/rag-chatbot/spec.md): the spec
