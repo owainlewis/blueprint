@@ -2,7 +2,7 @@
 
 > World-class software engineering and agentic engineering, encoded as a workflow agents can follow.
 
-Blueprint is the SDLC done right for AI coding agents. Spec when decisions matter. Plan when work needs splitting. Test before ship. Review before merge. The practices excellent engineering teams have always followed, distilled into focused skills an agent can execute reliably.
+Blueprint is the SDLC done right for AI coding agents. Design when architecture is ambiguous. Spec when decisions matter. Plan when work needs splitting. Test before ship. Refactor when code needs simplifying. Review before merge. Address PR feedback with judgment. The practices excellent engineering teams have always followed, distilled into focused skills an agent can execute reliably.
 
 It is the deliberate opposite of guardrail-heavy frameworks that try to constrain agents into producing good work. Blueprint bets on the model and encodes the workflow. Every model improvement makes that bet pay off more, not less.
 
@@ -18,10 +18,13 @@ It is the deliberate opposite of guardrail-heavy frameworks that try to constrai
 
 | Phase | Skill | What it does |
 |---|---|---|
+| **Design** | `design-doc` | Explore architecture, alternatives, and tradeoffs |
 | **Define** | `spec` | One document with requirements and design |
 | **Plan** | `plan` | Break work into agent-sized tasks |
 | **Build** | `implement` / `tdd` | Execute one task; tests prove acceptance |
+| **Improve** | `refactor` | Simplify changed code without changing behavior |
 | **Review** | `review` | Correctness, security, simplicity before merge |
+| **Feedback** | `address-pr-feedback` | Triage and fix valid GitHub PR feedback |
 | **Browser** | `browser-verify` | Check rendered UI, HTML, and visual docs in a real browser |
 | **Explain** | `explain-visually` | Create responsive HTML explainers for humans |
 | **Maintain** | `compress` | Keep skills tight; the meta-skill |
@@ -30,7 +33,10 @@ It is the deliberate opposite of guardrail-heavy frameworks that try to constrai
 
 ```mermaid
 flowchart TD
-    Start([Feature or task]) --> Choice{Needs design first?}
+    Start([Feature or task]) --> Architecture{Architecture ambiguous?}
+    Architecture -->|Yes| Design[design-doc<br/>architecture, alternatives,<br/>tradeoffs]
+    Architecture -->|No| Choice{Needs spec first?}
+    Design --> Spec
     Choice -->|Yes| Spec[spec<br/>requirements + technical design<br/>one document]
     Choice -->|No| Implement[implement<br/>do the scoped work]
     Spec --> Plan[plan<br/>write portable task list]
@@ -61,11 +67,14 @@ Some plugin hosts expose namespaced slash commands such as `/blueprint:spec`. Th
 
 | Skill | Plugin command, when available | Purpose |
 |---|---|---|
+| `design-doc` | `/blueprint:design-doc` | Write a lightweight architecture design doc |
 | `spec` | `/blueprint:spec` | Write a spec |
 | `plan` | `/blueprint:plan` | Break input into reviewable tasks |
 | `implement` | `/blueprint:implement` | Execute a single task |
 | `tdd` | `/blueprint:tdd` | Test-first variant of implement |
+| `refactor` | `/blueprint:refactor` | Simplify changed code without changing behavior |
 | `review` | `/blueprint:review` | Local code review |
+| `address-pr-feedback` | `/blueprint:address-pr-feedback` | Address valid GitHub PR feedback |
 | `browser-verify` | `/blueprint:browser-verify` | Verify browser-rendered work |
 | `explain-visually` | `/blueprint:explain-visually` | Create a visual HTML explanation |
 | `compress` | `/blueprint:compress` | Shorten agent-facing instructions |
@@ -74,7 +83,7 @@ Some plugin hosts expose namespaced slash commands such as `/blueprint:spec`. Th
 
 Branching and committing are mechanical, but they are still skills so the installer can expose the full workflow consistently.
 
-Removed entry points are not maintained as aliases: `requirements` and `architecture` are now `spec`; `task`, `build`, `debug`, and `refactor` are now `implement`; `coverage` is handled through `implement` when adding tests or `review` when evaluating them.
+Removed entry points are not maintained as aliases: `requirements` is now `spec`; `architecture` is now `design-doc` for architecture docs or `spec` for implementation instructions; `task`, `build`, and `debug` are now `implement`; `coverage` is handled through `implement` when adding tests or `review` when evaluating them.
 
 ## Install
 
@@ -103,11 +112,14 @@ Run this to update Blueprint and your installed skills to the latest version.
 
 | Skill | What it does | Example |
 |---|---|---|
+| `design-doc` | Writes `docs/<design-slug>/design.md`: architecture, alternatives, tradeoffs, and cross-cutting concerns | `Write a design doc for multi-tenant auth` |
 | `spec` | Writes `docs/<feature-slug>/spec.md`: requirements and design in one document | `Write a spec for user-auth` |
 | `plan` | Breaks a spec, brief, or request into tasks sized for agents, review, and rollback | `Create a plan for user-auth` |
 | `implement` | Executes one scoped change with tests and verification | `Implement LIN-123 from user-auth` |
 | `tdd` | Implements behavior test-first | `Use TDD for retry logic in the API client` |
+| `refactor` | Improves code shape without changing behavior | `Refactor the current diff` |
 | `review` | Reviews specs or code for correctness, security, simplicity, robustness, and tests | `Review the current diff` |
+| `address-pr-feedback` | Fetches GitHub PR comments, judges the feedback, fixes valid issues, and verifies the result | `Address PR feedback on #42` |
 | `browser-verify` | Verifies rendered UI, HTML, visual docs, and browser-facing behavior in a real browser | `Browser-verify the local HTML report` |
 | `explain-visually` | Creates a responsive HTML explanation of a repo, spec, PR, architecture, or concept | `Explain this repo visually` |
 | `compress` | Shortens agent-facing instructions without changing behavior | `Compress docs/user-auth/spec.md` |
@@ -116,7 +128,9 @@ Run this to update Blueprint and your installed skills to the latest version.
 
 ## Agent Instructions
 
-Blueprint creates instructions for agents. Sometimes that instruction is a one-sentence prompt. Sometimes it is an issue tracker item. Sometimes it is a markdown spec in the repo. The format should match the work.
+Blueprint creates instructions for agents. Sometimes that instruction is a one-sentence prompt. Sometimes it is an issue tracker item. Sometimes it is a design doc or markdown spec in the repo. The format should match the work.
+
+Design docs default to `docs/<design-slug>/design.md`: a lightweight architecture artifact for ambiguous decisions, alternatives, tradeoffs, and cross-cutting concerns.
 
 One spec lives at `docs/<feature-slug>/spec.md`. External requirements flow into it; the spec is the artifact that brings context into the codebase.
 
@@ -136,7 +150,13 @@ Use the full pipeline for work that touches contracts, schemas, multiple files, 
 
 ## Example
 
-The [examples/](examples/) folder shows the planning output for a Python RAG chatbot API:
+The [examples/](examples/) folder shows sample Blueprint artifacts.
+
+Design doc example:
+
+- [dispatch-control-plane/design.md](examples/dispatch-control-plane/design.md): a design doc for Dispatch's local agent control plane architecture
+
+Spec and plan examples for a Python RAG chatbot API:
 
 1. [input.md](examples/input.md): rough project notes
 2. [spec.md](examples/rag-chatbot/spec.md): the spec
