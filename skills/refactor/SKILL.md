@@ -24,6 +24,14 @@ Improve code shape without changing behavior. Use this when the user asks to ref
 
 Look for changes that would make the code easier to understand, maintain, or safely extend:
 
+Review through three lenses:
+
+- **Reuse**: can existing code replace new or duplicated logic?
+- **Shape**: can names, boundaries, control flow, or abstractions be clearer?
+- **Cost**: can unnecessary work be removed without changing behavior?
+
+Common signals:
+
 - duplicated or near-duplicated logic
 - unclear names or hidden concepts
 - long functions doing multiple jobs
