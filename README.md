@@ -36,7 +36,7 @@ flowchart TD
     Start([Feature or task]) --> Architecture{Architecture ambiguous?}
     Architecture -->|Yes| Design[design-doc<br/>architecture, alternatives,<br/>tradeoffs]
     Architecture -->|No| Choice{Needs spec first?}
-    Design --> Choice
+    Design --> Spec
     Choice -->|Yes| Spec[spec<br/>requirements + technical design<br/>one document]
     Choice -->|No| Implement[implement<br/>do the scoped work]
     Spec --> Plan[plan<br/>write portable task list]
