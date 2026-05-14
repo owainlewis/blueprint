@@ -22,6 +22,7 @@ Use this for behavioral changes where a failing test can describe the desired ou
 
 - Write the smallest failing test that proves the desired behavior or reproduces the bug.
 - Run it and confirm it fails for the expected reason.
+- If the test passes unexpectedly, stop and report whether the behavior already exists, the test needs sharpening, or the task appears stale.
 
 ### 3. Green
 
