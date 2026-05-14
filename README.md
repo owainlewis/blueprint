@@ -11,7 +11,7 @@ It is the deliberate opposite of guardrail-heavy frameworks that try to constrai
 - **Encode process, not knowledge.** Skills are workflows. Reference material lives elsewhere.
 - **Verification is non-negotiable.** Tests prove the requested behavior. Browser-rendered work is checked in a real browser. Review checks the proof is real.
 - **Bet on the model.** Smart agents, not heavy guardrails. Every model improvement makes guardrails less necessary and more likely to conflict with the model's own judgment.
-- **Density over length.** Skills are as short as they can be while remaining clear. The `compress` skill keeps them honest.
+- **Density over length.** Skills are as short as they can be while remaining clear.
 - **Focused skills, not sprawling catalogues.** Saying no is the discipline.
 
 ## The Shape
@@ -26,8 +26,6 @@ It is the deliberate opposite of guardrail-heavy frameworks that try to constrai
 | **Review** | `review` | Correctness, security, simplicity before merge |
 | **Feedback** | `address-pr-feedback` | Triage and fix valid GitHub PR feedback |
 | **Browser** | `browser-verify` | Check rendered UI, HTML, and visual docs in a real browser |
-| **Explain** | `explain-visually` | Create responsive HTML explainers for humans |
-| **Maintain** | `compress` | Keep skills tight; the meta-skill |
 
 ## The Flow
 
@@ -76,8 +74,6 @@ Some plugin hosts expose namespaced slash commands such as `/blueprint:spec`. Th
 | `review` | `/blueprint:review` | Local code review |
 | `address-pr-feedback` | `/blueprint:address-pr-feedback` | Address valid GitHub PR feedback |
 | `browser-verify` | `/blueprint:browser-verify` | Verify browser-rendered work |
-| `explain-visually` | `/blueprint:explain-visually` | Create a visual HTML explanation |
-| `compress` | `/blueprint:compress` | Shorten agent-facing instructions |
 | `branch` | `/blueprint:branch` | Create a traceable Git branch |
 | `commit` | `/blueprint:commit` | Conventional commit |
 
@@ -121,8 +117,6 @@ Run this to update Blueprint and your installed skills to the latest version.
 | `review` | Reviews specs or code for correctness, security, simplicity, robustness, and tests | `Review the current diff` |
 | `address-pr-feedback` | Fetches GitHub PR comments, judges the feedback, fixes valid issues, and verifies the result | `Address PR feedback on #42` |
 | `browser-verify` | Verifies rendered UI, HTML, visual docs, and browser-facing behavior in a real browser | `Browser-verify the local HTML report` |
-| `explain-visually` | Creates a responsive HTML explanation of a repo, spec, PR, architecture, or concept | `Explain this repo visually` |
-| `compress` | Shortens agent-facing instructions without changing behavior | `Compress docs/user-auth/spec.md` |
 | `branch` | Creates a traceable Git branch with the ticket ID when available | `Create a branch for LIN-123 user-auth` |
 | `commit` | Stages intended changes and writes one clear Conventional Commit | `Commit the current changes` |
 
