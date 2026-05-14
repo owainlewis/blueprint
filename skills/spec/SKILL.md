@@ -1,6 +1,6 @@
 ---
 name: spec
-description: "Write an implementation spec to docs/<feature-slug>/spec.md and pause for human review. Use when the user says \"write a spec\", \"spec this out\", \"technical design\", \"design doc\", or when a task has decisions, invariants, or contracts that should be reviewed before code is written."
+description: "Write an implementation spec to docs/<feature-slug>/spec.md and pause for human review. Use when the user says \"write a spec\", \"spec this out\", \"technical spec\", or when a task has decisions, invariants, or contracts that should be reviewed before code is written."
 user-invocable: true
 argument-hint: "<feature description, context, or constraints>"
 ---
