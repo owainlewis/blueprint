@@ -21,6 +21,7 @@ Create one clear Conventional Commit for the intended current changes.
 ## Rules
 
 - Prefer staging specific files over broad adds.
+- If unrelated changes are already staged, stop or ask before committing them.
 - Do not commit `.env`, credentials, or keys.
 - If the diff is not understood, stop.
 - Prefer `feat`, `fix`, `refactor`, `test`, `docs`, or `chore`.
