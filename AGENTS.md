@@ -23,8 +23,6 @@ Exploration is allowed without creating docs or issue tracker entries. Do not ma
 - `review`: pre-merge review for correctness, security, simplicity, robustness, and tests.
 - `address-pr-feedback`: fetch GitHub PR feedback, judge each comment, fix valid issues, and verify.
 - `browser-verify`: verify browser-rendered work in a real browser.
-- `explain-visually`: create a responsive HTML explainer for a repo, spec, PR, architecture, or concept.
-- `compress`: shorten over-long instructions without changing behavior.
 - `branch`: create a traceable Git branch with the ticket ID when available.
 - `commit`: stage intended changes and write one clear Conventional Commit.
 
@@ -35,7 +33,7 @@ Exploration is allowed without creating docs or issue tracker entries. Do not ma
 - Plans default to `docs/<feature-slug>/plan.md`. Push tasks to an issue tracker only when the user asks.
 - If the task, spec, or plan is wrong, stop and update it. Do not push through.
 - Tests are the verification mechanism; review checks they are real.
-- Density over length. Run `compress` when a skill or instruction starts to feel bloated.
+- Density over length.
 
 ## Out of Scope
 
