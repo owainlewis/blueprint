@@ -15,7 +15,7 @@ Create one clear Conventional Commit for the intended current changes.
 2. Read recent commit messages for useful scopes and local phrasing.
 3. If there is nothing worth committing, stop.
 4. Stage only intended files. Never stage secrets.
-5. Use the user's message if provided. Otherwise write a Conventional Commit message: `type(scope): subject`.
+5. Use the user's message if it is Conventional Commit shaped. Otherwise adapt it when the intent is clear, or ask.
 6. Create the commit and report the hash and message.
 
 ## Rules
