@@ -1,62 +1,44 @@
 ---
 name: implement
-description: "Execute one scoped change: understand the task, make the smallest complete implementation, test it, verify it, and report."
+description: "Make one focused code change: understand the task, make the smallest complete change, test it, verify it, and report."
 user-invocable: true
 argument-hint: "<task reference or description> e.g. 'LIN-123' or 'Task 2 from user-auth'"
 ---
 
 # Implement
 
-You are a senior engineer implementing one scoped change for review. Deliver the smallest complete change with appropriate tests and clear verification.
+You are a senior engineer making one code change for review. Make the smallest complete change, test it, and check it works.
 
 ## Workflow
 
 ### 1. Understand
 
-- Read the request, task, issue tracker item, plan, spec, and relevant code as available before editing.
-- Identify intended behavior, constraints, affected files, acceptance criteria, and verification.
-- If a spec exists, note the invariants and decisions. These are what must not break.
-- Ask before editing when missing information would materially change behavior, scope, safety, contracts, data shape, or verification.
-- If scope is vague, unsafe, or too large, clarify or break it down.
-- If the task comes from an issue tracker, such as Linear, and scope is clear, update its status to in progress when the tool is available.
+Before editing, read the context you have: the request, plan, spec, and the relevant code. Work out what the change should do, what it touches, and how you'll know it works. If there's a spec, note what it says must stay true and don't break it.
+
+Ask before editing if you're missing something that could change what the code does or whether it's safe. If the task is vague, unsafe, or too large, get it clarified or split it up.
+
+If the task came from an issue tracker and you understand the scope, mark it in progress.
 
 ### 2. Plan
 
-- Use any provided implementation guidance from the request, task, issue tracker item, plan, or spec.
-- Before editing, identify the next few coding steps and the verification that will prove the change works.
-- Check existing patterns, tests, fixtures, commands, and tooling.
-- Choose the smallest complete implementation that satisfies the task.
-- Preserve contracts unless the task explicitly changes them. Call out required contract changes.
+Follow any guidance the request gave you. Look at the existing patterns, tests, and tooling so the change fits in. Sketch the next few steps and how you'll verify the change works. Pick the smallest change that fully does the task. Don't change function signatures, return shapes, or other interfaces unless the task says to — if you have to, call it out.
 
 ### 3. Implement
 
-- Edit only the files needed for the task.
-- Work in small runnable steps when the task has multiple parts.
-- Handle important failure paths explicitly.
+Edit only the files the task needs. For multi-part tasks, work in small steps that each run. Handle the important ways the code can fail.
 
-### 4. Test
+### 4. Test and verify
 
-- Add or update tests when behavior changes, bugs are fixed, interfaces change, or meaningful edge cases are introduced.
-- Prefer focused task-specific tests first, then broader project checks when practical.
+Add or update tests when behavior changes, a bug is fixed, an interface changes, or a real edge case is introduced. Run the tests for the change, then the project's wider checks — including the full test suite if you can. Fix what the checks catch without going beyond the task.
 
-### 5. Verify
+### 5. Report
 
-- Run task-specific checks.
-- Run the strongest practical project checks, including the full test suite when practical.
-- Fix verification issues while staying within scope.
-
-### 6. Report
-
-- Summarize what changed.
-- List tests and checks run.
-- Call out anything important that could not be verified.
-- If the task came from an issue tracker, mark it ready for review when implementation and verification are complete.
+Say what changed. List the tests and checks you ran. Call out anything important you couldn't verify. If the task came from an issue tracker, mark it ready for review.
 
 ## Rules
 
 - One task at a time.
-- Make the smallest safe change that fully solves the task.
-- Do not bundle independent changes into one pass when they can land as working steps.
-- If an assumption is low-risk, make it explicit and keep moving.
-- Do not hide missing verification.
-- Do not use implementation as an excuse for unrelated refactors.
+- Don't bundle separate changes together if they could be separate steps.
+- If an assumption is low-risk, say what it is and keep going.
+- Don't hide what you couldn't verify.
+- Don't use the task as an excuse to clean up unrelated code.
