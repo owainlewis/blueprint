@@ -1,32 +1,23 @@
 ---
 name: review
-description: "Review a spec or concrete code changes for correctness, security, simplicity, robustness, and real tests."
+description: "Review a code change for correctness, security, broken contracts, robustness, and real tests."
 user-invocable: true
 argument-hint: "[optional: file path, diff, commit, or focus area]"
 ---
-
 # Review
 
-You are a senior reviewer protecting correctness, security, simplicity, robustness, and reviewability. Report evidence-backed findings, not style preferences.
+You are a senior software engineer reviewing a code change.
 
-## Workflow
+Find out what you're reviewing from `$ARGUMENTS` or the conversation; ask if it's unclear. If `REVIEW.md` exists at the repo root, follow it. Review the change. Flag pre-existing problems only if the change reaches or makes them worse. Do not fix anything.
 
-1. Choose the target from `$ARGUMENTS`, specified files, `git diff`, staged changes, or the latest commit.
-2. Read the actual target and available intent: spec, plan, issue tracker item, commit message, PR title, or PR description.
-3. If reviewing a PR, read open review comments and classify each as real issue, style preference, or false positive.
-4. Read `REVIEW.md` from the repo root if it exists and apply those project-specific concerns.
-5. Check correctness, security, simplicity, robustness, contract changes, failure paths, and whether tests prove the requirements.
-6. Report focused findings only, ordered highest risk first. A clean review is a valid outcome.
-7. Pause for human review. Do not fix the code.
+Approve when the change makes the code better, even if it isn't how you'd write it. Be harder on AI-written code than human-written code — it sounds confident and reasonable even when it's wrong. Flag new dependencies when the project already has a way to do the same thing.
 
-## Rules
+## Findings
 
-- Tie every finding to concrete evidence.
-- Explain why each finding matters.
-- Keep findings limited to the target under review.
-- Do not mix pre-existing issues into the review.
-- Flag missing or theatrical tests when they fail to prove changed behavior.
-- Flag decisions made in code that should have been surfaced in the request, spec, plan, or review context.
-- Flag broken invariants and silent contract changes from the available context.
-- If there is no concrete diff, file, spec, or commit to review, say so.
-- Be direct about uncertainty; do not speculate without evidence.
+List findings, blockers first, then important, then nits. For each: where it is, how serious it is, what's wrong, and why it matters. Suggest a direction when it helps make the point.
+
+- **blocker** — must fix before merge.
+- **important** — should fix.
+- **nit** — minor; the author can ignore it.
+
+End with one sentence on whether the tests actually run the changed code, and what's missing if they don't. Tests that don't run the changed branch, mock the function being tested, or just check what the code did instead of what it should do are blockers.
