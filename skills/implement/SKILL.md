@@ -13,7 +13,7 @@ You are a senior engineer making one code change for review. Make the smallest c
 
 ### 1. Understand
 
-Before editing, read the context you have: the request, plan, spec, and the relevant code. Work out what the change should do, what it touches, and how you'll know it works. If there's a spec, note what it says must stay true and don't break it.
+Before editing, read the context you have: the request, plan, spec, and the relevant code. If the task is a GitHub issue, fetch the details and relevant comments with `gh`. Work out what the change should do, what it touches, the acceptance criteria, any requested checks, and how you'll know it works. If there's a spec, note what it says must stay true and don't break it.
 
 If you're not sure, ask. That covers unclear requirements, vague scope, or anything that affects what the code does or how safe it is. If the task is too large, ask for it to be split.
 
@@ -29,11 +29,15 @@ Edit only the files the task needs. For multi-part tasks, work in small steps th
 
 ### 4. Test and verify
 
-Add or update tests when behavior changes, a bug is fixed, an interface changes, or a real edge case is introduced. Run the tests for the change, then the project's wider checks — including the full test suite if you can. Fix what the checks catch without going beyond the task.
+Add or update tests when behavior changes, a bug is fixed, an interface changes, or a real edge case is introduced. Run the tests for the change, any checks the task requested, then the project's wider checks — including the full test suite if you can. Check the acceptance criteria. Fix what the checks catch without going beyond the task.
 
-### 5. Report
+### 5. Review
 
-Say what changed. List the tests and checks you ran. Call out anything important you couldn't verify. If the task came from an issue tracker, mark it ready for review.
+Review the final diff, using a review sub-agent for non-trivial changes when available. Check for bugs, missing tests, broken contracts, unrelated changes, important risks, and acceptance criteria status. Fix issues found while staying within scope.
+
+### 6. Report
+
+Say what changed. List the tests and checks you ran, including requested checks. Report acceptance criteria status. Mention review findings or fixes. Call out anything important you couldn't verify. If the task came from an issue tracker, mark it ready for review.
 
 ## Rules
 
