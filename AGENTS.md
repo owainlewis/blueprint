@@ -1,6 +1,6 @@
 # Working in Blueprint
 
-Blueprint encodes world-class software engineering and agentic engineering practice: design when architecture is ambiguous, spec when decisions matter, plan when work needs splitting, test before ship, refactor when code needs simplifying, review before merge, address PR feedback with judgment.
+Blueprint encodes world-class software engineering and agentic engineering practice: design when architecture is ambiguous, spec when decisions matter, plan when work needs splitting, prompt when instructions need tuning, test before ship, refactor when code needs simplifying, review before merge, address PR feedback with judgment.
 
 If you are an AI agent working in this repo, follow this guidance.
 
@@ -10,6 +10,8 @@ Use `design-doc -> spec -> plan -> implement -> review` for changes with ambiguo
 
 Use `refactor` after implementation when changed code needs cleanup for reuse, quality, or efficiency. Use `address-pr-feedback` after GitHub PR review comments exist.
 
+Use `prompting` when writing, reviewing, migrating, or improving prompts, agent instructions, system prompts, tool-use guidance, output contracts, or prompt eval cases.
+
 Exploration is allowed without creating docs or issue tracker entries. Do not manufacture fake specs, plans, or issues for spikes.
 
 ## Skills
@@ -17,6 +19,7 @@ Exploration is allowed without creating docs or issue tracker entries. Do not ma
 - `design-doc`: write a lightweight architecture design doc before implementation when the design is ambiguous.
 - `spec`: write the technical design before coding.
 - `plan`: break a spec, brief, or request into agent-sized tasks.
+- `prompting`: write, review, migrate, or improve prompts against failures and evals.
 - `implement`: execute one scoped change with tests and verification.
 - `tdd`: test-first variant of implement.
 - `refactor`: simplify changed code without changing behavior.

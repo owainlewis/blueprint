@@ -21,6 +21,7 @@ It is the deliberate opposite of guardrail-heavy frameworks that try to constrai
 | **Design** | `design-doc` | Explore architecture, alternatives, and tradeoffs |
 | **Define** | `spec` | One document with requirements and design |
 | **Plan** | `plan` | Break work into agent-sized tasks |
+| **Prompt** | `prompting` | Write, review, and improve prompts against failures and evals |
 | **Build** | `implement` / `tdd` | Execute one task; tests prove acceptance |
 | **Improve** | `refactor` | Simplify changed code without changing behavior |
 | **Review** | `review` | Correctness, security, simplicity before merge |
@@ -68,6 +69,7 @@ Some plugin hosts expose namespaced slash commands such as `/blueprint:spec`. Th
 | `design-doc` | `/blueprint:design-doc` | Write a lightweight architecture design doc |
 | `spec` | `/blueprint:spec` | Write a spec |
 | `plan` | `/blueprint:plan` | Break input into reviewable tasks |
+| `prompting` | `/blueprint:prompting` | Write, review, migrate, or improve prompts |
 | `implement` | `/blueprint:implement` | Execute a single task |
 | `tdd` | `/blueprint:tdd` | Test-first variant of implement |
 | `refactor` | `/blueprint:refactor` | Simplify changed code without changing behavior |
@@ -111,6 +113,7 @@ Run this to update Blueprint and your installed skills to the latest version.
 | `design-doc` | Writes `docs/<design-slug>/design.md`: architecture, alternatives, tradeoffs, and cross-cutting concerns | `Write a design doc for multi-tenant auth` |
 | `spec` | Writes `docs/<feature-slug>/spec.md`: requirements and design in one document | `Write a spec for user-auth` |
 | `plan` | Breaks a spec, brief, or request into tasks sized for agents, review, and rollback | `Create a plan for user-auth` |
+| `prompting` | Writes, reviews, migrates, or improves prompts with eval cases and failure analysis | `Improve this agent prompt against these failures` |
 | `implement` | Executes one scoped change with tests and verification | `Implement LIN-123 from user-auth` |
 | `tdd` | Implements behavior test-first | `Use TDD for retry logic in the API client` |
 | `refactor` | Improves code shape without changing behavior | `Refactor the current diff` |
