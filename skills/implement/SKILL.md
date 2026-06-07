@@ -33,7 +33,7 @@ Add or update tests when behavior changes, a bug is fixed, an interface changes,
 
 ### 5. Review
 
-Review the final diff, using a review sub-agent for non-trivial changes when available. Check for bugs, missing tests, broken contracts, unrelated changes, important risks, and acceptance criteria status. Fix issues found while staying within scope.
+Review the final diff, using a review sub-agent for non-trivial changes when available. Check for bugs, missing or weak tests, broken contracts, unrelated changes, important risks, and whether the change satisfies the task's acceptance criteria. Make sure tests prove the changed behavior instead of only exercising code. Fix valid findings while staying within scope, then rerun the relevant checks.
 
 ### 6. Report
 
