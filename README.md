@@ -74,22 +74,20 @@ To run several tickets at once, pass `task-to-pr` a ticket list. Independent tic
 
 The supported install path is `npx skills add owainlewis/blueprint`. That installs standalone skills; invoke them by skill name (`spec`, `plan`, `implement`, etc.) or by the skill picker/natural-language flow your agent supports.
 
-Some plugin hosts expose namespaced slash commands such as `/blueprint:spec`. Those commands are aliases for the same skill names; the standalone skill name is the stable vocabulary.
-
-| Skill | Plugin command, when available | Purpose |
-|---|---|---|
-| `design-doc` | `/blueprint:design-doc` | Write a lightweight architecture design doc |
-| `spec` | `/blueprint:spec` | Write a spec |
-| `plan` | `/blueprint:plan` | Break input into reviewable tasks |
-| `implement` | `/blueprint:implement` | Execute a single task |
-| `tdd` | `/blueprint:tdd` | Test-first variant of implement |
-| `refactor` | `/blueprint:refactor` | Simplify changed code without changing behavior |
-| `review` | `/blueprint:review` | Local code review |
-| `task-to-pr` | `/blueprint:task-to-pr` | Run the loop from ticket to draft PR |
-| `pr-to-ready` | `/blueprint:pr-to-ready` | Drive an open PR to merge-ready |
-| `browser-verify` | `/blueprint:browser-verify` | Verify browser-rendered work |
-| `branch` | `/blueprint:branch` | Create a traceable Git branch |
-| `commit` | `/blueprint:commit` | Conventional commit |
+| Skill | Purpose |
+|---|---|
+| `design-doc` | Write a lightweight architecture design doc |
+| `spec` | Write a spec |
+| `plan` | Break input into reviewable tasks |
+| `implement` | Execute a single task |
+| `tdd` | Test-first variant of implement |
+| `refactor` | Simplify changed code without changing behavior |
+| `review` | Local code review |
+| `task-to-pr` | Run the loop from ticket to draft PR |
+| `pr-to-ready` | Drive an open PR to merge-ready |
+| `browser-verify` | Verify browser-rendered work |
+| `branch` | Create a traceable Git branch |
+| `commit` | Conventional commit |
 
 Branching and committing are mechanical, but they are still skills so the installer can expose the full workflow consistently.
 

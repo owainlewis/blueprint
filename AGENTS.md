@@ -1,6 +1,6 @@
 # Working in Blueprint
 
-Blueprint encodes world-class software engineering and agentic engineering practice: design when architecture is ambiguous, spec when decisions matter, plan when work needs splitting, test before ship, refactor when code needs simplifying, review before merge, address PR feedback with judgment.
+Blueprint encodes world-class software engineering and agentic engineering practice: design when architecture is ambiguous, spec when decisions matter, plan when work needs splitting, test before ship, refactor when code needs simplifying, review before merge, drive PR feedback to merge-ready with judgment.
 
 If you are an AI agent working in this repo, follow this guidance.
 
@@ -8,7 +8,7 @@ If you are an AI agent working in this repo, follow this guidance.
 
 Use `design-doc -> spec -> plan -> implement -> review` for changes with ambiguous architecture, tradeoffs, or cross-cutting concerns. Use `spec -> plan -> implement -> review` for changes that touch contracts, schemas, multiple files, user-visible behavior, or invariants. Skip stages only when explicitly told to or when the change is trivial and decision-complete.
 
-Use `refactor` after implementation when changed code needs cleanup for reuse, quality, or efficiency. Use `address-pr-feedback` after GitHub PR review comments exist.
+Use `refactor` after implementation when changed code needs cleanup for reuse, quality, or efficiency. Use `pr-to-ready` after PR review comments exist.
 
 Exploration is allowed without creating docs or issue tracker entries. Do not manufacture fake specs, plans, or issues for spikes.
 
@@ -21,7 +21,8 @@ Exploration is allowed without creating docs or issue tracker entries. Do not ma
 - `tdd`: test-first variant of implement.
 - `refactor`: simplify changed code without changing behavior.
 - `review`: pre-merge review for correctness, security, simplicity, robustness, and tests.
-- `address-pr-feedback`: fetch GitHub PR feedback, judge each comment, fix valid issues, and verify.
+- `task-to-pr`: run the loop from ticket to draft PR, keeping the ticket updated with evidence.
+- `pr-to-ready`: drive an open PR with feedback to merge-ready; never merges.
 - `browser-verify`: verify browser-rendered work in a real browser.
 - `branch`: create a traceable Git branch with the ticket ID when available.
 - `commit`: stage intended changes and write one clear Conventional Commit.

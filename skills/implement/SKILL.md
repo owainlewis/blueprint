@@ -1,6 +1,6 @@
 ---
 name: implement
-description: "Make one focused code change: understand the task, make the smallest complete change, test it, verify it, and report."
+description: "Make one focused code change inside the current branch or worktree: understand the task, make the smallest complete change, test it, verify it, and report. The inner build step — use when the workspace is already prepared and no PR is expected. Use task-to-pr when a ticket should go all the way to a pull request."
 user-invocable: true
 argument-hint: "<task reference or description> e.g. 'LIN-123' or 'Task 2 from user-auth'"
 ---

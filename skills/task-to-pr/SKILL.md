@@ -1,6 +1,6 @@
 ---
 name: task-to-pr
-description: "Turns explicit ticket references into draft or ready-for-review PRs. Use when the user passes tickets such as JIRA-123, LIN-123, a GitHub issue number or URL, a Linear issue, or a short ticket list, and wants code written, tests added, fresh subagent review, fixes applied, and a PR opened."
+description: "Turns explicit ticket references into draft or ready-for-review PRs. Use when the user passes tickets such as JIRA-123, LIN-123, a GitHub issue number or URL, a Linear issue, or a short ticket list, and wants code written, tests added, fresh subagent review, fixes applied, and a PR opened. The outer delivery loop — it owns branch and worktree creation, the PR, and ticket updates. Use implement when the workspace is already prepared and no PR is expected."
 user-invocable: true
 argument-hint: "<ticket reference or list> e.g. JIRA-123, LIN-123, github#456, https://github.com/owner/repo/issues/456"
 ---
