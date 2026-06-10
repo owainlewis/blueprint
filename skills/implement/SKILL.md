@@ -37,7 +37,7 @@ Review the final diff, using a review sub-agent for non-trivial changes when ava
 
 ### 6. Report
 
-Say what changed. List the tests and checks you ran, including requested checks. Report acceptance criteria status. Mention review findings or fixes. Call out anything important you couldn't verify. If the task came from an issue tracker, mark it ready for review.
+Say what changed. List the tests and checks you ran, including requested checks. Report acceptance criteria status. Mention review findings or fixes. Call out anything important you couldn't verify. If the task came from an issue tracker, mark it ready for review and comment with what changed and the verification evidence — tests and checks run with results, plus anything not verified — so the ticket reads as a complete record on its own.
 
 ## Rules
 

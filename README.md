@@ -2,7 +2,7 @@
 
 > World-class software engineering and agentic engineering, encoded as a workflow agents can follow.
 
-Blueprint is the SDLC done right for AI coding agents. Design when architecture is ambiguous. Spec when decisions matter. Plan when work needs splitting. Test before ship. Refactor when code needs simplifying. Review before merge. Address PR feedback with judgment. The practices excellent engineering teams have always followed, distilled into focused skills an agent can execute reliably.
+Blueprint is the SDLC done right for AI coding agents. Design when architecture is ambiguous. Spec when decisions matter. Plan when work needs splitting. Test before ship. Refactor when code needs simplifying. Review before merge. Drive PR feedback to merge-ready with judgment. The practices excellent engineering teams have always followed, distilled into focused skills an agent can execute reliably — as single steps you drive yourself, or as loops that run a whole ticket end to end.
 
 It is the deliberate opposite of guardrail-heavy frameworks that try to constrain agents into producing good work. Blueprint bets on the model and encodes the workflow. Every model improvement makes that bet pay off more, not less.
 
@@ -24,7 +24,7 @@ It is the deliberate opposite of guardrail-heavy frameworks that try to constrai
 | **Build** | `implement` / `tdd` | Execute one task; tests prove acceptance |
 | **Improve** | `refactor` | Simplify changed code without changing behavior |
 | **Review** | `review` | Correctness, security, simplicity before merge |
-| **Feedback** | `address-pr-feedback` | Triage and fix valid GitHub PR feedback |
+| **Feedback** | `pr-to-ready` | Drive an open PR with feedback to merge-ready |
 | **Browser** | `browser-verify` | Check rendered UI, HTML, and visual docs in a real browser |
 
 ## The Flow
@@ -57,6 +57,19 @@ flowchart TD
 
 **Tests are the default verification.** Blueprint does not run a separate "did the implementation match the instructions?" pass. The request or spec defines the testing strategy. The implementation produces tests that prove the requirements. Browser-rendered work also gets checked with `browser-verify`. Review checks the proof is real and not theatre. If you want stronger verification, write the additional concerns into `REVIEW.md`; the review skill will pick them up.
 
+## The Loops
+
+The skills above are steps: one phase, one human checkpoint. Two skills chain the steps into end-to-end loops:
+
+| Skill | From | To |
+|---|---|---|
+| `task-to-pr` | a ticket | a draft PR with code, tests, fresh-subagent review, and evidence |
+| `pr-to-ready` | an open PR with feedback | a merge-ready PR with checks passing |
+
+Loops keep the ticket updated as they work — status moves, comments with verification evidence, PR links — and stop at human checkpoints. Merging is always a human decision.
+
+To run several tickets at once, pass `task-to-pr` a ticket list. Independent tickets run in separate worktrees, in parallel when the host supports worker threads or full-session subagents; dependent tickets run sequentially.
+
 ## Invoking Skills
 
 The supported install path is `npx skills add owainlewis/blueprint`. That installs standalone skills; invoke them by skill name (`spec`, `plan`, `implement`, etc.) or by the skill picker/natural-language flow your agent supports.
@@ -72,14 +85,15 @@ Some plugin hosts expose namespaced slash commands such as `/blueprint:spec`. Th
 | `tdd` | `/blueprint:tdd` | Test-first variant of implement |
 | `refactor` | `/blueprint:refactor` | Simplify changed code without changing behavior |
 | `review` | `/blueprint:review` | Local code review |
-| `address-pr-feedback` | `/blueprint:address-pr-feedback` | Address valid GitHub PR feedback |
+| `task-to-pr` | `/blueprint:task-to-pr` | Run the loop from ticket to draft PR |
+| `pr-to-ready` | `/blueprint:pr-to-ready` | Drive an open PR to merge-ready |
 | `browser-verify` | `/blueprint:browser-verify` | Verify browser-rendered work |
 | `branch` | `/blueprint:branch` | Create a traceable Git branch |
 | `commit` | `/blueprint:commit` | Conventional commit |
 
 Branching and committing are mechanical, but they are still skills so the installer can expose the full workflow consistently.
 
-Removed entry points are not maintained as aliases: `requirements` is now `spec`; `architecture` is now `design-doc` for architecture docs or `spec` for implementation instructions; `task`, `build`, and `debug` are now `implement`; `coverage` is handled through `implement` when adding tests or `review` when evaluating them.
+Removed entry points are not maintained as aliases: `requirements` is now `spec`; `architecture` is now `design-doc` for architecture docs or `spec` for implementation instructions; `task`, `build`, and `debug` are now `implement`; `coverage` is handled through `implement` when adding tests or `review` when evaluating them; `address-pr-feedback` is now `pr-to-ready`; `codex-run-loop` is now `task-to-pr`.
 
 ## Install
 
@@ -115,7 +129,8 @@ Run this to update Blueprint and your installed skills to the latest version.
 | `tdd` | Implements behavior test-first | `Use TDD for retry logic in the API client` |
 | `refactor` | Improves code shape without changing behavior | `Refactor the current diff` |
 | `review` | Reviews specs or code for correctness, security, simplicity, robustness, and tests | `Review the current diff` |
-| `address-pr-feedback` | Fetches GitHub PR comments, judges the feedback, fixes valid issues, and verifies the result | `Address PR feedback on #42` |
+| `task-to-pr` | Runs the loop from ticket to draft PR: fetch the ticket, implement, test, fresh-subagent review, open the PR, and keep the ticket updated with evidence | `task-to-pr LIN-123` |
+| `pr-to-ready` | Inspects live PR state, fixes still-actionable feedback, verifies checks, and reports merge readiness; never merges | `Is PR #42 ready to merge?` |
 | `browser-verify` | Verifies rendered UI, HTML, visual docs, and browser-facing behavior in a real browser | `Browser-verify the local HTML report` |
 | `branch` | Creates a traceable Git branch with the ticket ID when available | `Create a branch for LIN-123 user-auth` |
 | `commit` | Stages intended changes and writes one clear Conventional Commit | `Commit the current changes` |
