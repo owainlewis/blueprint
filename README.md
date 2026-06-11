@@ -32,41 +32,51 @@ It is the deliberate opposite of guardrail-heavy frameworks that try to constrai
 ## The Flow
 
 ```mermaid
-flowchart LR
-    subgraph Decide["Decide: turn ambiguity into reviewed work"]
-        Request([Feature, bug, or brief])
-        Architecture{Architecture ambiguous?}
-        Design["design-doc<br/>options, tradeoffs,<br/>chosen direction"]
-        SpecGate{Decisions, contracts,<br/>or invariants?}
-        Spec["spec<br/>requirements + design<br/>human review"]
-        PlanGate{Needs splitting?}
-        Plan["plan<br/>agent-sized tasks<br/>acceptance criteria"]
-        Direct["one scoped task<br/>acceptance criteria"]
-        Tickets["tasks / tickets<br/>reviewable handoff"]
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, ui-sans-serif, system-ui", "fontSize": "18px", "primaryTextColor": "#f8fafc", "tertiaryTextColor": "#f8fafc", "lineColor": "#94a3b8", "edgeLabelBackground": "#020617"}}}%%
+flowchart TD
+    Request([Feature, bug, or brief])
 
-        Request --> Architecture
-        Architecture -->|yes| Design --> Spec
-        Architecture -->|no| SpecGate
-        SpecGate -->|yes| Spec
-        SpecGate -->|no| PlanGate
-        Spec --> PlanGate
-        PlanGate -->|yes| Plan --> Tickets
-        PlanGate -->|no| Direct --> Tickets
-    end
+    Ambiguous{Architecture<br/>ambiguous?}
+    Design["design-doc<br/>options + tradeoffs<br/>chosen direction"]
+    SpecGate{Decisions,<br/>contracts,<br/>or invariants?}
+    Spec["spec<br/>requirements + design<br/>human review"]
+    Split{Needs<br/>splitting?}
+    Plan["plan<br/>agent-sized tasks<br/>acceptance criteria"]
+    Direct["one scoped task<br/>acceptance criteria"]
+    Handoff["tasks / tickets<br/>reviewable handoff"]
 
-    subgraph Deliver["Deliver: turn work into reviewed PRs"]
-        Count{How many tickets?}
-        One["task-to-pr<br/>branch -> implement<br/>review -> pr"]
-        Many["multitask<br/>classify, isolate,<br/>coordinate workers"]
-        PRs["draft PRs<br/>with tests, review,<br/>and evidence"]
-        Ready["pr-to-ready<br/>respond to feedback<br/>never merge"]
+    Count{How many<br/>tickets?}
+    Single["task-to-pr<br/>branch -> implement<br/>review -> pr"]
+    Multi["multitask<br/>classify, isolate<br/>coordinate workers"]
+    PRs["draft PRs<br/>tests, review<br/>evidence"]
+    Ready["pr-to-ready<br/>feedback to merge-ready<br/>never merge"]
 
-        Count -->|one| One --> PRs
-        Count -->|many| Many --> PRs
-        PRs --> Ready
-    end
+    Request --> Ambiguous
+    Ambiguous -->|yes| Design --> Spec
+    Ambiguous -->|no| SpecGate
+    SpecGate -->|yes| Spec
+    SpecGate -->|no| Split
+    Spec --> Split
+    Split -->|yes| Plan --> Handoff
+    Split -->|no| Direct --> Handoff
+    Handoff --> Count
+    Count -->|one| Single --> PRs
+    Count -->|many| Multi --> PRs
+    PRs --> Ready
 
-    Tickets --> Count
+    classDef start fill:#0f172a,stroke:#38bdf8,stroke-width:3px,color:#f8fafc,font-size:18px;
+    classDef decision fill:#431407,stroke:#fb923c,stroke-width:3px,color:#ffedd5,font-size:18px;
+    classDef decide fill:#172554,stroke:#60a5fa,stroke-width:3px,color:#eff6ff,font-size:18px;
+    classDef handoff fill:#4c1d95,stroke:#a78bfa,stroke-width:3px,color:#faf5ff,font-size:18px;
+    classDef deliver fill:#052e16,stroke:#4ade80,stroke-width:3px,color:#f0fdf4,font-size:18px;
+    classDef feedback fill:#831843,stroke:#f472b6,stroke-width:3px,color:#fdf2f8,font-size:18px;
+
+    class Request start;
+    class Ambiguous,SpecGate,Split,Count decision;
+    class Design,Spec,Plan,Direct decide;
+    class Handoff handoff;
+    class Single,Multi,PRs deliver;
+    class Ready feedback;
 ```
 
 **If implementation reveals the instructions are wrong, stop.** Update the task, spec, or plan, then continue from the updated source. Do not push through stale instructions. Clarifying costs minutes; pushing through wrong instructions costs the rest of the feature.
@@ -90,23 +100,48 @@ Loops keep the ticket updated as they work — status moves, comments with verif
 `multitask` is the coordinator-worker loop for several tickets at once:
 
 ```mermaid
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, ui-sans-serif, system-ui", "fontSize": "18px", "primaryTextColor": "#f8fafc", "tertiaryTextColor": "#f8fafc", "lineColor": "#94a3b8", "edgeLabelBackground": "#020617"}}}%%
 flowchart TD
-    Tickets["ticket list<br/>LIN-101, LIN-102, LIN-103"] --> Coordinator["multitask coordinator<br/>read tickets + touched code<br/>classify independence"]
-    Coordinator --> Decision{Independent?}
-    Decision -->|yes| Parallel["parallel lanes<br/>separate worktree + branch<br/>one worker per lane"]
-    Decision -->|overlap| Sequential["sequential lane<br/>shared files, schema,<br/>or assumptions"]
+    Tickets["ticket list<br/>LIN-101<br/>LIN-102<br/>LIN-103"]
+    Coordinator["multitask coordinator<br/>read tickets + touched code<br/>classify independence"]
+    Decision{Independent?}
+    Parallel["parallel lanes<br/>separate worktrees<br/>separate branches"]
+    Sequential["sequential lane<br/>shared files, schema<br/>or assumptions"]
 
-    Parallel --> WorkerA["worker A<br/>task-to-pr LIN-101"]
-    Parallel --> WorkerB["worker B<br/>task-to-pr LIN-102"]
-    Parallel --> WorkerC["worker C<br/>task-to-pr LIN-103"]
-    Sequential --> WorkerD["worker<br/>task-to-pr each ticket<br/>in dependency order"]
+    WorkerA["worker A<br/>task-to-pr LIN-101"]
+    WorkerB["worker B<br/>task-to-pr LIN-102"]
+    WorkerC["worker C<br/>task-to-pr LIN-103"]
+    WorkerD["worker<br/>task-to-pr in order"]
 
-    WorkerA --> Fleet["fleet report<br/>ticket, branch, PR,<br/>status, evidence"]
+    Fleet["fleet report<br/>ticket, branch, PR<br/>status, evidence"]
+    Human["human review<br/>merge decision stays human"]
+
+    Tickets --> Coordinator --> Decision
+    Decision -->|yes| Parallel
+    Decision -->|overlap| Sequential
+    Parallel --> WorkerA
+    Parallel --> WorkerB
+    Parallel --> WorkerC
+    Sequential --> WorkerD
+    WorkerA --> Fleet
     WorkerB --> Fleet
     WorkerC --> Fleet
     WorkerD --> Fleet
+    Fleet --> Human
 
-    Fleet --> Human["human review<br/>merge decision stays human"]
+    classDef input fill:#0f172a,stroke:#38bdf8,stroke-width:3px,color:#f8fafc,font-size:18px;
+    classDef coordinator fill:#4c1d95,stroke:#a78bfa,stroke-width:3px,color:#faf5ff,font-size:18px;
+    classDef decision fill:#431407,stroke:#fb923c,stroke-width:3px,color:#ffedd5,font-size:18px;
+    classDef lane fill:#172554,stroke:#60a5fa,stroke-width:3px,color:#eff6ff,font-size:18px;
+    classDef worker fill:#052e16,stroke:#4ade80,stroke-width:3px,color:#f0fdf4,font-size:18px;
+    classDef report fill:#831843,stroke:#f472b6,stroke-width:3px,color:#fdf2f8,font-size:18px;
+
+    class Tickets input;
+    class Coordinator coordinator;
+    class Decision decision;
+    class Parallel,Sequential lane;
+    class WorkerA,WorkerB,WorkerC,WorkerD worker;
+    class Fleet,Human report;
 ```
 
 Each worker still runs the full `task-to-pr` workflow for exactly one ticket: `branch` -> `implement` -> `review` -> `pr` -> ticket update. The coordinator does not edit code; it partitions work, starts isolated lanes, monitors failures, and reports the fleet.
