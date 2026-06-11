@@ -22,35 +22,51 @@ It is the deliberate opposite of guardrail-heavy frameworks that try to constrai
 | **Define** | `spec` | One document with requirements and design |
 | **Plan** | `plan` | Break work into agent-sized tasks |
 | **Build** | `implement` / `tdd` | Execute one task; tests prove acceptance |
+| **Debug** | `debug` | Reproduce a failure, fix it test-first, and keep the guard |
 | **Improve** | `refactor` | Simplify changed code without changing behavior |
 | **Review** | `review` | Correctness, security, simplicity before merge |
+| **Deliver** | `task-to-pr` / `multitask` | Turn one ticket, or several tickets in parallel, into draft PRs |
 | **Feedback** | `pr-to-ready` | Drive an open PR with feedback to merge-ready |
 | **Browser** | `browser-verify` | Check rendered UI, HTML, and visual docs in a real browser |
 
 ## The Flow
 
 ```mermaid
-flowchart TD
-    Start([Feature or task]) --> Architecture{Architecture ambiguous?}
-    Architecture -->|Yes| Design[design-doc<br/>architecture, alternatives,<br/>tradeoffs]
-    Architecture -->|No| Choice{Needs spec first?}
-    Design --> Spec
-    Choice -->|Yes| Spec[spec<br/>requirements + technical design<br/>one document]
-    Choice -->|No| Implement[implement<br/>do the scoped work]
-    Spec --> Plan[plan<br/>write portable task list]
-    Plan --> Task[select a planned task]
-    Plan -. optional .-> Destination[Push tasks to<br/>the team's issue tracker]
-    Destination -.-> Task
-    Task --> Implement
-    Implement --> Tests[tests pass<br/>tests prove acceptance criteria]
-    Tests --> Review[review<br/>correctness, security, simplicity]
-    Review --> Decision{instructions still right?}
-    Decision -->|Yes| Ship[PR or merge]
-    Decision -->|No, drifted| Update[update spec, plan,<br/>or task]
-    Update --> Choice
-    Ship --> More{More planned tasks?}
-    More -->|Yes| Task
-    More -->|No| Done([Done])
+flowchart LR
+    subgraph Decide["Decide: turn ambiguity into reviewed work"]
+        Request([Feature, bug, or brief])
+        Architecture{Architecture ambiguous?}
+        Design["design-doc<br/>options, tradeoffs,<br/>chosen direction"]
+        SpecGate{Decisions, contracts,<br/>or invariants?}
+        Spec["spec<br/>requirements + design<br/>human review"]
+        PlanGate{Needs splitting?}
+        Plan["plan<br/>agent-sized tasks<br/>acceptance criteria"]
+        Direct["one scoped task<br/>acceptance criteria"]
+        Tickets["tasks / tickets<br/>reviewable handoff"]
+
+        Request --> Architecture
+        Architecture -->|yes| Design --> Spec
+        Architecture -->|no| SpecGate
+        SpecGate -->|yes| Spec
+        SpecGate -->|no| PlanGate
+        Spec --> PlanGate
+        PlanGate -->|yes| Plan --> Tickets
+        PlanGate -->|no| Direct --> Tickets
+    end
+
+    subgraph Deliver["Deliver: turn work into reviewed PRs"]
+        Count{How many tickets?}
+        One["task-to-pr<br/>branch -> implement<br/>review -> pr"]
+        Many["multitask<br/>classify, isolate,<br/>coordinate workers"]
+        PRs["draft PRs<br/>with tests, review,<br/>and evidence"]
+        Ready["pr-to-ready<br/>respond to feedback<br/>never merge"]
+
+        Count -->|one| One --> PRs
+        Count -->|many| Many --> PRs
+        PRs --> Ready
+    end
+
+    Tickets --> Count
 ```
 
 **If implementation reveals the instructions are wrong, stop.** Update the task, spec, or plan, then continue from the updated source. Do not push through stale instructions. Clarifying costs minutes; pushing through wrong instructions costs the rest of the feature.
@@ -59,16 +75,41 @@ flowchart TD
 
 ## The Loops
 
-The skills above are steps: one phase, one human checkpoint. Two skills chain the steps into end-to-end loops:
+The skills above are steps: one phase, one human checkpoint. Three skills chain the steps into end-to-end loops:
 
 | Skill | From | To |
 |---|---|---|
 | `task-to-pr` | a ticket | a draft PR with code, tests, fresh-subagent review, and evidence |
+| `multitask` | several tickets | several draft PRs, one isolated worker lane per ticket or dependency group |
 | `pr-to-ready` | an open PR with feedback | a merge-ready PR with checks passing |
 
 Loops keep the ticket updated as they work — status moves, comments with verification evidence, PR links — and stop at human checkpoints. Merging is always a human decision.
 
-To run several tickets at once, pass `task-to-pr` a ticket list. Independent tickets run in separate worktrees, in parallel when the host supports worker threads or full-session subagents; dependent tickets run sequentially.
+`task-to-pr` is the single-ticket loop: it resolves the ticket, creates a branch, implements the acceptance criteria, reviews the diff, opens a draft PR, and writes evidence back to the ticket.
+
+`multitask` is the coordinator-worker loop for several tickets at once:
+
+```mermaid
+flowchart TD
+    Tickets["ticket list<br/>LIN-101, LIN-102, LIN-103"] --> Coordinator["multitask coordinator<br/>read tickets + touched code<br/>classify independence"]
+    Coordinator --> Decision{Independent?}
+    Decision -->|yes| Parallel["parallel lanes<br/>separate worktree + branch<br/>one worker per lane"]
+    Decision -->|overlap| Sequential["sequential lane<br/>shared files, schema,<br/>or assumptions"]
+
+    Parallel --> WorkerA["worker A<br/>task-to-pr LIN-101"]
+    Parallel --> WorkerB["worker B<br/>task-to-pr LIN-102"]
+    Parallel --> WorkerC["worker C<br/>task-to-pr LIN-103"]
+    Sequential --> WorkerD["worker<br/>task-to-pr each ticket<br/>in dependency order"]
+
+    WorkerA --> Fleet["fleet report<br/>ticket, branch, PR,<br/>status, evidence"]
+    WorkerB --> Fleet
+    WorkerC --> Fleet
+    WorkerD --> Fleet
+
+    Fleet --> Human["human review<br/>merge decision stays human"]
+```
+
+Each worker still runs the full `task-to-pr` workflow for exactly one ticket: `branch` -> `implement` -> `review` -> `pr` -> ticket update. The coordinator does not edit code; it partitions work, starts isolated lanes, monitors failures, and reports the fleet.
 
 ## Invoking Skills
 
@@ -81,9 +122,12 @@ The supported install path is `npx skills add owainlewis/blueprint`. That instal
 | `plan` | Break input into reviewable tasks |
 | `implement` | Execute a single task |
 | `tdd` | Test-first variant of implement |
+| `debug` | Reproduce and fix a failure test-first |
 | `refactor` | Simplify changed code without changing behavior |
 | `review` | Local code review |
 | `task-to-pr` | Run the loop from ticket to draft PR |
+| `multitask` | Run several tickets to draft PRs in parallel |
+| `pr` | Commit, push, and open a PR |
 | `pr-to-ready` | Drive an open PR to merge-ready |
 | `browser-verify` | Verify browser-rendered work |
 | `branch` | Create a traceable Git branch |
@@ -91,7 +135,7 @@ The supported install path is `npx skills add owainlewis/blueprint`. That instal
 
 Branching and committing are mechanical, but they are still skills so the installer can expose the full workflow consistently.
 
-Removed entry points are not maintained as aliases: `requirements` is now `spec`; `architecture` is now `design-doc` for architecture docs or `spec` for implementation instructions; `task`, `build`, and `debug` are now `implement`; `coverage` is handled through `implement` when adding tests or `review` when evaluating them; `address-pr-feedback` is now `pr-to-ready`; `codex-run-loop` is now `task-to-pr`.
+Removed entry points are not maintained as aliases: `requirements` is now `spec`; `architecture` is now `design-doc` for architecture docs or `spec` for implementation instructions; `task` and `build` are now `implement`; `coverage` is handled through `implement` when adding tests or `review` when evaluating them; `address-pr-feedback` is now `pr-to-ready`; `codex-run-loop` is now `task-to-pr` for one ticket or `multitask` for several tickets.
 
 ## Install
 
@@ -125,9 +169,12 @@ Run this to update Blueprint and your installed skills to the latest version.
 | `plan` | Breaks a spec, brief, or request into tasks sized for agents, review, and rollback | `Create a plan for user-auth` |
 | `implement` | Executes one scoped change with tests and verification | `Implement LIN-123 from user-auth` |
 | `tdd` | Implements behavior test-first | `Use TDD for retry logic in the API client` |
+| `debug` | Finds the root cause of a failure, fixes it via TDD, and leaves a regression test | `Debug the failing retry test` |
 | `refactor` | Improves code shape without changing behavior | `Refactor the current diff` |
 | `review` | Reviews specs or code for correctness, security, simplicity, robustness, and tests | `Review the current diff` |
 | `task-to-pr` | Runs the loop from ticket to draft PR: fetch the ticket, implement, test, fresh-subagent review, open the PR, and keep the ticket updated with evidence | `task-to-pr LIN-123` |
+| `multitask` | Coordinates several tickets to draft PRs at once: classify dependencies, isolate worker lanes, run `task-to-pr` per ticket, and report the fleet | `multitask LIN-101 LIN-102 LIN-103` |
+| `pr` | Commits intended changes, pushes the branch, and opens a clear draft PR | `Open a draft PR for this change` |
 | `pr-to-ready` | Inspects live PR state, fixes still-actionable feedback, verifies checks, and reports merge readiness; never merges | `Is PR #42 ready to merge?` |
 | `browser-verify` | Verifies rendered UI, HTML, visual docs, and browser-facing behavior in a real browser | `Browser-verify the local HTML report` |
 | `branch` | Creates a traceable Git branch with the ticket ID when available | `Create a branch for LIN-123 user-auth` |
