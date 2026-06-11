@@ -1,48 +1,21 @@
 ---
 name: implement
-description: "Make one focused code change inside the current branch or worktree: understand the task, make the smallest complete change, test it, verify it, and report. The inner build step — use when the workspace is already prepared and no PR is expected. Use task-to-pr when a ticket should go all the way to a pull request."
+description: "Turn one scoped task into a verified diff: code, tests, verification, report. The inner build step of the delivery flow. Use directly when the workspace is prepared and no PR is expected; use task-to-pr when a ticket should become a PR."
 user-invocable: true
 argument-hint: "<task reference or description> e.g. 'LIN-123' or 'Task 2 from user-auth'"
 ---
 
 # Implement
 
-You are a senior engineer making one code change for review. Make the smallest complete change, test it, and check it works.
+Turn one task into a verified diff. Read the task, the spec when one exists, and the relevant code; fetch tracker details when the task references a ticket and mark it in progress. Ask when requirements are unclear, when the task is too large to be one change, or when anything affects behavior or safety. State low-risk assumptions and keep going.
 
-## Workflow
+## Contract
 
-### 1. Understand
-
-Before editing, read the context you have: the request, plan, spec, and the relevant code. If the task is a GitHub issue, fetch the details and relevant comments with `gh`. Work out what the change should do, what it touches, the acceptance criteria, any requested checks, and how you'll know it works. If there's a spec, note what it says must stay true and don't break it.
-
-If you're not sure, ask. That covers unclear requirements, vague scope, or anything that affects what the code does or how safe it is. If the task is too large, ask for it to be split.
-
-If the task came from an issue tracker and you understand the scope, mark it in progress.
-
-### 2. Plan
-
-Follow any guidance the request gave you. Look at the existing patterns, tests, and tooling so the change fits in. Sketch the next few steps and how you'll verify the change works. Pick the smallest change that fully does the task. Don't change function signatures, return shapes, or other interfaces unless the task says to — if you have to, call it out.
-
-### 3. Implement
-
-Edit only the files the task needs. For multi-part tasks, work in small steps that each run. Handle the important ways the code can fail.
-
-### 4. Test and verify
-
-Add or update tests when behavior changes, a bug is fixed, an interface changes, or a real edge case is introduced. Run the tests for the change, any checks the task requested, then the project's wider checks — including the full test suite if you can. Check the acceptance criteria. Fix what the checks catch without going beyond the task.
-
-### 5. Review
-
-Review the final diff, using a review sub-agent for non-trivial changes when available. Check for bugs, missing or weak tests, broken contracts, unrelated changes, important risks, and whether the change satisfies the task's acceptance criteria. Make sure tests prove the changed behavior instead of only exercising code. Fix valid findings while staying within scope, then rerun the relevant checks.
-
-### 6. Report
-
-Say what changed. List the tests and checks you ran, including requested checks. Report acceptance criteria status. Mention review findings or fixes. Call out anything important you couldn't verify. If the task came from an issue tracker, mark it ready for review and comment with what changed and the verification evidence — tests and checks run with results, plus anything not verified — so the ticket reads as a complete record on its own.
-
-## Rules
-
-- One task at a time.
-- Don't bundle separate changes together if they could be separate steps.
-- If an assumption is low-risk, say what it is and keep going.
-- Don't hide what you couldn't verify.
-- Don't use the task as an excuse to clean up unrelated code.
+- One task at a time. Make the smallest complete change that fully does it.
+- Don't touch unrelated code. The task is not an excuse for cleanup elsewhere.
+- Don't change function signatures, return shapes, or other contracts unless the task says to. If forced, call it out.
+- Add or update tests whenever behavior changes, a bug is fixed, or a real edge case is introduced. Tests must prove the new behavior, not just exercise the code.
+- When correctness depends on a framework's current behavior, check the docs for the version the project actually uses instead of trusting memory.
+- Run the focused checks first, then the project's wider checks. Fix what they catch without growing scope.
+- Run `review` on the final diff for non-trivial changes, with a fresh subagent when available. Fix valid in-scope findings and rerun the checks.
+- Report what changed, the checks run with results, acceptance criteria status, review findings fixed, and anything not verified. If the task came from a tracker, comment the evidence and mark it ready for review.

@@ -4,28 +4,42 @@ Blueprint encodes world-class software engineering and agentic engineering pract
 
 If you are an AI agent working in this repo, follow this guidance.
 
-## The Flow
+## The Two Flows
 
-Use `design-doc -> spec -> plan -> implement -> review` for changes with ambiguous architecture, tradeoffs, or cross-cutting concerns. Use `spec -> plan -> implement -> review` for changes that touch contracts, schemas, multiple files, user-visible behavior, or invariants. Skip stages only when explicitly told to or when the change is trivial and decision-complete.
+Blueprint has two flows. The handoff between them is a task with acceptance criteria.
 
-Use `refactor` after implementation when changed code needs cleanup for reuse, quality, or efficiency. Use `pr-to-ready` after PR review comments exist.
+**Decide** (`design-doc` -> `spec` -> `plan`): turn ambiguity into reviewed decisions and agent-sized tasks. Every stage pauses for human review. Start at `design-doc` when the architecture is ambiguous, at `spec` when decisions, contracts, or invariants need review, at `plan` when the work just needs splitting. Skip stages when the change is trivial and decision-complete.
+
+**Deliver** (`task-to-pr`): turn one task into a draft PR with the ticket as the audit trail. `task-to-pr` runs `branch` -> `implement` -> `review` -> `pr`. Use `multitask` to run several independent tickets in parallel, one isolated worker per ticket. Use `pr-to-ready` once feedback exists to drive the PR to merge-ready; merging is always a human decision. Use `implement` alone when the workspace is prepared and no PR is expected, `tdd` when a failing test can describe the behavior first, `refactor` to tidy the changed code before review, and `debug` when something breaks.
 
 Exploration is allowed without creating docs or issue tracker entries. Do not manufacture fake specs, plans, or issues for spikes.
 
 ## Skills
 
-- `design-doc`: write a lightweight architecture design doc before implementation when the design is ambiguous.
+Decide:
+
+- `design-doc`: write a lightweight architecture design doc when the design is ambiguous.
 - `spec`: write the technical design before coding.
 - `plan`: break a spec, brief, or request into agent-sized tasks.
-- `implement`: execute one scoped change with tests and verification.
+
+Deliver:
+
+- `task-to-pr`: orchestrate one ticket to a draft PR, keeping the ticket updated with evidence.
+- `multitask`: run several tickets to draft PRs in parallel, one isolated worker per ticket; composes task-to-pr.
+- `branch`: create a traceable Git branch with the ticket ID when available.
+- `implement`: turn one scoped task into a verified diff with tests.
 - `tdd`: test-first variant of implement.
+- `debug`: find the root cause of a failure, then fix it via tdd so a test guards it.
 - `refactor`: simplify changed code without changing behavior.
 - `review`: pre-merge review for correctness, security, simplicity, robustness, and tests.
-- `task-to-pr`: run the loop from ticket to draft PR, keeping the ticket updated with evidence.
+- `pr`: commit, push, and open a PR with a clear description.
+- `commit`: stage intended changes and write one clear Conventional Commit.
 - `pr-to-ready`: drive an open PR with feedback to merge-ready; never merges.
 - `browser-verify`: verify browser-rendered work in a real browser.
-- `branch`: create a traceable Git branch with the ticket ID when available.
-- `commit`: stage intended changes and write one clear Conventional Commit.
+
+## Agents
+
+- `code-reviewer` (`agents/code-reviewer.md`): fresh-context adversarial reviewer. The subagent that `implement` and `task-to-pr` should use for their fresh review step when agent definitions are installed.
 
 ## Guidance
 
