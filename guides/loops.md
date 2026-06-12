@@ -32,7 +32,19 @@ flowchart LR
 2. **Work**: a scheduled agent claims one `ready-for-agent` issue and runs `task-to-pr` to a draft PR, with the ticket as the audit trail.
 3. **Review**: you review PRs on your schedule. The review loop runs `pr-to-ready` against your feedback. You merge.
 
-The conventions the loops depend on, the definition of ready and the label state machine, live in [AGENTS.md](../AGENTS.md). The prompts below assume them.
+## Labels at a Glance
+
+Labels are the loop's control plane: each one marks a state, and exactly one loop or human moves an issue out of it.
+
+| Label | Means | Set by | Moves on when |
+|---|---|---|---|
+| `ready-for-spec` | Real problem, open decisions | The agent filing the issue | Spec loop writes a spec; a human reviews it and flips the label to `ready-for-agent` |
+| `ready-for-agent` | Meets the definition of ready | Filing agent, `plan`, or a human after spec review | Work loop claims it and swaps to `agent-in-progress` |
+| `agent-in-progress` | Claimed by a worker | Work loop, atomically at claim time | PR opens and the issue rides to merge; a blocker routes it to `needs-human`; or the claim goes stale (24h, no branch or PR activity) and releases back to `ready-for-agent` |
+| `blocked` | Waiting on another issue, linked in the body | `plan`, when filing dependent tasks | Work loop removes it once the blocking issue closes |
+| `needs-human` | An agent hit a decision only a human can make, explained in a comment | Any loop, on a blocker | A human answers in the comments and relabels `ready-for-agent`, or closes the issue |
+
+The full conventions, the definition of ready and the label state machine, live in [AGENTS.md](../AGENTS.md). The prompts below assume them.
 
 ## Phase 1: Ready
 

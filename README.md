@@ -146,7 +146,39 @@ flowchart TD
 
 Each worker still runs the full `task-to-pr` workflow for exactly one ticket: `branch` -> `implement` -> `review` -> `pr` -> ticket update. The coordinator does not edit code; it partitions work, starts isolated lanes, monitors failures, and reports the fleet.
 
-The loops can also run unattended: agents file labeled issues, a scheduled agent claims ready work and runs `task-to-pr`, and your involvement narrows to approving specs and reviewing PRs. See [guides/loops.md](guides/loops.md).
+## Running Unattended
+
+The loops above still start when you invoke them. They can also run on a schedule over an issue tracker, with agents filing every issue. Work moves through three phases:
+
+```mermaid
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Inter, ui-sans-serif, system-ui", "fontSize": "18px", "primaryTextColor": "#f8fafc", "tertiaryTextColor": "#f8fafc", "lineColor": "#94a3b8", "edgeLabelBackground": "#020617"}}}%%
+flowchart LR
+    Ideas([Ideas, specs,<br/>rough captures])
+    Ready["Ready<br/>agents file labeled issues<br/>spec loop resolves decisions"]
+    Work["Work<br/>claim one ready issue<br/>task-to-pr to draft PR"]
+    Review["Review<br/>human reviews<br/>pr-to-ready fixes feedback"]
+    Merge([Human merges])
+
+    Ideas --> Ready --> Work --> Review --> Merge
+
+    classDef start fill:#0f172a,stroke:#38bdf8,stroke-width:3px,color:#f8fafc,font-size:18px;
+    classDef ready fill:#172554,stroke:#60a5fa,stroke-width:3px,color:#eff6ff,font-size:18px;
+    classDef work fill:#052e16,stroke:#4ade80,stroke-width:3px,color:#f0fdf4,font-size:18px;
+    classDef review fill:#831843,stroke:#f472b6,stroke-width:3px,color:#fdf2f8,font-size:18px;
+
+    class Ideas,Merge start;
+    class Ready ready;
+    class Work work;
+    class Review review;
+```
+
+1. **Ready**: turn ideas and specs into agent-ready issues. The agent filing an issue judges it at creation: decision-complete work gets `ready-for-agent`; a real problem with open decisions gets `ready-for-spec`, and the spec loop turns it into a reviewed spec. Nothing unjudged enters the tracker.
+2. **Work**: a scheduled agent claims one `ready-for-agent` issue and runs `task-to-pr` to a draft PR, with the ticket as the audit trail. The loop throttles itself on review capacity: when too many agent PRs await review, it stops starting new work.
+3. **Review**: a human reviews the PR, `pr-to-ready` drives feedback to merge-ready, a human merges.
+
+Humans do three things: flip `ready-for-spec` to `ready-for-agent` after reviewing a spec, review PRs, and merge. Agents do everything else.
+
+The loop layer is prompts, not skills: skills encode judgment that must stay consistent everywhere, while the loop layer is wiring you paste into whatever runs it. The definition of ready and the label state machine live in [AGENTS.md](AGENTS.md); setup, triggers, and copy-pasteable loop prompts live in [guides/loops.md](guides/loops.md).
 
 ## Invoking Skills
 
