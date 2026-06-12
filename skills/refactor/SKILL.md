@@ -25,14 +25,11 @@ Improve code shape without changing behavior. Use this when the user asks to ref
 Look for changes that would make the code easier to understand, maintain, or safely extend:
 
 - duplicated or near-duplicated logic
-- unclear names or hidden concepts
-- long functions doing multiple jobs
-- unnecessary abstractions, wrappers, layers, or indirection
-- missing reuse of existing helpers, utilities, or local conventions
+- unclear names and long functions doing multiple jobs
+- unnecessary abstraction or indirection; missing reuse of existing helpers
 - tangled conditionals, data flow, or error handling
 - poor module boundaries or leaky abstractions
-- comments that could become clearer code
-- inefficient work that can be removed without changing behavior
+- comments that could become clearer code; work that can be deleted without changing behavior
 
 ### 3. Refactor
 

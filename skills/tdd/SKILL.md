@@ -32,7 +32,7 @@ Use this for behavioral changes where a failing test can describe the desired ou
 ### 4. Refine
 
 - Simplify code and tests while they stay green.
-- Run the full relevant test suite before finishing.
+- Run the focused checks first, then the project's wider checks, before finishing.
 - Report the failing-then-passing test and final verification.
 
 ## Rules
