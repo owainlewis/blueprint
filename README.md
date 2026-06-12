@@ -1,10 +1,12 @@
 # Blueprint
 
-> World-class software engineering and agentic engineering, encoded as a workflow agents can follow.
+> The best agent development skills in the world.
 
-Blueprint is the SDLC done right for AI coding agents. Design when architecture is ambiguous. Spec when decisions matter. Plan when work needs splitting. Test before ship. Refactor when code needs simplifying. Review before merge. Drive PR feedback to merge-ready with judgment. The practices excellent engineering teams have always followed, distilled into focused skills an agent can execute reliably — as single steps you drive yourself, or as loops that run a whole ticket end to end.
+Coding agents don't fail for lack of intelligence. They fail for lack of process: no spec, no plan, no tests, no review, just a confident 2,000-line PR nobody asked for. Blueprint fixes the process and trusts the intelligence.
 
-It is the deliberate opposite of guardrail-heavy frameworks that try to constrain agents into producing good work. Blueprint bets on the model and encodes the workflow. Every model improvement makes that bet pay off more, not less.
+It encodes how the best engineering teams have always shipped: design when architecture is ambiguous, spec when decisions matter, plan when work needs splitting, test before ship, review before merge. Fifteen dense skills you can run as single steps you drive yourself, or as loops that take whole tickets to draft PRs while you sleep.
+
+Blueprint is the deliberate opposite of bloated, over-engineered skill libraries like Superpowers and GSD. No ceremony, no guardrail mazes, no thousand-line process files burning your context window before any work starts. Simplicity is clarity: a skill short enough to hold in your head is a skill an agent actually follows. And Blueprint bets on the model. Heavy frameworks assume the model is weak and wrap it in rules; Blueprint assumes the model is strong and hands it the judgment of a great senior engineer, written down. Every model release makes that bet pay off more, and the guardrails more wrong.
 
 ## Principles
 
@@ -172,11 +174,11 @@ flowchart LR
     class Review review;
 ```
 
-1. **Ready**: turn ideas and specs into agent-ready issues. The agent filing an issue judges it at creation: decision-complete work gets `ready-for-agent`; a real problem with open decisions gets `ready-for-spec`, and the spec loop turns it into a reviewed spec. Nothing unjudged enters the tracker.
-2. **Work**: a scheduled agent claims one `ready-for-agent` issue and runs `task-to-pr` to a draft PR, with the ticket as the audit trail. The loop throttles itself on review capacity: when too many agent PRs await review, it stops starting new work.
+1. **Ready**: turn ideas and specs into agent-ready issues. The agent filing an issue judges it at creation: decision-complete work gets `agent:ready`; a real problem with open decisions gets `needs:spec`, and the spec loop turns it into a reviewed spec. Nothing unjudged enters the tracker.
+2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `task-to-pr` to a draft PR, with the ticket as the audit trail. The loop throttles itself on review capacity: when too many agent PRs await review, it stops starting new work.
 3. **Review**: a human reviews the PR, `pr-to-ready` drives feedback to merge-ready, a human merges.
 
-Humans do three things: flip `ready-for-spec` to `ready-for-agent` after reviewing a spec, review PRs, and merge. Agents do everything else.
+Humans do three things: flip `needs:spec` to `agent:ready` after reviewing a spec, review PRs, and merge. Agents do everything else.
 
 The loop layer is prompts, not skills: skills encode judgment that must stay consistent everywhere, while the loop layer is wiring you paste into whatever runs it. The definition of ready and the label state machine live in [AGENTS.md](AGENTS.md); setup, triggers, and copy-pasteable loop prompts live in [guides/loops.md](guides/loops.md).
 
