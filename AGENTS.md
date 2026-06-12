@@ -41,11 +41,39 @@ Deliver:
 
 - `code-reviewer` (`agents/code-reviewer.md`): fresh-context adversarial reviewer. The subagent that `implement` and `task-to-pr` should use for their fresh review step when agent definitions are installed.
 
+## Running Unattended
+
+The two flows can run as scheduled loops over an issue tracker, with agents filing every issue. Three phases:
+
+1. **Ready**: turn ideas and specs into agent-ready issues. The agent filing an issue judges it at creation: decision-complete work gets `ready-for-agent`; a real problem with open decisions gets `ready-for-spec`. Nothing unjudged enters the tracker.
+2. **Work**: a scheduled agent claims one `ready-for-agent` issue and runs `task-to-pr` to a draft PR.
+3. **Review**: a human reviews the PR, `pr-to-ready` drives feedback to merge-ready, a human merges.
+
+### Definition of Ready
+
+An issue is agent-ready when a fresh agent could finish it without asking questions:
+
+- Goal stated as an outcome, not an implementation.
+- Enough context to execute with no prior session.
+- Testable acceptance criteria.
+- A concrete, runnable verify step.
+- Decision-complete: no open product or design decisions.
+
+### Labels
+
+- `ready-for-spec`: real problem, open decisions. The spec loop picks it up.
+- `ready-for-agent`: meets the definition of ready. The work loop picks it up.
+- `agent-in-progress`: claimed by a worker. A claim with no linked branch or PR activity after 24 hours is stale; release it back to `ready-for-agent`.
+- `blocked`: waiting on another issue, linked in the body. Remove when the blocker closes.
+- `needs-human`: an agent hit a decision only a human can make, explained in a comment.
+
+Humans flip `ready-for-spec` to `ready-for-agent` after spec review, review PRs, and merge. Agents do everything else. Setup and sample prompts: `guides/loops.md`.
+
 ## Guidance
 
 - Design docs default to `docs/<design-slug>/design.md`.
 - One spec per feature, at `docs/<feature-slug>/spec.md`.
-- Plans default to `docs/<feature-slug>/plan.md`. Push tasks to an issue tracker only when the user asks.
+- Specs are durable; plans are transport. A plan goes to exactly one destination: tracker issues when the user asks or the repo runs an unattended loop, `docs/<feature-slug>/plan.md` when there is a feature directory, chat otherwise.
 - If the task, spec, or plan is wrong, stop and update it. Do not push through.
 - Tests are the verification mechanism; review checks they are real.
 - Density over length.

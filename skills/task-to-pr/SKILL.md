@@ -25,3 +25,4 @@ Turn one user-provided ticket into a draft PR. The user supplies the ticket; do 
 - Pause at the opened PR. Merging, CI triage, and post-review follow-up are separate work; use `pr-to-ready` when feedback arrives.
 - Open PRs only after verification has run, or state clearly what could not be verified.
 - If a status update, push, or PR creation fails, keep the work local when safe and report exactly what failed.
+- Unattended runs report through the ticket, not the chat. On a blocker, comment what blocked you on the ticket, apply the repo's documented needs-human label, release any claim label, and exit cleanly instead of waiting for input.

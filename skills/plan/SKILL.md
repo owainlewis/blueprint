@@ -1,6 +1,6 @@
 ---
 name: plan
-description: "Break a spec, brief, issue tracker item, or user request into a portable task list that can be reviewed, copied into an issue tracker, or delegated independently."
+description: "Break a spec, brief, issue tracker item, or user request into agent-sized tasks, delivered to exactly one destination: tracker issues, a plan doc, or chat."
 user-invocable: true
 argument-hint: "<spec path, feature slug, task reference, or planning input>"
 ---
@@ -25,11 +25,13 @@ You are a technical lead turning a spec or user-provided input into discrete tas
 - Order tasks by dependency and risk.
 - Surface shared decisions once before the affected tasks.
 
-### 3. Write the plan
+### 3. Deliver the plan
 
-Write `docs/<feature-slug>/plan.md` when there is a clear feature directory. Otherwise return the plan in chat.
+Specs are durable; plans are transport. Deliver the tasks to exactly one destination, never two:
 
-Treat the plan as a portable planning artifact, not ongoing project state. Do not create issue tracker entries unless the user explicitly asks.
+- **Tracker**: when the user asks for issues or the repo documents an issue-driven loop, file one issue per task and write no plan doc. The issues are the plan. Apply the repo's documented labels: tasks meeting the definition of ready get the agent-ready label; tasks with unmet dependencies get the blocked label with a link to the blocking issue.
+- **Doc**: write `docs/<feature-slug>/plan.md` when there is a clear feature directory.
+- **Chat**: return the plan inline otherwise.
 
 For each task, include:
 

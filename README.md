@@ -146,6 +146,8 @@ flowchart TD
 
 Each worker still runs the full `task-to-pr` workflow for exactly one ticket: `branch` -> `implement` -> `review` -> `pr` -> ticket update. The coordinator does not edit code; it partitions work, starts isolated lanes, monitors failures, and reports the fleet.
 
+The loops can also run unattended: agents file labeled issues, a scheduled agent claims ready work and runs `task-to-pr`, and your involvement narrows to approving specs and reviewing PRs. See [guides/loops.md](guides/loops.md).
+
 ## Invoking Skills
 
 The supported install path is `npx skills add owainlewis/blueprint`. That installs standalone skills; invoke them by skill name (`spec`, `plan`, `implement`, etc.) or by the skill picker/natural-language flow your agent supports.
@@ -223,7 +225,7 @@ Design docs default to `docs/<design-slug>/design.md`: a lightweight architectur
 
 One spec lives at `docs/<feature-slug>/spec.md`. External requirements flow into it; the spec is the artifact that brings context into the codebase.
 
-Plans default to `docs/<feature-slug>/plan.md`: a portable task list that can be reviewed, copied into an issue tracker, or used directly. If you want issues created in Linear, GitHub Issues, or another system, ask for that as the next step.
+Plans are transport, not durable artifacts. They go to exactly one destination: tracker issues when you ask or the repo runs an unattended loop, `docs/<feature-slug>/plan.md` when there is a feature directory, or chat. When tasks go to the tracker, no plan doc is written; the issues are the plan.
 
 Use the full pipeline for work that touches contracts, schemas, multiple files, or invariants. For trivial changes, just do them. For exploration, explore without manufacturing fake specs, plans, or issue tracker entries.
 
