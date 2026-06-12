@@ -28,23 +28,26 @@ flowchart LR
     class Review review;
 ```
 
-1. **Ready**: plan, triage, and get work agent-ready. Agents file every issue and judge it at creation: decision-complete work gets `ready-for-agent`, real problems with open decisions get `ready-for-spec`. The spec loop turns the latter into reviewed specs; you flip the label after approving.
-2. **Work**: a scheduled agent claims one `ready-for-agent` issue and runs `task-to-pr` to a draft PR, with the ticket as the audit trail.
+1. **Ready**: plan, triage, and get work agent-ready. Agents file every issue and judge it at creation: decision-complete work gets `agent:ready`, real problems with open decisions get `needs:spec`. The spec loop turns the latter into reviewed specs; you flip the label after approving.
+2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `task-to-pr` to a draft PR, with the ticket as the audit trail.
 3. **Review**: you review PRs on your schedule. The review loop runs `pr-to-ready` against your feedback. You merge.
 
 ## Labels at a Glance
 
-Labels are the loop's control plane: each one marks a state, and exactly one loop or human moves an issue out of it.
+Labels are the loop's control plane. Namespaces separate dimensions: `agent:*` is the state machine, `needs:*` is what an issue waits on, `risk:*` gates autonomy, `type:*` classifies for reporting. Exactly one loop or human moves an issue out of each state.
 
 | Label | Means | Set by | Moves on when |
 |---|---|---|---|
-| `ready-for-spec` | Real problem, open decisions | The agent filing the issue | Spec loop writes a spec; a human reviews it and flips the label to `ready-for-agent` |
-| `ready-for-agent` | Meets the definition of ready | Filing agent, `plan`, or a human after spec review | Work loop claims it and swaps to `agent-in-progress` |
-| `agent-in-progress` | Claimed by a worker | Work loop, atomically at claim time | PR opens and the issue rides to merge; a blocker routes it to `needs-human`; or the claim goes stale (24h, no branch or PR activity) and releases back to `ready-for-agent` |
+| `needs:spec` | Real problem, open decisions | The agent filing the issue | Spec loop writes a spec; a human reviews it and flips the label to `agent:ready` |
+| `agent:ready` | Meets the definition of ready | Filing agent, `plan`, or a human after spec review | Work loop claims it and swaps to `agent:working` |
+| `agent:working` | Claimed by a worker | Work loop, atomically at claim time | PR opens and it swaps to `agent:complete`; a blocker routes it to `needs:human`; or the claim goes stale (24h, no branch or PR activity) and releases back to `agent:ready` |
+| `agent:complete` | PR open, awaiting human review | Work loop, when the PR opens | Merge closes the issue; feedback runs through the review loop |
 | `blocked` | Waiting on another issue, linked in the body | `plan`, when filing dependent tasks | Work loop removes it once the blocking issue closes |
-| `needs-human` | An agent hit a decision only a human can make, explained in a comment | Any loop, on a blocker | A human answers in the comments and relabels `ready-for-agent`, or closes the issue |
+| `needs:human` | A decision only a human can make, explained in a comment | Any loop, on a blocker | A human answers in the comments and relabels `agent:ready`, or closes the issue |
+| `risk:low` / `risk:high` | Blast radius if the work goes wrong | The agent filing the issue | Never moves. Unattended loops claim `risk:low` only; `risk:high` waits for an attended session |
+| `type:feature` / `type:bug` / `type:chore` | Classification for reporting | The agent filing the issue | Never moves; not part of the loop |
 
-The full conventions, the definition of ready and the label state machine, live in [AGENTS.md](../AGENTS.md). The prompts below assume them.
+The definition of ready lives in [AGENTS.md](../AGENTS.md); the full label reference with the state diagram and setup commands lives in [labels.md](labels.md). The prompts below assume both.
 
 ## Phase 1: Ready
 
@@ -57,9 +60,11 @@ File this as an issue: <rough idea>.
 
 Shape it to the definition of ready in AGENTS.md: goal stated as an
 outcome, context a fresh agent needs, testable acceptance criteria, a
-runnable verify step. Label it honestly: ready-for-agent only if it is
-decision-complete; otherwise ready-for-spec, with the open decisions
-listed in the body. Do not pad a thin idea into fake completeness.
+runnable verify step. Label it honestly: agent:ready only if it is
+decision-complete; otherwise needs:spec, with the open decisions
+listed in the body. Add a risk label for the blast radius if the work
+goes wrong (risk:low or risk:high) and a type label (type:feature,
+type:bug, type:chore). Do not pad a thin idea into fake completeness.
 ```
 
 ### Plan a spec into issues
@@ -70,20 +75,44 @@ No prompt needed; this is the `plan` skill with the tracker as destination:
 Run plan on docs/<feature-slug>/spec.md. Destination: tracker issues.
 ```
 
-`plan` files one issue per task, labels ready tasks `ready-for-agent`, and labels dependent tasks `blocked` with a link to the blocker. No plan doc is written; the issues are the plan.
+`plan` files one issue per task, labels ready tasks `agent:ready` with a risk grade, and labels dependent tasks `blocked` with a link to the blocker. No plan doc is written; the issues are the plan.
+
+### Triage a backlog
+
+When agents file every issue, nothing unjudged enters the tracker and no triage pass is needed. Use this loop when issues arrive unjudged: humans file them, they were imported, or the backlog predates the labels. It is the manager pass: judge what is workable, label it, and sync drift.
+
+```text
+One tick of the triage loop.
+
+1. Find open issues with no agent:* or needs:* label. Judge each
+   against the definition of ready in AGENTS.md:
+   - Decision-complete: label agent:ready, add a risk grade (risk:low
+     or risk:high) and a type label.
+   - Real problem, open decisions: label needs:spec and comment the
+     open decisions.
+   - Too thin to act on: comment what is missing and label needs:human.
+   The label is the judgment. Do not pad thin issues into fake
+   readiness.
+2. Sync drift: close issues whose linked PRs merged, release stale
+   agent:working claims (24 hours, no branch or PR activity) back to
+   agent:ready, and remove blocked where the blocking issue is closed.
+3. Report what was labeled, what was released, and what needs a human.
+```
+
+A complete GitHub Actions workflow for this loop lives at [examples/workflows/triage.yml](../examples/workflows/triage.yml): copy it to `.github/workflows/` and add an `ANTHROPIC_API_KEY` secret.
 
 ### Spec loop
 
-Turns `ready-for-spec` issues into reviewed specs. Run on a schedule.
+Turns `needs:spec` issues into reviewed specs. Run on a schedule.
 
 ```text
 One tick of the spec loop.
 
-Pick the oldest unassigned issue labeled ready-for-spec; exit if none.
+Pick the oldest unassigned issue labeled needs:spec; exit if none.
 Assign yourself. Run the spec skill with the issue as the input. Open a
 PR adding docs/<slug>/spec.md, link it from the issue, and comment a
-summary of the decisions that need review. Leave ready-for-spec in
-place: a human flips it to ready-for-agent after reviewing the spec.
+summary of the decisions that need review. Leave needs:spec in
+place: a human flips it to agent:ready after reviewing the spec.
 ```
 
 ## Phase 2: Work
@@ -97,19 +126,21 @@ The pickup loop. Three details matter more than the schedule:
 ```text
 One tick of the work loop.
 
-1. Throttle. Count open agent-authored draft PRs awaiting human review.
-   If there are 3 or more, exit: finishing reviewed work beats starting
-   new work.
-2. Recover. Release stale claims: any issue labeled agent-in-progress
-   with no linked branch or PR activity in 24 hours goes back to
-   ready-for-agent. Remove blocked from issues whose blocking issues
-   are closed.
-3. Claim. Pick the oldest unassigned issue labeled ready-for-agent.
-   Assign yourself and swap ready-for-agent to agent-in-progress before
-   any other work. If none, exit and say so.
-4. Work. Run task-to-pr with the issue.
-5. Blocked? Comment what blocked you on the issue, label it needs-human,
-   remove agent-in-progress, and exit cleanly. The ticket is the only
+1. Throttle. Count issues labeled agent:complete: agent PRs awaiting
+   human review. If there are 3 or more, exit: finishing reviewed work
+   beats starting new work.
+2. Recover. Release stale claims: any issue labeled agent:working with
+   no linked branch or PR activity in 24 hours goes back to
+   agent:ready. Remove blocked from issues whose blocking issues are
+   closed.
+3. Claim. Pick the oldest unassigned issue labeled agent:ready and
+   risk:low; higher-risk work waits for an attended session. Assign
+   yourself and swap agent:ready to agent:working before any other
+   work. If none, exit and say so.
+4. Work. Run task-to-pr with the issue. When the PR opens, swap
+   agent:working to agent:complete.
+5. Blocked? Comment what blocked you on the issue, label it needs:human,
+   remove agent:working, and exit cleanly. The ticket is the only
    channel.
 ```
 
@@ -167,7 +198,7 @@ Start with one loop, the work loop, on a slow schedule. Add the spec and review 
 
 ## What Stays Human
 
-- Flipping `ready-for-spec` to `ready-for-agent` after reviewing a spec.
+- Flipping `needs:spec` to `agent:ready` after reviewing a spec.
 - Reviewing PRs.
 - Merging. No loop, skill, or prompt merges; `pr-to-ready` ends at a readiness verdict.
 

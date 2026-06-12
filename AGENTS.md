@@ -45,8 +45,8 @@ Deliver:
 
 The two flows can run as scheduled loops over an issue tracker, with agents filing every issue. Three phases:
 
-1. **Ready**: turn ideas and specs into agent-ready issues. The agent filing an issue judges it at creation: decision-complete work gets `ready-for-agent`; a real problem with open decisions gets `ready-for-spec`. Nothing unjudged enters the tracker.
-2. **Work**: a scheduled agent claims one `ready-for-agent` issue and runs `task-to-pr` to a draft PR.
+1. **Ready**: turn ideas and specs into agent-ready issues. The agent filing an issue judges it at creation: decision-complete work gets `agent:ready`; a real problem with open decisions gets `needs:spec`. Nothing unjudged enters the tracker.
+2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `task-to-pr` to a draft PR.
 3. **Review**: a human reviews the PR, `pr-to-ready` drives feedback to merge-ready, a human merges.
 
 ### Definition of Ready
@@ -61,13 +61,18 @@ An issue is agent-ready when a fresh agent could finish it without asking questi
 
 ### Labels
 
-- `ready-for-spec`: real problem, open decisions. The spec loop picks it up.
-- `ready-for-agent`: meets the definition of ready. The work loop picks it up.
-- `agent-in-progress`: claimed by a worker. A claim with no linked branch or PR activity after 24 hours is stale; release it back to `ready-for-agent`.
-- `blocked`: waiting on another issue, linked in the body. Remove when the blocker closes.
-- `needs-human`: an agent hit a decision only a human can make, explained in a comment.
+Namespaces separate dimensions: `agent:*` is the state machine, `needs:*` is what an issue waits on, `risk:*` and `type:*` are metadata set when the issue is filed.
 
-Humans flip `ready-for-spec` to `ready-for-agent` after spec review, review PRs, and merge. Agents do everything else. Setup and sample prompts: `guides/loops.md`.
+- `needs:spec`: real problem, open decisions. The spec loop picks it up.
+- `agent:ready`: meets the definition of ready. The work loop claims it.
+- `agent:working`: claimed by a worker. A claim with no linked branch or PR activity after 24 hours is stale; release it back to `agent:ready`.
+- `agent:complete`: PR open, awaiting human review. The work loop's throttle counts these.
+- `blocked`: waiting on another issue, linked in the body. Remove when the blocker closes.
+- `needs:human`: an agent hit a decision only a human can make, explained in a comment.
+- `risk:low` / `risk:high`: blast radius if the work goes wrong, judged at filing. Unattended loops claim `risk:low` only.
+- `type:feature` / `type:bug` / `type:chore`: optional classification for reporting; not part of the loop.
+
+Humans flip `needs:spec` to `agent:ready` after spec review, review PRs, and merge. Agents do everything else. Full label reference: `guides/labels.md`. Setup and sample prompts: `guides/loops.md`.
 
 ## Guidance
 
