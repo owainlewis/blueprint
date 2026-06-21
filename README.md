@@ -4,7 +4,7 @@
 
 Coding agents don't fail for lack of intelligence. They fail for lack of process: no spec, no plan, no tests, no review, just a confident 2,000-line PR nobody asked for. Blueprint fixes the process and trusts the intelligence.
 
-It encodes how the best engineering teams have always shipped: design when architecture is ambiguous, spec when decisions matter, plan when work needs splitting, test before ship, review before merge. Fifteen dense skills you can run as single steps you drive yourself, or as loops that take whole tickets to draft PRs while you sleep.
+It encodes how the best engineering teams have always shipped: bootstrap cleanly, design when architecture is ambiguous, spec when decisions matter, plan when work needs splitting, test before ship, review before merge. Sixteen dense skills you can run as single steps you drive yourself, or as loops that take whole tickets to draft PRs while you sleep.
 
 Blueprint is the deliberate opposite of bloated, over-engineered skill libraries like Superpowers and GSD. No ceremony, no guardrail mazes, no thousand-line process files burning your context window before any work starts. Simplicity is clarity: a skill short enough to hold in your head is a skill an agent actually follows. And Blueprint bets on the model. Heavy frameworks assume the model is weak and wrap it in rules; Blueprint assumes the model is strong and hands it the judgment of a great senior engineer, written down. Every model release makes that bet pay off more, and the guardrails more wrong.
 
@@ -20,6 +20,7 @@ Blueprint is the deliberate opposite of bloated, over-engineered skill libraries
 
 | Phase | Skill | What it does |
 |---|---|---|
+| **Setup** | `bootstrap-project` | Start a repo with clean docs, agent guidance, tracker setup, and first commit |
 | **Design** | `design-doc` | Explore architecture, alternatives, and tradeoffs |
 | **Define** | `spec` | One document with requirements and design |
 | **Plan** | `plan` | Break work into agent-sized tasks |
@@ -182,12 +183,15 @@ Humans do three things: flip `needs:spec` to `agent:ready` after reviewing a spe
 
 The loop layer is prompts, not skills: skills encode judgment that must stay consistent everywhere, while the loop layer is wiring you paste into whatever runs it. The definition of ready and the label state machine live in [AGENTS.md](AGENTS.md); setup, triggers, and copy-pasteable loop prompts live in [guides/loops.md](guides/loops.md).
 
+For an attended Codex coordinator that works through a small issue set, keeps a project board current, and may merge only when explicitly authorized, see [guides/codex-coordinator.md](guides/codex-coordinator.md).
+
 ## Invoking Skills
 
 The supported install path is `npx skills add owainlewis/blueprint`. That installs standalone skills; invoke them by skill name (`spec`, `plan`, `implement`, etc.) or by the skill picker/natural-language flow your agent supports.
 
 | Skill | Purpose |
 |---|---|
+| `bootstrap-project` | Bootstrap a new repo with docs, license, agent guidance, tracker setup, and optional first commit |
 | `design-doc` | Write a lightweight architecture design doc |
 | `spec` | Write a spec |
 | `plan` | Break input into reviewable tasks |
@@ -235,6 +239,7 @@ Run this to update Blueprint and your installed skills to the latest version.
 
 | Skill | What it does | Example |
 |---|---|---|
+| `bootstrap-project` | Starts a new or empty repo with README, license, `.gitignore`, `AGENTS.md`, docs, optional tracker setup, and an initial commit | `Bootstrap this repo for a new macOS editor project` |
 | `design-doc` | Writes `docs/<design-slug>/design.md`: architecture, alternatives, tradeoffs, and cross-cutting concerns | `Write a design doc for multi-tenant auth` |
 | `spec` | Writes `docs/<feature-slug>/spec.md`: requirements and design in one document | `Write a spec for user-auth` |
 | `plan` | Breaks a spec, brief, or request into tasks sized for agents, review, and rollback | `Create a plan for user-auth` |

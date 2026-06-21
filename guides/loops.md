@@ -193,6 +193,7 @@ jobs:
 ```
 
 **Codex**: paste the prompt into an automation in the Automations tab.
+For an attended Codex coordinator that owns a finite issue set and may merge only when explicitly authorized, use [codex-coordinator.md](codex-coordinator.md).
 
 Start with one loop, the work loop, on a slow schedule. Add the spec and review loops once you trust its output.
 

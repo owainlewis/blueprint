@@ -4,9 +4,11 @@ Blueprint encodes world-class software engineering and agentic engineering pract
 
 If you are an AI agent working in this repo, follow this guidance.
 
-## The Two Flows
+## The Three Flows
 
-Blueprint has two flows. The handoff between them is a task with acceptance criteria.
+Blueprint has three flows. The handoff between them is a project skeleton, spec, or task with acceptance criteria.
+
+**Setup** (`bootstrap-project`): turn a new or empty repo into a clean starting point with README, license, `.gitignore`, `AGENTS.md`, docs, optional tracker setup, and an initial commit. Interview the repo creator when product, license, remote, or tracker decisions are unclear.
 
 **Decide** (`design-doc` -> `spec` -> `plan`): turn ambiguity into reviewed decisions and agent-sized tasks. Every stage pauses for human review. Start at `design-doc` when the architecture is ambiguous, at `spec` when decisions, contracts, or invariants need review, at `plan` when the work just needs splitting. Skip stages when the change is trivial and decision-complete.
 
@@ -18,6 +20,7 @@ Exploration is allowed without creating docs or issue tracker entries. Do not ma
 
 Decide:
 
+- `bootstrap-project`: bootstrap a new or empty repository with clean docs, license, agent guidance, optional tracker setup, and an initial commit.
 - `design-doc`: write a lightweight architecture design doc when the design is ambiguous.
 - `spec`: write the technical design before coding.
 - `plan`: break a spec, brief, or request into agent-sized tasks.

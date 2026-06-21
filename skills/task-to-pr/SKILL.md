@@ -21,7 +21,7 @@ You are the coordinator. Use tools directly to inspect, prepare the workspace, e
 6. **Run acceptance verification** with a separate fresh subagent. Give it the ticket, acceptance criteria, current diff, and verification run. Ask it to mark each acceptance criterion as satisfied, partial, missing, or not verifiable. Treat missing or partial required criteria as blockers. Fix valid blockers and re-run relevant verification.
 7. **Repair loop.** Repeat implementation, local verification, review, and acceptance verification until the work is clean or blocked. Do not loop indefinitely; after repeated failed attempts, stop, leave the branch/worktree intact, and report the blocker with evidence.
 8. **Run `pr`.** Open a draft PR unless the user or repository convention says otherwise. The body must include the ticket link, acceptance criteria status, summary of changes, verification commands/results, and review/verification status.
-9. **Update the ticket.** Comment with the PR link and the verification evidence, then move it to the closest existing review state. Do not invent tracker states or labels.
+9. **Update the ticket.** Comment with the PR link and the verification evidence, then move it to the closest existing review state. If the repo documents a project board or tracker field, keep it in sync with the ticket state. Do not invent tracker states or labels.
 10. **Report:** ticket, workspace or worktree path, branch, commit, PR URL, verification run, and anything blocked or unverified.
 
 ## Boundaries
