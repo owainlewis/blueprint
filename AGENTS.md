@@ -30,16 +30,19 @@ Deliver:
 
 - `task-to-pr`: orchestrate one ticket to a draft PR, keeping the ticket updated with evidence; uses isolated branches/worktrees, tests, review, and acceptance verification.
 - `multitask`: run several tickets to draft PRs in parallel, one isolated worker per ticket; composes task-to-pr.
-- `branch`: create a traceable Git branch with the ticket ID when available.
 - `implement`: turn one scoped task into a verified diff with tests.
 - `tdd`: test-first variant of implement.
 - `debug`: find the root cause of a failure, then fix it with a regression test first when practical.
 - `refactor`: simplify changed code without changing behavior.
 - `review`: pre-merge code review for correctness, security, simplicity, robustness, and tests.
 - `pr`: commit, push, and open a PR with a clear description.
-- `commit`: stage intended changes and write one clear Conventional Commit.
 - `pr-to-ready`: drive an open PR with feedback to merge-ready; never merges.
 - `browser-verify`: verify browser-rendered work in a real browser.
+
+Helper entry points:
+
+- `branch`: create a traceable Git branch with the ticket ID when available.
+- `commit`: stage intended changes and write one clear Conventional Commit.
 
 ## Agents
 
