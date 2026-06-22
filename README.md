@@ -26,7 +26,7 @@ Blueprint is the deliberate opposite of bloated, over-engineered skill libraries
 | **Plan**     | `plan`                     | Break work into agent-sized tasks                                             |
 | **Goal**     | `goal-skill`               | Turn long-running work into a paste-ready Codex `/goal`                       |
 | **Build**    | `implement` / `tdd`        | Execute one task; tests prove acceptance                                      |
-| **Debug**    | `debug`                    | Reproduce a failure, fix it test-first, and keep the guard                    |
+| **Debug**    | `debug`                    | Reproduce a failure, fix it test-first when practical, and keep the guard     |
 | **Improve**  | `refactor`                 | Simplify changed code without changing behavior                               |
 | **Review**   | `review`                   | Correctness, security, simplicity before merge                                |
 | **Deliver**  | `task-to-pr` / `multitask` | Turn one ticket, or several tickets in parallel, into draft PRs               |
@@ -50,9 +50,9 @@ flowchart TD
     Handoff["tasks / tickets<br/>reviewable handoff"]
 
     Count{How many<br/>tickets?}
-    Single["task-to-pr<br/>branch -> implement<br/>review -> pr"]
+    Single["task-to-pr<br/>branch -> implement<br/>review + verify -> pr"]
     Multi["multitask<br/>classify, isolate<br/>coordinate workers"]
-    PRs["draft PRs<br/>tests, review<br/>evidence"]
+    PRs["draft PRs<br/>tests, review<br/>acceptance evidence"]
     Ready["pr-to-ready<br/>feedback to merge-ready<br/>never merge"]
 
     Request --> Ambiguous
@@ -85,7 +85,7 @@ flowchart TD
 
 **If implementation reveals the instructions are wrong, stop.** Update the task, spec, or plan, then continue from the updated source. Do not push through stale instructions. Clarifying costs minutes; pushing through wrong instructions costs the rest of the feature.
 
-**Tests are the default verification.** Blueprint does not run a separate "did the implementation match the instructions?" pass. The request or spec defines the testing strategy. The implementation produces tests that prove the requirements. Browser-rendered work also gets checked with `browser-verify`. Review checks the proof is real and not theatre. If you want stronger verification, write the additional concerns into `REVIEW.md`; the review skill will pick them up.
+**Tests are the default verification.** The request or spec defines the testing strategy. The implementation produces tests that prove the requirements. Browser-rendered work also gets checked with `browser-verify`. `task-to-pr` adds fresh acceptance verification against the ticket before the draft PR. Review checks the proof is real and not theatre. If you want stronger code review concerns, write them into `REVIEW.md`; the review skill will pick them up.
 
 ## The Loops
 
@@ -93,13 +93,13 @@ The skills above are steps: one phase, one human checkpoint. Three skills chain 
 
 | Skill         | From                     | To                                                                         |
 | ------------- | ------------------------ | -------------------------------------------------------------------------- |
-| `task-to-pr`  | a ticket                 | a draft PR with code, tests, fresh-subagent review, and evidence           |
+| `task-to-pr`  | a ticket                 | a draft PR with code, tests, fresh-subagent review, acceptance verification, and evidence |
 | `multitask`   | several tickets          | several draft PRs, one isolated worker lane per ticket or dependency group |
 | `pr-to-ready` | an open PR with feedback | a merge-ready PR with checks passing                                       |
 
 Loops keep the ticket updated as they work — status moves, comments with verification evidence, PR links — and stop at human checkpoints. Merging is always a human decision.
 
-`task-to-pr` is the single-ticket loop: it resolves the ticket, creates a branch, implements the acceptance criteria, reviews the diff, opens a draft PR, and writes evidence back to the ticket.
+`task-to-pr` is the single-ticket loop: it resolves the ticket, creates a branch, implements the acceptance criteria, reviews the diff, verifies acceptance, opens a draft PR, and writes evidence back to the ticket.
 
 `multitask` is the coordinator-worker loop for several tickets at once:
 
@@ -148,7 +148,7 @@ flowchart TD
     class Fleet,Human report;
 ```
 
-Each worker still runs the full `task-to-pr` workflow for exactly one ticket: `branch` -> `implement` -> `review` -> `pr` -> ticket update. The coordinator does not edit code; it partitions work, starts isolated lanes, monitors failures, and reports the fleet.
+Each worker still runs the full `task-to-pr` workflow for exactly one ticket: `branch` -> `implement` -> `review` -> acceptance verification -> `pr` -> ticket update. The coordinator does not edit code; it partitions work, starts isolated lanes, monitors failures, and reports the fleet.
 
 ## Running Unattended
 
@@ -199,7 +199,7 @@ The supported install path is `npx skills add owainlewis/blueprint`. That instal
 | `goal-skill`        | Create a paste-ready Codex `/goal` with verifier evidence and blocked stop conditions             |
 | `implement`         | Execute a single task                                                                             |
 | `tdd`               | Test-first variant of implement                                                                   |
-| `debug`             | Reproduce and fix a failure test-first                                                            |
+| `debug`             | Reproduce and fix a failure test-first when practical                                             |
 | `refactor`          | Simplify changed code without changing behavior                                                   |
 | `review`            | Local code review                                                                                 |
 | `task-to-pr`        | Run the loop from ticket to draft PR                                                              |
@@ -249,10 +249,10 @@ Run this to update Blueprint and your installed skills to the latest version.
 | `goal-skill`        | Creates paste-ready Codex `/goal` prompts with verifier evidence, constraints, boundaries, iteration policy, and blocked conditions                     | `Create a Codex goal for this deployment plan`       |
 | `implement`         | Executes one scoped change with tests and verification                                                                                                  | `Implement LIN-123 from user-auth`                   |
 | `tdd`               | Implements behavior test-first                                                                                                                          | `Use TDD for retry logic in the API client`          |
-| `debug`             | Finds the root cause of a failure, fixes it via TDD, and leaves a regression test                                                                       | `Debug the failing retry test`                       |
+| `debug`             | Finds the root cause of a failure, fixes it test-first when practical, and leaves a regression test                                                     | `Debug the failing retry test`                       |
 | `refactor`          | Improves code shape without changing behavior                                                                                                           | `Refactor the current diff`                          |
 | `review`            | Reviews specs or code for correctness, security, simplicity, robustness, and tests                                                                      | `Review the current diff`                            |
-| `task-to-pr`        | Runs the loop from ticket to draft PR: fetch the ticket, implement, test, fresh-subagent review, open the PR, and keep the ticket updated with evidence | `task-to-pr LIN-123`                                 |
+| `task-to-pr`        | Runs the loop from ticket to draft PR: fetch the ticket, implement, test, fresh-subagent review, verify acceptance, open the PR, and keep the ticket updated with evidence | `task-to-pr LIN-123` |
 | `multitask`         | Coordinates several tickets to draft PRs at once: classify dependencies, isolate worker lanes, run `task-to-pr` per ticket, and report the fleet        | `multitask LIN-101 LIN-102 LIN-103`                  |
 | `pr`                | Commits intended changes, pushes the branch, and opens a clear draft PR                                                                                 | `Open a draft PR for this change`                    |
 | `pr-to-ready`       | Inspects live PR state, fixes still-actionable feedback, verifies checks, and reports merge readiness; never merges                                     | `Is PR #42 ready to merge?`                          |

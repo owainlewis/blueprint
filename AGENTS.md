@@ -33,7 +33,7 @@ Deliver:
 - `branch`: create a traceable Git branch with the ticket ID when available.
 - `implement`: turn one scoped task into a verified diff with tests.
 - `tdd`: test-first variant of implement.
-- `debug`: find the root cause of a failure, then fix it via tdd so a test guards it.
+- `debug`: find the root cause of a failure, then fix it with a regression test first when practical.
 - `refactor`: simplify changed code without changing behavior.
 - `review`: pre-merge review for correctness, security, simplicity, robustness, and tests.
 - `pr`: commit, push, and open a PR with a clear description.
