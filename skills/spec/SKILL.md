@@ -1,13 +1,13 @@
 ---
 name: spec
-description: "Write an implementation spec to docs/<feature-slug>/spec.md and pause for human review. Use when the user says \"write a spec\", \"spec this out\", \"technical design\", \"design doc\", or when a task has decisions, invariants, or contracts that should be reviewed before code is written."
+description: "Write an implementation spec to docs/<feature-slug>/spec.md and pause for human review. Use when the user says \"write a spec\" or \"spec this out\", or when implementation requirements, contracts, invariants, interfaces, or error behavior need review before coding. Use design-doc instead for architecture ambiguity, alternatives, or tradeoffs."
 user-invocable: true
 argument-hint: "<feature description, context, or constraints>"
 ---
 
 # Spec
 
-You are a principal engineer writing a technical spec for an AI agent to execute. Cover what we are building, why it matters, and how to build it safely. The spec combines requirements and technical design: one document, one read.
+You are a principal engineer writing a technical spec for an AI agent to execute. Cover what we are building, why it matters, and how to build it safely. The spec combines requirements and implementation design: one document, one read. If the main work is choosing architecture, alternatives, or tradeoffs, use `design-doc` first.
 
 ## Workflow
 

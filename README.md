@@ -4,7 +4,7 @@
 
 Coding agents don't fail for lack of intelligence. They fail for lack of process: no spec, no plan, no tests, no review, just a confident 2,000-line PR nobody asked for. Blueprint fixes the process and trusts the intelligence.
 
-It encodes how the best engineering teams have always shipped: bootstrap cleanly, design when architecture is ambiguous, spec when decisions matter, plan when work needs splitting, test before ship, review before merge. Sixteen dense skills you can run as single steps you drive yourself, or as loops that take whole tickets to draft PRs while you sleep.
+It encodes how the best engineering teams have always shipped: bootstrap cleanly, design when architecture is ambiguous, spec when implementation contracts or invariants matter, plan when work needs splitting, test before ship, review before merge. Sixteen dense skills you can run as single steps you drive yourself, or as loops that take whole tickets to draft PRs while you sleep.
 
 Blueprint is the deliberate opposite of bloated, over-engineered skill libraries like Superpowers and GSD. No ceremony, no guardrail mazes, no thousand-line process files burning your context window before any work starts. Simplicity is clarity: a skill short enough to hold in your head is a skill an agent actually follows. And Blueprint bets on the model. Heavy frameworks assume the model is weak and wrap it in rules; Blueprint assumes the model is strong and hands it the judgment of a great senior engineer, written down. Every model release makes that bet pay off more, and the guardrails more wrong.
 
@@ -22,13 +22,13 @@ Blueprint is the deliberate opposite of bloated, over-engineered skill libraries
 | ------------ | -------------------------- | ----------------------------------------------------------------------------- |
 | **Setup**    | `bootstrap-project`        | Start a repo with clean docs, agent guidance, tracker setup, and first commit |
 | **Design**   | `design-doc`               | Explore architecture, alternatives, and tradeoffs                             |
-| **Define**   | `spec`                     | One document with requirements and design                                     |
+| **Define**   | `spec`                     | Requirements, contracts, invariants, and implementation design                |
 | **Plan**     | `plan`                     | Break work into agent-sized tasks                                             |
 | **Goal**     | `goal-skill`               | Turn long-running work into a paste-ready Codex `/goal`                       |
 | **Build**    | `implement` / `tdd`        | Execute one task; tests prove acceptance                                      |
 | **Debug**    | `debug`                    | Reproduce a failure, fix it test-first when practical, and keep the guard     |
 | **Improve**  | `refactor`                 | Simplify changed code without changing behavior                               |
-| **Review**   | `review`                   | Correctness, security, simplicity before merge                                |
+| **Review**   | `review`                   | Code-change correctness, security, simplicity before merge                    |
 | **Deliver**  | `task-to-pr` / `multitask` | Turn one ticket, or several tickets in parallel, into draft PRs               |
 | **Feedback** | `pr-to-ready`              | Drive an open PR with feedback to merge-ready                                 |
 | **Browser**  | `browser-verify`           | Check rendered UI, HTML, and visual docs in a real browser                    |
@@ -42,8 +42,8 @@ flowchart TD
 
     Ambiguous{Architecture<br/>ambiguous?}
     Design["design-doc<br/>options + tradeoffs<br/>chosen direction"]
-    SpecGate{Decisions,<br/>contracts,<br/>or invariants?}
-    Spec["spec<br/>requirements + design<br/>human review"]
+    SpecGate{Contracts,<br/>invariants,<br/>or error behavior?}
+    Spec["spec<br/>requirements + implementation design<br/>human review"]
     Split{Needs<br/>splitting?}
     Plan["plan<br/>agent-sized tasks<br/>acceptance criteria"]
     Direct["one scoped task<br/>acceptance criteria"]
@@ -193,8 +193,8 @@ The supported install path is `npx skills add owainlewis/blueprint`. That instal
 | Skill               | Purpose                                                                                           |
 | ------------------- | ------------------------------------------------------------------------------------------------- |
 | `bootstrap-project` | Bootstrap a new repo with docs, license, agent guidance, tracker setup, and optional first commit |
-| `design-doc`        | Write a lightweight architecture design doc                                                       |
-| `spec`              | Write a spec                                                                                      |
+| `design-doc`        | Decide architecture, alternatives, and tradeoffs                                                   |
+| `spec`              | Specify implementation requirements, contracts, and invariants                                     |
 | `plan`              | Break input into reviewable tasks                                                                 |
 | `goal-skill`        | Create a paste-ready Codex `/goal` with verifier evidence and blocked stop conditions             |
 | `implement`         | Execute a single task                                                                             |
@@ -244,14 +244,14 @@ Run this to update Blueprint and your installed skills to the latest version.
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
 | `bootstrap-project` | Starts a new or empty repo with README, license, `.gitignore`, `AGENTS.md`, docs, optional tracker setup, and an initial commit                         | `Bootstrap this repo for a new macOS editor project` |
 | `design-doc`        | Writes `docs/<design-slug>/design.md`: architecture, alternatives, tradeoffs, and cross-cutting concerns                                                | `Write a design doc for multi-tenant auth`           |
-| `spec`              | Writes `docs/<feature-slug>/spec.md`: requirements and design in one document                                                                           | `Write a spec for user-auth`                         |
+| `spec`              | Writes `docs/<feature-slug>/spec.md`: requirements, contracts, invariants, and implementation design                                                     | `Write a spec for user-auth`                         |
 | `plan`              | Breaks a spec, brief, or request into tasks sized for agents, review, and rollback                                                                      | `Create a plan for user-auth`                        |
 | `goal-skill`        | Creates paste-ready Codex `/goal` prompts with verifier evidence, constraints, boundaries, iteration policy, and blocked conditions                     | `Create a Codex goal for this deployment plan`       |
 | `implement`         | Executes one scoped change with tests and verification                                                                                                  | `Implement LIN-123 from user-auth`                   |
 | `tdd`               | Implements behavior test-first                                                                                                                          | `Use TDD for retry logic in the API client`          |
 | `debug`             | Finds the root cause of a failure, fixes it test-first when practical, and leaves a regression test                                                     | `Debug the failing retry test`                       |
 | `refactor`          | Improves code shape without changing behavior                                                                                                           | `Refactor the current diff`                          |
-| `review`            | Reviews specs or code for correctness, security, simplicity, robustness, and tests                                                                      | `Review the current diff`                            |
+| `review`            | Reviews code changes for correctness, security, simplicity, robustness, and tests                                                                       | `Review the current diff`                            |
 | `task-to-pr`        | Runs the loop from ticket to draft PR: fetch the ticket, implement, test, fresh-subagent review, verify acceptance, open the PR, and keep the ticket updated with evidence | `task-to-pr LIN-123` |
 | `multitask`         | Coordinates several tickets to draft PRs at once: classify dependencies, isolate worker lanes, run `task-to-pr` per ticket, and report the fleet        | `multitask LIN-101 LIN-102 LIN-103`                  |
 | `pr`                | Commits intended changes, pushes the branch, and opens a clear draft PR                                                                                 | `Open a draft PR for this change`                    |

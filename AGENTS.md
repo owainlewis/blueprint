@@ -1,6 +1,6 @@
 # Working in Blueprint
 
-Blueprint encodes world-class software engineering and agentic engineering practice: design when architecture is ambiguous, spec when decisions matter, plan when work needs splitting, test before ship, refactor when code needs simplifying, review before merge, drive PR feedback to merge-ready with judgment.
+Blueprint encodes world-class software engineering and agentic engineering practice: design when architecture is ambiguous, spec when implementation contracts or invariants matter, plan when work needs splitting, test before ship, refactor when code needs simplifying, review before merge, drive PR feedback to merge-ready with judgment.
 
 If you are an AI agent working in this repo, follow this guidance.
 
@@ -10,7 +10,7 @@ Blueprint has three flows. The handoff between them is a project skeleton, spec,
 
 **Setup** (`bootstrap-project`): turn a new or empty repo into a clean starting point with README, license, `.gitignore`, `AGENTS.md`, docs, optional tracker setup, and an initial commit. Interview the repo creator when product, license, remote, or tracker decisions are unclear.
 
-**Decide** (`design-doc` -> `spec` -> `plan`): turn ambiguity into reviewed decisions and agent-sized tasks. Every stage pauses for human review. Start at `design-doc` when the architecture is ambiguous, at `spec` when decisions, contracts, or invariants need review, at `plan` when the work just needs splitting. Skip stages when the change is trivial and decision-complete.
+**Decide** (`design-doc` -> `spec` -> `plan`): turn ambiguity into reviewed decisions and agent-sized tasks. Every stage pauses for human review. Start at `design-doc` when architecture, alternatives, or tradeoffs are ambiguous. Use `spec` when implementation requirements, contracts, invariants, or error behavior need review. Use `plan` when the work just needs splitting. Skip stages when the change is trivial and decision-complete.
 
 **Deliver** (`task-to-pr`): turn one task into a draft PR with the ticket as the audit trail. `task-to-pr` runs workspace preparation -> `implement` -> review subagent -> acceptance-verification subagent -> `pr`, preferring worktrees when isolation reduces risk. Use `multitask` to run several independent tickets in parallel, one isolated worker per ticket. Use `pr-to-ready` once feedback exists to drive the PR to merge-ready; merging is always a human decision. Use `implement` alone when the workspace is prepared and no PR is expected, `tdd` when a failing test can describe the behavior first, `refactor` to tidy the changed code before review, and `debug` when something breaks.
 
@@ -21,8 +21,8 @@ Exploration is allowed without creating docs or issue tracker entries. Do not ma
 Decide:
 
 - `bootstrap-project`: bootstrap a new or empty repository with clean docs, license, agent guidance, optional tracker setup, and an initial commit.
-- `design-doc`: write a lightweight architecture design doc when the design is ambiguous.
-- `spec`: write the technical design before coding.
+- `design-doc`: write a lightweight architecture design doc when architecture or tradeoffs are ambiguous.
+- `spec`: write implementation requirements, contracts, invariants, and error behavior before coding.
 - `plan`: break a spec, brief, or request into agent-sized tasks.
 - `goal-skill`: turn rough long-running work into a paste-ready Codex `/goal` with verifier evidence and blocked conditions.
 
@@ -35,7 +35,7 @@ Deliver:
 - `tdd`: test-first variant of implement.
 - `debug`: find the root cause of a failure, then fix it with a regression test first when practical.
 - `refactor`: simplify changed code without changing behavior.
-- `review`: pre-merge review for correctness, security, simplicity, robustness, and tests.
+- `review`: pre-merge code review for correctness, security, simplicity, robustness, and tests.
 - `pr`: commit, push, and open a PR with a clear description.
 - `commit`: stage intended changes and write one clear Conventional Commit.
 - `pr-to-ready`: drive an open PR with feedback to merge-ready; never merges.
