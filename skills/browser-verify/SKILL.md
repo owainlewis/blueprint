@@ -13,9 +13,10 @@ You verify what the browser actually renders. Static code review is not enough f
 
 ### 1. Open
 
-Open the target in a real browser using Chrome DevTools MCP.
+Open the target with an available real-browser verification path.
+Use Chrome DevTools MCP, Playwright, in-app browser tooling, or another browser automation and inspection capability.
 
-If Chrome DevTools MCP is unavailable, stop and tell the user browser verification cannot run until it is installed.
+If no real-browser verification path is available, stop and tell the user browser verification cannot run until one is available.
 
 ### 2. Inspect
 
