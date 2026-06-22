@@ -8,7 +8,7 @@ If you are an AI agent working in this repo, follow this guidance.
 
 Blueprint has three flows. The handoff between them is a project skeleton, spec, or task with acceptance criteria.
 
-**Setup** (`bootstrap-project`): turn a new or empty repo into a clean starting point with README, license, `.gitignore`, `AGENTS.md`, docs, optional tracker setup, and an initial commit. Interview the repo creator when product, license, remote, or tracker decisions are unclear.
+**Setup** (`bootstrap-project`): turn a new or empty repo into a clean local starting point with README, license, `.gitignore`, `AGENTS.md`, and docs. Interview the repo creator only when file-changing decisions are unclear; commit or push only when explicitly asked.
 
 **Decide** (`design-doc` -> `spec` -> `plan`): turn ambiguity into reviewed decisions and agent-sized tasks. Every stage pauses for human review. Start at `design-doc` when architecture, alternatives, or tradeoffs are ambiguous. Use `spec` when implementation requirements, contracts, invariants, or error behavior need review. Use `plan` when the work just needs splitting. Skip stages when the change is trivial and decision-complete.
 
@@ -20,7 +20,7 @@ Exploration is allowed without creating docs or issue tracker entries. Do not ma
 
 Decide:
 
-- `bootstrap-project`: bootstrap a new or empty repository with clean docs, license, agent guidance, optional tracker setup, and an initial commit.
+- `bootstrap-project`: bootstrap a new or empty repository with clean docs, license, and agent guidance.
 - `design-doc`: write a lightweight architecture design doc when architecture or tradeoffs are ambiguous.
 - `spec`: write implementation requirements, contracts, invariants, and error behavior before coding.
 - `plan`: break a spec, brief, or request into agent-sized tasks.
