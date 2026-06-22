@@ -24,6 +24,7 @@ Decide:
 - `design-doc`: write a lightweight architecture design doc when the design is ambiguous.
 - `spec`: write the technical design before coding.
 - `plan`: break a spec, brief, or request into agent-sized tasks.
+- `goal-skill`: turn rough long-running work into a paste-ready Codex `/goal` with verifier evidence and blocked conditions.
 
 Deliver:
 
