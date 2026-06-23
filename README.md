@@ -20,7 +20,7 @@ Blueprint is the deliberate opposite of bloated, over-engineered skill libraries
 
 | Phase        | Skill                      | What it does                                                                  |
 | ------------ | -------------------------- | ----------------------------------------------------------------------------- |
-| **Setup**    | `bootstrap-project`        | Start a repo with clean docs, agent guidance, tracker setup, and first commit |
+| **Setup**    | `bootstrap-project`        | Start a repo with clean local docs and agent guidance                         |
 | **Design**   | `design-doc`               | Explore architecture, alternatives, and tradeoffs                             |
 | **Define**   | `spec`                     | Requirements, contracts, invariants, and implementation design                |
 | **Plan**     | `plan`                     | Break work into agent-sized tasks                                             |
@@ -192,7 +192,7 @@ The supported install path is `npx skills add owainlewis/blueprint`. That instal
 
 | Skill               | Purpose                                                                                           |
 | ------------------- | ------------------------------------------------------------------------------------------------- |
-| `bootstrap-project` | Bootstrap a new repo with docs, license, agent guidance, tracker setup, and optional first commit |
+| `bootstrap-project` | Bootstrap a new repo with docs, license, and agent guidance                                      |
 | `design-doc`        | Decide architecture, alternatives, and tradeoffs                                                   |
 | `spec`              | Specify implementation requirements, contracts, and invariants                                     |
 | `plan`              | Break input into reviewable tasks                                                                 |
@@ -242,7 +242,7 @@ Run this to update Blueprint and your installed skills to the latest version.
 
 | Skill               | What it does                                                                                                                                            | Example                                              |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| `bootstrap-project` | Starts a new or empty repo with README, license, `.gitignore`, `AGENTS.md`, docs, optional tracker setup, and an initial commit                         | `Bootstrap this repo for a new macOS editor project` |
+| `bootstrap-project` | Starts a new or empty repo with README, license, `.gitignore`, `AGENTS.md`, and docs                                                                          | `Bootstrap this repo for a new macOS editor project` |
 | `design-doc`        | Writes `docs/<design-slug>/design.md`: architecture, alternatives, tradeoffs, and cross-cutting concerns                                                | `Write a design doc for multi-tenant auth`           |
 | `spec`              | Writes `docs/<feature-slug>/spec.md`: requirements, contracts, invariants, and implementation design                                                     | `Write a spec for user-auth`                         |
 | `plan`              | Breaks a spec, brief, or request into tasks sized for agents, review, and rollback                                                                      | `Create a plan for user-auth`                        |
