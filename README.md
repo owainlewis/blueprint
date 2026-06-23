@@ -4,7 +4,7 @@
 
 Coding agents don't fail for lack of intelligence. They fail for lack of process: no spec, no plan, no tests, no review, just a confident 2,000-line PR nobody asked for. Blueprint fixes the process and trusts the intelligence.
 
-It encodes how the best engineering teams have always shipped: bootstrap cleanly, design when architecture is ambiguous, spec when implementation contracts or invariants matter, plan when work needs splitting, test before ship, review before merge. Sixteen dense skills you can run as single steps you drive yourself, or as loops that take whole tickets to draft PRs while you sleep.
+It encodes how the best engineering teams have always shipped: bootstrap cleanly, design when architecture is ambiguous, spec when implementation contracts or invariants matter, plan when work needs splitting, test before ship, review before merge. Fourteen core workflow skills, plus two mechanical helpers, let you run single steps yourself or loops that take whole tickets to draft PRs while you sleep.
 
 Blueprint is the deliberate opposite of bloated, over-engineered skill libraries like Superpowers and GSD. No ceremony, no guardrail mazes, no thousand-line process files burning your context window before any work starts. Simplicity is clarity: a skill short enough to hold in your head is a skill an agent actually follows. And Blueprint bets on the model. Heavy frameworks assume the model is weak and wrap it in rules; Blueprint assumes the model is strong and hands it the judgment of a great senior engineer, written down. Every model release makes that bet pay off more, and the guardrails more wrong.
 
@@ -190,6 +190,8 @@ For an attended Codex coordinator that works through a small issue set, keeps a 
 
 The supported install path is `npx skills add owainlewis/blueprint`. That installs standalone skills; invoke them by skill name (`spec`, `plan`, `implement`, etc.) or by the skill picker/natural-language flow your agent supports.
 
+Core workflows:
+
 | Skill               | Purpose                                                                                           |
 | ------------------- | ------------------------------------------------------------------------------------------------- |
 | `bootstrap-project` | Bootstrap a new repo with docs, license, and agent guidance                                      |
@@ -207,10 +209,15 @@ The supported install path is `npx skills add owainlewis/blueprint`. That instal
 | `pr`                | Commit, push, and open a PR                                                                       |
 | `pr-to-ready`       | Drive an open PR to merge-ready                                                                   |
 | `browser-verify`    | Verify browser-rendered work                                                                      |
-| `branch`            | Create a traceable Git branch                                                                     |
-| `commit`            | Conventional commit                                                                               |
 
-Branching and committing are mechanical, but they are still skills so the installer can expose the full workflow consistently.
+Helper entry points:
+
+| Skill    | Purpose                       |
+| -------- | ----------------------------- |
+| `branch` | Create a traceable Git branch |
+| `commit` | Conventional commit           |
+
+`branch` and `commit` are helper entry points, not core workflows. They stay installable so `task-to-pr`, `multitask`, and `pr` can expose the full delivery path consistently.
 
 Removed entry points are not maintained as aliases: `requirements` is now `spec`; `architecture` is now `design-doc` for architecture docs or `spec` for implementation instructions; `task` and `build` are now `implement`; `coverage` is handled through `implement` when adding tests or `review` when evaluating them; `address-pr-feedback` is now `pr-to-ready`; `codex-run-loop` is now `task-to-pr` for one ticket or `multitask` for several tickets.
 
@@ -240,6 +247,8 @@ Run this to update Blueprint and your installed skills to the latest version.
 
 ## Skills
 
+Core workflows:
+
 | Skill               | What it does                                                                                                                                            | Example                                              |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
 | `bootstrap-project` | Starts a new or empty repo with README, license, `.gitignore`, `AGENTS.md`, and docs                                                                          | `Bootstrap this repo for a new macOS editor project` |
@@ -257,8 +266,13 @@ Run this to update Blueprint and your installed skills to the latest version.
 | `pr`                | Commits intended changes, pushes the branch, and opens a clear draft PR                                                                                 | `Open a draft PR for this change`                    |
 | `pr-to-ready`       | Inspects live PR state, fixes still-actionable feedback, verifies checks, and reports merge readiness; never merges                                     | `Is PR #42 ready to merge?`                          |
 | `browser-verify`    | Verifies rendered UI, HTML, visual docs, and browser-facing behavior in a real browser                                                                  | `Browser-verify the local HTML report`               |
-| `branch`            | Creates a traceable Git branch with the ticket ID when available                                                                                        | `Create a branch for LIN-123 user-auth`              |
-| `commit`            | Stages intended changes and writes one clear Conventional Commit                                                                                        | `Commit the current changes`                         |
+
+Helper entry points:
+
+| Skill    | What it does                                                 | Example                                 |
+| -------- | ------------------------------------------------------------ | --------------------------------------- |
+| `branch` | Creates a traceable Git branch with the ticket ID when available | `Create a branch for LIN-123 user-auth` |
+| `commit` | Stages intended changes and writes one clear Conventional Commit | `Commit the current changes`            |
 
 ## Agent Instructions
 
