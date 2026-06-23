@@ -222,7 +222,8 @@ npx skills add owainlewis/blueprint
 
 Install Blueprint with the `skills` CLI. This is the supported setup path; Blueprint does not maintain per-tool skill installation guides.
 
-`browser-verify` requires Chrome DevTools MCP:
+`browser-verify` requires an available real-browser automation and inspection path.
+Chrome DevTools MCP is one supported setup:
 
 ```bash
 claude mcp add chrome-devtools --scope user npx chrome-devtools-mcp@latest
