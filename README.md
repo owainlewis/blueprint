@@ -18,19 +18,20 @@ Blueprint is the deliberate opposite of bloated, over-engineered skill libraries
 
 ## The Shape
 
-| Phase | Skill | What it does |
-|---|---|---|
-| **Setup** | `bootstrap-project` | Start a repo with clean docs, agent guidance, tracker setup, and first commit |
-| **Design** | `design-doc` | Explore architecture, alternatives, and tradeoffs |
-| **Define** | `spec` | One document with requirements and design |
-| **Plan** | `plan` | Break work into agent-sized tasks |
-| **Build** | `implement` / `tdd` | Execute one task; tests prove acceptance |
-| **Debug** | `debug` | Reproduce a failure, fix it test-first, and keep the guard |
-| **Improve** | `refactor` | Simplify changed code without changing behavior |
-| **Review** | `review` | Correctness, security, simplicity before merge |
-| **Deliver** | `task-to-pr` / `multitask` | Turn one ticket, or several tickets in parallel, into draft PRs |
-| **Feedback** | `pr-to-ready` | Drive an open PR with feedback to merge-ready |
-| **Browser** | `browser-verify` | Check rendered UI, HTML, and visual docs in a real browser |
+| Phase        | Skill                      | What it does                                                                  |
+| ------------ | -------------------------- | ----------------------------------------------------------------------------- |
+| **Setup**    | `bootstrap-project`        | Start a repo with clean docs, agent guidance, tracker setup, and first commit |
+| **Design**   | `design-doc`               | Explore architecture, alternatives, and tradeoffs                             |
+| **Define**   | `spec`                     | One document with requirements and design                                     |
+| **Plan**     | `plan`                     | Break work into agent-sized tasks                                             |
+| **Goal**     | `goal-skill`               | Turn long-running work into a paste-ready Codex `/goal`                       |
+| **Build**    | `implement` / `tdd`        | Execute one task; tests prove acceptance                                      |
+| **Debug**    | `debug`                    | Reproduce a failure, fix it test-first, and keep the guard                    |
+| **Improve**  | `refactor`                 | Simplify changed code without changing behavior                               |
+| **Review**   | `review`                   | Correctness, security, simplicity before merge                                |
+| **Deliver**  | `task-to-pr` / `multitask` | Turn one ticket, or several tickets in parallel, into draft PRs               |
+| **Feedback** | `pr-to-ready`              | Drive an open PR with feedback to merge-ready                                 |
+| **Browser**  | `browser-verify`           | Check rendered UI, HTML, and visual docs in a real browser                    |
 
 ## The Flow
 
@@ -90,11 +91,11 @@ flowchart TD
 
 The skills above are steps: one phase, one human checkpoint. Three skills chain the steps into end-to-end loops:
 
-| Skill | From | To |
-|---|---|---|
-| `task-to-pr` | a ticket | a draft PR with code, tests, fresh-subagent review, and evidence |
-| `multitask` | several tickets | several draft PRs, one isolated worker lane per ticket or dependency group |
-| `pr-to-ready` | an open PR with feedback | a merge-ready PR with checks passing |
+| Skill         | From                     | To                                                                         |
+| ------------- | ------------------------ | -------------------------------------------------------------------------- |
+| `task-to-pr`  | a ticket                 | a draft PR with code, tests, fresh-subagent review, and evidence           |
+| `multitask`   | several tickets          | several draft PRs, one isolated worker lane per ticket or dependency group |
+| `pr-to-ready` | an open PR with feedback | a merge-ready PR with checks passing                                       |
 
 Loops keep the ticket updated as they work — status moves, comments with verification evidence, PR links — and stop at human checkpoints. Merging is always a human decision.
 
@@ -189,24 +190,25 @@ For an attended Codex coordinator that works through a small issue set, keeps a 
 
 The supported install path is `npx skills add owainlewis/blueprint`. That installs standalone skills; invoke them by skill name (`spec`, `plan`, `implement`, etc.) or by the skill picker/natural-language flow your agent supports.
 
-| Skill | Purpose |
-|---|---|
+| Skill               | Purpose                                                                                           |
+| ------------------- | ------------------------------------------------------------------------------------------------- |
 | `bootstrap-project` | Bootstrap a new repo with docs, license, agent guidance, tracker setup, and optional first commit |
-| `design-doc` | Write a lightweight architecture design doc |
-| `spec` | Write a spec |
-| `plan` | Break input into reviewable tasks |
-| `implement` | Execute a single task |
-| `tdd` | Test-first variant of implement |
-| `debug` | Reproduce and fix a failure test-first |
-| `refactor` | Simplify changed code without changing behavior |
-| `review` | Local code review |
-| `task-to-pr` | Run the loop from ticket to draft PR |
-| `multitask` | Run several tickets to draft PRs in parallel |
-| `pr` | Commit, push, and open a PR |
-| `pr-to-ready` | Drive an open PR to merge-ready |
-| `browser-verify` | Verify browser-rendered work |
-| `branch` | Create a traceable Git branch |
-| `commit` | Conventional commit |
+| `design-doc`        | Write a lightweight architecture design doc                                                       |
+| `spec`              | Write a spec                                                                                      |
+| `plan`              | Break input into reviewable tasks                                                                 |
+| `goal-skill`        | Create a paste-ready Codex `/goal` with verifier evidence and blocked stop conditions             |
+| `implement`         | Execute a single task                                                                             |
+| `tdd`               | Test-first variant of implement                                                                   |
+| `debug`             | Reproduce and fix a failure test-first                                                            |
+| `refactor`          | Simplify changed code without changing behavior                                                   |
+| `review`            | Local code review                                                                                 |
+| `task-to-pr`        | Run the loop from ticket to draft PR                                                              |
+| `multitask`         | Run several tickets to draft PRs in parallel                                                      |
+| `pr`                | Commit, push, and open a PR                                                                       |
+| `pr-to-ready`       | Drive an open PR to merge-ready                                                                   |
+| `browser-verify`    | Verify browser-rendered work                                                                      |
+| `branch`            | Create a traceable Git branch                                                                     |
+| `commit`            | Conventional commit                                                                               |
 
 Branching and committing are mechanical, but they are still skills so the installer can expose the full workflow consistently.
 
@@ -237,24 +239,25 @@ Run this to update Blueprint and your installed skills to the latest version.
 
 ## Skills
 
-| Skill | What it does | Example |
-|---|---|---|
-| `bootstrap-project` | Starts a new or empty repo with README, license, `.gitignore`, `AGENTS.md`, docs, optional tracker setup, and an initial commit | `Bootstrap this repo for a new macOS editor project` |
-| `design-doc` | Writes `docs/<design-slug>/design.md`: architecture, alternatives, tradeoffs, and cross-cutting concerns | `Write a design doc for multi-tenant auth` |
-| `spec` | Writes `docs/<feature-slug>/spec.md`: requirements and design in one document | `Write a spec for user-auth` |
-| `plan` | Breaks a spec, brief, or request into tasks sized for agents, review, and rollback | `Create a plan for user-auth` |
-| `implement` | Executes one scoped change with tests and verification | `Implement LIN-123 from user-auth` |
-| `tdd` | Implements behavior test-first | `Use TDD for retry logic in the API client` |
-| `debug` | Finds the root cause of a failure, fixes it via TDD, and leaves a regression test | `Debug the failing retry test` |
-| `refactor` | Improves code shape without changing behavior | `Refactor the current diff` |
-| `review` | Reviews specs or code for correctness, security, simplicity, robustness, and tests | `Review the current diff` |
-| `task-to-pr` | Runs the loop from ticket to draft PR: fetch the ticket, implement, test, fresh-subagent review, open the PR, and keep the ticket updated with evidence | `task-to-pr LIN-123` |
-| `multitask` | Coordinates several tickets to draft PRs at once: classify dependencies, isolate worker lanes, run `task-to-pr` per ticket, and report the fleet | `multitask LIN-101 LIN-102 LIN-103` |
-| `pr` | Commits intended changes, pushes the branch, and opens a clear draft PR | `Open a draft PR for this change` |
-| `pr-to-ready` | Inspects live PR state, fixes still-actionable feedback, verifies checks, and reports merge readiness; never merges | `Is PR #42 ready to merge?` |
-| `browser-verify` | Verifies rendered UI, HTML, visual docs, and browser-facing behavior in a real browser | `Browser-verify the local HTML report` |
-| `branch` | Creates a traceable Git branch with the ticket ID when available | `Create a branch for LIN-123 user-auth` |
-| `commit` | Stages intended changes and writes one clear Conventional Commit | `Commit the current changes` |
+| Skill               | What it does                                                                                                                                            | Example                                              |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| `bootstrap-project` | Starts a new or empty repo with README, license, `.gitignore`, `AGENTS.md`, docs, optional tracker setup, and an initial commit                         | `Bootstrap this repo for a new macOS editor project` |
+| `design-doc`        | Writes `docs/<design-slug>/design.md`: architecture, alternatives, tradeoffs, and cross-cutting concerns                                                | `Write a design doc for multi-tenant auth`           |
+| `spec`              | Writes `docs/<feature-slug>/spec.md`: requirements and design in one document                                                                           | `Write a spec for user-auth`                         |
+| `plan`              | Breaks a spec, brief, or request into tasks sized for agents, review, and rollback                                                                      | `Create a plan for user-auth`                        |
+| `goal-skill`        | Creates paste-ready Codex `/goal` prompts with verifier evidence, constraints, boundaries, iteration policy, and blocked conditions                     | `Create a Codex goal for this deployment plan`       |
+| `implement`         | Executes one scoped change with tests and verification                                                                                                  | `Implement LIN-123 from user-auth`                   |
+| `tdd`               | Implements behavior test-first                                                                                                                          | `Use TDD for retry logic in the API client`          |
+| `debug`             | Finds the root cause of a failure, fixes it via TDD, and leaves a regression test                                                                       | `Debug the failing retry test`                       |
+| `refactor`          | Improves code shape without changing behavior                                                                                                           | `Refactor the current diff`                          |
+| `review`            | Reviews specs or code for correctness, security, simplicity, robustness, and tests                                                                      | `Review the current diff`                            |
+| `task-to-pr`        | Runs the loop from ticket to draft PR: fetch the ticket, implement, test, fresh-subagent review, open the PR, and keep the ticket updated with evidence | `task-to-pr LIN-123`                                 |
+| `multitask`         | Coordinates several tickets to draft PRs at once: classify dependencies, isolate worker lanes, run `task-to-pr` per ticket, and report the fleet        | `multitask LIN-101 LIN-102 LIN-103`                  |
+| `pr`                | Commits intended changes, pushes the branch, and opens a clear draft PR                                                                                 | `Open a draft PR for this change`                    |
+| `pr-to-ready`       | Inspects live PR state, fixes still-actionable feedback, verifies checks, and reports merge readiness; never merges                                     | `Is PR #42 ready to merge?`                          |
+| `browser-verify`    | Verifies rendered UI, HTML, visual docs, and browser-facing behavior in a real browser                                                                  | `Browser-verify the local HTML report`               |
+| `branch`            | Creates a traceable Git branch with the ticket ID when available                                                                                        | `Create a branch for LIN-123 user-auth`              |
+| `commit`            | Stages intended changes and writes one clear Conventional Commit                                                                                        | `Commit the current changes`                         |
 
 ## Agent Instructions
 
