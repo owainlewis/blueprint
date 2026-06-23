@@ -21,5 +21,6 @@ Turn one task into a verified diff. Read the task, the spec when one exists, and
 - If the behavior is hard to test without huge mocks, reconsider the boundary before forcing the test.
 - When correctness depends on a framework's current behavior, check the docs for the version the project actually uses instead of trusting memory.
 - Run the focused checks first, then the project's wider checks. Fix what they catch without growing scope.
-- Run `review` on the final diff for non-trivial changes, with a fresh subagent when available. Ask it to check ownership, boundaries, invalid states, unnecessary abstraction, and whether tests prove the changed behavior. Fix valid in-scope findings and rerun the checks.
-- Report what changed, the checks run with results, acceptance criteria status, review findings fixed, and anything not verified. If the task came from a tracker, comment the evidence and mark it ready for review.
+- When used directly, run `review` on the final diff for non-trivial changes, with a fresh subagent when available. Ask it to check ownership, boundaries, invalid states, unnecessary abstraction, and whether tests prove the changed behavior. Fix valid in-scope findings and rerun the checks.
+- When run inside `task-to-pr`, skip the direct-use review step. `task-to-pr` owns fresh review and acceptance verification for the PR loop.
+- Report what changed, the checks run with results, acceptance criteria status, review findings fixed when reviewed directly, and anything not verified. If the task came from a tracker, comment the evidence and mark it ready for review.
