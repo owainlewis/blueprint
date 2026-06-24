@@ -7,9 +7,7 @@ argument-hint: "<PR URL, number, branch, or current repository PR>"
 
 # PR To Ready
 
-Drive an open pull request to merge-ready.
-The job is independent validation, not agreement: re-read the live PR state and decide from evidence.
-Merging is always a human decision.
+Drive an open pull request to merge-ready. Re-read live PR state and decide from evidence. Never merge.
 
 ## Workflow
 
@@ -28,7 +26,7 @@ Merging is always a human decision.
 4. Patch only actionable findings. Keep changes narrow and consistent with the repo.
 5. Run the smallest verification that proves the fixes, then broader tests when shared behavior, public APIs, security, or user-visible flows changed.
 6. Re-check live PR state after pushing or after local fixes if not pushing.
-7. Sync the linked ticket when the PR references one and the tracker is accessible: keep it in the existing review state, and comment the readiness verdict with evidence covering fixes made, checks passing, and verification run. Use existing states only; do not invent states, labels, or tracker conventions.
+7. Sync the linked ticket when the PR references one and the tracker is accessible: keep the existing review state, and comment the readiness verdict with fixes made, passing checks, and verification run. Use existing states only.
 8. Report merge readiness with evidence.
 
 ## Review-Watch Loop
@@ -44,7 +42,7 @@ When this skill is run by a scheduled loop, persistent goal, or coordinator watc
 
 ## Rules
 
-- Never merge the PR. The skill ends at a merge-readiness verdict; a human merges.
+- Never merge the PR.
 - Do not spin forever waiting for comments. A scheduler, goal, or coordinator owns wakeups and budget.
 - Do not rely on stale chat summaries. Inspect the PR again.
 - Do not treat a resolved or outdated bot comment as current work.

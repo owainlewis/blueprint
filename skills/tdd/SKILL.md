@@ -7,7 +7,7 @@ argument-hint: "<task reference or behavior> e.g. 'LIN-123' or 'retry logic for 
 
 # Test-Driven Development
 
-Use this for behavioral changes where a failing test can describe the desired outcome before implementation.
+Use for behavioral changes where a failing test can define the desired outcome before implementation.
 
 ## Workflow
 

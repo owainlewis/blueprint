@@ -7,9 +7,9 @@ argument-hint: "<project idea, repo path, or bootstrap scope>"
 
 # Bootstrap Project
 
-Turn a new or empty repository into a ready-to-build project skeleton.
+Turn a new or empty repository into a local project skeleton.
 Keep the work local unless the user explicitly asks for commit, push, or remote setup.
-Inspect first, ask only for decisions that change files, then write the smallest useful baseline.
+Inspect first, ask only for file-changing decisions, then write the smallest baseline.
 Do not invent product direction, ownership, or external workflow.
 
 ## Workflow
@@ -33,19 +33,18 @@ Ask one question at a time, with a recommended answer, only when the answer chan
 - remote URL, commit, or push intent, only when the user explicitly requested that work.
 
 Do not ask what the repo already answers.
-If the user says to use defaults, create a minimal local baseline only: `README.md`, appropriate `.gitignore`, lightweight `AGENTS.md`, `docs/` when useful, no public claims, no remote setup, no commit, and no push.
+If the user says to use defaults, create a minimal local baseline only: `README.md`, appropriate `.gitignore`, lightweight `AGENTS.md`, docs only when they add supplied context, no public claims, no remote setup, no commit, and no push.
 
 ### 3. Create Or Update The Skeleton
 
-Create or update only files needed for the chosen baseline:
+Create or update chosen baseline files:
 
 - `README.md`: project identity, status, and links to useful docs.
 - `LICENSE`: chosen license.
 - `.gitignore`: language and platform defaults.
 - `AGENTS.md`: repo-specific agent instructions and project constraints.
-- `docs/`: short durable notes only when the user supplied enough context to make them real.
+- `docs/`: short notes only when the user supplied enough context.
 
-Keep docs plain and practical.
 For long Markdown files, put each full sentence on its own physical line.
 Prefer editing existing files over replacing them wholesale, and preserve existing identity.
 
@@ -58,7 +57,7 @@ Prefer editing existing files over replacing them wholesale, and preserve existi
 
 ### 5. Report
 
-Report files changed, repo and remote state, commit hash if committed, push status if pushed, and the next recommended action.
+Report files changed, repo state, remote state, commit hash if committed, push status if pushed, and next action.
 
 ## Rules
 

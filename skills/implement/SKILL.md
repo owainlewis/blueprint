@@ -7,7 +7,7 @@ argument-hint: "<task reference or description> e.g. 'LIN-123' or 'Task 2 from u
 
 # Implement
 
-Turn one task into a verified diff. Read the task, the spec when one exists, and the relevant code; fetch tracker details when the task references a ticket and mark it in progress. Ask when requirements are unclear, when the task is too large to be one change, or when anything affects behavior or safety. State low-risk assumptions and keep going.
+Turn one task into a verified diff. Read the task, spec if present, and relevant code. Fetch tracker details when the task references a ticket and mark it in progress. Ask when requirements are unclear, the task is too large, or behavior or safety changes. State low-risk assumptions and continue.
 
 ## Contract
 
@@ -15,7 +15,7 @@ Turn one task into a verified diff. Read the task, the spec when one exists, and
 - Before coding, identify the owning module and boundary. Put the change where the behavior belongs; keep I/O, persistence, rendering, and domain logic from bleeding into each other.
 - Don't touch unrelated code. The task is not an excuse for cleanup elsewhere.
 - Don't change function signatures, return shapes, or other contracts unless the task says to. If forced, call it out.
-- Prefer boring, local code over new abstractions. Add an abstraction only when it removes real complexity, protects a boundary, or has a real second use.
+- Prefer local code over new abstractions. Add an abstraction only when it removes complexity, protects a boundary, or has a second use.
 - Make invalid states harder to represent. Prefer explicit types, enums, narrow constructors, and clear error paths over boolean flags, nullable state, or swallowed failures.
 - Add or update tests whenever behavior changes, a bug is fixed, or a real edge case is introduced. Tests must prove the new behavior, not just exercise the code.
 - If the behavior is hard to test without huge mocks, reconsider the boundary before forcing the test.

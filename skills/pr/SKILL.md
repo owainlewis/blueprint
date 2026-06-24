@@ -1,6 +1,6 @@
 ---
 name: pr
-description: "Commit, push, and open a pull request with a clear description. Use when finished work on the current branch needs to become a PR."
+description: "Commit, push, and open a pull request. Use when finished work on the current branch needs to become a PR."
 user-invocable: true
 argument-hint: "[optional: PR title, base branch, or draft|ready]"
 ---
@@ -15,7 +15,7 @@ Take the finished change on the current branch to an open pull request.
 2. Run `commit` for any uncommitted intended changes.
 3. Push the branch.
 4. Open the PR with `gh` or GitHub tools. Draft by default; ready only when the user or ticket policy asks. Write the title like a commit subject: in squash-merge repos it becomes the commit on the default branch.
-5. Write the body from the diff and the work actually done, not from memory: what changed and why, ticket link when one exists, tests and checks run with results, review findings fixed, and anything not verified. A reviewer should be able to judge the change without reading the conversation.
+5. Write the body from the diff and work done: what changed and why, ticket link when one exists, tests and checks run with results, review findings fixed, and anything not verified.
 6. Report the PR URL.
 
 ## Rules

@@ -7,7 +7,7 @@ argument-hint: "<url, file, app route, or browser-facing change>"
 
 # Browser Verify
 
-You verify what the browser actually renders. Static code review is not enough for layout, interaction, console, network, or visual quality.
+Verify what the browser renders: layout, interaction, console, network, and visual defects.
 
 ## Workflow
 
@@ -31,11 +31,11 @@ Check the rendered page, not just the source.
 
 ### 3. Fix
 
-If anything is broken, fix the source. Do not explain away visual defects.
+If anything is broken, fix the source.
 
 ### 4. Re-check
 
-Reload and verify again. Repeat until the browser output is clean.
+Reload and verify again. Repeat until defects are fixed.
 
 ## Rules
 

@@ -7,7 +7,7 @@ argument-hint: "[optional files, diff, commit, or cleanup focus]"
 
 # Refactor
 
-Improve code shape without changing behavior. Use this when the user asks to refactor, simplify, tidy, clean up, reduce duplication, improve design, or make code easier to maintain.
+Improve code shape without changing behavior. Use when the user asks to refactor, simplify, tidy, clean up, reduce duplication, improve design, or improve maintainability.
 
 ## Workflow
 
@@ -22,14 +22,15 @@ Improve code shape without changing behavior. Use this when the user asks to ref
 
 ### 2. Find Simplifications
 
-Look for changes that would make the code easier to understand, maintain, or safely extend:
+Find behavior-preserving changes:
 
 - duplicated or near-duplicated logic
 - unclear names and long functions doing multiple jobs
 - unnecessary abstraction or indirection; missing reuse of existing helpers
 - tangled conditionals, data flow, or error handling
 - poor module boundaries or leaky abstractions
-- comments that could become clearer code; work that can be deleted without changing behavior
+- comments that can become code
+- code that can be deleted without changing behavior
 
 ### 3. Refactor
 
@@ -43,7 +44,7 @@ Look for changes that would make the code easier to understand, maintain, or saf
 
 - Run the relevant tests and checks after editing.
 - Run broader tests when the refactor touches shared behavior or contracts.
-- If no code changes were needed, say the target was already clean.
+- If no code changes were needed, say so.
 - Report what changed, what stayed behaviorally the same, and what verification ran.
 
 ## Rules
@@ -52,5 +53,4 @@ Look for changes that would make the code easier to understand, maintain, or saf
 - Do not broaden scope into unrelated cleanup.
 - Do not change behavior to make refactoring easier.
 - Stop and ask before changing public contracts, data shape, or user-visible behavior.
-- Keep abstractions earned by real simplification, not aesthetic preference.
-- A good refactor makes the code easier to understand, not merely different.
+- Keep abstractions only when they reduce complexity or duplication.

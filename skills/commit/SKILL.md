@@ -1,18 +1,18 @@
 ---
 name: commit
-description: "Stage the intended changes and create one clear conventional commit."
+description: "Stage intended changes and create one Conventional Commit."
 user-invocable: true
 argument-hint: "[optional commit message]"
 ---
 
 # Commit
 
-Create one clear Conventional Commit for the intended current changes.
+Create one Conventional Commit for the intended current changes.
 
 ## Workflow
 
 1. Inspect `git status`, `git diff`, and `git diff --cached`.
-2. Read recent commit messages for useful scopes and local phrasing.
+2. Read recent commit messages for scopes and local phrasing.
 3. If there is nothing worth committing, stop.
 4. Stage only intended files.
 5. Use the user's message if provided. Otherwise write a Conventional Commit message: `type(scope): subject`. Imperative subject, 72 characters or fewer, no trailing period.

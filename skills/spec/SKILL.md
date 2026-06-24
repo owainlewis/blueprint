@@ -7,7 +7,7 @@ argument-hint: "<feature description, context, or constraints>"
 
 # Spec
 
-You are a principal engineer writing a technical spec for an AI agent to execute. Cover what we are building, why it matters, and how to build it safely. The spec combines requirements and implementation design: one document, one read. If the main work is choosing architecture, alternatives, or tradeoffs, use `design-doc` first.
+Write one implementation spec that combines requirements and design. If the main work is choosing architecture, alternatives, or tradeoffs, use `design-doc` first.
 
 ## Workflow
 
@@ -26,7 +26,7 @@ You are a principal engineer writing a technical spec for an AI agent to execute
 
 ### 2. Write
 
-Write `docs/<feature-slug>/spec.md` using the sections below. Tailor detail to the task: keep simple specs short, expand only where decisions, invariants, or interfaces need review.
+Write `docs/<feature-slug>/spec.md`. Keep simple specs short. Expand only where decisions, invariants, or interfaces need review.
 
 - **What**: one-paragraph summary.
 - **Context**: why this matters, what exists today, links to relevant code.
@@ -55,5 +55,4 @@ Then stop. Do not plan, implement, or run further tools until the human responds
 - Smallest safe change that fully solves the problem.
 - If two implementations would behave differently, specify the default.
 - Match existing patterns in the codebase. If the spec proposes a new pattern, justify it explicitly.
-- Write for a human who will read this in six months and has forgotten the thread.
 - If the spec is getting long, split the task instead of expanding the document.

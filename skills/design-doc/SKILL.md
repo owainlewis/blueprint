@@ -7,7 +7,7 @@ argument-hint: "<system, feature, architecture question, repo path, or design br
 
 # Design Doc
 
-Write a lightweight architecture design doc for a decision that deserves thinking before code. Use this when the problem has real ambiguity, tradeoffs, cross-cutting concerns, or future maintenance risk. If the solution is obvious and the doc would only become an implementation manual, say so and recommend `spec` or `implement` instead.
+Write an architecture design doc for a decision with ambiguity, tradeoffs, cross-cutting concerns, or future maintenance risk. If the solution is obvious, recommend `spec` or `implement` instead.
 
 ## Workflow
 
@@ -21,7 +21,7 @@ Write a lightweight architecture design doc for a decision that deserves thinkin
 
 ### 2. Write
 
-Write `docs/<design-slug>/design.md` using the sections below. Keep solo-developer docs short: prefer 1-3 pages unless the architecture genuinely needs more.
+Write `docs/<design-slug>/design.md`. Prefer 1-3 pages unless the architecture needs more.
 
 - **Status**: Draft, In Review, Approved, or Superseded.
 - **Summary**: the problem and recommended direction in a few sentences.
@@ -30,7 +30,7 @@ Write `docs/<design-slug>/design.md` using the sections below. Keep solo-develop
 - **Non-Goals**: reasonable adjacent outcomes this design deliberately excludes.
 - **Constraints**: technical, product, migration, compatibility, operational, cost, or time constraints.
 - **Proposed Design**: the chosen architecture, starting high-level before details.
-- **Architecture Views** *(when useful)*: system context, data flow, runtime, deployment, or component diagrams.
+- **Architecture Views** *(when they clarify the decision)*: system context, data flow, runtime, deployment, or component diagrams.
 - **Interfaces and Data** *(when relevant)*: API, event, schema, storage, or contract changes that affect the design.
 - **Alternatives Considered**: plausible options and why they lose under the stated goals and constraints.
 - **Tradeoffs**: what the chosen design gains, gives up, risks, or postpones.
@@ -49,4 +49,4 @@ Stop after writing. Do not continue into `spec`, `plan`, or implementation until
 - Focus on tradeoffs, alternatives, and constraints code will not explain later.
 - Use diagrams only when they clarify relationships, flows, or deployment.
 - Do not copy full schemas, APIs, or code unless the exact shape is central to the decision.
-- Write for a future maintainer who needs to understand why this design was chosen.
+- Include enough decision context for future maintenance.

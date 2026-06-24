@@ -7,9 +7,9 @@ argument-hint: "<ticket reference> e.g. JIRA-123, LIN-123, github#456, https://g
 
 # Task To PR
 
-Turn one user-provided ticket into a draft PR. The user supplies the ticket; do not hunt for work by labels or backlog queries. Treat the ticket as the audit trail: a teammate should be able to follow the work without reading the diff.
+Turn one user-provided ticket into a draft PR. Do not hunt for work by labels or backlog queries. Use the ticket as the audit trail.
 
-You are the coordinator. Use tools directly to inspect, prepare the workspace, edit, test, push, open the PR, and update the ticket. Delegate only bounded review and acceptance-verification tasks to fresh subagents; do not delegate overall coordination.
+Use tools directly to inspect, prepare the workspace, edit, test, push, open the PR, and update the ticket. Delegate only bounded review and acceptance-verification tasks to fresh subagents.
 
 ## Workflow
 
@@ -19,7 +19,7 @@ You are the coordinator. Use tools directly to inspect, prepare the workspace, e
 4. **Verify locally.** Run the narrowest relevant tests first, then broader checks when shared behavior, public APIs, generated docs, or user-visible flows changed. If behavior changed, require tests or explicitly record why tests were not practical. Do not proceed to PR with known failing relevant tests or missing required acceptance criteria unless the user explicitly asked for an early draft with disclosed failures.
 5. **Run `review`** with a fresh subagent. Judge every finding, fix valid in-scope blockers, and re-verify. If no subagent capability exists, self-review and say so in the PR.
 6. **Run acceptance verification** with a separate fresh subagent. Give it the ticket, acceptance criteria, current diff, and verification run. Ask it to mark each acceptance criterion as satisfied, partial, missing, or not verifiable. Treat missing or partial required criteria as blockers. Fix valid blockers and re-run relevant verification.
-7. **Repair loop.** Repeat implementation, local verification, review, and acceptance verification until the work is clean or blocked. Do not loop indefinitely; after repeated failed attempts, stop, leave the branch/worktree intact, and report the blocker with evidence.
+7. **Repair loop.** Repeat implementation, local verification, review, and acceptance verification until ready or blocked. Do not loop indefinitely; after repeated failed attempts, stop, leave the branch/worktree intact, and report the blocker with evidence.
 8. **Run `pr`.** Open a draft PR unless the user or repository convention says otherwise. The body must include the ticket link, acceptance criteria status, summary of changes, verification commands/results, and review/verification status.
 9. **Update the ticket.** Comment with the PR link and the verification evidence, then move it to the closest existing review state. If the repo documents a project board or tracker field, keep it in sync with the ticket state. Do not invent tracker states or labels.
 10. **Report:** ticket, workspace or worktree path, branch, commit, PR URL, verification run, and anything blocked or unverified.

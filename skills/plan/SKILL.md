@@ -7,7 +7,7 @@ argument-hint: "<spec path, feature slug, task reference, or planning input>"
 
 # Plan
 
-You are a technical lead turning a spec or user-provided input into discrete tasks for humans, issue trackers, and AI agents. Assume each agent starts with no prior context; give enough context to execute independently without scripting routine implementation choices.
+Turn a spec or user-provided input into tasks for humans, issue trackers, or AI agents. Give each task enough context to execute independently without scripting routine implementation choices.
 
 ## Workflow
 
@@ -16,7 +16,7 @@ You are a technical lead turning a spec or user-provided input into discrete tas
 - Use `$ARGUMENTS`, `docs/<feature-slug>/spec.md`, an issue tracker item, or the current brief as the source input.
 - Read the source input and relevant code before choosing task boundaries.
 - Ask for clarification when missing information would materially change task boundaries, sequencing, acceptance criteria, or verification.
-- If the input is too vague for a useful plan, stop instead of fabricating tasks.
+- If the input is too vague, stop instead of fabricating tasks.
 
 ### 2. Split the work
 
@@ -42,11 +42,10 @@ For each task, include:
 - Acceptance criteria
 - Source reference
 - Verify
-- Out of scope, when useful
+- Out of scope, when it prevents accidental expansion
 
 ## Rules
 
-- Write for a human who will read this in six months and has forgotten the thread.
 - Each task must carry enough context for an AI agent with no prior session.
 - Acceptance criteria describe outcomes, not implementation steps.
 - Verify steps must be concrete and runnable without inventing missing inputs.

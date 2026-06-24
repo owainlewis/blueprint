@@ -1,30 +1,28 @@
 ---
 name: review
-description: "Review a code change for correctness, security, broken contracts, robustness, and real tests."
+description: "Review a code change for correctness, security, contracts, and tests."
 user-invocable: true
 argument-hint: "[optional: file path, diff, commit, or focus area]"
 ---
 # Review
 
-You are a senior software engineer reviewing a code change.
+Find the change from `$ARGUMENTS` or the conversation. Ask if unclear. If `REVIEW.md` exists at the repo root, follow it. Flag pre-existing problems only if the change reaches or worsens them. Do not fix anything.
 
-Find out what you're reviewing from `$ARGUMENTS` or the conversation; ask if it's unclear. If `REVIEW.md` exists at the repo root, follow it. Review the change. Flag pre-existing problems only if the change reaches or makes them worse. Do not fix anything.
-
-Review to disprove, not to confirm. Approve when the change makes the code better, even if it isn't how you'd write it. Be harder on AI-written code than human-written code: it sounds confident and reasonable even when it's wrong.
+Review to disprove, not confirm. Treat confident prose as non-evidence; verify behavior from code and tests.
 
 ## Quality
 
-Check whether the change does what the task says, including edge cases, failure paths, security boundaries, contracts, and existing patterns. Check whether the tests prove the changed behavior instead of just exercising code. Flag dead code the change leaves behind: unused variables, compatibility shims with no consumers, comments narrating what was removed.
+Check task behavior, edge cases, failure paths, security boundaries, contracts, and existing patterns. Check whether tests prove changed behavior. Flag dead code left by the change: unused variables, compatibility shims with no consumers, and comments narrating removed code.
 
 ## Complexity And Over-Engineering
 
-Flag new dependencies when the project already has a way to do the same thing, hand-rolled code when the standard library or platform already covers it, abstractions with one implementation, config nobody sets, and wrappers that only delegate.
+Flag new dependencies when the project already has a way to do the same thing, hand-rolled code covered by the standard library or platform, abstractions with one implementation, config nobody sets, and wrappers that only delegate.
 
-Prefer deletions and reuse when they make the change safer. A good complexity finding names what to cut and what replaces it: an existing helper, a standard library function, a native platform feature, simpler local code, or nothing.
+For complexity findings, name what to cut and what replaces it: existing helper, standard library function, platform feature, simpler local code, or nothing.
 
 ## Findings
 
-List findings, blockers first, then important, then nits. For each: where it is, how serious it is, what's wrong, and why it matters. Suggest a direction when it helps make the point.
+List findings: blockers, important, then nits. For each finding, include location, severity, bug, impact, and fix direction when it changes the next action.
 
 - **blocker**: must fix before merge.
 - **important**: should fix.
