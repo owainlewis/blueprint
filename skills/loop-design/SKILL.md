@@ -95,29 +95,30 @@ Do not bury the actual handoff under a long plan.
 Write prompts like instructions for a careful beginner.
 Use simple headings and direct verbs.
 Avoid clever phrasing, compressed abstractions, and unexplained system words.
+Do not use conversational section headings such as "Your job"; use artifact-style headings such as "Objective".
 If a technical word is necessary, explain it in one short sentence.
-Prefer this shape:
+Prefer Markdown sections with direct, outcome-first headings:
 
 ```text
-Your job
+## Objective
 <plain outcome>
 
-Read first
+## Context
 <files, issues, docs, commands, or state to inspect before changing anything>
 
-What you may do
+## Allowed Actions
 <allowed edits, tools, side effects, and limits>
 
-After each pass
+## Loop
 <how to choose the next small action and what evidence to record>
 
-You are done when
+## Done
 <checks or evidence that prove the outcome>
 
-Stop and ask when
+## Stop
 <human decisions, repeated failures, unsafe actions, or unclear blockers>
 
-Do not
+## Never
 <hard limits>
 ```
 
@@ -125,79 +126,80 @@ Do not
 
 In-session:
 
-```text
-Your job
+```md
+## Objective
 Keep working until <plain outcome>.
 
-Read first
+## Context
 Read <context sources>.
 
-What you may do
+## Allowed Actions
 You may <allowed actions>.
 Keep <constraints>.
 
-After each pass
+## Loop
 Run <checks>.
 Record <state or evidence>.
 If the goal is not done, choose the next smallest safe action.
 
-You are done when
+## Done
 <success condition> is true and <verification evidence> proves it.
 
-Stop and ask when
+## Stop
 <cap>, <no-progress signal>, or <blocked condition> happens.
 Report <evidence gathered>, <blocker>, and <input needed>.
 
-Do not
+## Never
 <hard limits>.
 ```
 
 Codex persistent goal:
 
-```text
+```md
 /goal
-Your job
+
+## Objective
 <plain outcome>.
 
-Read first
+## Context
 Use <allowed context, tools, and boundaries>.
 
-What you may do
+## Allowed Actions
 <allowed actions>.
 Preserve <constraints>.
 
-After each pass
+## Loop
 Run <specific checks>.
 If the goal is not done, choose the next smallest safe action.
 
-You are done when
+## Done
 <specific evidence> proves the outcome.
 
-Stop and ask when
+## Stop
 Blocked, repeated failures occur, or no valid paths remain.
 Report <what happened>, <what is blocking>, and <what would unlock progress>.
 ```
 
 Scheduled tick:
 
-```text
-One tick of <loop name>.
+```md
+# One Tick: <loop name>
 
-Read first
+## Context
 Recover stale state.
 Find work that is eligible.
 
-What you may do
+## Allowed Actions
 Claim only eligible work.
 Do at most <unit of work>.
 Do not start new work if <throttle>.
 
-After each pass
+## Loop
 Run <verification>.
 Record <state/evidence>.
 Exit cleanly.
 
-Stop and ask when
+## Stop
 <blocked condition>.
 ```
 
