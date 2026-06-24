@@ -24,7 +24,7 @@ Blueprint is the deliberate opposite of bloated, over-engineered skill libraries
 | **Design**   | `design-doc`               | Explore architecture, alternatives, and tradeoffs                             |
 | **Define**   | `spec`                     | Requirements, contracts, invariants, and implementation design                |
 | **Plan**     | `plan`                     | Break work into agent-sized tasks                                             |
-| **Loop**     | `loop-design`              | Design long-running goals and loops for Claude Code, Codex, schedules, or trackers |
+| **Goal**     | `goal-design`              | Write Codex and Claude Code `/goal` prompts with checks, evidence, and stop rules |
 | **Build**    | `implement` / `tdd`        | Execute one task; tests prove acceptance                                      |
 | **Debug**    | `debug`                    | Reproduce a failure, fix it test-first when practical, and keep the guard     |
 | **Improve**  | `refactor`                 | Simplify changed code without changing behavior                               |
@@ -185,9 +185,9 @@ flowchart LR
 Humans do three things: flip `needs:spec` to `agent:ready` after reviewing a spec, review PRs when judgment is needed, and merge.
 Agents do everything else.
 
-`loop-design` is the pre-flight skill for long-running goals and loops.
-It turns fuzzy intent into a portable handoff for Claude Code, Codex, a scheduled tick, or an issue-tracker workflow.
-The runtime loop layer is still prompts and external state: skills encode judgment, while prompts wire that judgment into the runner you use.
+`goal-design` is the pre-flight skill for Codex and Claude Code `/goal` prompts.
+It turns fuzzy intent into a clear goal with a finish line, required checks, evidence, and stop rules.
+Scheduled loops and issue-tracker automations are separate runbooks; use `goal-design` only for the `/goal` prompt inside an attended agent session.
 The definition of ready and the label state machine live in [AGENTS.md](AGENTS.md); setup, triggers, and copy-pasteable loop prompts live in [guides/loops.md](guides/loops.md).
 
 For an attended Codex coordinator that works through a small issue set, keeps a project board current, and may merge only when explicitly authorized, see [guides/codex-coordinator.md](guides/codex-coordinator.md).
@@ -204,7 +204,7 @@ Core workflows:
 | `design-doc`        | Decide architecture, alternatives, and tradeoffs                                                   |
 | `spec`              | Specify implementation requirements, contracts, and invariants                                     |
 | `plan`              | Break input into reviewable tasks                                                                 |
-| `loop-design`       | Design long-running goals and loops with verifier evidence, state, gates, guardrails, and stop conditions |
+| `goal-design`       | Write `/goal` prompts with clear done conditions, checks, evidence, and stop rules |
 | `implement`         | Execute a single task                                                                             |
 | `tdd`               | Test-first variant of implement                                                                   |
 | `debug`             | Reproduce and fix a failure test-first when practical                                             |
@@ -225,7 +225,7 @@ Helper entry points:
 
 `branch` and `commit` are helper entry points, not core workflows. They stay installable so `task-to-pr`, `multitask`, and `pr` can expose the full delivery path consistently.
 
-Removed entry points are not maintained as aliases: `requirements` is now `spec`; `architecture` is now `design-doc` for architecture docs or `spec` for implementation instructions; `task` and `build` are now `implement`; `coverage` is handled through `implement` when adding tests or `review` when evaluating them; `goal-skill` is now `loop-design`; `address-pr-feedback` is now `pr-to-ready`; `codex-run-loop` is now `task-to-pr` for one ticket or `multitask` for several tickets.
+Removed entry points are not maintained as aliases: `requirements` is now `spec`; `architecture` is now `design-doc` for architecture docs or `spec` for implementation instructions; `task` and `build` are now `implement`; `coverage` is handled through `implement` when adding tests or `review` when evaluating them; `goal-skill` and `loop-design` are now `goal-design`; `address-pr-feedback` is now `pr-to-ready`; `codex-run-loop` is now `task-to-pr` for one ticket or `multitask` for several tickets.
 
 ## Install
 
@@ -261,7 +261,7 @@ Core workflows:
 | `design-doc`        | Writes `docs/<design-slug>/design.md`: architecture, alternatives, tradeoffs, and cross-cutting concerns                                                | `Write a design doc for multi-tenant auth`           |
 | `spec`              | Writes `docs/<feature-slug>/spec.md`: requirements, contracts, invariants, and implementation design                                                     | `Write a spec for user-auth`                         |
 | `plan`              | Breaks a spec, brief, or request into tasks sized for agents, review, and rollback                                                                      | `Create a plan for user-auth`                        |
-| `loop-design`       | Designs Claude Code, Codex, scheduled, or issue-tracker loops with verifier evidence, state, gates, guardrails, and stop conditions                     | `Design a loop for this deployment plan`             |
+| `goal-design`       | Writes Codex and Claude Code `/goal` prompts with clear checks, evidence, and stop rules                                                               | `Write a goal for this ticket-to-PR task`            |
 | `implement`         | Executes one scoped change with tests and verification                                                                                                  | `Implement LIN-123 from user-auth`                   |
 | `tdd`               | Implements behavior test-first                                                                                                                          | `Use TDD for retry logic in the API client`          |
 | `debug`             | Finds the root cause of a failure, fixes it test-first when practical, and leaves a regression test                                                     | `Debug the failing retry test`                       |

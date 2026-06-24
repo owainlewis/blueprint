@@ -24,7 +24,7 @@ Decide:
 - `design-doc`: write a lightweight architecture design doc when architecture or tradeoffs are ambiguous.
 - `spec`: write implementation requirements, contracts, invariants, and error behavior before coding.
 - `plan`: break a spec, brief, or request into agent-sized tasks.
-- `loop-design`: turn rough long-running goals and loops into Claude Code, Codex, scheduled, or issue-tracker handoffs with verifier evidence, state, gates, and stop conditions.
+- `goal-design`: turn rough objectives into Codex or Claude Code `/goal` prompts with clear checks, evidence, and stop rules.
 
 Deliver:
 

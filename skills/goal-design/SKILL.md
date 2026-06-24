@@ -1,17 +1,41 @@
 ---
-name: loop-design
-description: "Write or tighten long-running Codex and Claude Code goals with clear done conditions, required checks, evidence, and stop rules."
+name: goal-design
+description: "Write or tighten Codex and Claude Code /goal prompts with clear done conditions, required checks, evidence, and stop rules."
 user-invocable: true
 argument-hint: "<rough goal, task, ticket, issue set, or prompt>"
 ---
 
-# Loop Design
+# Goal Design
 
-Turn a rough goal into clear instructions for Codex or Claude Code.
+Turn a rough objective into a clear `/goal` prompt for Codex or Claude Code.
 
-Use this when the user wants an agent to keep working until a result is proven or blocked.
+Use this when the user wants the agent to keep working until a result is proven or blocked.
 
 Do not use it for simple questions, one-off edits, or work with no meaningful way to verify success.
+
+## Rules
+
+A goal prompt must start with `/goal`.
+
+The first sentence should say what skill or workflow to use and what outcome must exist.
+
+The goal should make verification a gate.
+
+For example:
+
+> The PR must not be opened until the work has been tested and verified.
+
+Write the goal so the evaluator can judge it from the agent's reports, command results, links, and artifacts.
+
+Do not rely on "looks done".
+
+Use simple language.
+
+Do not use headings unless the user asks for a longer structured prompt.
+
+Do not use conversational headings such as "Your job".
+
+Do not design scheduled jobs or external automation unless the user explicitly asks for that.
 
 ## Workflow
 
@@ -25,17 +49,9 @@ Ask only if you cannot define the finish line, required checks, allowed side eff
 
 If the goal is too vague to verify, ask for the missing evidence source.
 
-### 2. Choose The Goal Type
+### 2. Write The Contract
 
-Default to a Codex `/goal` when the user is working in Codex.
-
-Use a Claude Code goal prompt when the user asks for Claude Code.
-
-Do not design scheduled jobs or external automation unless the user explicitly asks for that.
-
-### 3. Write The Contract
-
-The goal must answer these questions in simple language:
+The goal must answer these questions:
 
 - What result should exist at the end?
 - What should the agent read before changing anything?
@@ -47,12 +63,6 @@ The goal must answer these questions in simple language:
 - What should happen after a failure?
 - When must the agent stop and ask?
 - What must the agent never do?
-
-Make verification a gate.
-
-For example, say:
-
-> The PR must not be opened until the work has been tested and verified.
 
 Prefer pass/fail checks over vague success language.
 
@@ -67,7 +77,7 @@ Examples:
 - Use a review subagent for bugs, regressions, missing tests, and scope creep.
 - Use a separate acceptance subagent to check acceptance criteria.
 
-### 4. Add Stop Rules
+### 3. Add Stop Rules
 
 Every goal needs stop rules.
 
@@ -87,23 +97,17 @@ When blocked, the agent must report:
 - What is blocking progress.
 - What input would unblock the work.
 
-### 5. Deliver The Prompt
+### 4. Deliver The Prompt
 
-Return the paste-ready prompt first.
+Return the paste-ready `/goal` prompt first.
 
 Keep any explanation short.
-
-For short Codex goals, use a compact instruction block without headings.
-
-For longer Claude Code prompts, headings are allowed if they make the prompt easier to scan.
-
-Do not use conversational headings such as "Your job".
 
 Avoid clever phrasing, abstract labels, and unexplained system words.
 
 ## Style Examples
 
-Single Codex task:
+Single task:
 
 ```md
 /goal
@@ -120,6 +124,12 @@ Keep the work scoped to the task.
 
 Use a dedicated branch and worktree.
 
+Follow the existing codebase patterns.
+
+Make the smallest complete change that satisfies the task.
+
+Add or update tests for changed behavior.
+
 The PR must not be opened until the work has been tested and verified.
 
 Required verification:
@@ -130,6 +140,7 @@ Required verification:
 - For UI changes, verify desktop and mobile in a real browser.
 - Use a review subagent to check for bugs, regressions, missing tests, and scope creep.
 - Use a separate acceptance subagent to check the task's acceptance criteria.
+- Review the final diff for unrelated changes, brittle code, missing tests, and broken docs.
 
 Fix valid failures and repeat until verification is clean.
 
@@ -145,13 +156,26 @@ Do not merge, deploy, combine unrelated work, discard unrelated local changes, o
 Task list:
 
 ```md
+/goal
 Use the `task-to-pr` workflow to implement the provided task list.
 
 Create one draft PR per task.
 
+Do not stop until every task has either a verified draft PR or a blocker reported with evidence.
+
+Before changing code, read the task list, the repo instructions, and any referenced files or docs.
+
 Work one task at a time unless the user explicitly asks for parallel work.
 
 For each task, use a dedicated branch and worktree.
+
+Keep each PR scoped to exactly one task.
+
+Follow the existing codebase patterns.
+
+Make the smallest complete change that satisfies the current task.
+
+Add or update tests for changed behavior.
 
 Do not open a PR until that task has been tested and verified.
 
@@ -159,9 +183,13 @@ For each task, run the relevant automated tests, the repo's documented lint and 
 
 Use a review subagent and a separate acceptance subagent for each task.
 
+Review the final diff for unrelated changes, brittle code, missing tests, and broken docs.
+
 Fix valid failures and repeat until verification is clean for that task.
 
 Then commit, push, open a draft PR, and update the task with the PR link and verification evidence.
+
+Each PR body must include the task link or task text, summary of changes, acceptance criteria status, and verification commands.
 
 Keep at most 2 draft PRs open from this goal unless the user approves more.
 
@@ -192,4 +220,4 @@ Avoid prompts like:
 - "Review your own work and decide if it is good."
 - "Deploy when ready" without approval and rollback boundaries.
 
-Rewrite them into clear goals with checks, evidence, and stop rules.
+Rewrite them into clear `/goal` prompts with checks, evidence, and stop rules.

@@ -2,7 +2,7 @@
 
 Blueprint's skills run attended by default: you invoke them, they pause at human checkpoints. This guide shows how to run them unattended, as scheduled loops over an issue tracker. You write ideas down, agents turn them into specs and draft PRs, and your involvement narrows to two gates: approving specs and reviewing PRs.
 
-Use `loop-design` when a long-running goal or automation idea still needs a finish line, verifier, gate, state, or stop rule.
+Use `goal-design` when the `/goal` prompt inside an attended Codex or Claude Code session still needs a finish line, verifier, evidence, or stop rule.
 The runtime loop layer is deliberately prompts and external state, not a bespoke runner.
 Skills encode judgment that must stay consistent everywhere; the loop layer is wiring between skills for one workflow, and it gets pasted into whatever runs it: a GitHub Action, a Claude Code schedule, a Codex automation, or cron.
 Adjust the prompts to your repo.
