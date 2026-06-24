@@ -24,7 +24,7 @@ Decide:
 - `design-doc`: write a lightweight architecture design doc when architecture or tradeoffs are ambiguous.
 - `spec`: write implementation requirements, contracts, invariants, and error behavior before coding.
 - `plan`: break a spec, brief, or request into agent-sized tasks.
-- `goal-skill`: turn rough long-running work into a paste-ready Codex `/goal` with verifier evidence and blocked conditions.
+- `loop-design`: turn rough long-running goals and loops into Claude Code, Codex, scheduled, or issue-tracker handoffs with verifier evidence, state, gates, and stop conditions.
 
 Deliver:
 
@@ -50,11 +50,11 @@ Helper entry points:
 
 ## Running Unattended
 
-The two flows can run as scheduled loops over an issue tracker, with agents filing every issue. Three phases:
+Blueprint can run as scheduled loops over an issue tracker, with agents filing every issue. Three phases:
 
 1. **Ready**: turn ideas and specs into agent-ready issues. The agent filing an issue judges it at creation: decision-complete work gets `agent:ready`; a real problem with open decisions gets `needs:spec`. Nothing unjudged enters the tracker.
 2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `task-to-pr` to a draft PR.
-3. **Review**: a human reviews the PR, `pr-to-ready` drives feedback to merge-ready, a human merges.
+3. **Review**: humans, review bots, and checks leave feedback. A review-watch loop runs `pr-to-ready` after a short grace window, repeats until ready or blocked, and a human merges.
 
 ### Definition of Ready
 
@@ -73,13 +73,13 @@ Namespaces separate dimensions: `agent:*` is the state machine, `needs:*` is wha
 - `needs:spec`: real problem, open decisions. The spec loop picks it up.
 - `agent:ready`: meets the definition of ready. The work loop claims it.
 - `agent:working`: claimed by a worker. A claim with no linked branch or PR activity after 24 hours is stale; release it back to `agent:ready`.
-- `agent:complete`: PR open, awaiting human review. The work loop's throttle counts these.
+- `agent:complete`: PR open, awaiting feedback or merge. The work loop's throttle counts these.
 - `blocked`: waiting on another issue, linked in the body. Remove when the blocker closes.
 - `needs:human`: an agent hit a decision only a human can make, explained in a comment.
 - `risk:low` / `risk:high`: blast radius if the work goes wrong, judged at filing. Unattended loops claim `risk:low` only.
 - `type:feature` / `type:bug` / `type:chore`: optional classification for reporting; not part of the loop.
 
-Humans flip `needs:spec` to `agent:ready` after spec review, review PRs, and merge. Agents do everything else. Full label reference: `guides/labels.md`. Setup and sample prompts: `guides/loops.md`.
+Humans flip `needs:spec` to `agent:ready` after spec review, review PRs when judgment is needed, and merge. Agents do everything else. Full label reference: `guides/labels.md`. Setup and sample prompts: `guides/loops.md`.
 
 ## Guidance
 

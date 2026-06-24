@@ -7,7 +7,9 @@ argument-hint: "<PR URL, number, branch, or current repository PR>"
 
 # PR To Ready
 
-Drive an open pull request to merge-ready. The job is independent validation, not agreement: re-read the live PR state and decide from evidence. Merging is always a human decision.
+Drive an open pull request to merge-ready.
+The job is independent validation, not agreement: re-read the live PR state and decide from evidence.
+Merging is always a human decision.
 
 ## Workflow
 
@@ -26,12 +28,24 @@ Drive an open pull request to merge-ready. The job is independent validation, no
 4. Patch only actionable findings. Keep changes narrow and consistent with the repo.
 5. Run the smallest verification that proves the fixes, then broader tests when shared behavior, public APIs, security, or user-visible flows changed.
 6. Re-check live PR state after pushing or after local fixes if not pushing.
-7. Sync the linked ticket when the PR references one and the tracker is accessible: keep it in the existing review state, and comment the readiness verdict with its evidence — fixes made, checks passing, verification run — when it changes the state of play. Use existing states only; do not invent states, labels, or tracker conventions.
+7. Sync the linked ticket when the PR references one and the tracker is accessible: keep it in the existing review state, and comment the readiness verdict with evidence covering fixes made, checks passing, and verification run. Use existing states only; do not invent states, labels, or tracker conventions.
 8. Report merge readiness with evidence.
+
+## Review-Watch Loop
+
+When this skill is run by a scheduled loop, persistent goal, or coordinator watching a PR:
+
+1. Treat human reviews, bot review comments, unresolved review threads, top-level comments, and failing required checks as possible feedback.
+2. After opening a PR or pushing fixes, allow a short grace window for review systems to respond. Ten minutes is a good default unless the repo says otherwise.
+3. In a scheduled tick, exit cleanly instead of waiting when the latest agent push is still inside the grace window and checks or review bots are pending.
+4. Run one bounded repair pass per tick: classify current feedback, fix actionable items, verify, push when appropriate, and record evidence.
+5. Continue on later ticks until the PR is ready, merged, closed, blocked on a human decision, or repeating the same failure with no new information.
+6. For an in-session goal, cap repair cycles before stopping. Three cycles is the default unless the user set a different budget.
 
 ## Rules
 
 - Never merge the PR. The skill ends at a merge-readiness verdict; a human merges.
+- Do not spin forever waiting for comments. A scheduler, goal, or coordinator owns wakeups and budget.
 - Do not rely on stale chat summaries. Inspect the PR again.
 - Do not treat a resolved or outdated bot comment as current work.
 - Do not mark a PR ready while required checks are failing or pending.

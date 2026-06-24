@@ -27,7 +27,8 @@ You are the coordinator. Use tools directly to inspect, prepare the workspace, e
 ## Boundaries
 
 - One ticket, one branch, one PR. For a list of tickets, use `multitask`.
-- Pause at the opened PR. Merging, CI triage, and post-review follow-up are separate work; use `pr-to-ready` when feedback arrives.
+- Pause at the opened PR unless the user explicitly asked for a persistent review-watch loop. Merging, CI triage, and post-review follow-up are separate work; use `pr-to-ready` when feedback arrives.
+- If a coordinator or goal is watching the PR, hand off to `pr-to-ready` after the review grace window rather than polling inside `task-to-pr`.
 - Prefer worktrees for isolation when the current checkout is dirty, risky, unattended, or already in use.
 - Do not open a PR with known failing relevant tests or missing required acceptance criteria unless explicitly asked to create an early draft, and disclose the failure prominently.
 - Do not broaden scope because review, verification, or a bot suggested a nice-to-have refactor.

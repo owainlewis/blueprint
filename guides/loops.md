@@ -2,7 +2,10 @@
 
 Blueprint's skills run attended by default: you invoke them, they pause at human checkpoints. This guide shows how to run them unattended, as scheduled loops over an issue tracker. You write ideas down, agents turn them into specs and draft PRs, and your involvement narrows to two gates: approving specs and reviewing PRs.
 
-The loop layer is deliberately prompts, not skills. Skills encode judgment that must stay consistent everywhere; the loop layer is wiring between skills for one workflow, and it gets pasted into whatever runs it: a GitHub Action, a Claude Code schedule, a Codex automation, or cron. Adjust the prompts to your repo.
+Use `loop-design` when a long-running goal or automation idea still needs a finish line, verifier, gate, state, or stop rule.
+The runtime loop layer is deliberately prompts and external state, not a bespoke runner.
+Skills encode judgment that must stay consistent everywhere; the loop layer is wiring between skills for one workflow, and it gets pasted into whatever runs it: a GitHub Action, a Claude Code schedule, a Codex automation, or cron.
+Adjust the prompts to your repo.
 
 ## The Three Phases
 
@@ -30,7 +33,7 @@ flowchart LR
 
 1. **Ready**: plan, triage, and get work agent-ready. Agents file every issue and judge it at creation: decision-complete work gets `agent:ready`, real problems with open decisions get `needs:spec`. The spec loop turns the latter into reviewed specs; you flip the label after approving.
 2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `task-to-pr` to a draft PR, with the ticket as the audit trail.
-3. **Review**: you review PRs on your schedule. The review loop runs `pr-to-ready` against your feedback. You merge.
+3. **Review**: humans and review systems leave feedback on PRs. The review loop watches for that feedback, runs `pr-to-ready`, and leaves merge decisions to you.
 
 ## Labels at a Glance
 
@@ -41,7 +44,7 @@ Labels are the loop's control plane. Namespaces separate dimensions: `agent:*` i
 | `needs:spec` | Real problem, open decisions | The agent filing the issue | Spec loop writes a spec; a human reviews it and flips the label to `agent:ready` |
 | `agent:ready` | Meets the definition of ready | Filing agent, `plan`, or a human after spec review | Work loop claims it and swaps to `agent:working` |
 | `agent:working` | Claimed by a worker | Work loop, atomically at claim time | PR opens and it swaps to `agent:complete`; a blocker routes it to `needs:human`; or the claim goes stale (24h, no branch or PR activity) and releases back to `agent:ready` |
-| `agent:complete` | PR open, awaiting human review | Work loop, when the PR opens | Merge closes the issue; feedback runs through the review loop |
+| `agent:complete` | PR open, awaiting feedback or merge | Work loop, when the PR opens | Merge closes the issue; feedback runs through the review loop |
 | `blocked` | Waiting on another issue, linked in the body | `plan`, when filing dependent tasks | Work loop removes it once the blocking issue closes |
 | `needs:human` | A decision only a human can make, explained in a comment | Any loop, on a blocker | A human answers in the comments and relabels `agent:ready`, or closes the issue |
 | `risk:low` / `risk:high` | Blast radius if the work goes wrong | The agent filing the issue | Never moves. Unattended loops claim `risk:low` only; `risk:high` waits for an attended session |
@@ -146,14 +149,33 @@ One tick of the work loop.
 
 ## Phase 3: Review
 
-You review PRs in GitHub whenever suits you. The review loop drives your feedback to merge-ready.
+You review PRs in GitHub whenever suits you.
+Review bots and CI can also leave feedback.
+The review loop watches the PR, gives review systems a short window to respond after each push, and drives actionable feedback to merge-ready.
+It does not merge.
 
 ```text
 One tick of the review loop.
 
-List open agent-authored PRs with human feedback newer than the last
-agent activity. For each, run pr-to-ready. Never merge. If a finding
-needs a human decision, say so in a PR comment and move on.
+1. List open agent-authored PRs connected to issues labeled
+   agent:complete.
+2. Sync closed PRs: if a PR was merged, close or update the linked
+   issue using the repo's normal convention. If it was closed without
+   merge, comment the state and move the issue to needs:human unless
+   the repo has a better documented state.
+3. For each open PR, inspect reviews, unresolved threads, top-level
+   comments, bot comments, check runs, required statuses, mergeability,
+   and the latest head commit.
+4. If the latest agent push is less than 10 minutes old and checks or
+   review bots are still pending, skip the PR for this tick so feedback
+   can arrive.
+5. Run pr-to-ready when any human review, bot comment, unresolved
+   thread, or failing required check is newer than the last agent
+   activity, or when older actionable feedback is still unresolved.
+6. After pr-to-ready, comment the readiness verdict with evidence when
+   it changes the state of play. Leave ready PRs open for human merge.
+7. Stop on needs-human findings, repeated identical failures, missing
+   permissions, or unclear repo policy. Never merge.
 ```
 
 ## Triggers
@@ -200,7 +222,7 @@ Start with one loop, the work loop, on a slow schedule. Add the spec and review 
 ## What Stays Human
 
 - Flipping `needs:spec` to `agent:ready` after reviewing a spec.
-- Reviewing PRs.
-- Merging. No loop, skill, or prompt merges; `pr-to-ready` ends at a readiness verdict.
+- Reviewing PRs when human judgment is needed.
+- Merging. No unattended loop, skill, or prompt merges; `pr-to-ready` ends at a readiness verdict.
 
 Everything else is the loops' job. If you find yourself doing it by hand, the fix is a better issue or a better prompt, not more hands.

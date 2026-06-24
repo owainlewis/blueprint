@@ -4,7 +4,7 @@
 
 Coding agents don't fail for lack of intelligence. They fail for lack of process: no spec, no plan, no tests, no review, just a confident 2,000-line PR nobody asked for. Blueprint fixes the process and trusts the intelligence.
 
-It encodes how the best engineering teams have always shipped: bootstrap cleanly, design when architecture is ambiguous, spec when implementation contracts or invariants matter, plan when work needs splitting, test before ship, review before merge. Fourteen core workflow skills, plus two mechanical helpers, let you run single steps yourself or loops that take whole tickets to draft PRs while you sleep.
+It encodes how the best engineering teams have always shipped: bootstrap cleanly, design when architecture is ambiguous, spec when implementation contracts or invariants matter, plan when work needs splitting, test before ship, review before merge. Core workflow skills, plus two mechanical helpers, let you run single steps yourself or loops that take whole tickets to draft PRs while you sleep.
 
 Blueprint is the deliberate opposite of bloated, over-engineered skill libraries like Superpowers and GSD. No ceremony, no guardrail mazes, no thousand-line process files burning your context window before any work starts. Simplicity is clarity: a skill short enough to hold in your head is a skill an agent actually follows. And Blueprint bets on the model. Heavy frameworks assume the model is weak and wrap it in rules; Blueprint assumes the model is strong and hands it the judgment of a great senior engineer, written down. Every model release makes that bet pay off more, and the guardrails more wrong.
 
@@ -24,13 +24,13 @@ Blueprint is the deliberate opposite of bloated, over-engineered skill libraries
 | **Design**   | `design-doc`               | Explore architecture, alternatives, and tradeoffs                             |
 | **Define**   | `spec`                     | Requirements, contracts, invariants, and implementation design                |
 | **Plan**     | `plan`                     | Break work into agent-sized tasks                                             |
-| **Goal**     | `goal-skill`               | Turn long-running work into a paste-ready Codex `/goal`                       |
+| **Loop**     | `loop-design`              | Design long-running goals and loops for Claude Code, Codex, schedules, or trackers |
 | **Build**    | `implement` / `tdd`        | Execute one task; tests prove acceptance                                      |
 | **Debug**    | `debug`                    | Reproduce a failure, fix it test-first when practical, and keep the guard     |
 | **Improve**  | `refactor`                 | Simplify changed code without changing behavior                               |
 | **Review**   | `review`                   | Code-change correctness, security, simplicity before merge                    |
 | **Deliver**  | `task-to-pr` / `multitask` | Turn one ticket, or several tickets in parallel, into draft PRs               |
-| **Feedback** | `pr-to-ready`              | Drive an open PR with feedback to merge-ready                                 |
+| **Feedback** | `pr-to-ready`              | Drive an open PR with human, bot, or check feedback to merge-ready            |
 | **Browser**  | `browser-verify`           | Check rendered UI, HTML, and visual docs in a real browser                    |
 
 ## The Flow
@@ -95,9 +95,11 @@ The skills above are steps: one phase, one human checkpoint. Three skills chain 
 | ------------- | ------------------------ | -------------------------------------------------------------------------- |
 | `task-to-pr`  | a ticket                 | a draft PR with code, tests, fresh-subagent review, acceptance verification, and evidence |
 | `multitask`   | several tickets          | several draft PRs, one isolated worker lane per ticket or dependency group |
-| `pr-to-ready` | an open PR with feedback | a merge-ready PR with checks passing                                       |
+| `pr-to-ready` | an open PR with human, bot, or check feedback | a merge-ready PR with checks passing                    |
 
-Loops keep the ticket updated as they work — status moves, comments with verification evidence, PR links — and stop at human checkpoints. Merging is always a human decision.
+Loops keep the ticket updated as they work: status moves, comments with verification evidence, and PR links.
+They stop at human checkpoints.
+Merging is always a human decision.
 
 `task-to-pr` is the single-ticket loop: it resolves the ticket, creates a branch, implements the acceptance criteria, reviews the diff, verifies acceptance, opens a draft PR, and writes evidence back to the ticket.
 
@@ -160,7 +162,7 @@ flowchart LR
     Ideas([Ideas, specs,<br/>rough captures])
     Ready["Ready<br/>agents file labeled issues<br/>spec loop resolves decisions"]
     Work["Work<br/>claim one ready issue<br/>task-to-pr to draft PR"]
-    Review["Review<br/>human reviews<br/>pr-to-ready fixes feedback"]
+    Review["Review<br/>humans, bots, checks<br/>pr-to-ready fixes feedback"]
     Merge([Human merges])
 
     Ideas --> Ready --> Work --> Review --> Merge
@@ -178,11 +180,15 @@ flowchart LR
 
 1. **Ready**: turn ideas and specs into agent-ready issues. The agent filing an issue judges it at creation: decision-complete work gets `agent:ready`; a real problem with open decisions gets `needs:spec`, and the spec loop turns it into a reviewed spec. Nothing unjudged enters the tracker.
 2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `task-to-pr` to a draft PR, with the ticket as the audit trail. The loop throttles itself on review capacity: when too many agent PRs await review, it stops starting new work.
-3. **Review**: a human reviews the PR, `pr-to-ready` drives feedback to merge-ready, a human merges.
+3. **Review**: humans, review bots, and checks leave feedback. A review-watch loop runs `pr-to-ready` after a short grace window, repeats until the PR is ready or blocked, and a human merges.
 
-Humans do three things: flip `needs:spec` to `agent:ready` after reviewing a spec, review PRs, and merge. Agents do everything else.
+Humans do three things: flip `needs:spec` to `agent:ready` after reviewing a spec, review PRs when judgment is needed, and merge.
+Agents do everything else.
 
-The loop layer is prompts, not skills: skills encode judgment that must stay consistent everywhere, while the loop layer is wiring you paste into whatever runs it. The definition of ready and the label state machine live in [AGENTS.md](AGENTS.md); setup, triggers, and copy-pasteable loop prompts live in [guides/loops.md](guides/loops.md).
+`loop-design` is the pre-flight skill for long-running goals and loops.
+It turns fuzzy intent into a portable handoff for Claude Code, Codex, a scheduled tick, or an issue-tracker workflow.
+The runtime loop layer is still prompts and external state: skills encode judgment, while prompts wire that judgment into the runner you use.
+The definition of ready and the label state machine live in [AGENTS.md](AGENTS.md); setup, triggers, and copy-pasteable loop prompts live in [guides/loops.md](guides/loops.md).
 
 For an attended Codex coordinator that works through a small issue set, keeps a project board current, and may merge only when explicitly authorized, see [guides/codex-coordinator.md](guides/codex-coordinator.md).
 
@@ -198,7 +204,7 @@ Core workflows:
 | `design-doc`        | Decide architecture, alternatives, and tradeoffs                                                   |
 | `spec`              | Specify implementation requirements, contracts, and invariants                                     |
 | `plan`              | Break input into reviewable tasks                                                                 |
-| `goal-skill`        | Create a paste-ready Codex `/goal` with verifier evidence and blocked stop conditions             |
+| `loop-design`       | Design long-running goals and loops with verifier evidence, state, gates, guardrails, and stop conditions |
 | `implement`         | Execute a single task                                                                             |
 | `tdd`               | Test-first variant of implement                                                                   |
 | `debug`             | Reproduce and fix a failure test-first when practical                                             |
@@ -207,7 +213,7 @@ Core workflows:
 | `task-to-pr`        | Run the loop from ticket to draft PR                                                              |
 | `multitask`         | Run several tickets to draft PRs in parallel                                                      |
 | `pr`                | Commit, push, and open a PR                                                                       |
-| `pr-to-ready`       | Drive an open PR to merge-ready                                                                   |
+| `pr-to-ready`       | Drive an open PR with live feedback to merge-ready                                                |
 | `browser-verify`    | Verify browser-rendered work                                                                      |
 
 Helper entry points:
@@ -219,7 +225,7 @@ Helper entry points:
 
 `branch` and `commit` are helper entry points, not core workflows. They stay installable so `task-to-pr`, `multitask`, and `pr` can expose the full delivery path consistently.
 
-Removed entry points are not maintained as aliases: `requirements` is now `spec`; `architecture` is now `design-doc` for architecture docs or `spec` for implementation instructions; `task` and `build` are now `implement`; `coverage` is handled through `implement` when adding tests or `review` when evaluating them; `address-pr-feedback` is now `pr-to-ready`; `codex-run-loop` is now `task-to-pr` for one ticket or `multitask` for several tickets.
+Removed entry points are not maintained as aliases: `requirements` is now `spec`; `architecture` is now `design-doc` for architecture docs or `spec` for implementation instructions; `task` and `build` are now `implement`; `coverage` is handled through `implement` when adding tests or `review` when evaluating them; `goal-skill` is now `loop-design`; `address-pr-feedback` is now `pr-to-ready`; `codex-run-loop` is now `task-to-pr` for one ticket or `multitask` for several tickets.
 
 ## Install
 
@@ -255,7 +261,7 @@ Core workflows:
 | `design-doc`        | Writes `docs/<design-slug>/design.md`: architecture, alternatives, tradeoffs, and cross-cutting concerns                                                | `Write a design doc for multi-tenant auth`           |
 | `spec`              | Writes `docs/<feature-slug>/spec.md`: requirements, contracts, invariants, and implementation design                                                     | `Write a spec for user-auth`                         |
 | `plan`              | Breaks a spec, brief, or request into tasks sized for agents, review, and rollback                                                                      | `Create a plan for user-auth`                        |
-| `goal-skill`        | Creates paste-ready Codex `/goal` prompts with verifier evidence, constraints, boundaries, iteration policy, and blocked conditions                     | `Create a Codex goal for this deployment plan`       |
+| `loop-design`       | Designs Claude Code, Codex, scheduled, or issue-tracker loops with verifier evidence, state, gates, guardrails, and stop conditions                     | `Design a loop for this deployment plan`             |
 | `implement`         | Executes one scoped change with tests and verification                                                                                                  | `Implement LIN-123 from user-auth`                   |
 | `tdd`               | Implements behavior test-first                                                                                                                          | `Use TDD for retry logic in the API client`          |
 | `debug`             | Finds the root cause of a failure, fixes it test-first when practical, and leaves a regression test                                                     | `Debug the failing retry test`                       |
