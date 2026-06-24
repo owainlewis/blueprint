@@ -1,13 +1,13 @@
 ---
 name: loop-design
-description: "Design or tighten long-running agent goals and loops for Claude Code, Codex, scheduled prompts, or issue-tracker workflows, with verifier evidence, gates, state, guardrails, and stop conditions."
+description: "Design or tighten long-running agent goals and loops for Claude Code, Codex, scheduled prompts, or issue-tracker workflows, with clear done conditions, checks, saved state, safety limits, and stop rules."
 user-invocable: true
 argument-hint: "<rough goal, loop idea, issue set, plan, spec, or runbook path>"
 ---
 
 # Loop Design
 
-Turn a rough goal or loop idea into one portable execution contract.
+Turn a rough goal or loop idea into clear instructions an agent can follow.
 
 A goal is the smallest loop: keep acting until the outcome is proven or blocked.
 A loop is a goal with explicit triggers, gates, state, and stop rules.
@@ -32,13 +32,13 @@ If the objective is too vague to verify, stop and ask for the missing evidence s
 Choose the lightest shape that fits:
 
 - `in-session`: one Claude Code or Codex session keeps working until done.
-- `scheduled`: one idempotent tick prompt runs on a cadence.
+- `scheduled`: one repeatable prompt runs on a cadence.
 - `issue-tracker`: labels, comments, PRs, and assignments hold state.
-- `runbook`: reusable instructions for a human or external orchestrator.
+- `runbook`: reusable instructions for a human or external runner.
 
-Do not imply durable orchestration unless an actual orchestrator owns scheduling, concurrency, retries, and restart state.
+Do not claim the loop will keep running unless a real runner owns the schedule, retries, and restart state.
 
-### 3. Define The Contract
+### 3. Define The Instructions
 
 Write the loop around nine elements:
 
@@ -66,7 +66,7 @@ Reviewer notes and judge verdicts are different roles.
 A reviewer can advise.
 A judge or human can block a gate.
 
-### 4. Add Guardrails
+### 4. Add Safety Limits
 
 Every loop needs:
 
@@ -74,41 +74,131 @@ Every loop needs:
 - A max iteration or revision cap.
 - A no-progress signal, such as the same blocker repeating or verifier output staying unchanged.
 - A blocked stop condition that names the evidence to report and the input needed to continue.
-- An execution boundary: current workspace, branch, worktree, sandbox, issue tracker, or external orchestrator.
+- An execution boundary: current workspace, branch, worktree, sandbox, issue tracker, or external runner.
 
-For scheduled or parallel work, include a concurrency and duplicate-action story.
+For scheduled or parallel work, say what happens if two copies run at the same time.
+Also say how the loop avoids doing the same external action twice.
 
-For side effects such as pushes, PR comments, deploys, deletes, database writes, messages, or vendor sends, require approval or an idempotency check unless the user explicitly allows them.
+For side effects such as pushes, PR comments, deploys, deletes, database writes, messages, or vendor sends, require approval or a check that prevents repeating the same action unless the user explicitly allows them.
 
 ### 5. Deliver The Right Artifact
 
 Return exactly what the user needs:
 
-- For Claude Code: provide a paste-ready loop prompt or runbook that names the outcome, checks, gates, state, and stops.
+- For Claude Code: provide a paste-ready loop prompt or runbook that says what to do, what to read, how to verify, when to stop, and what not to do.
 - For Codex: provide a paste-ready `/goal` when the work is in-session, or an automation/tick prompt when the work is scheduled.
-- For issue-tracker loops: provide an idempotent tick prompt and the label/state transitions.
+- For issue-tracker loops: provide a repeatable tick prompt and the label or state changes.
 - For reusable workflows: write a short runbook with the goal, context, allowed actions, checks, gates, state, guardrails, and blocked conditions.
 
 Do not bury the actual handoff under a long plan.
+
+Write prompts like instructions for a careful beginner.
+Use simple headings and direct verbs.
+Avoid clever phrasing, compressed abstractions, and unexplained system words.
+If a technical word is necessary, explain it in one short sentence.
+Prefer this shape:
+
+```text
+Your job
+<plain outcome>
+
+Read first
+<files, issues, docs, commands, or state to inspect before changing anything>
+
+What you may do
+<allowed edits, tools, side effects, and limits>
+
+After each pass
+<how to choose the next small action and what evidence to record>
+
+You are done when
+<checks or evidence that prove the outcome>
+
+Stop and ask when
+<human decisions, repeated failures, unsafe actions, or unclear blockers>
+
+Do not
+<hard limits>
+```
 
 ## Pasteable Patterns
 
 In-session:
 
 ```text
-Keep working until <outcome>, verified by <programmatic checks, judge rubric, or human signoff>, while preserving <constraints>. Read <context sources>. You may <allowed actions> and must record <state/evidence>. After each result, choose the next action by <iteration policy>. Stop when <success condition>, <cap>, <no-progress signal>, or <blocked condition>, and report <evidence needed>.
+Your job
+Keep working until <plain outcome>.
+
+Read first
+Read <context sources>.
+
+What you may do
+You may <allowed actions>.
+Keep <constraints>.
+
+After each pass
+Run <checks>.
+Record <state or evidence>.
+If the goal is not done, choose the next smallest safe action.
+
+You are done when
+<success condition> is true and <verification evidence> proves it.
+
+Stop and ask when
+<cap>, <no-progress signal>, or <blocked condition> happens.
+Report <evidence gathered>, <blocker>, and <input needed>.
+
+Do not
+<hard limits>.
 ```
 
 Codex persistent goal:
 
 ```text
-/goal <outcome>, verified by <specific evidence>, while preserving <constraints>. Use <allowed context, tools, and boundaries>. Between iterations, <how to choose the next best action>. If blocked, repeated failures occur, or no valid paths remain, <what to report and what would unlock progress>.
+/goal
+Your job
+<plain outcome>.
+
+Read first
+Use <allowed context, tools, and boundaries>.
+
+What you may do
+<allowed actions>.
+Preserve <constraints>.
+
+After each pass
+Run <specific checks>.
+If the goal is not done, choose the next smallest safe action.
+
+You are done when
+<specific evidence> proves the outcome.
+
+Stop and ask when
+Blocked, repeated failures occur, or no valid paths remain.
+Report <what happened>, <what is blocking>, and <what would unlock progress>.
 ```
 
 Scheduled tick:
 
 ```text
-One idempotent tick of <loop name>. Recover stale state, claim only eligible work, perform at most <unit of work>, run <verification>, record <state/evidence>, and exit cleanly. Do not start new work if <throttle>. Stop and ask for human input when <blocked condition>.
+One tick of <loop name>.
+
+Read first
+Recover stale state.
+Find work that is eligible.
+
+What you may do
+Claim only eligible work.
+Do at most <unit of work>.
+Do not start new work if <throttle>.
+
+After each pass
+Run <verification>.
+Record <state/evidence>.
+Exit cleanly.
+
+Stop and ask when
+<blocked condition>.
 ```
 
 ## Quality Bar

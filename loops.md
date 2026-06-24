@@ -33,10 +33,30 @@ If the task does not need that loop, it is probably just a prompt.
 ## Goal Template
 
 ```text
-/goal <outcome>, verified by <specific evidence>, while preserving <constraints>.
-Use <allowed files, tools, and boundaries>.
-Between iterations, <how to choose the next bounded action>.
-If blocked, repeated failures occur, or no valid paths remain, stop with <evidence gathered>, <blocker>, and <input needed>.
+/goal
+Your job
+<plain outcome>
+
+Read first
+<files, tools, and state to inspect before changing anything>
+
+What you may do
+<allowed actions and boundaries>
+Preserve <constraints>.
+
+After each pass
+Run <specific checks>.
+If the goal is not done, choose the next smallest safe action.
+
+You are done when
+<specific evidence> proves the outcome.
+
+Stop and ask when
+Blocked, repeated failures occur, or no valid paths remain.
+Report <evidence gathered>, <blocker>, and <input needed>.
+
+Do not
+<hard limits>
 ```
 
 Good goals include:
@@ -61,14 +81,38 @@ Use this when README, AGENTS, CLAUDE, guides, and skill files may describe diffe
 This is a real goal because the agent must find a mismatch, patch it, re-scan, and continue until no unexplained contradictions remain.
 
 ```text
-/goal Blueprint's public workflow docs are internally consistent, verified by targeted `rg` scans and a final diff summary showing no unexplained mismatch in skill names, workflow names, loop phases, or install guidance.
+/goal
+Your job
+Make Blueprint's public workflow docs agree with each other.
+The docs should use the same skill names, workflow names, loop phases, and install guidance.
 
-Use README.md, AGENTS.md, CLAUDE.md, guides/*.md, skills/*/SKILL.md, and agents/code-reviewer.md.
-Between iterations, find the smallest real contradiction, patch only the owning doc, then re-run the relevant scan.
+Read first
+Read README.md, AGENTS.md, CLAUDE.md, guides/*.md, skills/*/SKILL.md, and agents/code-reviewer.md.
+Run targeted `rg` scans to find stale names or mismatched workflow descriptions.
+
+What you may do
+Fix one real contradiction at a time.
+Patch only the doc that owns the mistake.
 Preserve current skill names and public workflow intent.
+
+After each fix
+Re-run the relevant scan.
+Check whether the same mismatch still appears.
+If another clear mismatch remains, fix the next smallest one.
+
+You are done when
+The scans show no unexplained mismatch in skill names, workflow names, loop phases, or install guidance.
+The final report lists changed files and scans run.
+
+Stop and ask Owain when
+You have made 6 patches.
+The same mismatch repeats twice.
+Resolving a contradiction would change the intended product direction.
+
+Do not
 Do not edit generated files, examples, lockfiles, vendored files, or unrelated prose.
-Stop after 6 patches, if the same mismatch repeats twice, or if resolving a contradiction would change the intended product direction.
-Report changed files, scans run, remaining risks, and any needs-human decision.
+Do not rename skills or workflows.
+Do not guess product direction.
 ```
 
 Good verification scans:
@@ -85,15 +129,33 @@ Use this when the skill set has drifted from Blueprint's own quality bar.
 This is a real goal because the agent works one skill at a time, patches only clear failures, and re-checks each changed skill before moving on.
 
 ```text
-/goal Every skill file passes Blueprint's review bar, verified by a report that marks each skill pass, patched, or needs-human.
+/goal
+Your job
+Check that every skill file meets Blueprint's review bar.
 
-Use REVIEW.md, AGENTS.md, and skills/*/SKILL.md.
+Read first
+Read REVIEW.md, AGENTS.md, and skills/*/SKILL.md.
 For each skill, check trigger clarity, scope boundary, verification evidence, failure behavior, and unnecessary ceremony.
-Between iterations, patch one skill only when the fix is clear and behavior-preserving, then re-read the changed skill before continuing.
+
+What you may do
+Patch one skill only when the fix is clear and behavior-preserving.
 Keep skills short and portable.
+
+After each pass
+Re-read the changed skill before continuing.
+Mark the inspected skill as pass, patched, or needs-human.
+
+You are done when
+Every inspected skill has a pass, patched, or needs-human result.
+The final report lists checks run.
+
+Stop and ask when
+You have made 5 skill patches.
+A skill's intended contract is ambiguous.
+Making a skill shorter would weaken safety.
+
+Do not
 Do not change skill names, public workflow contracts, generated files, or examples.
-Stop after 5 skill patches, if a skill's intended contract is ambiguous, or if concision would weaken safety.
-Report pass/patched/needs-human for every inspected skill, plus checks run.
 ```
 
 ### 3. Skill Metadata Normalizer
@@ -103,14 +165,32 @@ Use this when installed skills need predictable frontmatter for discovery.
 This is a good goal because the verifier is concrete and the agent can keep normalizing until every skill matches the schema or an intentional exception appears.
 
 ```text
-/goal Every skill in skills/*/SKILL.md has consistent required frontmatter, verified by a parser or explicit scan confirming `name`, `description`, `user-invocable`, and `argument-hint` fields are present and consistently ordered.
+/goal
+Your job
+Make every skill in skills/*/SKILL.md use the same required frontmatter fields.
 
+Read first
 Use skills/*/SKILL.md only.
-Between iterations, fix one skill's frontmatter, then re-run the metadata check.
+Check for `name`, `description`, `user-invocable`, and `argument-hint`.
+
+What you may do
+Fix one skill's frontmatter at a time.
+Keep the fields consistently ordered.
+
+After each fix
+Re-run the metadata check.
+
+You are done when
+A parser or explicit scan confirms every skill has the required fields in the expected order.
+The final report lists files changed and the command or scan used.
+
+Stop and ask when
+You have made 10 skill patches.
+A skill intentionally needs a different schema.
+
+Do not
 Do not rewrite skill bodies except where a field value needs a clearer description.
 Do not change skill names or public trigger behavior.
-Stop when all skill metadata is consistent, after 10 skill patches, or if a skill intentionally needs a different schema.
-Report the command or scan used, files changed, and any intentional exception.
 ```
 
 Useful verification:
@@ -126,14 +206,32 @@ Use this when local docs have drifted after file renames or guide changes.
 This is a real goal because link repair is naturally iterative: check, fix one class of broken links, check again.
 
 ```text
-/goal All local Markdown links in README.md, AGENTS.md, CLAUDE.md, REVIEW.md, guides/*.md, and skills/*/SKILL.md resolve, verified by a link checker or documented fallback scan.
+/goal
+Your job
+Make all local Markdown links resolve in Blueprint's repo-authored docs.
 
+Read first
+Use README.md, AGENTS.md, CLAUDE.md, REVIEW.md, guides/*.md, and skills/*/SKILL.md.
 Use repo-authored Markdown only.
-Between iterations, identify one broken local link or stale path, patch the owning source, then re-run the link check.
+
+What you may do
+Fix one broken local link or stale path at a time.
+Patch the source that owns the broken link.
+
+After each fix
+Re-run the link check or documented fallback scan.
+
+You are done when
+All local Markdown links resolve.
+The final report lists the checker used, fixed links, skipped links, and any needs-human target.
+
+Stop and ask when
+You have made 8 link fixes.
+A target appears intentionally future-facing.
+
+Do not
 Do not validate external URLs unless network access and policy are explicit.
 Do not edit generated files or examples unless the broken link is in the source of truth.
-Stop when all local links resolve, after 8 link fixes, or if a target appears intentionally future-facing.
-Report the checker used, fixed links, skipped links, and any needs-human target.
 ```
 
 ### 5. Example Artifact Boundary Repair
@@ -143,14 +241,31 @@ Use this when examples and docs are unclear about what is source material, gener
 This is a real goal because the agent may need to inspect several files, patch one boundary explanation, and re-check that the docs no longer contradict each other.
 
 ```text
-/goal Blueprint's example artifact boundaries are clear and consistent, verified by docs that distinguish source prompts, regeneration scripts, generated examples, and hand-edited examples without contradiction.
+/goal
+Your job
+Make Blueprint's example artifact boundaries clear and consistent.
 
+Read first
 Use README.md, AGENTS.md, guides/*.md, examples/input.md, examples/regenerate.sh, examples/rag-chatbot/*.md, and examples/dispatch-control-plane/*.md.
-Between iterations, find one unclear or contradictory boundary, patch the owning doc, and re-scan for references to generated examples, regenerate scripts, and no-edit policy.
+Look for how docs describe source prompts, regeneration scripts, generated examples, and hand-edited examples.
+
+What you may do
+Fix one unclear or contradictory boundary at a time.
+Patch the doc that owns the unclear wording.
+
+After each fix
+Re-scan for references to generated examples, regeneration scripts, and no-edit policy.
+
+You are done when
+The docs distinguish source prompts, regeneration scripts, generated examples, and hand-edited examples without contradiction.
+The final report lists boundary rules, files changed, scans run, and any needs-human decision.
+
+Stop and ask when
+The intended source of truth cannot be inferred from the repo.
+
+Do not
 Do not regenerate examples.
 Do not edit generated examples unless the repo already treats them as hand-edited sources.
-Stop if the intended source of truth cannot be inferred from the repo.
-Report the boundary rules, files changed, scans run, and any needs-human decision.
 ```
 
 ### 6. Release Dry-Run Repair
@@ -160,14 +275,34 @@ Use this before tagging a Blueprint release.
 This is a goal because release readiness often reveals a sequence of small blockers, and the agent should repair clear local blockers while stopping before publish authority.
 
 ```text
-/goal Blueprint is locally ready for a release dry run, verified by a report covering changed skills, docs consistency, example boundaries, install manifest expectations, and unresolved risks.
+/goal
+Your job
+Check whether Blueprint is locally ready for a release dry run.
 
+Read first
 Use git status, git diff, README.md, AGENTS.md, CLAUDE.md, guides/*.md, skills/*/SKILL.md, agents/code-reviewer.md, and examples/.
-Between iterations, fix one clear local release blocker, run the relevant check, and update the release-readiness evidence.
+Check changed skills, docs consistency, example boundaries, install manifest expectations, and unresolved risks.
+
+What you may do
+Fix one clear local release blocker at a time.
+Keep the work local.
+
+After each fix
+Run the relevant check.
+Update the release-readiness evidence.
+
+You are done when
+The final report says ready or not ready.
+The report covers fixes made, checks run, unresolved risks, and the exact human decision needed before release.
+
+Stop and ask when
+You have made 5 fixes.
+Publish tooling or network access is required.
+Release policy needs human approval.
+
+Do not
 Do not tag, publish, push, edit lockfiles, or change generated files.
 Do not invent a changelog if the repo prefers generated release notes.
-Stop when local readiness is proven, after 5 fixes, if publish tooling or network access is required, or if release policy needs human approval.
-Report ready/not ready, fixes made, checks run, and the exact human decision needed before release.
 ```
 
 ### 7. Working Tree Reviewability Repair
@@ -177,14 +312,32 @@ Use this when the repo has several local changes and you want it made reviewable
 This is a goal because the agent must inspect current state, group changes, fix only safe inconsistencies, and stop rather than discard unrelated work.
 
 ```text
-/goal The working tree is reviewable, verified by `git status --short` plus a report that explains every remaining changed file as intended, unrelated, generated, blocked, or needs-human.
+/goal
+Your job
+Make the working tree reviewable without losing human work.
 
-Use git status, git diff, repo instructions, and touched files only.
-Between iterations, inspect one changed-file group, fix only clear inconsistencies inside that group, and update the reviewability report.
+Read first
+Use `git status --short`, git diff, repo instructions, and touched files only.
+
+What you may do
+Inspect one changed-file group at a time.
+Fix only clear inconsistencies inside that group.
+
+After each fix
+Run `git status --short`.
+Update the reviewability report.
+
+You are done when
+Every remaining changed file is explained as intended, unrelated, generated, blocked, or needs-human.
+The final report lists groups, files touched, checks run, and what should happen next.
+
+Stop and ask when
+You have made 4 repair patches.
+A change belongs to another human task.
+
+Do not
 Never discard, revert, reset, checkout, or overwrite user changes.
 Do not stage, commit, push, or edit unrelated files.
-Stop when every changed file is explained, after 4 repair patches, or if a change belongs to another human task.
-Report groups, files touched, checks run, and what should happen next.
 ```
 
 ## Adjacent Non-Goals
