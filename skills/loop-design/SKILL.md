@@ -93,11 +93,52 @@ Return exactly what the user needs:
 Do not bury the actual handoff under a long plan.
 
 Write prompts like instructions for a careful beginner.
-Use simple headings and direct verbs.
+For short `/goal` handoffs, prefer a compact instruction block without headings.
+Use headings only when they make a longer runbook, scheduled loop, or multi-stage workflow easier to scan.
+When using headings, keep them simple and direct.
 Avoid clever phrasing, compressed abstractions, and unexplained system words.
 Do not use conversational section headings such as "Your job"; use artifact-style headings such as "Objective".
 If a technical word is necessary, explain it in one short sentence.
-Prefer Markdown sections with direct, outcome-first headings:
+Make verification a gate, not a suggestion.
+Say what must be tested, what must be verified, and what evidence must appear before any external side effect such as a PR, push, comment, deploy, or message.
+For a short Codex goal, prefer this shape:
+
+```md
+/goal
+Use <skill or workflow> to <plain outcome>.
+
+Do not stop until one of these is true:
+
+1. <successful external result> exists.
+2. The work is genuinely blocked and the blocker is reported with evidence.
+
+Before changing code, read <context sources>.
+
+Keep the work scoped to <boundary>.
+
+Use <branch, worktree, tracker, or execution boundary>.
+
+The <external result> must not happen until the work has been tested and verified.
+
+Required verification:
+
+- <programmatic check>.
+- <programmatic check>.
+- <browser/manual/judge check if needed>.
+- <acceptance check if needed>.
+
+Fix valid failures and repeat until verification is clean.
+
+Then <allowed external side effects>.
+
+The <external artifact> must include <required evidence>.
+
+Stop and ask if <blocked condition>, <repeated failure>, or <scope expansion> occurs.
+
+Do not <hard limits>.
+```
+
+For a longer runbook, scheduled loop, or multi-stage workflow, use Markdown sections with direct, outcome-first headings:
 
 ```text
 ## Objective
@@ -157,27 +198,37 @@ Codex persistent goal:
 
 ```md
 /goal
+Use <skill or workflow> to <plain outcome>.
 
-## Objective
-<plain outcome>.
+Do not stop until one of these is true:
 
-## Context
-Use <allowed context, tools, and boundaries>.
+1. <successful result> exists.
+2. The work is genuinely blocked and the blocker is reported with evidence.
 
-## Allowed Actions
-<allowed actions>.
-Preserve <constraints>.
+Before changing code, read <context sources>.
 
-## Loop
-Run <specific checks>.
-If the goal is not done, choose the next smallest safe action.
+Keep the work scoped to <boundary>.
 
-## Done
-<specific evidence> proves the outcome.
+Use <branch, worktree, tracker, or execution boundary>.
 
-## Stop
-Blocked, repeated failures occur, or no valid paths remain.
-Report <what happened>, <what is blocking>, and <what would unlock progress>.
+The <successful result> must not happen until the work has been tested and verified.
+
+Required verification:
+
+- <programmatic check>.
+- <programmatic check>.
+- <browser/manual/judge check if needed>.
+- <acceptance check if needed>.
+
+Fix valid failures and repeat until verification is clean.
+
+Then <allowed external side effects>.
+
+The <external artifact> must include <required evidence>.
+
+Stop and ask if <blocked condition>, <repeated failure>, or <scope expansion> occurs.
+
+Do not <hard limits>.
 ```
 
 Scheduled tick:
