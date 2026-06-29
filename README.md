@@ -23,7 +23,7 @@ Blueprint is the deliberate opposite of bloated, over-engineered skill libraries
 | **Setup**    | `bootstrap-project`        | Start a repo with clean local docs and agent guidance                         |
 | **Design**   | `design-doc`               | Explore architecture, alternatives, and tradeoffs                             |
 | **Define**   | `spec`                     | Requirements, contracts, invariants, and implementation design                |
-| **Plan**     | `plan`                     | Break work into agent-sized tasks                                             |
+| **Plan**     | `plan`                     | Break work into tasks, adding phases and milestones for larger work           |
 | **Goal**     | `goal-design`              | Write Codex and Claude Code `/goal` prompts with checks, evidence, and stop rules |
 | **Build**    | `implement` / `tdd`        | Execute one task; tests prove acceptance                                      |
 | **Debug**    | `debug`                    | Reproduce a failure, fix it test-first when practical, and keep the guard     |
@@ -203,7 +203,7 @@ Core workflows:
 | `bootstrap-project` | Bootstrap a new repo with docs, license, and agent guidance                                      |
 | `design-doc`        | Decide architecture, alternatives, and tradeoffs                                                   |
 | `spec`              | Specify implementation requirements, contracts, and invariants                                     |
-| `plan`              | Break input into reviewable tasks                                                                 |
+| `plan`              | Break input into reviewable tasks, with phase goals and milestones when useful                     |
 | `goal-design`       | Write `/goal` prompts with clear done conditions, checks, evidence, and stop rules |
 | `implement`         | Execute a single task                                                                             |
 | `tdd`               | Test-first variant of implement                                                                   |
