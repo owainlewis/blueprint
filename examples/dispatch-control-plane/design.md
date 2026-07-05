@@ -8,7 +8,7 @@ Draft
 
 Dispatch is a local-first control plane for delegated agent work. A Next.js app owns the UI, API routes, and JSON-backed state. A Go worker process registers itself, long-polls for pending tasks, runs shell and agent steps, streams events back, and reports completion. This design documents the current minimal architecture and the tradeoffs behind keeping orchestration explicit rather than hiding it inside a workflow engine.
 
-## Context and Scope
+## Background
 
 The `dispatch` repo contains a prototype for running AI agents as delegated workers instead of interactive terminal sessions.
 
@@ -34,7 +34,7 @@ This design covers the local v1 architecture, not the eventual production design
 - Support Claude Code sessions so replies to a completed task can continue the same task context.
 - Keep the prototype easy to run with `just dev` plus a separate worker command.
 
-## Non-Goals
+## What Not to Solve
 
 - Production durability, horizontal control-plane scaling, or multi-user auth.
 - Managing worker machines or provisioning workspaces.
@@ -42,7 +42,7 @@ This design covers the local v1 architecture, not the eventual production design
 - Supporting every agent runtime equally in v1.
 - Building a full distributed scheduler.
 
-## Constraints
+## Limits
 
 - The control plane is a Next.js app with API routes under `control-plane/app/api`.
 - The worker is a Go CLI under `worker/cmd/agentctrl-worker`.
@@ -225,7 +225,7 @@ Important types:
 
 Task creation accepts a title, prompt, optional working directory, and optional step definitions. If no usable steps are provided, the control plane creates a default agent step using the task prompt.
 
-## Alternatives Considered
+## Other Options
 
 ### Put the worker inside the Next.js app
 
@@ -273,7 +273,7 @@ The shared TypeScript types keep the control-plane model explicit. The risk is d
 
 Developers start the control plane with `just dev` and start workers separately. This makes the control plane and worker lifecycle visible during development.
 
-## Rollout and Migration
+## Rollout
 
 The current architecture is already suitable for a local prototype:
 
