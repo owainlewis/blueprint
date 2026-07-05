@@ -71,17 +71,20 @@ flowchart TD
 
 ## The Loops
 
-Most skills are steps: one phase, one human checkpoint. Three skills chain the steps into end-to-end loops:
+Most skills are steps: one phase, one human checkpoint. Four skills chain the steps into end-to-end loops:
 
 | Skill         | From                     | To                                                                         |
 | ------------- | ------------------------ | -------------------------------------------------------------------------- |
 | `task-to-pr`  | a ticket                 | a PR ready for review, with code, tests, another review, acceptance checks, and proof |
+| `milestone`   | a GitHub milestone       | every open issue completed through `task-to-pr`, one PR at a time |
 | `multitask`   | several tickets          | several PRs ready for review, one separate worker per ticket or dependent group |
 | `pr-to-ready` | an open PR with human, bot, or check feedback | a PR that is ready to merge, with checks passing |
 
 Loops keep the ticket updated as they work: status moves, comments with proof, and PR links. They stop at human checkpoints. Merging is always a human decision.
 
 `task-to-pr` is the single-ticket loop: it reads the ticket, creates a branch, implements the acceptance criteria, reviews the diff, checks acceptance, opens a PR ready for review, handles current feedback, and writes proof back to the ticket.
+
+`milestone` is the release-slice loop: it reads open issues in a GitHub milestone, orders them by dependency and risk, then runs `task-to-pr` for each issue. It stops for human merge unless merge permission was explicit. When merging is allowed, it merges only after checks and review are clean, syncs the default branch, then continues.
 
 `multitask` is the coordinator-worker loop for several tickets at once: it groups dependent work, starts one isolated worker per ticket, and reports each PR or blocker. The coordinator never edits code. See [guides/multitask.md](guides/multitask.md) for how it splits and coordinates work.
 
@@ -154,12 +157,13 @@ npx skills update
 | **Improve**  | `refactor`          | Improves code shape without changing behavior                                                                     | `Refactor the current diff`                  |
 | **Review**   | `review`            | Reviews code changes for correctness, security, simplicity, robustness, and tests                                | `Review the current diff`                    |
 | **Deliver**  | `task-to-pr`        | Runs the loop from ticket to PR: implement, test, review, check acceptance, open the PR, update the ticket with proof | `task-to-pr LIN-123`                    |
+| **Deliver**  | `milestone`         | Completes a GitHub milestone through `task-to-pr`, one issue and PR at a time                                    | `milestone https://github.com/org/repo/milestone/1` |
 | **Deliver**  | `multitask`         | Coordinates several tickets to PRs at once, one isolated worker per ticket                                        | `multitask LIN-101 LIN-102 LIN-103`          |
 | **Deliver**  | `pr`                | Commits intended changes, pushes the branch, and opens a clear PR                                                 | `Open a PR for this change`                  |
 | **Feedback** | `pr-to-ready`       | Inspects live PR state, fixes actionable feedback, verifies checks, and reports merge readiness; never merges     | `Is PR #42 ready to merge?`                  |
 | **Browser**  | `browser-verify`    | Verifies rendered UI, HTML, visual docs, and browser-facing behavior in a real browser                            | `Browser-verify the local HTML report`       |
 
-Helper entry points, not core workflows; they stay installable so `task-to-pr`, `multitask`, and `pr` can expose the full delivery path consistently:
+Helper entry points, not core workflows; they stay installable so `task-to-pr`, `milestone`, `multitask`, and `pr` can expose the full delivery path consistently:
 
 | Skill    | What it does                                                      | Example                                 |
 | -------- | ------------------------------------------------------------------ | ---------------------------------------- |

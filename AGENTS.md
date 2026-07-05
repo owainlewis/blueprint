@@ -10,7 +10,7 @@ Blueprint has two flows. The input to the next step is a spec, plan, or task wit
 
 **Decide** (`design-doc` -> `spec` -> `plan`): turn unclear work into reviewed decisions and tasks a new agent can do. Every stage pauses for human review. Start at `design-doc` when architecture, options, or tradeoffs are unclear. Use `spec` when requirements, function signatures, return values, data shapes, or error behavior need review. Use `plan` when the work just needs splitting. Skip stages when the change is small and already decided.
 
-**Deliver** (`task-to-pr`): turn one task into a PR that is ready for review, with the ticket as the record of the work. `task-to-pr` prepares the workspace, implements the change, tests it, gets another review, checks each acceptance criterion, commits, pushes, opens the PR, handles current feedback, and updates the ticket. Prefer worktrees when they reduce risk. Use `multitask` to run several independent tickets in parallel, one worker per ticket. Use `pr-to-ready` when later feedback exists; merging is always a human decision. Use `implement` alone for one code task, `tdd` when a failing test can describe the behavior first, `refactor` to simplify changed code before review, and `debug` when something breaks.
+**Deliver** (`task-to-pr`): turn one task into a PR that is ready for review, with the ticket as the record of the work. `task-to-pr` prepares the workspace, implements the change, tests it, gets another review, checks each acceptance criterion, commits, pushes, opens the PR, handles current feedback, and updates the ticket. Prefer worktrees when they reduce risk. Use `milestone` to complete a GitHub milestone through `task-to-pr`, one issue at a time. Use `multitask` to run several independent tickets in parallel, one worker per ticket. Use `pr-to-ready` when later feedback exists; merging is always a human decision. Use `implement` alone for one code task, `tdd` when a failing test can describe the behavior first, `refactor` to simplify changed code before review, and `debug` when something breaks.
 
 Exploration is allowed without creating docs or issue tracker entries. Do not manufacture fake specs, plans, or issues for spikes.
 
@@ -26,6 +26,7 @@ Decide:
 Deliver:
 
 - `task-to-pr`: turn one ticket into a PR ready for review, keeping the ticket updated with proof; uses separate branches or worktrees, tests, review, and acceptance checks.
+- `milestone`: complete all open issues in a GitHub milestone by running `task-to-pr` one issue at a time.
 - `multitask`: run several tickets to PRs in parallel, one worker per ticket.
 - `implement`: turn one task into a checked diff with tests.
 - `tdd`: test-first variant of implement.
