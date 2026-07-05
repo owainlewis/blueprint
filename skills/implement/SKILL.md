@@ -7,22 +7,17 @@ argument-hint: "<task reference or description> e.g. 'LIN-123' or 'Task 2 from u
 
 # Implement
 
-Goal: finish one code task with tests and review.
-
-## Workflow
-
-1. Read the request, ticket, spec, plan, and relevant code. Capture the goal, acceptance criteria, checks, and what not to change.
-2. Ask only when requirements, what to change, safety, code ownership, or product behavior are unclear. State low-risk assumptions and continue.
-3. Make the smallest complete change in the right module. Preserve public functions, commands, config, routes, return values, and data shapes unless the task requires changing them.
-4. Add or update tests for changed behavior. If a useful test is not practical, say why and verify manually.
-5. Run the most relevant checks first, then wider checks when shared behavior, public functions, commands, config, routes, generated docs, or user-facing flows changed. Fix relevant failures without expanding the task.
-6. Ask another agent or reviewer to review the diff before reporting back or opening a PR. Fix real issues about this task and rerun checks. If no other reviewer is available, self-review for obvious issues, but do not push or open a PR unless the user explicitly accepts that limitation.
-7. If the task expects a PR, use a task branch, commit intended changes with a Conventional Commit subject, include the ticket ID when available, push, and open a PR ready for review with a clear title and body. Otherwise report changed files, checks, acceptance status, review status, and anything not checked.
+1. Read the request, its sources, and the relevant code. Capture the goal, acceptance criteria, checks, and what not to change.
+2. Ask only when requirements, safety, ownership, or product behavior are unclear. State low-risk assumptions and continue.
+3. Make the smallest complete change in the right module. Don't change public interfaces or data shapes unless the task requires it.
+4. Add or update tests for changed behavior. If a useful test isn't practical, say why and verify manually.
+5. Run the most relevant checks first, wider checks when shared or user-facing behavior changed. Fix relevant failures without expanding the task.
+6. Get the diff reviewed by another agent or reviewer before reporting or opening a PR. If none is available, self-review, and don't push or open a PR unless the user accepts that limitation.
+7. If the task expects a PR: task branch, Conventional Commit with ticket ID when available, push, open a PR ready for review. Otherwise report changed files, checks, acceptance status, review status, and anything not checked.
 
 ## Rules
 
-- One task at a time.
-- Do not touch unrelated code.
-- Do not hide work that was not checked.
-- Do not overwrite or discard user changes.
-- Stop if the task, spec, or plan is wrong; update the source of truth before continuing.
+- One task at a time. Don't touch unrelated code.
+- Don't hide unchecked work.
+- Don't overwrite or discard user changes.
+- If the task, spec, or plan is wrong, stop and update the source of truth before continuing.
