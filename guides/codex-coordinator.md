@@ -13,7 +13,7 @@ This loop is useful when:
 - merging is explicitly authorized for this run.
 
 Do not use this as Blueprint's default unattended loop.
-The default remains draft PRs for human review.
+The default opens PRs ready for review and leaves merge decisions to humans.
 
 ## Coordinator Prompt
 
@@ -81,7 +81,7 @@ Workflow for each issue:
 - The worker thread makes the smallest complete change that satisfies the issue.
 - Follow existing project patterns.
 - Add or update tests that would catch the behavior.
-- Keep docs aligned when behavior, commands, public APIs, or decisions change.
+- Keep docs aligned when behavior, commands, public functions, config, routes, or decisions change.
 
 5. Verify.
 - Run the issue's listed verification commands.

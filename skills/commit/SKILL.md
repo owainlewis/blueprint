@@ -7,12 +7,12 @@ argument-hint: "[optional commit message]"
 
 # Commit
 
-Create one Conventional Commit for the intended current changes.
+Goal: commit only the intended files.
 
 ## Workflow
 
 1. Inspect `git status`, `git diff`, and `git diff --cached`.
-2. Read recent commit messages for scopes and local phrasing.
+2. Read recent commit messages for local style.
 3. If there is nothing worth committing, stop.
 4. Stage only intended files.
 5. Use the user's message if provided. Otherwise write a Conventional Commit message: `type(scope): subject`. Imperative subject, 72 characters or fewer, no trailing period.
@@ -24,5 +24,5 @@ Create one Conventional Commit for the intended current changes.
 - Do not commit `.env`, credentials, or keys.
 - If the diff is not understood, stop.
 - Prefer `feat`, `fix`, `refactor`, `test`, `docs`, or `chore`.
-- The subject should say what changed. Add a body when the why, risk, or verification matters.
+- The subject should say what changed. Add a body when the reason, risk, or checks matter.
 - Never bypass hooks with `--no-verify`. If a hook fails, fix the cause or stop and report.

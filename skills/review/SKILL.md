@@ -1,24 +1,26 @@
 ---
 name: review
-description: "Review a code change for correctness, security, contracts, and tests."
+description: "Review a code change for bugs, security problems, broken behavior, and missing tests."
 user-invocable: true
 argument-hint: "[optional: file path, diff, commit, or focus area]"
 ---
 # Review
 
-Find the change from `$ARGUMENTS` or the conversation. Ask if unclear. If `REVIEW.md` exists at the repo root, follow it. Flag pre-existing problems only if the change reaches or worsens them. Do not fix anything.
+Goal: find the most important problems in a code change.
 
-Review to disprove, not confirm. Treat confident prose as non-evidence; verify behavior from code and tests.
+Do not edit files. Find the change from `$ARGUMENTS` or the conversation. Ask if unclear. If `REVIEW.md` exists at the repo root, follow it. Flag pre-existing problems only if the change reaches or worsens them.
+
+Try to prove the change wrong, not right. Trust code and tests, not confident explanations.
 
 ## Quality
 
-Check task behavior, edge cases, failure paths, security boundaries, contracts, and existing patterns. Check whether tests prove changed behavior. Flag dead code left by the change: unused variables, compatibility shims with no consumers, and comments narrating removed code.
+Check task behavior, edge cases, failure paths, security checks, function signatures, return values, data shapes, and existing patterns. Check whether tests prove the changed behavior. Flag dead code left by the change: unused variables, unused compatibility code, and comments that explain deleted code.
 
 ## Complexity And Over-Engineering
 
-Flag new dependencies when the project already has a way to do the same thing, hand-rolled code covered by the standard library or platform, abstractions with one implementation, config nobody sets, and wrappers that only delegate.
+Flag new packages when the project already has a way to do the same thing, custom code covered by the standard library or platform, abstractions with one implementation, config nobody sets, and wrappers that only call another function.
 
-For complexity findings, name what to cut and what replaces it: existing helper, standard library function, platform feature, simpler local code, or nothing.
+For complexity findings, name what to remove and what replaces it: existing helper, standard library function, platform feature, simpler local code, or nothing.
 
 ## Findings
 

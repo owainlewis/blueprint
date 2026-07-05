@@ -4,33 +4,32 @@
 
 Coding agents don't fail for lack of intelligence. They fail for lack of process: no spec, no plan, no tests, no review, just a confident 2,000-line PR nobody asked for. Blueprint fixes the process and trusts the intelligence.
 
-It encodes how the best engineering teams have always shipped: bootstrap cleanly, design when architecture is ambiguous, spec when implementation contracts or invariants matter, plan when work needs splitting, test before ship, review before merge. Core workflow skills, plus two mechanical helpers, let you run single steps yourself or loops that take whole tickets to draft PRs while you sleep.
+It encodes how strong engineering teams ship: design when architecture is unclear, write specs when behavior or interfaces need review, plan when work needs splitting, test before ship, and review before merge. Core skills, plus two small Git helpers, let you run one step yourself or take tickets all the way to PRs ready for review.
 
-Blueprint is the deliberate opposite of bloated, over-engineered skill libraries like Superpowers and GSD. No ceremony, no guardrail mazes, no thousand-line process files burning your context window before any work starts. Simplicity is clarity: a skill short enough to hold in your head is a skill an agent actually follows. And Blueprint bets on the model. Heavy frameworks assume the model is weak and wrap it in rules; Blueprint assumes the model is strong and hands it the judgment of a great senior engineer, written down. Every model release makes that bet pay off more, and the guardrails more wrong.
+Blueprint is deliberately small. No ceremony, no mazes of rules, no thousand-line process files before work starts. A short skill is easier for an agent to follow. Blueprint assumes the model is strong enough to use clear instructions and good engineering judgment.
 
 ## Principles
 
-- **Encode process, not knowledge.** Skills are workflows. Reference material lives elsewhere.
+- **Encode process, not knowledge.** Skills say what to do. Reference material lives elsewhere.
 - **Verification is non-negotiable.** Tests prove the requested behavior. Browser-rendered work is checked in a real browser. Review checks the proof is real.
-- **Bet on the model.** Smart agents, not heavy guardrails. Every model improvement makes guardrails less necessary and more likely to conflict with the model's own judgment.
+- **Bet on the model.** Use clear instructions, not heavy rules.
 - **Density over length.** Skills are as short as they can be while remaining clear.
-- **Focused skills, not sprawling catalogues.** Saying no is the discipline.
+- **Focused skills, not big catalogues.** Saying no is the discipline.
 
 ## The Shape
 
 | Phase        | Skill                      | What it does                                                                  |
 | ------------ | -------------------------- | ----------------------------------------------------------------------------- |
-| **Setup**    | `bootstrap-project`        | Start a repo with clean local docs and agent guidance                         |
-| **Design**   | `design-doc`               | Explore architecture, alternatives, and tradeoffs                             |
-| **Define**   | `spec`                     | Requirements, contracts, invariants, and implementation design                |
+| **Design**   | `design-doc`               | Explore architecture, options, and tradeoffs                                  |
+| **Define**   | `spec`                     | Requirements, interfaces, data shapes, and implementation design              |
 | **Plan**     | `plan`                     | Break work into tasks, adding phases and milestones for larger work           |
-| **Goal**     | `goal-design`              | Write Codex and Claude Code `/goal` prompts with checks, evidence, and stop rules |
+| **Goal**     | `goal-design`              | Write Codex and Claude Code `/goal` prompts with checks, proof, and stop rules |
 | **Build**    | `implement` / `tdd`        | Execute one task; tests prove acceptance                                      |
-| **Debug**    | `debug`                    | Reproduce a failure, fix it test-first when practical, and keep the guard     |
+| **Debug**    | `debug`                    | Reproduce a failure, fix it test-first when practical, and keep the test      |
 | **Improve**  | `refactor`                 | Simplify changed code without changing behavior                               |
 | **Review**   | `review`                   | Code-change correctness, security, simplicity before merge                    |
-| **Deliver**  | `task-to-pr` / `multitask` | Turn one ticket, or several tickets in parallel, into draft PRs               |
-| **Feedback** | `pr-to-ready`              | Drive an open PR with human, bot, or check feedback to merge-ready            |
+| **Deliver**  | `task-to-pr` / `multitask` | Turn one ticket, or several tickets in parallel, into PRs ready for review    |
+| **Feedback** | `pr-to-ready`              | Drive an open PR with human, bot, or check feedback to ready                  |
 | **Browser**  | `browser-verify`           | Check rendered UI, HTML, and visual docs in a real browser                    |
 
 ## The Flow
@@ -40,20 +39,20 @@ Blueprint is the deliberate opposite of bloated, over-engineered skill libraries
 flowchart TD
     Request([Feature, bug, or brief])
 
-    Ambiguous{Architecture<br/>ambiguous?}
-    Design["design-doc<br/>options + tradeoffs<br/>chosen direction"]
-    SpecGate{Contracts,<br/>invariants,<br/>or error behavior?}
+    Ambiguous{Architecture<br/>unclear?}
+    Design["design-doc<br/>options + tradeoffs<br/>chosen design"]
+    SpecGate{Interfaces,<br/>data shapes,<br/>or error behavior?}
     Spec["spec<br/>requirements + implementation design<br/>human review"]
     Split{Needs<br/>splitting?}
     Plan["plan<br/>agent-sized tasks<br/>acceptance criteria"]
-    Direct["one scoped task<br/>acceptance criteria"]
-    Handoff["tasks / tickets<br/>reviewable handoff"]
+    Direct["one task<br/>acceptance criteria"]
+    Handoff["tasks / tickets<br/>ready to build"]
 
     Count{How many<br/>tickets?}
-    Single["task-to-pr<br/>branch -> implement<br/>review + verify -> pr"]
+    Single["task-to-pr<br/>branch -> code<br/>review + verify -> PR"]
     Multi["multitask<br/>classify, isolate<br/>coordinate workers"]
-    PRs["draft PRs<br/>tests, review<br/>acceptance evidence"]
-    Ready["pr-to-ready<br/>feedback to merge-ready<br/>never merge"]
+    PRs["PRs ready for review<br/>tests, review<br/>acceptance proof"]
+    Ready["pr-to-ready<br/>feedback to ready<br/>never merge"]
 
     Request --> Ambiguous
     Ambiguous -->|yes| Design --> Spec
@@ -85,7 +84,7 @@ flowchart TD
 
 **If implementation reveals the instructions are wrong, stop.** Update the task, spec, or plan, then continue from the updated source. Do not push through stale instructions. Clarifying costs minutes; pushing through wrong instructions costs the rest of the feature.
 
-**Tests are the default verification.** The request or spec defines the testing strategy. The implementation produces tests that prove the requirements. Browser-rendered work also gets checked with `browser-verify`. `task-to-pr` adds fresh acceptance verification against the ticket before the draft PR. Review checks the proof is real and not theatre. If you want stronger code review concerns, write them into `REVIEW.md`; the review skill will pick them up.
+**Tests are the default proof.** The request or spec defines what to test. The implementation adds tests that prove the requirements. Browser-rendered work also gets checked with `browser-verify`. `task-to-pr` checks each acceptance criterion before opening the PR. Review checks that the proof is real. If you want stronger code review rules, write them into `REVIEW.md`; the review skill will pick them up.
 
 ## The Loops
 
@@ -93,15 +92,15 @@ The skills above are steps: one phase, one human checkpoint. Three skills chain 
 
 | Skill         | From                     | To                                                                         |
 | ------------- | ------------------------ | -------------------------------------------------------------------------- |
-| `task-to-pr`  | a ticket                 | a draft PR with code, tests, fresh-subagent review, acceptance verification, and evidence |
-| `multitask`   | several tickets          | several draft PRs, one isolated worker lane per ticket or dependency group |
-| `pr-to-ready` | an open PR with human, bot, or check feedback | a merge-ready PR with checks passing                    |
+| `task-to-pr`  | a ticket                 | a PR ready for review, with code, tests, another review, acceptance checks, and proof |
+| `multitask`   | several tickets          | several PRs ready for review, one separate worker per ticket or dependent group |
+| `pr-to-ready` | an open PR with human, bot, or check feedback | a PR that is ready to merge, with checks passing |
 
-Loops keep the ticket updated as they work: status moves, comments with verification evidence, and PR links.
+Loops keep the ticket updated as they work: status moves, comments with proof, and PR links.
 They stop at human checkpoints.
 Merging is always a human decision.
 
-`task-to-pr` is the single-ticket loop: it resolves the ticket, creates a branch, implements the acceptance criteria, reviews the diff, verifies acceptance, opens a draft PR, and writes evidence back to the ticket.
+`task-to-pr` is the single-ticket loop: it reads the ticket, creates a branch, implements the acceptance criteria, reviews the diff, checks acceptance, opens a PR ready for review, handles current feedback, and writes proof back to the ticket.
 
 `multitask` is the coordinator-worker loop for several tickets at once:
 
@@ -111,15 +110,15 @@ flowchart TD
     Tickets["ticket list<br/>LIN-101<br/>LIN-102<br/>LIN-103"]
     Coordinator["multitask coordinator<br/>read tickets + touched code<br/>classify independence"]
     Decision{Independent?}
-    Parallel["parallel lanes<br/>separate worktrees<br/>separate branches"]
-    Sequential["sequential lane<br/>shared files, schema<br/>or assumptions"]
+    Parallel["parallel workers<br/>separate worktrees<br/>separate branches"]
+    Sequential["one worker<br/>shared files, schema<br/>or assumptions"]
 
     WorkerA["worker A<br/>task-to-pr LIN-101"]
     WorkerB["worker B<br/>task-to-pr LIN-102"]
     WorkerC["worker C<br/>task-to-pr LIN-103"]
     WorkerD["worker<br/>task-to-pr in order"]
 
-    Fleet["fleet report<br/>ticket, branch, PR<br/>status, evidence"]
+    Fleet["worker report<br/>ticket, branch, PR<br/>status, proof"]
     Human["human review<br/>merge decision stays human"]
 
     Tickets --> Coordinator --> Decision
@@ -150,7 +149,7 @@ flowchart TD
     class Fleet,Human report;
 ```
 
-Each worker still runs the full `task-to-pr` workflow for exactly one ticket: `branch` -> `implement` -> `review` -> acceptance verification -> `pr` -> ticket update. The coordinator does not edit code; it partitions work, starts isolated lanes, monitors failures, and reports the fleet.
+Each worker still handles exactly one ticket: branch, code, tests, review, acceptance checks, PR, current feedback, and ticket update. The coordinator does not edit code; it splits work, starts separate workers, watches failures, and reports the result.
 
 ## Running Unattended
 
@@ -161,7 +160,7 @@ The loops above still start when you invoke them. They can also run on a schedul
 flowchart LR
     Ideas([Ideas, specs,<br/>rough captures])
     Ready["Ready<br/>agents file labeled issues<br/>spec loop resolves decisions"]
-    Work["Work<br/>claim one ready issue<br/>task-to-pr to draft PR"]
+    Work["Work<br/>claim one ready issue<br/>task-to-pr to PR"]
     Review["Review<br/>humans, bots, checks<br/>pr-to-ready fixes feedback"]
     Merge([Human merges])
 
@@ -178,15 +177,15 @@ flowchart LR
     class Review review;
 ```
 
-1. **Ready**: turn ideas and specs into agent-ready issues. The agent filing an issue judges it at creation: decision-complete work gets `agent:ready`; a real problem with open decisions gets `needs:spec`, and the spec loop turns it into a reviewed spec. Nothing unjudged enters the tracker.
-2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `task-to-pr` to a draft PR, with the ticket as the audit trail. The loop throttles itself on review capacity: when too many agent PRs await review, it stops starting new work.
+1. **Ready**: turn ideas and specs into issues a new agent can do. The agent filing an issue judges it at creation: decided work gets `agent:ready`; real work with open decisions gets `needs:spec`, and the spec loop turns it into a reviewed spec. Nothing unjudged enters the tracker.
+2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `task-to-pr` to a PR ready for review, with the ticket as the work record. The loop throttles itself on review capacity: when too many agent PRs await review, it stops starting new work.
 3. **Review**: humans, review bots, and checks leave feedback. A review-watch loop runs `pr-to-ready` after a short grace window, repeats until the PR is ready or blocked, and a human merges.
 
 Humans do three things: flip `needs:spec` to `agent:ready` after reviewing a spec, review PRs when judgment is needed, and merge.
 Agents do everything else.
 
 `goal-design` is the pre-flight skill for Codex and Claude Code `/goal` prompts.
-It turns fuzzy intent into a clear goal with a finish line, required checks, evidence, and stop rules.
+It turns fuzzy intent into a clear goal with a finish line, required checks, proof, and stop rules.
 Scheduled loops and issue-tracker automations are separate runbooks; use `goal-design` only for the `/goal` prompt inside an attended agent session.
 The definition of ready and the label state machine live in [AGENTS.md](AGENTS.md); setup, triggers, and copy-pasteable loop prompts live in [guides/loops.md](guides/loops.md).
 
@@ -200,27 +199,26 @@ Core workflows:
 
 | Skill               | Purpose                                                                                           |
 | ------------------- | ------------------------------------------------------------------------------------------------- |
-| `bootstrap-project` | Bootstrap a new repo with docs, license, and agent guidance                                      |
-| `design-doc`        | Decide architecture, alternatives, and tradeoffs                                                   |
-| `spec`              | Specify implementation requirements, contracts, and invariants                                     |
-| `plan`              | Break input into reviewable tasks, with phase goals and milestones when useful                     |
-| `goal-design`       | Write `/goal` prompts with clear done conditions, checks, evidence, and stop rules |
+| `design-doc`        | Decide architecture, options, and tradeoffs                                                        |
+| `spec`              | Specify requirements, interfaces, data shapes, and behavior that must not change                    |
+| `plan`              | Break input into tasks, with phase goals and milestones when useful                                |
+| `goal-design`       | Write `/goal` prompts with clear done conditions, checks, proof, and stop rules |
 | `implement`         | Execute a single task                                                                             |
 | `tdd`               | Test-first variant of implement                                                                   |
 | `debug`             | Reproduce and fix a failure test-first when practical                                             |
 | `refactor`          | Simplify changed code without changing behavior                                                   |
 | `review`            | Local code review                                                                                 |
-| `task-to-pr`        | Run the loop from ticket to draft PR                                                              |
-| `multitask`         | Run several tickets to draft PRs in parallel                                                      |
+| `task-to-pr`        | Run the loop from ticket to PR ready for review                                                    |
+| `multitask`         | Run several tickets to PRs in parallel                                                            |
 | `pr`                | Commit, push, and open a PR                                                                       |
-| `pr-to-ready`       | Drive an open PR with live feedback to merge-ready                                                |
+| `pr-to-ready`       | Drive an open PR with live feedback to ready                                                       |
 | `browser-verify`    | Verify browser-rendered work                                                                      |
 
 Helper entry points:
 
 | Skill    | Purpose                       |
 | -------- | ----------------------------- |
-| `branch` | Create a traceable Git branch |
+| `branch` | Create a Git branch with the ticket ID or task name |
 | `commit` | Conventional commit           |
 
 `branch` and `commit` are helper entry points, not core workflows. They stay installable so `task-to-pr`, `multitask`, and `pr` can expose the full delivery path consistently.
@@ -257,19 +255,18 @@ Core workflows:
 
 | Skill               | What it does                                                                                                                                            | Example                                              |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
-| `bootstrap-project` | Starts a new or empty repo with README, license, `.gitignore`, `AGENTS.md`, and docs                                                                          | `Bootstrap this repo for a new macOS editor project` |
-| `design-doc`        | Writes `docs/<design-slug>/design.md`: architecture, alternatives, tradeoffs, and cross-cutting concerns                                                | `Write a design doc for multi-tenant auth`           |
-| `spec`              | Writes `docs/<feature-slug>/spec.md`: requirements, contracts, invariants, and implementation design                                                     | `Write a spec for user-auth`                         |
+| `design-doc`        | Writes `docs/<design-slug>/design.md`: architecture, options, tradeoffs, and risks                                                                       | `Write a design doc for multi-tenant auth`           |
+| `spec`              | Writes `docs/<feature-slug>/spec.md`: requirements, interfaces, data shapes, and implementation design                                                   | `Write a spec for user-auth`                         |
 | `plan`              | Breaks a spec, brief, or request into tasks sized for agents, review, and rollback                                                                      | `Create a plan for user-auth`                        |
-| `goal-design`       | Writes Codex and Claude Code `/goal` prompts with clear checks, evidence, and stop rules                                                               | `Write a goal for this ticket-to-PR task`            |
-| `implement`         | Executes one scoped change with tests and verification                                                                                                  | `Implement LIN-123 from user-auth`                   |
+| `goal-design`       | Writes Codex and Claude Code `/goal` prompts with clear checks, proof, and stop rules                                                                   | `Write a goal for this ticket-to-PR task`            |
+| `implement`         | Executes one task with tests and checks                                                                                                                  | `Implement LIN-123 from user-auth`                   |
 | `tdd`               | Implements behavior test-first                                                                                                                          | `Use TDD for retry logic in the API client`          |
 | `debug`             | Finds the root cause of a failure, fixes it test-first when practical, and leaves a regression test                                                     | `Debug the failing retry test`                       |
 | `refactor`          | Improves code shape without changing behavior                                                                                                           | `Refactor the current diff`                          |
 | `review`            | Reviews code changes for correctness, security, simplicity, robustness, and tests                                                                       | `Review the current diff`                            |
-| `task-to-pr`        | Runs the loop from ticket to draft PR: fetch the ticket, implement, test, fresh-subagent review, verify acceptance, open the PR, and keep the ticket updated with evidence | `task-to-pr LIN-123` |
-| `multitask`         | Coordinates several tickets to draft PRs at once: classify dependencies, isolate worker lanes, run `task-to-pr` per ticket, and report the fleet        | `multitask LIN-101 LIN-102 LIN-103`                  |
-| `pr`                | Commits intended changes, pushes the branch, and opens a clear draft PR                                                                                 | `Open a draft PR for this change`                    |
+| `task-to-pr`        | Runs the loop from ticket to PR: fetch the ticket, implement, test, get another review, check acceptance, open the PR, handle current feedback, and keep the ticket updated with proof | `task-to-pr LIN-123` |
+| `multitask`         | Coordinates several tickets to PRs at once: group dependent work, start separate workers, give each worker a complete prompt, and report the result | `multitask LIN-101 LIN-102 LIN-103`                  |
+| `pr`                | Commits intended changes, pushes the branch, and opens a clear PR                                                                                       | `Open a PR for this change`                          |
 | `pr-to-ready`       | Inspects live PR state, fixes still-actionable feedback, verifies checks, and reports merge readiness; never merges                                     | `Is PR #42 ready to merge?`                          |
 | `browser-verify`    | Verifies rendered UI, HTML, visual docs, and browser-facing behavior in a real browser                                                                  | `Browser-verify the local HTML report`               |
 
@@ -277,34 +274,34 @@ Helper entry points:
 
 | Skill    | What it does                                                 | Example                                 |
 | -------- | ------------------------------------------------------------ | --------------------------------------- |
-| `branch` | Creates a traceable Git branch with the ticket ID when available | `Create a branch for LIN-123 user-auth` |
+| `branch` | Creates a Git branch with the ticket ID when available | `Create a branch for LIN-123 user-auth` |
 | `commit` | Stages intended changes and writes one clear Conventional Commit | `Commit the current changes`            |
 
 ## Agent Instructions
 
 Blueprint creates instructions for agents. Sometimes that instruction is a one-sentence prompt. Sometimes it is an issue tracker item. Sometimes it is a design doc or markdown spec in the repo. The format should match the work.
 
-Design docs default to `docs/<design-slug>/design.md`: a lightweight architecture artifact for ambiguous decisions, alternatives, tradeoffs, and cross-cutting concerns.
+Design docs default to `docs/<design-slug>/design.md`: a short architecture doc for unclear decisions, options, tradeoffs, and risks.
 
-One spec lives at `docs/<feature-slug>/spec.md`. External requirements flow into it; the spec is the artifact that brings context into the codebase.
+One spec lives at `docs/<feature-slug>/spec.md`. Requirements flow into it; the spec is the file that brings background into the codebase.
 
-Plans are transport, not durable artifacts. They go to exactly one destination: tracker issues when you ask or the repo runs an unattended loop, `docs/<feature-slug>/plan.md` when there is a feature directory, or chat. When tasks go to the tracker, no plan doc is written; the issues are the plan.
+Plans are temporary. They go to exactly one place: tracker issues when you ask or the repo runs without a human present, `docs/<feature-slug>/plan.md` when there is a feature directory, or chat. When tasks go to the tracker, no plan doc is written; the issues are the plan.
 
-Use the full pipeline for work that touches contracts, schemas, multiple files, or invariants. For trivial changes, just do them. For exploration, explore without manufacturing fake specs, plans, or issue tracker entries.
+Use the full pipeline for work that touches interfaces, schemas, multiple files, or behavior that must not change. For trivial changes, just do them. For exploration, explore without making fake specs, plans, or issue tracker entries.
 
 ## Philosophy
 
-**Specs are prompts with weight.** A spec is an instruction with enough structure to make decisions reviewable. Once the code is right, the spec's job is done.
+**Specs are prompts with weight.** A spec is an instruction with enough structure to make decisions easy to review. Once the code is right, the spec's job is done.
 
-**Do not confuse planning with prompting.** Professional teams do planning in the systems they already use: issue trackers, docs, design reviews, meetings, and PRs. Blueprint turns that context into the distilled instruction an agent needs.
+**Do not confuse planning with prompting.** Teams do planning in the systems they already use: issue trackers, docs, design reviews, meetings, and PRs. Blueprint turns that background into the clear instruction an agent needs.
 
-**Compress context.** Every word competes for attention. Cut restated rules, overlap, padding, and preamble. Keep constraints, exact names, commands, paths, schemas, and examples that carry meaning.
+**Compress context.** Every word competes for attention. Cut repeated rules, overlap, padding, and preamble. Keep limits, exact names, commands, paths, schemas, and examples that matter.
 
-**Agent inputs only.** Blueprint is not an issue tracker, architecture review board, or release process. It turns external context into high-quality instructions for coding agents. That's the entire job.
+**Agent inputs only.** Blueprint is not an issue tracker, architecture review board, or release process. It turns outside information into clear instructions for coding agents. That's the entire job.
 
 ## Example
 
-The [examples/](examples/) folder shows sample Blueprint artifacts.
+The [examples/](examples/) folder shows sample Blueprint files.
 
 Design doc example:
 

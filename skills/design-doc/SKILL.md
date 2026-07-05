@@ -1,52 +1,25 @@
 ---
 name: design-doc
-description: "Write a lightweight technical design document for ambiguous or consequential architecture decisions before implementation."
+description: "Write a short design document for unclear or important architecture decisions before implementation."
 user-invocable: true
 argument-hint: "<system, feature, architecture question, repo path, or design brief>"
 ---
 
 # Design Doc
 
-Write an architecture design doc for a decision with ambiguity, tradeoffs, cross-cutting concerns, or future maintenance risk. If the solution is obvious, recommend `spec` or `implement` instead.
+Goal: write a short design doc for human review.
 
 ## Workflow
 
-### 1. Ground
-
-- Treat the full argument as the design brief unless the user names a feature or path.
-- Derive a kebab-case slug if no name is given.
-- Read referenced docs, code, specs, plans, and architecture notes so the design fits the system as it exists.
-- Identify stakeholders, goals, non-goals, constraints, cross-cutting concerns, and decisions that need human review.
-- Ask only when a missing fact would materially change the design. Ask one question at a time with your recommended answer.
-
-### 2. Write
-
-Write `docs/<design-slug>/design.md`. Prefer 1-3 pages unless the architecture needs more.
-
-- **Status**: Draft, In Review, Approved, or Superseded.
-- **Summary**: the problem and recommended direction in a few sentences.
-- **Context and Scope**: objective background, current system, and what this doc covers.
-- **Goals**: outcomes this design must achieve.
-- **Non-Goals**: reasonable adjacent outcomes this design deliberately excludes.
-- **Constraints**: technical, product, migration, compatibility, operational, cost, or time constraints.
-- **Proposed Design**: the chosen architecture, starting high-level before details.
-- **Architecture Views** *(when they clarify the decision)*: system context, data flow, runtime, deployment, or component diagrams.
-- **Interfaces and Data** *(when relevant)*: API, event, schema, storage, or contract changes that affect the design.
-- **Alternatives Considered**: plausible options and why they lose under the stated goals and constraints.
-- **Tradeoffs**: what the chosen design gains, gives up, risks, or postpones.
-- **Cross-Cutting Concerns**: security, privacy, observability, reliability, performance, cost, and operations where relevant.
-- **Rollout and Migration** *(when relevant)*: how to ship, migrate, verify, and back out safely.
-- **Open Questions**: decisions or facts still unresolved.
-- **Decision**: the recommendation, assumptions, and who needs to review or approve it.
-
-### 3. Pause
-
-Stop after writing. Do not continue into `spec`, `plan`, or implementation until the human confirms the design.
+1. Read the brief, linked docs, code, specs, plans, and design notes. Derive a kebab-case design slug if needed.
+2. Identify goals, what not to solve, limits, options, tradeoffs, risks, and open questions. Ask one question at a time, with a recommended answer, only when a missing fact would change the proposed design.
+3. Write `docs/<design-slug>/design.md`. Prefer 1-3 pages.
+4. Include: status, summary, background, goals, what not to solve, limits, proposed design, other options, tradeoffs, risks, rollout, open questions, and decision. Omit sections that do not apply.
+5. Stop after writing. Do not continue into spec, plan, or implementation until the human confirms the design.
 
 ## Rules
 
-- The document exists to make reasoning reviewable, not to document every implementation step.
-- Focus on tradeoffs, alternatives, and constraints code will not explain later.
-- Use diagrams only when they clarify relationships, flows, or deployment.
-- Do not copy full schemas, APIs, or code unless the exact shape is central to the decision.
-- Include enough decision context for future maintenance.
+- Make the design choice easy to review.
+- Focus on decisions code will not explain later.
+- Use diagrams only when they clarify structure, flow, or deployment.
+- Do not copy full schemas, APIs, or code unless the exact shape is central.
