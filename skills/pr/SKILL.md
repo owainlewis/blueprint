@@ -7,20 +7,15 @@ argument-hint: "[optional: PR title, base branch, or draft|ready]"
 
 # PR
 
-Goal: open a pull request for the finished branch.
-
-## Workflow
-
-1. If still on the default branch, create or switch to a task branch before pushing.
-2. Commit uncommitted intended changes with a Conventional Commit subject. Stage only intended files.
-3. Push the branch.
-4. Open the PR with `gh` or GitHub tools. Open it ready for review by default. Use draft only when the user asks or the work is known to be incomplete. Write the title like a commit subject: in squash-merge repos it becomes the commit on the default branch.
-5. Write the body from the diff and work done: what changed and why, ticket link when one exists, tests and checks run with results, review issues fixed, and anything not checked.
-6. Report the PR URL.
+1. If still on the default branch, create or switch to a task branch first.
+2. Commit intended changes with a Conventional Commit subject. Stage only intended files.
+3. Push and open the PR, ready for review by default, draft only when asked or the work is known incomplete. Title reads like a commit subject: in squash-merge repos it becomes the commit on the default branch.
+4. Write the body from the diff: what changed and why, ticket link when one exists, checks run with results, anything not checked.
+5. Report the PR URL.
 
 ## Rules
 
-- One PR per branch. If one is already open, push and update its description instead of opening another. Preserve human edits to the body: update only what the new commits change, never rewrite the whole description.
+- One PR per branch. If one is open, push and update it. Preserve human edits to the body: update only what the new commits change.
 - Follow the repo's PR template when one exists.
-- Do not claim checks that did not run.
-- If push or PR creation fails, keep the branch and commit local and report the exact failure.
+- Never claim checks that didn't run.
+- If push or PR creation fails, keep the work local and report the exact failure.
