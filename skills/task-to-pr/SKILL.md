@@ -7,29 +7,23 @@ argument-hint: "<ticket reference> e.g. JIRA-123, LIN-123, github#456, https://g
 
 # Task To PR
 
-Goal: turn one ticket into a PR that is ready for review, or explain why it cannot be done.
+1. Resolve the ticket: problem, acceptance criteria, PR rules. Stop if it's unclear, already has a PR, spans unrelated work, or needs missing secrets or decisions.
+2. Work in an isolated branch or worktree named with the ticket ID. Protect unrelated local changes.
+3. Implement the smallest complete change. Add or update tests, and docs when user-facing behavior changed.
+4. Run focused checks first, wider ones when shared behavior changed.
+5. Get the diff reviewed by another agent or reviewer. If none is available, self-review, and don't push unless the user accepts that limitation.
+6. Check each acceptance criterion against the ticket. Unmet required criteria block the PR.
+7. Commit with a Conventional Commit subject and ticket ID, push, open a PR ready for review. Body: ticket link, summary, acceptance status, check results, review status.
+8. Handle checks and feedback that arrive during this run: fix actionable items, re-check, push. Stop when clean, when nothing arrives after a reasonable wait, or when a human decision is needed.
+9. Update the ticket with the PR link and proof, move it to the closest review state.
+10. Report ticket, branch, PR URL, checks, feedback handled, and anything blocked or unchecked.
 
-## Workflow
+## Rules
 
-1. Resolve the ticket. Capture the problem, acceptance criteria, background, and PR rules. Stop if it is unclear, already has a PR, spans unrelated work, or needs missing secrets or decisions.
-2. Prepare an isolated workspace. Inspect `git status --short`, protect unrelated changes, and use a dedicated branch or worktree with the ticket ID when available.
-3. Implement the smallest complete change. Add or update tests. Update docs or generated-doc sources when behavior, config, public functions, commands, routes, or user-facing flows change.
-4. Check locally. Run focused tests first, then wider checks when shared behavior changed. Do not open a PR with failing relevant checks or missing acceptance criteria unless the user explicitly asks for an early draft.
-5. Ask another agent or reviewer to review the code before PR. Fix real issues about this ticket and re-check. If no other reviewer is available, self-review for obvious issues, but do not push or open a PR unless the user explicitly accepts that limitation.
-6. Separately check each acceptance criterion against the ticket. Treat missing or partly done required criteria as things that block the PR. Fix real blocking issues and re-check.
-7. Commit intended changes with a Conventional Commit subject, include the ticket ID when available, push, and open a PR ready for review. Use draft only when the user explicitly asked for an early or incomplete PR. The PR body must include ticket link, summary, acceptance status, check results, and review status.
-8. After opening the PR, wait for checks and review feedback available during this run. Fix actionable feedback as it arrives, re-check, and push updates. Stop when checks pass, no current actionable feedback remains, feedback has not arrived after a reasonable wait, or a human decision is needed.
-9. Update the ticket with PR link and proof, then move it to the closest existing review state when accessible.
-10. Report ticket, branch or worktree, commit, PR URL, checks, review feedback handled, and anything blocked or unchecked.
-
-## Boundaries
-
-- One ticket, one branch, one PR. For a list of tickets, split the work into one separate worker per ticket.
-- Do not merge. After the PR opens, handle checks and review feedback that arrive during the run. Long-running review watching is separate unless the user asks for it.
-- If a coordinator or goal is watching the PR, report the PR and proof instead of polling inside this workflow.
-- Prefer worktrees when the current checkout has local changes, is risky, is already in use, or will run without a human present.
-- Do not open a PR with known failing relevant tests or missing required acceptance criteria unless explicitly asked to create an early draft, and disclose the failure clearly.
-- Do not expand the task because review, checks, or a bot suggested a nice-to-have refactor.
-- If a status update, push, or PR creation fails, keep the work local when safe and report exactly what failed.
-- Keep branches and worktrees intact on failure; do not clean them up unless the user asks.
-- Runs without a human present report through the ticket, not chat. When blocked, comment proof, apply the documented needs-human label, release any claim label, and exit cleanly.
+- One ticket, one branch, one PR. A list of tickets means one worker per ticket.
+- Never merge. Long-running review watching is a separate run unless asked.
+- Don't open a PR with failing relevant checks or unmet required criteria unless the user asks for an early draft, and disclose it.
+- Don't expand the task for nice-to-have suggestions from review, checks, or bots.
+- Prefer a worktree when the checkout has local changes, is in use, or runs unattended.
+- On failure, keep work local, keep branches and worktrees intact, report exactly what failed.
+- Unattended runs report through the ticket, not chat. When blocked: comment proof, apply the needs-human label, release any claim label, exit cleanly.
