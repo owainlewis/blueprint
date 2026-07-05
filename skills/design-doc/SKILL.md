@@ -1,25 +1,52 @@
 ---
 name: design-doc
-description: "Write a short design document for unclear or important architecture decisions before implementation."
+description: "Write a short design document for unclear or important architecture decisions before implementation. Use when a decision is expensive to reverse or crosses team boundaries."
 user-invocable: true
 argument-hint: "<system, feature, architecture question, repo path, or design brief>"
 ---
 
 # Design Doc
 
-Goal: write a short design doc for human review.
-
-## Workflow
-
-1. Read the brief, linked docs, code, specs, plans, and design notes. Derive a kebab-case design slug if needed.
-2. Identify goals, what not to solve, limits, options, tradeoffs, risks, and open questions. Ask one question at a time, with a recommended answer, only when a missing fact would change the proposed design.
-3. Write `docs/<design-slug>/design.md`. Prefer 1-3 pages.
-4. Include: status, summary, background, goals, what not to solve, limits, proposed design, other options, tradeoffs, risks, rollout, open questions, and decision. Omit sections that do not apply.
-5. Stop after writing. Do not continue into spec, plan, or implementation until the human confirms the design.
+1. Read the brief and any linked docs, code, or plans. Ask a question, one at a time with a recommended answer, only when a missing fact would change the design.
+2. Write `docs/<design-slug>/design.md`, 1-3 pages, using the template below. Omit sections that don't apply.
+3. Stop after writing. Don't continue into spec, plan, or implementation until the human confirms.
 
 ## Rules
 
-- Make the design choice easy to review.
-- Focus on decisions code will not explain later.
-- Use diagrams only when they clarify structure, flow, or deployment.
-- Do not copy full schemas, APIs, or code unless the exact shape is central.
+- Focus on decisions code won't explain later.
+- Don't copy full schemas, APIs, or code unless the exact shape is central.
+- Leave Status as Draft and Decision empty. Both are filled during review.
+
+## Template
+
+    # <Title>
+
+    **Status:** Draft | In review | Approved
+    **Author:** <name>  **Date:** <date>
+
+    ## Summary
+    One paragraph: the problem, the proposed solution, and why.
+
+    ## Goals
+    What this design must achieve.
+
+    ## Non-goals
+    What it deliberately does not solve.
+
+    ## Proposed design
+    How it works. Structure, data flow, key interfaces. Diagram only if it clarifies.
+
+    ## Alternatives and tradeoffs
+    Each option considered, why it lost. This is the section reviewers judge.
+
+    ## Risks
+    What could go wrong and how it's mitigated.
+
+    ## Rollout
+    How it ships: migration, flags, backout.
+
+    ## Open questions
+    Decisions still needed and from whom.
+
+    ## Decision
+    Filled in after review: what was decided, by whom, when.
