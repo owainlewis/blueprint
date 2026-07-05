@@ -5,40 +5,18 @@ user-invocable: true
 argument-hint: "<task reference or behavior> e.g. 'LIN-123' or 'retry logic for API client'"
 ---
 
-# Test-Driven Development
+# TDD
 
-Goal: write the failing test first, then make it pass.
-
-## Workflow
-
-### 1. Understand
-
-- Read the request, task, issue tracker item, plan, spec, and relevant code as available.
-- Identify the desired behavior, current function signatures, return values, data shapes, failure paths, and checks.
-- If a spec exists, note decisions, behavior that must not change, and test plan.
-- Ask before writing tests when missing information would change behavior, what to change, safety, function signatures, return values, data shapes, or checks.
-
-### 2. Red
-
-- Write the smallest failing test that proves the desired behavior or reproduces the bug.
-- Run it and confirm it fails for the expected reason.
-
-### 3. Green
-
-- Write the minimum implementation needed to pass the test.
-- Preserve existing function signatures, return values, data shapes, and user-visible behavior unless the task explicitly changes them.
-- Add failure-path tests where they matter.
-
-### 4. Refine
-
-- Simplify code and tests while they keep passing.
-- Run the focused checks first, then wider project checks, before finishing.
-- Report the test that failed before the fix, passed after the fix, and final checks.
+1. Read the request, its sources, and the relevant code. Ask before writing tests only when a missing decision would change behavior, interfaces, or checks.
+2. Red: write the smallest failing test that proves the behavior or reproduces the bug. Run it and confirm it fails for the expected reason.
+3. Green: write the minimum implementation that passes. Don't change existing interfaces or user-visible behavior unless the task requires it. Add failure-path tests where they matter.
+4. Refine: simplify code and tests while they keep passing. Run focused checks, then wider ones.
+5. Report the test that failed before, passes after, and final checks.
 
 ## Rules
 
-- Do not write implementation code before a failing test for the behavior.
-- If an assumption is low-risk, make it explicit and keep moving.
+- No implementation code before a failing test for the behavior.
+- State low-risk assumptions and keep moving.
 - Tests describe behavior, not implementation details.
 - Prefer real boundaries over mocks when practical.
-- Skip TDD for documentation, formatting, or non-behavioral scaffolding work.
+- Skip TDD for docs, formatting, or non-behavioral scaffolding.
