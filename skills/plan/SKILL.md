@@ -10,12 +10,8 @@ argument-hint: "<spec path, feature slug, task reference, or planning input>"
 1. Read the input, linked files, and relevant code. Ask if context is missing.
 2. Group tasks into milestones only when the effort is large. Each milestone has one clear result.
 3. Prefer tasks that deliver user-visible progress. Order by dependency and risk.
-4. Each task says what should be true, why it matters, what must not change, and how to verify it. Not how to implement it, unless the implementation detail is a real requirement.
+4. Write each task with the template below. Say what should be true, not how to implement it, unless the implementation detail is a real requirement.
 5. File tasks in the project's issue tracker. Use the tracker the repo already uses; default to GitHub Issues if unclear. Deliver to `docs/<feature-slug>/plan.md` or chat only when the user asks.
-
-## Task Fields
-
-Title, goal, background, acceptance criteria, verify steps. Add references, constraints, dependencies, labels, or milestone only when they carry real information.
 
 ## Rules
 
@@ -24,3 +20,25 @@ Title, goal, background, acceptance criteria, verify steps. Add references, cons
 - Split tasks that mix unrelated decisions or need too many acceptance criteria.
 - Don't list files to edit or functions to add unless that detail is part of the requirement.
 - Before filing, check for existing issues covering the same work. Follow the repo's issue templates and labels when present.
+
+## Template
+
+    # <Task title: imperative, one outcome>
+
+    ## Goal
+    What should be true when this task is done, and why it matters.
+
+    ## Background
+    Context a new agent needs: links to the spec, design doc, or related issues.
+
+    ## Acceptance criteria
+    - Observable results, each checkable on its own.
+
+    ## Verify
+    Runnable commands or steps that prove each criterion.
+
+    ## Must not change
+    Existing behavior, interfaces, or data this task must preserve. Omit if none.
+
+    ## Depends on
+    Tasks or decisions that must land first. Omit if none.
