@@ -7,16 +7,16 @@ argument-hint: "<task reference or behavior> e.g. 'LIN-123' or 'retry logic for 
 
 # Test-Driven Development
 
-Use for behavioral changes where a failing test can define the desired outcome before implementation.
+Goal: write the failing test first, then make it pass.
 
 ## Workflow
 
 ### 1. Understand
 
 - Read the request, task, issue tracker item, plan, spec, and relevant code as available.
-- Identify the desired behavior, existing contracts, failure paths, and verification.
-- If a spec exists, note its invariants, decisions, and testing strategy.
-- Ask before writing tests when missing information would materially change behavior, scope, safety, contracts, data shape, or verification.
+- Identify the desired behavior, current function signatures, return values, data shapes, failure paths, and checks.
+- If a spec exists, note decisions, behavior that must not change, and test plan.
+- Ask before writing tests when missing information would change behavior, what to change, safety, function signatures, return values, data shapes, or checks.
 
 ### 2. Red
 
@@ -26,14 +26,14 @@ Use for behavioral changes where a failing test can define the desired outcome b
 ### 3. Green
 
 - Write the minimum implementation needed to pass the test.
-- Preserve existing contracts unless the task explicitly changes them.
+- Preserve existing function signatures, return values, data shapes, and user-visible behavior unless the task explicitly changes them.
 - Add failure-path tests where they matter.
 
 ### 4. Refine
 
-- Simplify code and tests while they stay green.
-- Run the focused checks first, then the project's wider checks, before finishing.
-- Report the failing-then-passing test and final verification.
+- Simplify code and tests while they keep passing.
+- Run the focused checks first, then wider project checks, before finishing.
+- Report the test that failed before the fix, passed after the fix, and final checks.
 
 ## Rules
 

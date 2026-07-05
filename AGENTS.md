@@ -1,18 +1,16 @@
 # Working in Blueprint
 
-Blueprint encodes world-class software engineering and agentic engineering practice: design when architecture is ambiguous, spec when implementation contracts or invariants matter, plan when work needs splitting, test before ship, refactor when code needs simplifying, review before merge, drive PR feedback to merge-ready with judgment.
+Blueprint encodes software engineering practice for coding agents: design when architecture is unclear, write specs when behavior or interfaces need review, plan when work needs splitting, test before ship, refactor when code needs simplifying, review before merge, and drive PR feedback to ready with judgment.
 
 If you are an AI agent working in this repo, follow this guidance.
 
-## The Three Flows
+## The Two Flows
 
-Blueprint has three flows. The handoff between them is a project skeleton, spec, or task with acceptance criteria.
+Blueprint has two flows. The input to the next step is a spec, plan, or task with acceptance criteria.
 
-**Setup** (`bootstrap-project`): turn a new or empty repo into a clean local starting point with README, license, `.gitignore`, `AGENTS.md`, and docs. Interview the repo creator only when file-changing decisions are unclear; commit or push only when explicitly asked.
+**Decide** (`design-doc` -> `spec` -> `plan`): turn unclear work into reviewed decisions and tasks a new agent can do. Every stage pauses for human review. Start at `design-doc` when architecture, options, or tradeoffs are unclear. Use `spec` when requirements, function signatures, return values, data shapes, or error behavior need review. Use `plan` when the work just needs splitting. Skip stages when the change is small and already decided.
 
-**Decide** (`design-doc` -> `spec` -> `plan`): turn ambiguity into reviewed decisions and agent-sized tasks. Every stage pauses for human review. Start at `design-doc` when architecture, alternatives, or tradeoffs are ambiguous. Use `spec` when implementation requirements, contracts, invariants, or error behavior need review. Use `plan` when the work just needs splitting. Skip stages when the change is trivial and decision-complete.
-
-**Deliver** (`task-to-pr`): turn one task into a draft PR with the ticket as the audit trail. `task-to-pr` runs workspace preparation -> `implement` -> review subagent -> acceptance-verification subagent -> `pr`, preferring worktrees when isolation reduces risk. Use `multitask` to run several independent tickets in parallel, one isolated worker per ticket. Use `pr-to-ready` once feedback exists to drive the PR to merge-ready; merging is always a human decision. Use `implement` alone when the workspace is prepared and no PR is expected, `tdd` when a failing test can describe the behavior first, `refactor` to tidy the changed code before review, and `debug` when something breaks.
+**Deliver** (`task-to-pr`): turn one task into a PR that is ready for review, with the ticket as the record of the work. `task-to-pr` prepares the workspace, implements the change, tests it, gets another review, checks each acceptance criterion, commits, pushes, opens the PR, handles current feedback, and updates the ticket. Prefer worktrees when they reduce risk. Use `multitask` to run several independent tickets in parallel, one worker per ticket. Use `pr-to-ready` when later feedback exists; merging is always a human decision. Use `implement` alone for one code task, `tdd` when a failing test can describe the behavior first, `refactor` to simplify changed code before review, and `debug` when something breaks.
 
 Exploration is allowed without creating docs or issue tracker entries. Do not manufacture fake specs, plans, or issues for spikes.
 
@@ -20,50 +18,49 @@ Exploration is allowed without creating docs or issue tracker entries. Do not ma
 
 Decide:
 
-- `bootstrap-project`: bootstrap a new or empty repository with clean docs, license, and agent guidance.
-- `design-doc`: write a lightweight architecture design doc when architecture or tradeoffs are ambiguous.
-- `spec`: write implementation requirements, contracts, invariants, and error behavior before coding.
-- `plan`: break a spec, brief, or request into agent-sized tasks.
-- `goal-design`: turn rough objectives into Codex or Claude Code `/goal` prompts with clear checks, evidence, and stop rules.
+- `design-doc`: write a short design doc when architecture or tradeoffs are unclear.
+- `spec`: write requirements, interfaces, data shapes, and error behavior before coding.
+- `plan`: break a spec, brief, or request into tasks a new agent can do.
+- `goal-design`: turn rough goals into Codex or Claude Code `/goal` prompts with clear checks, proof, and stop rules.
 
 Deliver:
 
-- `task-to-pr`: orchestrate one ticket to a draft PR, keeping the ticket updated with evidence; uses isolated branches/worktrees, tests, review, and acceptance verification.
-- `multitask`: run several tickets to draft PRs in parallel, one isolated worker per ticket; composes task-to-pr.
-- `implement`: turn one scoped task into a verified diff with tests.
+- `task-to-pr`: turn one ticket into a PR ready for review, keeping the ticket updated with proof; uses separate branches or worktrees, tests, review, and acceptance checks.
+- `multitask`: run several tickets to PRs in parallel, one worker per ticket.
+- `implement`: turn one task into a checked diff with tests.
 - `tdd`: test-first variant of implement.
 - `debug`: find the root cause of a failure, then fix it with a regression test first when practical.
 - `refactor`: simplify changed code without changing behavior.
 - `review`: pre-merge code review for correctness, security, simplicity, robustness, and tests.
 - `pr`: commit, push, and open a PR with a clear description.
-- `pr-to-ready`: drive an open PR with feedback to merge-ready; never merges.
+- `pr-to-ready`: drive an open PR with feedback to ready; never merges.
 - `browser-verify`: verify browser-rendered work in a real browser.
 
 Helper entry points:
 
-- `branch`: create a traceable Git branch with the ticket ID when available.
+- `branch`: create a Git branch with the ticket ID or task name.
 - `commit`: stage intended changes and write one clear Conventional Commit.
 
 ## Agents
 
-- `code-reviewer` (`agents/code-reviewer.md`): fresh-context adversarial reviewer. The subagent that `implement` and `task-to-pr` should use for their fresh review step when agent definitions are installed.
+- `code-reviewer` (`agents/code-reviewer.md`): separate reviewer. `implement` and `task-to-pr` should use it for code review when agent definitions are installed.
 
 ## Running Unattended
 
 Blueprint can run as scheduled loops over an issue tracker, with agents filing every issue. Three phases:
 
-1. **Ready**: turn ideas and specs into agent-ready issues. The agent filing an issue judges it at creation: decision-complete work gets `agent:ready`; a real problem with open decisions gets `needs:spec`. Nothing unjudged enters the tracker.
-2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `task-to-pr` to a draft PR.
+1. **Ready**: turn ideas and specs into issues a new agent can do. The agent filing an issue judges it at creation: decided work gets `agent:ready`; real work with open decisions gets `needs:spec`. Nothing unjudged enters the tracker.
+2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `task-to-pr` to a PR ready for review.
 3. **Review**: humans, review bots, and checks leave feedback. A review-watch loop runs `pr-to-ready` after a short grace window, repeats until ready or blocked, and a human merges.
 
 ### Definition of Ready
 
-An issue is agent-ready when a fresh agent could finish it without asking questions:
+An issue is ready for an agent when a new agent could finish it without asking questions:
 
-- Goal stated as an outcome, not an implementation.
-- Enough context to execute with no prior session.
+- Goal stated as a result, not an implementation.
+- Enough background to execute with no prior session.
 - Testable acceptance criteria.
-- A concrete, runnable verify step.
+- A specific check command or manual check.
 - Decision-complete: no open product or design decisions.
 
 ### Labels
@@ -85,11 +82,11 @@ Humans flip `needs:spec` to `agent:ready` after spec review, review PRs when jud
 
 - Design docs default to `docs/<design-slug>/design.md`.
 - One spec per feature, at `docs/<feature-slug>/spec.md`.
-- Specs are durable; plans are transport. A plan goes to exactly one destination: tracker issues when the user asks or the repo runs an unattended loop, `docs/<feature-slug>/plan.md` when there is a feature directory, chat otherwise.
+- Specs stay in the repo; plans are temporary. A plan goes to exactly one place: tracker issues when the user asks or the repo runs without a human present, `docs/<feature-slug>/plan.md` when there is a feature directory, chat otherwise.
 - If the task, spec, or plan is wrong, stop and update it. Do not push through.
-- Tests are the verification mechanism; review checks they are real.
+- Tests prove the change; review checks that they test the real behavior.
 - Density over length.
 
 ## Out of Scope
 
-Blueprint is not an issue tracker, architecture review board, or release process. It turns external context into high-quality instructions for coding agents. That's the entire job.
+Blueprint is not an issue tracker, architecture review board, or release process. It turns outside information into clear instructions for coding agents. That's the entire job.

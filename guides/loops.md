@@ -1,8 +1,8 @@
 # Running Blueprint as Unattended Loops
 
-Blueprint's skills run attended by default: you invoke them, they pause at human checkpoints. This guide shows how to run them unattended, as scheduled loops over an issue tracker. You write ideas down, agents turn them into specs and draft PRs, and your involvement narrows to two gates: approving specs and reviewing PRs.
+Blueprint's skills run attended by default: you invoke them, they pause at human checkpoints. This guide shows how to run them unattended, as scheduled loops over an issue tracker. You write ideas down, agents turn them into specs and PRs ready for review, and your involvement narrows to two gates: approving specs and reviewing PRs.
 
-Use `goal-design` when the `/goal` prompt inside an attended Codex or Claude Code session still needs a finish line, verifier, evidence, or stop rule.
+Use `goal-design` when the `/goal` prompt inside an attended Codex or Claude Code session still needs a finish line, check, proof, or stop rule.
 The runtime loop layer is deliberately prompts and external state, not a bespoke runner.
 Skills encode judgment that must stay consistent everywhere; the loop layer is wiring between skills for one workflow, and it gets pasted into whatever runs it: a GitHub Action, a Claude Code schedule, a Codex automation, or cron.
 Adjust the prompts to your repo.
@@ -14,7 +14,7 @@ Adjust the prompts to your repo.
 flowchart LR
     Ideas([Ideas, specs,<br/>rough captures])
     Ready["Ready<br/>agents file labeled issues<br/>spec loop resolves decisions"]
-    Work["Work<br/>claim one ready issue<br/>task-to-pr to draft PR"]
+    Work["Work<br/>claim one ready issue<br/>task-to-pr to PR"]
     Review["Review<br/>human reviews<br/>pr-to-ready fixes feedback"]
     Merge([Human merges])
 
@@ -32,7 +32,7 @@ flowchart LR
 ```
 
 1. **Ready**: plan, triage, and get work agent-ready. Agents file every issue and judge it at creation: decision-complete work gets `agent:ready`, real problems with open decisions get `needs:spec`. The spec loop turns the latter into reviewed specs; you flip the label after approving.
-2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `task-to-pr` to a draft PR, with the ticket as the audit trail.
+2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `task-to-pr` to a PR ready for review, with the ticket as the work record.
 3. **Review**: humans and review systems leave feedback on PRs. The review loop watches for that feedback, runs `pr-to-ready`, and leaves merge decisions to you.
 
 ## Labels at a Glance
@@ -56,7 +56,7 @@ The definition of ready lives in [AGENTS.md](../AGENTS.md); the full label refer
 
 ### Capture a rough idea
 
-For the thought you have mid-task and don't want to lose. The judgment is the label: the capture agent must not promote a thin idea to `ready-for-agent`.
+For the thought you have mid-task and don't want to lose. The judgment is the label: the capture agent must not promote a thin idea to `agent:ready`.
 
 ```text
 File this as an issue: <rough idea>.
@@ -172,7 +172,7 @@ One tick of the review loop.
 5. Run pr-to-ready when any human review, bot comment, unresolved
    thread, or failing required check is newer than the last agent
    activity, or when older actionable feedback is still unresolved.
-6. After pr-to-ready, comment the readiness verdict with evidence when
+6. After pr-to-ready, comment the readiness verdict with proof when
    it changes the state of play. Leave ready PRs open for human merge.
 7. Stop on needs-human findings, repeated identical failures, missing
    permissions, or unclear repo policy. Never merge.

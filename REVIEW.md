@@ -10,5 +10,5 @@ This repo contains agent skills. When reviewing changes, prefer the simplest wor
 - No hidden assumptions: avoid requiring specific repo history, global tools, platforms, or unsupported features
 - Simple language: assume agents are already smart and getting smarter
 - Make the smallest safe change that fully solves the problem
-- Preserve contracts or call out the migration clearly
+- Preserve behavior and interfaces, or call out the migration clearly
 - Handle failure paths explicitly instead of leaving them implicit

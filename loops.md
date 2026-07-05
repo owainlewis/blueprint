@@ -25,7 +25,7 @@ A goal makes sense when the valuable part is the repeated self-check:
 ```text
 Is the condition true yet?
 If not, what is the next safe bounded action?
-If continuing is unclear or unsafe, what evidence should be reported?
+If continuing is unclear or unsafe, what proof should be reported?
 ```
 
 If the task does not need that loop, it is probably just a prompt.
@@ -36,7 +36,7 @@ If the task does not need that loop, it is probably just a prompt.
 /goal
 Use <skill or workflow> to <specific outcome>.
 
-Do not stop until the outcome is proven or the work is genuinely blocked with evidence.
+Do not stop until the outcome is proven or the work is genuinely blocked with proof.
 
 Before changing anything, read <files, tools, and state>.
 
@@ -46,7 +46,7 @@ Run <specific checks> after each pass.
 
 Fix valid failures and repeat until verification is clean.
 
-Report <required evidence>.
+Report <required proof>.
 
 Stop and ask if <blocked condition>, repeated failure, or scope expansion occurs.
 
@@ -78,7 +78,7 @@ This is a real goal because the agent must find a mismatch, patch it, re-scan, a
 /goal
 Make Blueprint's public workflow docs agree with each other.
 
-Do not stop until the docs use the same skill names, workflow names, loop phases, and install guidance, or the work is blocked with evidence.
+Do not stop until the docs use the same skill names, workflow names, loop phases, and install guidance, or the work is blocked with proof.
 
 Before changing anything, read README.md, AGENTS.md, CLAUDE.md, guides/*.md, skills/*/SKILL.md, and agents/code-reviewer.md.
 
@@ -122,7 +122,7 @@ Do not stop until every skill is marked pass, patched, or needs-human.
 
 Before changing anything, read REVIEW.md, AGENTS.md, and skills/*/SKILL.md.
 
-For each skill, check trigger clarity, scope boundary, verification evidence, failure behavior, and unnecessary ceremony.
+For each skill, check trigger clarity, scope boundary, proof, failure behavior, and unnecessary ceremony.
 
 Patch one skill only when the fix is clear and behavior-preserving.
 
@@ -132,11 +132,11 @@ Re-read the changed skill before continuing.
 
 Mark the inspected skill as pass, patched, or needs-human.
 
-Stop and ask if you have made 5 skill patches, a skill's intended contract is ambiguous, or making a skill shorter would weaken safety.
+Stop and ask if you have made 5 skill patches, a skill's intended behavior is unclear, or making a skill shorter would weaken safety.
 
 The final report must list checks run.
 
-Do not change skill names, public workflow contracts, generated files, or examples.
+Do not change skill names, public workflow rules, generated files, or examples.
 ```
 
 ### 3. Skill Metadata Normalizer
@@ -149,7 +149,7 @@ This is a good goal because the verifier is concrete and the agent can keep norm
 /goal
 Make every skill in skills/*/SKILL.md use the same required frontmatter fields.
 
-Do not stop until a parser or explicit scan confirms every skill has the required fields in the expected order, or the work is blocked with evidence.
+Do not stop until a parser or explicit scan confirms every skill has the required fields in the expected order, or the work is blocked with proof.
 
 Use skills/*/SKILL.md only.
 
@@ -186,7 +186,7 @@ This is a real goal because link repair is naturally iterative: check, fix one c
 /goal
 Make all local Markdown links resolve in Blueprint's repo-authored docs.
 
-Do not stop until all local Markdown links resolve, or blocked links are reported with evidence.
+Do not stop until all local Markdown links resolve, or blocked links are reported with proof.
 
 Use repo-authored Markdown only.
 
@@ -217,7 +217,7 @@ This is a real goal because the agent may need to inspect several files, patch o
 /goal
 Make Blueprint's example artifact boundaries clear and consistent.
 
-Do not stop until the docs distinguish source prompts, regeneration scripts, generated examples, and hand-edited examples without contradiction, or the work is blocked with evidence.
+Do not stop until the docs distinguish source prompts, regeneration scripts, generated examples, and hand-edited examples without contradiction, or the work is blocked with proof.
 
 Read README.md, AGENTS.md, guides/*.md, examples/input.md, examples/regenerate.sh, examples/rag-chatbot/*.md, and examples/dispatch-control-plane/*.md.
 
@@ -258,7 +258,7 @@ Fix one clear local release blocker at a time.
 
 Keep the work local.
 
-After each fix, run the relevant check and update the release-readiness evidence.
+After each fix, run the relevant check and update the release-readiness proof.
 
 Stop and ask if you have made 5 fixes, publish tooling or network access is required, or release policy needs human approval.
 
@@ -362,4 +362,4 @@ Start with goals that touch docs only.
 
 That order moves from low-risk, mechanical cleanup toward broader release judgment.
 
-It also demonstrates the real value of `/goal`: repeated repair against evidence, not a long prompt with a slash command.
+It also demonstrates the real value of `/goal`: repeated repair against proof, not a long prompt with a slash command.

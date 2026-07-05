@@ -15,7 +15,7 @@ Judge quality:
 
 - Does the change do what the task says, including edge cases and failure paths?
 - Do the tests prove the changed behavior, or just exercise code? Tests that mock the thing under test, never run the changed branch, or assert what the code did instead of what it should do are blockers.
-- Are contracts, security boundaries, and existing patterns intact?
+- Are behavior, interfaces, security boundaries, and existing patterns intact?
 - Is anything here the task didn't ask for?
 
 Judge complexity and over-engineering:
