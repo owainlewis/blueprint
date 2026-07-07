@@ -12,8 +12,8 @@ argument-hint: "<task reference or description> e.g. 'LIN-123' or 'Task 2 from u
 3. Make the smallest complete change in the right module. Don't change public interfaces or data shapes unless the task requires it.
 4. Add or update tests for changed behavior. If a useful test isn't practical, say why and verify manually.
 5. Run the most relevant checks first, wider checks when shared or user-facing behavior changed. Fix relevant failures without expanding the task.
-6. Get the diff reviewed by another agent or reviewer before reporting or opening a PR. If none is available, self-review, and don't push or open a PR unless the user accepts that limitation.
-7. If the task expects a PR: task branch, Conventional Commit with ticket ID when available, push, open a PR ready for review. Otherwise report changed files, checks, acceptance status, review status, and anything not checked.
+6. Use a subagent to review the work. Fix any issues found. 
+7. Open a pull request for human to review
 
 ## Rules
 
