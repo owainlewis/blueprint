@@ -7,13 +7,13 @@ argument-hint: "<rough goal, task, ticket, issue set, or prompt>"
 
 # Goal Design
 
-1. Read the brief and anything it references. Ask only when the goal can't be checked from the input.
-2. Write one plain paragraph starting with `/goal`, 5-8 sentences: what to read first, what to change, what checks must pass, what proof to report, an effort budget, when to stop as blocked.
+1. Read the brief and anything it references. Ask only when the goal cannot be checked from the input.
+2. Write one plain prompt starting with `/goal`, 5-8 sentences: what to read first, what to change, what checks must pass, what proof to report, an effort budget, and when to stop as blocked.
 3. Return the prompt first. Add a note after only when useful.
 
 ## Rules
 
-- The completion condition must be provable from the agent's own output. Name the exact command and expected result; goal evaluation reads the session, it doesn't run checks itself.
+- The completion condition must be provable from the agent's own output. Name the exact command and expected result; goal evaluation reads the session, it does not run checks itself.
 - Checks are a gate, not a suggestion. Concrete proof: command results, links, files, screenshots.
 - Always include a budget: a turn, iteration, or time limit.
 - Require reviewer sign-off before PR, and a check of each acceptance criterion when criteria exist.

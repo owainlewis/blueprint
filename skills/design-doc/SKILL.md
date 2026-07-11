@@ -7,14 +7,15 @@ argument-hint: "<system, feature, architecture question, repo path, or design br
 
 # Design Doc
 
-1. Read the brief and any linked docs, code, or plans. Ask a question, one at a time with a recommended answer, only when a missing fact would change the design.
-2. Write `docs/<design-slug>/design.md`, 1-3 pages, using the template below. Omit sections that don't apply.
-3. Stop after writing. Don't continue into spec, plan, or implementation until the human confirms.
+1. Read the brief and any linked docs, code, or plans. Ask one question at a time, with a recommended answer, only when a missing fact would change the design.
+2. Write `docs/<design-slug>/design.md`, 1-3 pages, using the template below. Omit sections that do not apply.
+3. Stop after writing. Do not continue into spec, plan, or implementation until the human confirms.
 
 ## Rules
 
-- Focus on decisions code won't explain later.
-- Don't copy full schemas, APIs, or code unless the exact shape is central.
+- Make the design choice and its tradeoffs easy to review.
+- Focus on decisions code will not explain later.
+- Do not copy full schemas, APIs, or code unless the exact shape is central.
 - Leave Status as Draft and Decision empty. Both are filled during review.
 
 ## Template
@@ -33,6 +34,9 @@ argument-hint: "<system, feature, architecture question, repo path, or design br
     ## Non-goals
     What it deliberately does not solve.
 
+    ## Constraints
+    Technical, product, migration, compatibility, operational, cost, or time limits.
+
     ## Proposed design
     How it works. Structure, data flow, key interfaces. Diagram only if it clarifies.
 
@@ -40,7 +44,7 @@ argument-hint: "<system, feature, architecture question, repo path, or design br
     Each option considered, why it lost. This is the section reviewers judge.
 
     ## Risks
-    What could go wrong and how it's mitigated.
+    What could go wrong and how it is mitigated.
 
     ## Rollout
     How it ships: migration, flags, backout.

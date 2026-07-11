@@ -7,11 +7,11 @@ argument-hint: "<ticket list> e.g. LIN-101, LIN-102, LIN-103"
 
 # Multitask
 
-1. Read each ticket and the code it likely touches. Tickets that overlap in files or behavior go in one ordered group; the rest get separate workers.
-2. Give each worker its own worktree, branch, and full session. If parallel workers aren't available, run groups sequentially and say so.
+1. Read each ticket and the code it likely touches. Tickets that overlap in files, data shapes, or behavior go in one ordered group; the rest get separate workers.
+2. Give each worker its own worktree, branch, and full session. If parallel workers are not available, run groups sequentially and say so.
 3. Start each worker with a complete prompt: ticket, repo path, branch rule, acceptance criteria, checks, review rule, PR rules, report format. The worker owns the full loop from implement through PR, ticket update, and proof.
 4. Watch the workers. If one fails or invalidates an assumption another needs, stop the affected workers and report why. Report failures, never silently retry.
-5. Report every ticket: branch, PR URL, status, blockers, proof. Clean up worktrees whose PRs are open.
+5. Report every ticket: branch, PR URL, status, blockers, proof, and any worktree path. Clean up worktrees only when the repo convention says to or the user asks.
 
 ## Rules
 

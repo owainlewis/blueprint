@@ -8,8 +8,8 @@ argument-hint: "<feature description, context, or constraints>"
 # Spec
 
 1. Read the request, referenced files, and relevant code.
-2. Ask one question at a time, with a recommended answer, only when a missing decision would change behavior, interfaces, dependencies, or checks.
-3. Write `docs/<feature-slug>/spec.md`, short unless the decisions need detail, using the template below. Omit sections that don't apply.
+2. Ask one question at a time, with a recommended answer, only when a missing decision would change behavior, interfaces, dependencies, error behavior, or checks.
+3. Write `docs/<feature-slug>/spec.md`, short unless the decisions need detail, using the template below. Omit sections that do not apply.
 4. Check current versions when the spec pins runtimes, frameworks, or dependencies.
 5. Stop and ask for review. Do not plan or implement.
 
@@ -36,7 +36,7 @@ argument-hint: "<feature description, context, or constraints>"
     ## Decisions
     Choices made where implementations could differ, each with the chosen default and why.
 
-    ## Must not change
+    ## Invariants
     Existing behavior, interfaces, and data shapes this work must preserve.
 
     ## Error behavior
@@ -44,3 +44,6 @@ argument-hint: "<feature description, context, or constraints>"
 
     ## Test plan
     How each requirement gets verified: specific tests or runnable checks.
+
+    ## Out of scope
+    What this spec deliberately does not cover.
