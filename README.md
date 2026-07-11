@@ -32,7 +32,7 @@ flowchart TD
     Handoff["tasks / tickets<br/>ready to build"]
 
     Count{How many<br/>tickets?}
-    Single["task-to-pr<br/>branch -> code<br/>review + verify -> PR"]
+    Single["task-to-pr<br/>branch + worktree -> code<br/>review + verify -> PR"]
     Multi["multitask<br/>classify, isolate<br/>coordinate workers"]
     PRs["PRs ready for review<br/>tests, review<br/>acceptance proof"]
     Ready["pr-to-ready<br/>feedback to ready<br/>never merge"]
@@ -82,7 +82,7 @@ Most skills are steps: one phase, one human checkpoint. Four skills chain the st
 
 Loops keep the ticket updated as they work: status moves, comments with proof, and PR links. They stop at human checkpoints. Merging is always a human decision.
 
-`task-to-pr` is the single-ticket loop: it reads the ticket, creates a branch, implements the acceptance criteria, reviews the diff, checks acceptance, opens a PR ready for review, handles current feedback, and writes proof back to the ticket.
+`task-to-pr` is the single-ticket loop: it reads the ticket, creates a dedicated branch and worktree from the latest remote default branch, implements the acceptance criteria, reviews the diff, checks acceptance, opens a PR ready for review, handles current feedback, and writes proof back to the ticket.
 
 `milestone` is the release-slice loop: it reads open issues in a GitHub milestone, orders them by dependency and risk, then runs `task-to-pr` for each issue. It stops for human merge unless merge permission was explicit. When merging is allowed, it merges only after checks and review are clean, syncs the default branch, then continues.
 
