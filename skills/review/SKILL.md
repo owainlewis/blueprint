@@ -11,7 +11,7 @@ Do not edit files. Find the change from `$ARGUMENTS` or the conversation; ask if
 
 Try to prove the change wrong, not right. Trust code and tests, not confident explanations.
 
-## Quality
+## Check
 
 Check behavior, edge cases, failure paths, security, interfaces and data shapes, and fit with existing patterns. Check whether tests prove the changed behavior. Flag dead code left by the change.
 
@@ -27,4 +27,4 @@ List blockers, then important, then nits, each with location, severity, impact, 
 - **important**: should fix.
 - **nit**: author can ignore.
 
-End with one sentence on whether the tests actually run the changed code. Tests that don't run the changed branch, mock the function under test, or assert what the code did instead of what it should do are blockers.
+End with one sentence on whether the tests actually run the changed code, and what is missing if they do not. Tests that do not run the changed branch, mock the function under test, or only assert what the code did instead of what it should do are blockers.
