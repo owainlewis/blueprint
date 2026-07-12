@@ -1,44 +1,41 @@
 ---
 name: plan
-description: "Plan work. Break work down into outcome-based tasks for an agent to execute, optionally grouped into milestones."
+description: "Break a spec or decided brief into agent-ready tickets that each deliver a working outcome. Draft them in chat and publish them when asked."
 user-invocable: true
-argument-hint: "<spec path, feature slug, task reference, or planning input>"
+argument-hint: "<spec, brief, issue, or repo path>"
 ---
 
 # Plan
 
-1. Read the input, linked files, and relevant code. Ask if context is missing.
-2. Group tasks into milestones only when the effort is large. Each milestone has one clear result.
-3. Prefer tasks that deliver user-visible progress. Order by dependency and risk.
-4. Write each task with the template below. Say what should be true, not how to implement it, unless the implementation detail is a real requirement.
-5. File tasks in the project's issue tracker. Use the tracker the repo already uses; default to GitHub Issues if unclear. Deliver to `docs/<feature-slug>/plan.md` or chat only when the user asks.
+1. Read the input, linked material, and relevant code. Stop and list missing decisions if the work is not ready to build.
+2. Split the work into the smallest useful outcomes an agent can implement, test, and review independently. Keep dependent work in order. One ticket is fine.
+3. Write each ticket with the template below. Include enough context for a new agent with no access to this conversation.
+4. Return drafts in chat. Publish only when asked, using the requested or existing tracker such as GitHub Issues, Linear, or Jira. If access is unavailable, return the complete drafts and say why they were not published.
+5. Group tickets into milestones only when that makes the delivery order clearer.
 
-## Rules
+Prefer working slices over separate database, API, UI, or testing tickets. Do not split work just to create more tickets.
 
-- Each task must stand alone for a new agent with no additional context.
-- Acceptance criteria are observable results. Verify steps are specific and runnable.
-- Split tasks that mix unrelated decisions or need too many acceptance criteria.
-- Don't list files to edit or functions to add unless that detail is part of the requirement.
-- Before filing, check for existing issues covering the same work. Follow the repo's issue templates and labels when present.
+```markdown
+# <One working outcome>
 
-## Template
+## Goal
+What must be true when this ticket is done, and why.
 
-    # <Task title: imperative, one outcome>
+## Context
+The decisions, links, and constraints the agent needs.
 
-    ## Goal
-    What should be true when this task is done, and why it matters.
+## Acceptance criteria
+- Observable results.
 
-    ## Background
-    Context a new agent needs: links to the spec, design doc, or related issues.
+## Verify
+- Commands or manual checks that prove completion.
 
-    ## Acceptance criteria
-    - Observable results, each checkable on its own.
+## Must preserve
+- Existing behavior or interfaces that cannot change.
 
-    ## Verify
-    Runnable commands or steps that prove each criterion.
+## Out of scope
+- Related work this ticket must not absorb.
 
-    ## Must not change
-    Existing behavior, interfaces, or data this task must preserve. Omit if none.
-
-    ## Depends on
-    Tasks or decisions that must land first. Omit if none.
+## Dependencies
+- Work that must land first, and why.
+```

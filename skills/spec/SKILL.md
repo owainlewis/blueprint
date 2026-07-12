@@ -1,49 +1,38 @@
 ---
 name: spec
-description: "Write an implementation spec to docs/<feature-slug>/spec.md and pause for human review."
+description: "Write a short implementation spec at docs/<feature-slug>/spec.md and pause for review. Use when behavior, interfaces, data, or errors need decisions before coding."
 user-invocable: true
-argument-hint: "<feature description, context, or constraints>"
+argument-hint: "<feature, problem, or brief>"
 ---
 
 # Spec
 
-1. Read the request, referenced files, and relevant code.
-2. Ask one question at a time, with a recommended answer, only when a missing decision would change behavior, interfaces, dependencies, error behavior, or checks.
-3. Write `docs/<feature-slug>/spec.md`, short unless the decisions need detail, using the template below. Omit sections that do not apply.
-4. Check current versions when the spec pins runtimes, frameworks, or dependencies.
-5. Stop and ask for review. Do not plan or implement.
+1. Read the request, relevant code, and linked material.
+2. Resolve decisions that would change behavior, interfaces, data, errors, or tests. Ask one question at a time and recommend an answer. Stop if broad architecture is still undecided.
+3. Write `docs/<feature-slug>/spec.md` using the template below. Keep it short and omit sections that do not apply.
+4. Stop for human review. Do not plan or implement.
 
-## Rules
+```markdown
+# <Title>
 
-- Specify the smallest safe change that solves the problem.
-- If two implementations would behave differently, choose a default.
-- Match existing code patterns or explain why a new one is needed.
-- Split the task when the spec gets too long.
+## Summary
+What we are building, why, and the chosen approach.
 
-## Template
+## Requirements
+- Observable, testable behavior.
 
-    # <Feature>
+## Design
+Important components, data flow, and implementation decisions.
 
-    ## Summary
-    What this does and why, in a few sentences.
+## Interfaces and data
+APIs, commands, events, schemas, or compatibility requirements.
 
-    ## Requirements
-    What must be true when done. Observable, testable statements.
+## Error behavior
+What happens on invalid input, failure, or partial completion.
 
-    ## Design
-    Components touched, data flow, interfaces, file paths. Skip anything the code will make obvious.
+## Test plan
+How the requirements will be proved.
 
-    ## Decisions
-    Choices made where implementations could differ, each with the chosen default and why.
-
-    ## Invariants
-    Existing behavior, interfaces, and data shapes this work must preserve.
-
-    ## Error behavior
-    What happens on bad input, failure, or partial completion.
-
-    ## Test plan
-    How each requirement gets verified: specific tests or runnable checks.
-
-    ## Out of scope
-    What this spec deliberately does not cover.
+## Out of scope
+- Related work this spec does not include.
+```
