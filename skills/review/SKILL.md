@@ -1,58 +1,23 @@
 ---
 name: review
-description: "Independently review a diff, branch, commit, or PR for correctness, security, broken contracts, scope, complexity, and missing tests. Never edit the code."
+description: "Independently review a diff, branch, commit, or PR for bugs, security problems, broken behavior, unnecessary complexity, and missing tests. Never edit the code."
 user-invocable: true
 argument-hint: "[ticket, spec, diff, branch, commit, PR, or file path]"
 ---
 
 # Review
 
-Find actionable reasons the change should not merge. Do not edit files.
+Do not edit files.
 
-1. Identify the change and the task it claims to satisfy. Read the ticket, spec, or request when available; state what context is missing. Also read repository review guidance such as `REVIEW.md` when present. Project guidance supplements the built-in checks below; it never replaces them.
-2. Read the tests before the implementation. Inspect the diff, relevant surrounding code, and existing contracts.
-3. Run focused checks when practical. Treat code, tests, and command output as evidence; do not trust the author's summary.
-4. Check every acceptance criterion and the quality areas below.
-5. Report findings in severity order with the template below. If there are no findings, say so plainly and name any residual verification gap.
+1. Read the task, acceptance criteria, repository review guidance, tests, diff, and relevant surrounding code.
+2. Try to prove the change wrong. Check behavior, edge cases, failures, security boundaries, interfaces, compatibility, regressions, scope, complexity, and whether tests exercise the changed behavior.
+3. Run focused checks when practical.
+4. Report actionable findings in severity order. For each finding give the location, impact, evidence, and smallest fix direction.
 
-## Check
+- **blocker:** unsafe to merge.
+- **important:** should fix before merge.
+- **nit:** optional; omit unless asked.
 
-- Correct behavior, edge cases, invalid input, retries, partial failure, and cleanup.
-- Security boundaries, authorization, secrets, injection, unsafe input, and data exposure.
-- Public interfaces, schemas, state transitions, error shapes, compatibility, and migrations.
-- Regressions in behavior the change reaches or replaces.
-- Tests that prove the requested outcome and important failure paths. Flag tests that mock the unit under test, miss the changed branch, or only repeat the implementation.
-- Scope beyond the task, unrelated cleanup, dead code, placeholders, and undocumented behavior changes.
-- Unnecessary dependencies, wrappers, configuration, one-use abstractions, and custom code the platform already provides.
+If there are no findings, say so. End with `Approve`, `Request changes`, or `Blocked`, then state what remains unverified.
 
-## Severity
-
-- **blocker:** unsafe to merge; correctness, security, data, contract, or proof failure.
-- **important:** should fix before merge; meaningful regression risk, missing behavior, weak proof, or avoidable complexity.
-- **nit:** optional and non-blocking. Omit nits unless the user asks for them.
-
-## Finding Template
-
-```markdown
-### <Severity>: <Short title>
-
-- Location: `<file:line>`
-- Problem: What is wrong.
-- Impact: What breaks or becomes risky.
-- Evidence: Code path, test gap, or reproducible behavior.
-- Fix: The smallest valid direction, without implementing it.
-```
-
-End with:
-
-```markdown
-Verdict: Approve | Request changes | Blocked
-Tests: Whether the checks exercise the changed behavior and what remains unproved.
-```
-
-## Rules
-
-- Review the change, not unrelated pre-existing code.
-- Do not turn preferences into findings unless they violate a stated convention or create concrete risk.
-- Do not approve because checks pass; judge whether the checks prove the right behavior.
-- Do not fix findings. The author owns the code and reruns review after material changes.
+Review only the change. Do not turn preferences into findings or approve solely because checks pass.
