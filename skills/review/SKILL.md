@@ -9,7 +9,7 @@ argument-hint: "[ticket, spec, diff, branch, commit, PR, or file path]"
 
 Find actionable reasons the change should not merge. Do not edit files.
 
-1. Identify the change and the task it claims to satisfy. Read the ticket, spec, or request when available; state what context is missing.
+1. Identify the change and the task it claims to satisfy. Read the ticket, spec, or request when available; state what context is missing. Also read repository review guidance such as `REVIEW.md` when present. Project guidance supplements the built-in checks below; it never replaces them.
 2. Read the tests before the implementation. Inspect the diff, relevant surrounding code, and existing contracts.
 3. Run focused checks when practical. Treat code, tests, and command output as evidence; do not trust the author's summary.
 4. Check every acceptance criterion and the quality areas below.

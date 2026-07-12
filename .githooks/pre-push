@@ -1,0 +1,27 @@
+#!/bin/bash
+# Check if any skill files changed since the last push.
+# If so, remind the user to regenerate examples.
+
+remote="$1"
+url="$2"
+
+while read local_ref local_oid remote_ref remote_oid; do
+    if [ "$remote_oid" = "0000000000000000000000000000000000000000" ]; then
+        range="$local_oid"
+    else
+        range="$remote_oid..$local_oid"
+    fi
+
+    changed_skills=$(git diff --name-only "$range" -- 'skills/' 2>/dev/null)
+
+    if [ -n "$changed_skills" ]; then
+        echo ""
+        echo "⚠  Skills changed:"
+        echo "$changed_skills" | sed 's/^/   /'
+        echo ""
+        echo "   Consider running: ./examples/regenerate.sh"
+        echo ""
+    fi
+done
+
+exit 0

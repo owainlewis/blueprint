@@ -1,17 +1,14 @@
 # Review Concerns
 
-This repository contains agent skills. Prefer the fewest instructions that reliably improve outcomes.
+This repo contains agent skills. When reviewing changes, prefer the simplest wording that still improves outcomes.
 
-- **Clear trigger:** It is obvious when the skill applies.
-- **Clear boundary:** It is obvious when the skill stops and what it does not do.
-- **One transformation:** The input and output are clear. `build` may coordinate many tickets because it owns the full delivery phase.
-- **Self-contained:** Runtime instructions, defaults, templates, checks, and stop rules live in the owning `SKILL.md`.
-- **No hidden dependency:** A skill does not require root docs, another skill, a custom agent definition, or an unsupported tool.
-- **Useful defaults:** Common work can proceed without repeating branch, commit, PR, test, or review policy.
-- **Real verification:** Checks prove observable outcomes and important failure paths.
-- **Portable wording:** Vendor or tool details appear only when the workflow requires them.
-- **Simple language:** Remove ceremony, repetition, vague advice, and rules that do not change behavior.
-- **Complete failure paths:** State when to stop, resume, or ask for a human decision.
-- **Smallest complete change:** Preserve existing behavior and interfaces unless migration is explicit.
-
-Review the five skills as a set. Look for gaps, overlap, contradictory defaults, and stale references to removed workflows.
+- Clear trigger: it should be obvious when a skill applies
+- Clear boundary: it should be obvious when a skill does not apply
+- Minimal instruction count: nothing should be included "just in case"
+- Portable wording: avoid tying skills to one vendor, agent, or tool unless it is essential
+- Real verification: checks should confirm outcomes, not ceremony
+- No hidden assumptions: avoid requiring specific repo history, global tools, platforms, or unsupported features
+- Simple language: assume agents are already smart and getting smarter
+- Make the smallest safe change that fully solves the problem
+- Preserve behavior and interfaces, or call out the migration clearly
+- Handle failure paths explicitly instead of leaving them implicit
