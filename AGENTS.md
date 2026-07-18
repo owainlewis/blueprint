@@ -39,7 +39,7 @@ Use `/implement <ticket, task, or PR>` for one end-to-end code change. It compos
 9. Wait for CI checks and current review feedback.
 10. Fix important CI or review feedback, reply to addressed comments with evidence, then repeat affected tests and fresh review until the PR is green and has no important unresolved feedback.
 
-Use a dedicated branch and worktree named with the ticket number or task slug. Never merge unless the user explicitly asks. Reuse a Codex-managed worktree when the task already has one. When creating one locally, use `~/Code/.worktrees/<repo>/<ticket-or-task>` and remove it after the PR is merged or closed.
+Resume the branch and worktree for an existing PR. For new work, fetch the remote and create a dedicated branch and worktree from the latest remote default branch, named with the ticket number or task slug. Reuse a Codex-managed worktree when the task already has one. When creating one locally, use `~/Code/.worktrees/<repo>/<ticket-or-task>` and remove it after the PR is merged or closed. Never merge unless the user explicitly asks.
 
 ## Outputs
 

@@ -19,6 +19,6 @@ Follow this workflow for `$ARGUMENTS`:
 9. Wait for CI checks and current review feedback.
 10. Fix important CI or review feedback, reply to addressed comments with evidence, then repeat affected tests and fresh review until the PR is green and has no important unresolved feedback.
 
-Use a dedicated branch and worktree named with the ticket number or task slug. Reuse a suitable existing one and do not duplicate tickets or PRs. If the ticket is wrong or incomplete, update it before continuing. Prefer the smallest complete change and no unrelated cleanup.
+Resume the branch and worktree for an existing PR. For new work, fetch the remote and create a dedicated branch and worktree from the latest remote default branch, named with the ticket number or task slug. Do not duplicate tickets or PRs. If the ticket is wrong or incomplete, update it before continuing. Prefer the smallest complete change and no unrelated cleanup.
 
 Stop at a green pull request ready for human merge. Never merge unless the user explicitly asks. Report an exact blocker when required access, checks, or independent review remain unavailable after safe alternatives are exhausted.

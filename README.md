@@ -58,7 +58,7 @@ There is no `build` skill. Writing code is a base agent capability. There are no
 `commands/implement.md` is the canonical end-to-end workflow. Give it one ticket, task, or existing PR. It:
 
 1. resolves the task or PR, creating a ticket only for new work when GitHub is available;
-2. creates or reuses a ticket-named branch and worktree;
+2. resumes an existing PR branch and worktree, or creates a ticket- or task-named branch and worktree from the latest remote default branch;
 3. inspects, plans, and writes the smallest complete code change;
 4. runs `test`, including real-browser verification when relevant;
 5. runs `review` with a fresh subagent;
