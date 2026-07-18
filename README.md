@@ -16,16 +16,14 @@ There are three layers:
 idea -> design -> plan -> task
                          |
                          v
-              /implement task
-                  code -> test -> review -> improve
-                    ^                         |
-                    +-------------------------+
+                    /implement
                          |
                          v
-                  green pull request
-                         |
-                         v
-                     human merge
+isolate -> code -> test -> review -> green PR -> human merge
+                  ^         |
+                  +-- fix ---+
+
+existing code -> improve -> simpler code
 ```
 
 Use only the phases the work needs. A small, decided task can start at `/implement`. A costly or unclear change should start at `design`. A large design can go through `plan` before implementation.
@@ -57,17 +55,17 @@ There is no `build` skill. Writing code is a base agent capability. There are no
 
 `commands/implement.md` is the canonical end-to-end workflow. Give it one ticket, task, or existing PR. It:
 
-1. resolves the task or PR, creating a ticket only for new work when GitHub is available;
-2. resumes an existing PR branch and worktree, or creates a ticket- or task-named branch and worktree from the latest remote default branch;
-3. inspects, plans, and writes the smallest complete code change;
+1. resolves the task or PR, creating a ticket only when requested or useful for durable tracking;
+2. isolates work before editing by resuming the PR worktree or branching from the latest remote default branch;
+3. inspects the code, outlines the change without invoking `plan`, and writes the smallest complete implementation;
 4. runs `test`, including real-browser verification when relevant;
 5. runs `review` with a fresh subagent;
 6. addresses valid findings, then repeats tests and review until clean;
 7. creates Conventional Commits, pushes, and opens a ready PR;
-8. waits for CI and feedback, fixes important findings, and replies with evidence;
+8. waits for CI to finish, then handles feedback that currently exists without waiting indefinitely for future review;
 9. stops at a green, mergeable PR for a human to merge.
 
-The same workflow is written in `AGENTS.md` so agents that do not support slash commands still follow it. Tool-specific command locations are adapters, not new product concepts.
+This command is the single workflow authority. `AGENTS.md` points to it instead of carrying a second copy. Agents without slash commands can read it as an ordinary prompt. Tool-specific command locations are adapters, not new product concepts.
 
 ## Install
 
@@ -77,7 +75,7 @@ Install the five skills:
 npx skills add owainlewis/blueprint
 ```
 
-Copy `commands/implement.md` to the custom-command directory used by your coding tool, or invoke it as an ordinary prompt. Keep `AGENTS.md` in the repository as the portable fallback.
+Copy `commands/implement.md` to the custom-command directory used by your coding tool, or invoke it as an ordinary prompt. Repository policy stays in `AGENTS.md`; the delivery workflow stays in the command.
 
 If you installed an older Blueprint release, read [MIGRATION.md](MIGRATION.md). Skill updaters may leave removed directories behind, so updating alone may not give you the new five-skill surface.
 
