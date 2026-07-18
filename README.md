@@ -77,7 +77,7 @@ Most skills are steps: one phase, one human checkpoint. Three skills chain the s
 
 Loops keep the ticket updated as they work: status moves, comments with proof, and PR links. They stop at human checkpoints. Human merge is the default; agents merge only with explicit permission.
 
-`implement` is the single-task loop. Give it a ticket or describe the task. When no issue exists, it creates one with `gh` when available, then creates a dedicated ticket-numbered branch and worktree from the latest remote default branch. It implements the acceptance criteria, reviews the diff, checks acceptance, opens a PR, waits for feedback, fixes important items, and writes proof back to the ticket. Later runs resume the same PR. It leaves merging to a human unless the user explicitly asks for merge.
+`implement` is the single-task loop. Give it a ticket or describe the task. When no issue exists, it creates one with `gh` when available. Without authenticated `gh`, it keeps the task description as the source of truth. It then creates a dedicated branch and worktree from the latest remote default branch, named with the ticket ID or a task slug. It implements the acceptance criteria, reviews the diff, checks acceptance, opens a PR, waits for feedback, fixes important items, and writes proof back to the ticket or chat. Later runs resume the same PR. It leaves merging to a human unless the user explicitly asks for merge.
 
 `milestone` is the release-slice loop: it reads open issues in a GitHub milestone, orders them by dependency and risk, then runs `implement` for each issue. It stops for human merge unless merge permission was explicit. When merging is allowed, it merges only after checks and review are clean, syncs the default branch, then continues.
 

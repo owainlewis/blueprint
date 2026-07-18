@@ -10,7 +10,7 @@ Blueprint has two flows. The input to the next step is a spec, plan, or task wit
 
 **Decide** (`design-doc` -> `spec` -> `plan`): turn unclear work into reviewed decisions and tasks a new agent can do. Every stage pauses for human review. Start at `design-doc` when architecture, options, or tradeoffs are unclear. Use `spec` when requirements, function signatures, return values, data shapes, or error behavior need review. Use `plan` when the work just needs splitting. Skip stages when the change is small and already decided.
 
-**Deliver** (`implement`): turn one ticket or task into a PR that is ready for human merge, with the ticket as the record of the work. For a task without a ticket, `implement` creates a GitHub issue with `gh` when available. It uses a dedicated ticket-numbered branch and worktree from the latest remote default branch, implements the change, tests it, gets a fresh-agent review, checks each acceptance criterion, commits, pushes, opens the PR, waits for feedback, fixes important items, and updates the ticket. Later runs resume the same PR. Use `milestone` to complete a GitHub milestone through `implement`, one issue at a time. Use `multitask` to run several independent tickets in parallel, one worker per ticket. Merging is a human decision unless explicitly requested. Use `tdd` when a failing test can describe the behavior first, `refactor` to simplify changed code before review, and `debug` when something breaks.
+**Deliver** (`implement`): turn one ticket or task into a PR that is ready for human merge. For a task without a ticket, `implement` creates a GitHub issue with `gh` when available; otherwise the task description remains the record. It uses a dedicated branch and worktree from the latest remote default branch, named with the ticket ID or a task slug, implements the change, tests it, gets a fresh-agent review, checks each acceptance criterion, commits, pushes, opens the PR, waits for feedback, fixes important items, and updates the ticket or chat. Later runs resume the same PR. Use `milestone` to complete a GitHub milestone through `implement`, one issue at a time. Use `multitask` to run several independent tickets in parallel, one worker per ticket. Merging is a human decision unless explicitly requested. Use `tdd` when a failing test can describe the behavior first, `refactor` to simplify changed code before review, and `debug` when something breaks.
 
 Exploration is allowed without creating docs or issue tracker entries. Do not manufacture fake specs, plans, or issues for spikes.
 
@@ -25,7 +25,7 @@ Decide:
 
 Deliver:
 
-- `implement`: turn one ticket or task into a PR ready for human merge; creates missing GitHub issues with `gh`, uses a dedicated branch and worktree, tests, review, acceptance checks, and feedback handling.
+- `implement`: turn one ticket or task into a PR ready for human merge; creates missing GitHub issues with `gh` when available, uses a dedicated branch and worktree, tests, review, acceptance checks, and feedback handling.
 - `milestone`: complete all open issues in a GitHub milestone by running `implement` one issue at a time.
 - `multitask`: run several tickets to PRs in parallel, one worker per ticket.
 - `tdd`: test-first variant of implement.
