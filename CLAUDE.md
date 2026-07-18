@@ -1,11 +1,9 @@
 @AGENTS.md
 
-## Claude Code
+## Claude Code adapter
 
-Blueprint installs as standalone skills via `npx skills add owainlewis/blueprint`. The active workflows live in `skills/<name>/SKILL.md`.
+Install Blueprint skills with `npx skills add owainlewis/blueprint`. The public skills are `design`, `plan`, `test`, `review`, and `improve`.
 
-- Invoke core workflows by name: `design-doc`, `spec`, `plan`, `implement`, `tdd`, `debug`, `refactor`, `review`, `task-to-pr`, `multitask`, `pr`, `pr-to-ready`, `browser-verify`.
-- Helper entry points remain available for mechanical delivery steps: `branch`, `commit`.
-- Agent definitions live in `agents/`. Copy them to `.claude/agents/` (project) or `~/.claude/agents/` (user) to make them spawnable; `npx skills add` installs skills only.
-- `browser-verify` requires an available real-browser automation and inspection path, such as Chrome DevTools MCP.
-- Keep shared repo guidance in `AGENTS.md`; keep Claude-specific adapter notes here.
+Copy `commands/implement.md` to `.claude/commands/implement.md` for a project command or `~/.claude/commands/implement.md` for a user command. The shared workflow remains in `AGENTS.md` for portability.
+
+The `review` phase uses a fresh generic subagent. Blueprint does not require a separate reviewer agent definition.

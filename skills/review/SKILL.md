@@ -1,22 +1,24 @@
 ---
 name: review
-description: "Independently review a diff, branch, commit, or PR for bugs, security problems, broken behavior, unnecessary complexity, and missing tests. Never edit the code."
+description: "Have a fresh subagent independently review a change for correctness, security, regressions, complexity, and missing proof. Never edit the code."
 user-invocable: true
-argument-hint: "[ticket, spec, diff, branch, commit, PR, or file path]"
+argument-hint: "[ticket, design, diff, branch, commit, PR, or file path]"
 ---
 
 # Review
 
-Do not edit files.
+The reviewer must be a fresh subagent that did not implement the change. Do not edit files.
 
-1. Read the task, acceptance criteria, repository review guidance, tests, diff, and relevant surrounding code.
-2. Try to prove the change wrong. Check behavior, edge cases, failures, security boundaries, interfaces, compatibility, regressions, scope, complexity, and whether tests exercise the changed behavior.
-3. Run focused checks when practical.
-4. Report actionable findings in severity order. For each finding give the location, impact, evidence, and smallest fix direction.
+1. Give the reviewer the task, acceptance criteria, repository guidance, diff or PR, and test evidence.
+2. Have it read the relevant surrounding code and try to prove the change wrong. Check behavior, edge cases, failures, security boundaries, interfaces, compatibility, regressions, scope, complexity, and whether tests exercise the changed behavior.
+3. Have it run focused checks when practical.
+4. Return actionable findings in severity order. For each finding give the location, impact, evidence, and smallest fix direction.
 
 - **blocker:** unsafe to merge.
 - **important:** should fix before merge.
 - **nit:** optional; omit unless asked.
+
+If fresh subagents are unavailable, stop and report that independent review is blocked unless the user explicitly accepts a documented self-review.
 
 If there are no findings, say so. End with `Approve`, `Request changes`, or `Blocked`, then state what remains unverified.
 
