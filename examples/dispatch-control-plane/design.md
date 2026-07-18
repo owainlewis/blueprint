@@ -1,298 +1,199 @@
-# Design: Dispatch Local Agent Control Plane
+# Dispatch local agent control plane
 
-## Status
+> **Status:** Proposed for review
+>
+> **Scope:** Local-first v1 architecture
 
-Draft
+## What and why
 
-## Summary
+Dispatch lets a developer delegate agent work from a web control plane instead of managing every run in an interactive terminal. A local worker claims tasks, runs explicit shell and agent steps, streams evidence back, and preserves enough run history for review and follow-up.
 
-Dispatch is a local-first control plane for delegated agent work. A Next.js app owns the UI, API routes, and JSON-backed state. A Go worker process registers itself, long-polls for pending tasks, runs shell and agent steps, streams events back, and reports completion. This design documents the current minimal architecture and the tradeoffs behind keeping orchestration explicit rather than hiding it inside a workflow engine.
+The first version should prove this delegation loop without committing to production infrastructure. It favors inspectable local state and explicit execution over hidden automation.
 
-## Background
+## Requirements
 
-The `dispatch` repo contains a prototype for running AI agents as delegated workers instead of interactive terminal sessions.
+- Developers can create tasks from a web UI or API.
+- One or more local workers can register, heartbeat, claim tasks, and report completion.
+- Tasks contain ordered shell and agent steps.
+- Runs retain comments, status, and ordered event streams for review.
+- Follow-up replies can continue a completed Claude Code session.
+- The control plane starts with `just dev`; workers run as separate processes.
+- Checkout, setup, test, and push behavior remains explicit in task steps.
 
-Current repo layout:
+## Acceptance criteria
 
-```text
-control-plane/   Next.js UI, API routes, local store, shared types
-worker/          Go worker CLI
-docs/            specs, architecture notes, mockups
-scripts/         local helper commands, including fake Claude
-```
+- A developer can create a task and see it move from `pending` to `running` to `succeeded` or `failed`.
+- A worker claims at most one task at a time and executes its steps in order.
+- Shell and agent output appears in the task event stream with stable sequence numbers.
+- A failed step stops the remaining steps and records the failure.
+- A follow-up comment creates a new run and can reuse the prior Claude session ID.
+- The full local flow works with `scripts/fake-claude` before a real agent runtime is required.
 
-The control plane stores data in `.agentctrl-data/store.json` by default. The worker registers a host and worker, polls the control plane, claims one task at a time, executes task steps, streams task events, and completes the task. Claude Code is the intended real runtime; `scripts/fake-claude` supports local smoke testing.
+## Design
 
-This design covers the local v1 architecture, not the eventual production design with Postgres, auth, multi-tenant projects, budgets, or agent-created task trees.
-
-## Goals
-
-- Let a developer create tasks from a web UI or API.
-- Let one or more local workers claim and run tasks.
-- Support ordered task steps: shell steps and agent steps.
-- Capture task runs, comments, and event streams for review.
-- Support Claude Code sessions so replies to a completed task can continue the same task context.
-- Keep the prototype easy to run with `just dev` plus a separate worker command.
-
-## What Not to Solve
-
-- Production durability, horizontal control-plane scaling, or multi-user auth.
-- Managing worker machines or provisioning workspaces.
-- Hiding checkout, setup, branch, or push behavior behind special workflow types.
-- Supporting every agent runtime equally in v1.
-- Building a full distributed scheduler.
-
-## Limits
-
-- The control plane is a Next.js app with API routes under `control-plane/app/api`.
-- The worker is a Go CLI under `worker/cmd/agentctrl-worker`.
-- Storage is local JSON, so concurrent writes and long-term durability are intentionally limited.
-- One worker runs one task at a time.
-- Task lifecycle is currently `pending -> running -> succeeded | failed`.
-- Task steps must be explicit so users can compose checkout, setup, agent, test, and push behavior themselves.
-
-## Proposed Design
-
-Dispatch uses a control-plane / worker split.
+Dispatch uses a control-plane and worker split. The Next.js application owns the UI, API, shared TypeScript model, and JSON-backed state. A separate Go process owns local execution.
 
 ```mermaid
 flowchart TB
-    User["Developer"] --> UI["Next.js UI"]
-    UI --> API["Next.js API routes"]
-    API --> Store["Local JSON store<br/>.agentctrl-data/store.json"]
-
-    Worker["Go worker CLI"] -->|register host / worker| API
-    Worker -->|heartbeat| API
-    Worker -->|claim pending task| API
-    Worker -->|stream events| API
-    Worker -->|complete run| API
-
-    Worker --> Shell["Shell step"]
-    Worker --> Agent["Agent step<br/>Claude Code or fallback command"]
+    Developer([Developer]) --> UI["Next.js UI"]
+    UI --> API["Control-plane API"]
+    API <--> Store[("Local JSON store")]
+    API <-->|tasks · status · events| Worker["Go worker"]
+    Worker -->|execute| Shell["Local shell"]
+    Worker -->|delegate| Agent["Claude Code"]
 ```
 
-### Control Plane
+### Control plane
 
-The control plane owns durable state for the prototype:
+The control plane stores hosts, workers, tasks, runs, steps, comments, and events in `.agentctrl-data/store.json`. API routes create tasks, serve UI state, register workers, assign pending work, append events, and complete runs.
 
-- hosts
-- workers
-- tasks
-- task runs
-- task steps
-- comments
-- events
-
-The API creates tasks, returns current state to UI pages, accepts host and worker registration, lets workers claim tasks, records step status, appends events, and marks runs complete.
-
-The store is implemented in `control-plane/lib/store.ts`. All mutations happen through `withStore`, which reads the JSON file, mutates an in-memory object, and writes it back.
+All mutations pass through `withStore` in `control-plane/lib/store.ts`, which reads the file, changes an in-memory object, and writes the result. This is sufficient for a local prototype but is not a production concurrency model.
 
 ### Worker
 
-The worker CLI:
+The worker:
 
-1. Registers a host with labels such as `local` or `macos`.
-2. Registers a worker attached to that host.
-3. Heartbeats on each polling loop.
-4. Claims a pending task when available.
-5. Runs the task's steps sequentially.
-6. Streams system/stdout/stderr/agent events back to the control plane.
-7. Completes the run and task with `succeeded` or `failed`.
+1. registers its host and worker identity;
+2. heartbeats while polling;
+3. claims one pending task;
+4. executes its steps sequentially;
+5. streams system, stdout, stderr, and agent events;
+6. completes the run and task as `succeeded` or `failed`.
 
-For agent steps, the worker uses a structured Claude Code adapter when the command basename is `claude`. Other commands use the generic fallback contract:
+Claude Code has a structured adapter. Other agent commands use the fallback contract:
 
 ```text
 <command> -p "<task prompt>"
 ```
 
-### Tasks and Runs
+### Tasks, runs, and events
 
-A task is the user-facing work item. A run is an execution attempt for that task. A task can have multiple runs, which enables follow-up replies after an initial task completes.
+A task is the user-facing unit of work. A run is one execution attempt. A task can have several runs so a follow-up can continue the same work without rewriting history.
 
 ```mermaid
 classDiagram
+    Task "1" --> "*" TaskRun : attempts
+    Task "1" --> "*" TaskStep : defines
+    TaskRun "1" --> "*" TaskEvent : records
+    TaskRun "0..1" --> "0..1" TaskComment : triggered by
+
     class Task {
-      id
-      title
-      prompt
-      workDir
-      status
-      currentRunId
-      latestRunId
+        id
+        title
+        prompt
+        workDir
+        status
     }
     class TaskRun {
-      id
-      taskId
-      status
-      prompt
-      triggerCommentId
-      sessionId
-      workDir
+        id
+        taskId
+        status
+        sessionId
     }
     class TaskStep {
-      id
-      taskId
-      index
-      type
-      command
-      prompt
-      status
+        index
+        type
+        command
+        status
     }
     class TaskEvent {
-      id
-      taskId
-      runId
-      seq
-      stream
-      message
+        seq
+        stream
+        message
     }
-
-    Task "1" --> "*" TaskRun
-    Task "1" --> "*" TaskStep
-    TaskRun "1" --> "*" TaskEvent
+    class TaskComment {
+        id
+        author
+        body
+    }
 ```
 
-### Step Execution
-
-Steps execute in order. A shell step runs with `sh -lc`. An agent step runs Claude Code or the fallback command. A failed step stops the task and reports failure.
+### Execution
 
 ```mermaid
 sequenceDiagram
     participant W as Worker
-    participant API as Control Plane API
-    participant S as Shell
-    participant A as Agent CLI
+    participant API as Control-plane API
+    participant R as Step runtime
 
-    W->>API: claim(workerId, hostId)
-    API-->>W: task with run and steps
-    loop each step
-        W->>API: step running
-        alt shell step
-            W->>S: run command
-            S-->>W: output + exit code
-        else agent step
-            W->>A: run prompt
-            A-->>W: events + exit code
-        end
-        W->>API: append events
-        W->>API: step succeeded or failed
+    W->>API: Claim next task
+    API-->>W: Task, run, and ordered steps
+    loop Each step
+        W->>API: Mark step running
+        W->>R: Execute shell command or agent prompt
+        R-->>W: Output, events, and exit code
+        W->>API: Append events and step result
     end
-    W->>API: complete run
+    alt Every step succeeds
+        W->>API: Complete run as succeeded
+    else A step fails
+        W->>API: Complete run as failed
+    end
 ```
 
-## Architecture Views
+## Interfaces and data
 
-### System Context
+The shared TypeScript model is the contract between the UI, API, store, and worker responses.
 
-```mermaid
-flowchart LR
-    Developer["Developer"] --> Dispatch["Dispatch Control Plane"]
-    Dispatch --> Worker["Local Worker"]
-    Worker --> Claude["Claude Code"]
-    Worker --> Shell["Local Shell"]
-    Dispatch --> Store["Local JSON Store"]
-```
+| Type | Purpose |
+| --- | --- |
+| `Host` | Machine identity and labels |
+| `Worker` | Runtime process attached to a host |
+| `Task` | User-facing work item and current state |
+| `TaskStep` | Ordered shell or agent operation |
+| `TaskRun` | Execution attempt and optional Claude session ID |
+| `TaskComment` | User, agent, or system comment |
+| `TaskEvent` | Ordered output or lifecycle event |
 
-### Runtime View
+Task creation accepts a title, prompt, optional working directory, and optional step definitions. When no usable steps are supplied, the control plane creates one default agent step from the task prompt.
 
-```mermaid
-flowchart TD
-    Create["Create task"] --> Pending["Task pending"]
-    Pending --> Claim["Worker claims task"]
-    Claim --> Running["Task running"]
-    Running --> Steps{"More steps?"}
-    Steps -->|Yes| Execute["Run next shell or agent step"]
-    Execute --> Event["Record events and output"]
-    Event --> Failed{"Step failed?"}
-    Failed -->|No| Steps
-    Failed -->|Yes| TaskFailed["Task failed"]
-    Steps -->|No| Succeeded["Task succeeded"]
-```
+## Failure behavior
 
-## Interfaces and Data
+- A failed step stops the task and records its output and exit status.
+- A worker claims only one task, preventing parallel execution inside one process.
+- Heartbeats expose disconnected workers, but v1 does not reclaim abandoned tasks automatically.
+- Corrupt or concurrent JSON writes are local-prototype risks; production use requires transactional storage.
+- Shell commands and agent runtimes execute with the local user's permissions. There is no sandbox or secret boundary in v1.
 
-The current TypeScript model is the contract between UI, API routes, local store, and worker responses.
+## Test approach
 
-Important types:
+- Start the control plane and a worker using `scripts/fake-claude`.
+- Create a task containing both shell and agent steps.
+- Verify ordered execution, event sequence numbers, and terminal status in the UI.
+- Force a step failure and verify later steps do not run.
+- Add a follow-up comment and verify a new run preserves the previous history and session ID.
+- Repeat the happy path with a real Claude Code worker before declaring the adapter complete.
 
-- `Host`: machine identity and labels
-- `Worker`: runtime process attached to a host
-- `Task`: user-facing unit of work
-- `TaskStep`: ordered shell or agent operation
-- `TaskRun`: execution attempt with optional Claude session ID
-- `TaskComment`: user, agent, or system comment
-- `TaskEvent`: ordered event stream for audit and UI display
+## Risks
 
-Task creation accepts a title, prompt, optional working directory, and optional step definitions. If no usable steps are provided, the control plane creates a default agent step using the task prompt.
+| Risk | Consequence | Mitigation for v1 |
+| --- | --- | --- |
+| JSON storage | Lost updates under concurrent writes | Keep v1 local and serialize mutations through `withStore` |
+| Long polling | Extra latency and repeated requests | Accept the tradeoff until the delegation loop is proven |
+| TypeScript and Go models drift | Runtime contract failures | Keep the model small; consider generated clients before production |
+| Local command execution | Host access and secret exposure | Limit v1 to developer-controlled machines and document the trust boundary |
+| Explicit task steps | More setup for users | Provide useful defaults without hiding the execution model |
 
-## Other Options
+## Alternatives considered
 
-### Put the worker inside the Next.js app
-
-This would make local startup simpler, but it couples task execution to the web server process. A separate worker better matches the long-term architecture where workers run on different machines and the control plane only coordinates.
-
-### Use Postgres immediately
-
-Postgres would improve durability, concurrency, and queryability, but it adds setup friction. Local JSON is enough for the v1 prototype and keeps the core loop easy to inspect.
-
-### Make tasks a single prompt only
-
-A single prompt is simpler, but real delegated work often needs checkout, setup, agent execution, tests, and push steps. Explicit shell and agent steps keep those operations visible and composable.
-
-### Hide git and workspace behavior inside Dispatch
-
-Hardcoding worktrees, clones, branches, and pushes would make the product opinionated too early. Keeping them as shell steps lets each project encode its own workflow.
-
-## Tradeoffs
-
-- Local JSON keeps the prototype simple but is not safe for high-concurrency writes.
-- Long-polling is easy to implement and debug but less efficient than a push-based worker protocol.
-- Explicit steps make workflows transparent but require users to compose more up front.
-- A Go worker adds a second language to the repo but gives a small, portable process for task execution.
-- Claude Code receives first-class adapter behavior, while other runtimes only get the generic command contract.
-
-## Cross-Cutting Concerns
-
-### Reliability
-
-Workers heartbeat and claim one task at a time. The prototype has basic failure reporting, but lease expiry, reclaiming abandoned tasks, and durable concurrency should be revisited before production.
-
-### Observability
-
-Task events are first-class records with sequence numbers, stream names, messages, and timestamps. This gives the UI enough data to show what happened during a run.
-
-### Security
-
-The prototype runs shell commands and agent CLIs on machines the developer controls. There is no sandbox, auth boundary, or secret isolation in the local v1. Production use would need authentication, scoped worker tokens, secret handling, and workspace isolation.
-
-### Maintainability
-
-The shared TypeScript types keep the control-plane model explicit. The risk is drift between the TypeScript API contract and the Go worker structs, since there is no generated client.
-
-### Operations
-
-Developers start the control plane with `just dev` and start workers separately. This makes the control plane and worker lifecycle visible during development.
+- **Run workers inside Next.js.** Simpler startup, but task execution would share the web server lifecycle and make remote workers harder later.
+- **Start with Postgres.** Better durability and concurrency, but unnecessary setup before the local loop is validated.
+- **Represent every task as one prompt.** Smaller model, but no explicit checkout, setup, test, or push steps.
+- **Hide Git and workspace operations.** Easier demos, but forces project-specific policy into Dispatch too early.
 
 ## Rollout
 
-The current architecture is already suitable for a local prototype:
+1. Prove the complete flow with the fake agent runtime.
+2. Run real local Claude Code tasks and follow-ups.
+3. Validate failure reporting and abandoned-worker behavior.
+4. Replace JSON with Postgres while preserving task, run, step, comment, and event concepts.
+5. Add authentication, worker tokens, secret handling, and workspace isolation before networked or multi-user use.
 
-1. Run the Next.js control plane.
-2. Start a fake worker with `scripts/fake-claude`.
-3. Create a task with shell and/or agent steps.
-4. Verify task events, runs, and completion in the UI.
-5. Start a Claude Code worker for real agent runs.
+## Out of scope
 
-The likely next migration is replacing the JSON store with Postgres while preserving the same task, run, step, comment, and event concepts.
-
-## Open Questions
-
-- Should task status include a human review state between `running` and terminal states?
-- How should failed tasks be retried while preserving run history?
-- Should the Go worker consume an OpenAPI-generated client to prevent API contract drift?
-- What is the minimum auth model for local network use?
-- When should agent-created child tasks enter the model?
-
-## Decision
-
-Keep Dispatch v1 as a local-first control plane with a Next.js API/UI, JSON-backed state, and a separate Go worker. Preserve explicit shell and agent steps as the core composition primitive. Defer production durability, auth, and agent-created task trees until the local delegation loop is proven.
+- Production durability or horizontally scaled control planes
+- Multi-user authentication and tenant isolation
+- Worker-machine provisioning
+- A distributed scheduler or lease-recovery system
+- Budgets and agent-created task trees
+- Equal first-class support for every agent runtime

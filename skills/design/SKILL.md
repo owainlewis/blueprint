@@ -7,6 +7,8 @@ argument-hint: "<feature, problem, or brief>"
 
 # Design
 
+## Workflow
+
 1. Read the request, repository instructions, relevant code, and linked material.
 2. Resolve choices that would change behavior, interfaces, data, errors, security, operations, or tests. Ask only questions whose answers materially change the design. Recommend an answer when asking.
 3. Write `docs/<feature-slug>/design.md` using the shape below. Keep it short and omit sections that do not apply.
@@ -43,4 +45,7 @@ How each important requirement will be proved.
 - Related work this design does not include.
 ```
 
-Prefer one clear recommendation over a catalogue of options. Record rejected options only when the tradeoff matters later.
+## Boundaries
+
+- Prefer one clear recommendation over a catalogue of options.
+- Record rejected options only when the tradeoff matters later.

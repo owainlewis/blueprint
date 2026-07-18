@@ -1,71 +1,83 @@
+<div align="center">
+
 # Blueprint
 
-Blueprint is a small, principles-first workflow for AI coding.
+**A small, principles-first workflow for AI coding.**
 
-Agents are already good at writing code. They need clear decisions, bounded work, real proof, and independent review. Blueprint provides those boundaries without turning engineering into a catalogue of tiny skills.
+Clear decisions. Bounded work. Real proof. Independent review.
 
-## The model
+</div>
 
-There are three layers:
+Blueprint gives coding agents the engineering boundaries that matter without turning software delivery into a catalogue of tiny skills. It separates repository policy, reusable phases, and end-to-end workflows so each instruction has one clear job.
 
-1. **Repository instructions define policy.** `AGENTS.md` says what good work means in a codebase.
-2. **Skills define phases.** Each skill has one durable engineering outcome.
-3. **Commands compose workflows.** `/implement` takes one task through the phases to a pull request.
+## Start with the work, not the process
 
-```text
-idea -> design -> plan -> task
-                         |
-                         v
-                    /implement
-                         |
-                         v
-isolate -> code -> test -> review -> green PR -> human merge
-                  ^         |
-                  +-- fix ---+
+Use the smallest entry point that resolves the uncertainty in front of you.
 
-existing code -> improve -> simpler code
+| If you need to… | Start with | Result |
+| --- | --- | --- |
+| Decide what to build or resolve important technical choices | `design` | A reviewed design with requirements and acceptance criteria |
+| Split a decided feature into work for several agent runs | `plan` | Ordered tasks in chat or tracker tickets |
+| Take one task through delivery | `/implement` | A tested, reviewed, green pull request |
+| Prove a change works | `test` | Acceptance criteria mapped to evidence |
+| Get an independent second opinion | `review` | Findings and a pre-merge verdict from a fresh subagent |
+| Simplify existing code without changing behavior | `improve` | Clearer, smaller, better-structured code |
+
+Small, decided work can go straight to `/implement`. Use `design` only when decisions need review, and `plan` only when the work needs splitting.
+
+## How Blueprint fits together
+
+```mermaid
+flowchart TB
+    subgraph Decide["Decide only as much as needed"]
+        Idea([Idea or problem]) --> Design["design"]
+        Idea -->|already decided| Task([One task])
+        Design -->|one task| Task
+        Design -->|needs splitting| Plan["plan"] --> Task
+    end
+
+    subgraph Deliver["Deliver with /implement"]
+        Task --> Isolate["isolate"] --> Code["code"] --> Test["test"] --> Review["review"]
+        Review -->|findings| Fix["fix"] --> Test
+        Review -->|clean| Publish["publish PR"] --> Validate["CI + current feedback"]
+        Validate -->|failure or finding| Fix
+        Validate -->|clean| PR["green PR"]
+    end
+
+    PR --> Merge([Human merge])
+    Existing([Existing code]) --> Improve["improve"] --> Simpler([Simpler code])
 ```
 
-Use only the phases the work needs. A small, decided task can start at `/implement`. A costly or unclear change should start at `design`. A large design can go through `plan` before implementation.
+The model has three layers:
 
-## Principles
+1. **Repository instructions define policy.** `AGENTS.md` says what good work means in a codebase.
+2. **Skills define phases.** Each skill has one durable engineering outcome and a clear stopping point.
+3. **Commands compose workflows.** `/implement` connects normal delivery steps without turning each one into a skill.
 
-- **Encode process, not knowledge.** Skills define outcomes and boundaries. Agents choose the local mechanics.
-- **One skill per phase.** A skill should represent a reusable mode of work, not one shell command or one job title.
-- **Workflows compose phases.** Ticket lookup, worktrees, commits, pull requests, CI, and feedback are one delivery workflow.
-- **Proof is part of the work.** Acceptance criteria map to tests or explicit manual evidence. Browser behavior is checked in a real browser.
-- **Review must be independent.** A fresh subagent reviews the diff and its proof. A named reviewer persona adds little value.
-- **The source of truth can change.** When implementation exposes a bad requirement, update the ticket or design before continuing.
-- **Prefer less.** Keep the smallest complete change, the shortest useful instruction, and no duplicate entry points.
-- **Humans own irreversible judgment.** Agents prepare a green PR. A human merges unless they explicitly delegate it.
+## The five phases
 
-## Skills
-
-| Skill | Outcome | Stops when |
+| Skill | Owns | Stops when |
 | --- | --- | --- |
-| `design` | A reviewed description of what, why, requirements, acceptance criteria, technical design, constraints, risks, and scope | The design is written for human review |
-| `plan` | Ordered, agent-ready tasks and optional milestones | The tasks are ready to hand off |
-| `test` | Acceptance criteria and important failures have evidence | Each criterion is pass, fail, or explicitly unverified |
-| `review` | A fresh subagent has independently reviewed the change | Findings and a verdict are reported |
-| `improve` | Existing code is clearer, simpler, and better structured without changing intended behavior | Relevant tests prove behavior was preserved |
+| `design` | What, why, requirements, acceptance criteria, technical design, constraints, risks, and scope | The design is ready for human review |
+| `plan` | Vertical, ordered tasks and optional milestones | The work is ready to hand off |
+| `test` | Automated checks, failure paths, and real-browser proof when relevant | Every criterion is pass, fail, or explicitly unverified |
+| `review` | Independent review of correctness, security, regressions, complexity, and proof | Findings and a verdict are reported |
+| `improve` | Behavior-preserving simplification of existing code | Relevant checks prove behavior was preserved |
 
-There is no `build` skill. Writing code is a base agent capability. There are no separate skills for branching, committing, opening a PR, debugging, TDD, browser checking, or addressing feedback. Those are techniques or steps inside a phase or workflow.
+Writing code is a base capability, not a phase skill. Branching, committing, opening a PR, debugging, TDD, browser checking, and addressing feedback are techniques or workflow steps, not separate product concepts.
 
-## `/implement`
+## One task to one pull request
 
-`commands/implement.md` is the canonical end-to-end workflow. Give it one ticket, task, or existing PR. It:
+[`commands/implement.md`](commands/implement.md) is the single authority for delivery. Given a ticket, task, or existing PR, it:
 
-1. resolves the task or PR, creating a ticket only when requested or useful for durable tracking;
-2. isolates work before editing by resuming the PR worktree or branching from the latest remote default branch;
-3. inspects the code, outlines the change without invoking `plan`, and writes the smallest complete implementation;
-4. runs `test`, including real-browser verification when relevant;
-5. runs `review` with a fresh subagent;
-6. addresses valid findings, then repeats tests and review until clean;
-7. creates Conventional Commits, pushes, and opens a ready PR;
-8. waits for CI to finish, then handles feedback that currently exists without waiting indefinitely for future review;
-9. stops at a green, mergeable PR for a human to merge.
+1. resolves the source and isolates work before editing;
+2. implements the smallest complete change;
+3. runs `test` and independent `review` loops;
+4. creates Conventional Commits and opens or updates the PR;
+5. waits for CI, handles feedback that exists, and records evidence;
+6. stops at a green, mergeable PR for a human to merge.
 
-This command is the single workflow authority. `AGENTS.md` points to it instead of carrying a second copy. Agents without slash commands can read it as an ordinary prompt. Tool-specific command locations are adapters, not new product concepts.
+It does not wait forever for future human feedback, manufacture tracker artifacts for trivial work, or merge without explicit permission.
 
 ## Install
 
@@ -75,27 +87,48 @@ Install the five skills:
 npx skills add owainlewis/blueprint
 ```
 
-The Skills CLI installs skills, not `commands/implement.md`. Download the command separately. For a project-level Claude Code command:
+The Skills CLI does not install commands. For a project-level Claude Code command:
 
 ```bash
 mkdir -p .claude/commands
-curl -fsSL https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md -o .claude/commands/implement.md
+curl -fsSL https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md \
+  -o .claude/commands/implement.md
 ```
 
-For another coding tool, change the output path to its custom-command directory. You can also [open the raw command](https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md) and invoke it as an ordinary prompt. Repository policy stays in `AGENTS.md`; the delivery workflow stays in the command.
+For another coding tool, download the [raw command](https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md) to its custom-command directory or use it as an ordinary prompt.
 
-If you installed an older Blueprint release, read [MIGRATION.md](MIGRATION.md). Skill updaters may leave removed directories behind, so updating alone may not give you the new five-skill surface.
+Upgrading from the older skill catalogue? Follow the [migration guide](MIGRATION.md). Removed skills can remain installed after a normal update, so the cleanup step matters.
+
+## Repository map
+
+```text
+skills/                 five reusable engineering phases
+commands/implement.md   canonical task-to-PR workflow
+AGENTS.md                portable repository policy
+CLAUDE.md                Claude Code adapter
+REVIEW.md                review standard for Blueprint itself
+MIGRATION.md             clean upgrade from the old catalogue
+examples/                reviewed design and planning examples
+```
 
 ## Examples
 
-The RAG chatbot example shows the full decision flow:
+The RAG chatbot example follows one idea through the decision flow:
 
-1. [rough input](examples/input.md)
+1. [rough project notes](examples/input.md)
 2. [reviewed design](examples/rag-chatbot/design.md)
 3. [captured chat plan](examples/rag-chatbot/plan.md)
 
-The [Dispatch control-plane design](examples/dispatch-control-plane/design.md) is a larger architecture example.
+For a larger architecture example, read the [Dispatch local control-plane design](examples/dispatch-control-plane/design.md).
 
-## What Blueprint is not
+## Principles
 
-Blueprint is not an issue tracker, agent framework, release system, reviewer persona library, or unattended state machine. It is a compact set of phase instructions plus one normal code-delivery workflow.
+- **Encode process, not knowledge.** Give agents outcomes, constraints, and proof; trust them with local mechanics.
+- **One skill per phase.** A skill represents a durable mode of work, not a command or job title.
+- **Proof is part of the work.** Tests establish behavior. Review checks that the implementation and proof are sound.
+- **Use the real surface.** Browser behavior is checked in a browser. Live PR feedback is read from the PR.
+- **Fix the source of truth.** If implementation exposes a bad requirement, update the task or design before continuing.
+- **Prefer less.** Keep the smallest complete change, shortest useful instruction, and no duplicate entry points.
+- **Keep irreversible judgment human.** Agents prepare the decision. Humans review designs and merge pull requests unless they explicitly delegate it.
+
+Blueprint is not an issue tracker, agent framework, release system, or reviewer-persona library. It is a compact engineering process for capable coding agents.

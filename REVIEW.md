@@ -1,6 +1,6 @@
-# Review Blueprint changes
+# Review Blueprint
 
-Review this repository as a small process product, not a prompt catalogue.
+Review Blueprint as a small process product, not a prompt catalogue. Read the issue, complete diff, rendered public docs, and relevant surrounding files.
 
 - Does each skill represent one meaningful engineering phase?
 - Is policy in `AGENTS.md`, phase behavior in a skill, and orchestration in a command?

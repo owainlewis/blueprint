@@ -1,4 +1,4 @@
-# Working in Blueprint
+# Blueprint repository policy
 
 Blueprint is a small, principles-first process for AI coding. It separates thinking phases from the workflow that ships code.
 
