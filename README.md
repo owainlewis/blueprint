@@ -49,7 +49,7 @@ Use only the phases the work needs. A small, decided task can start at `/impleme
 | `plan` | Ordered, agent-ready tasks and optional milestones | The tasks are ready to hand off |
 | `test` | Acceptance criteria and important failures have evidence | Each criterion is pass, fail, or explicitly unverified |
 | `review` | A fresh subagent has independently reviewed the change | Findings and a verdict are reported |
-| `improve` | Valid findings are fixed and the change is simpler without new scope | Affected proof is rerun and the change is ready for review |
+| `improve` | Existing code is clearer, simpler, and better structured without changing intended behavior | Relevant tests prove behavior was preserved |
 
 There is no `build` skill. Writing code is a base agent capability. There are no separate skills for branching, committing, opening a PR, debugging, TDD, browser checking, or addressing feedback. Those are techniques or steps inside a phase or workflow.
 
@@ -57,12 +57,12 @@ There is no `build` skill. Writing code is a base agent capability. There are no
 
 `commands/implement.md` is the canonical end-to-end workflow. Give it one ticket, task, or existing PR. It:
 
-1. resolves or creates the ticket when GitHub is available;
+1. resolves the task or PR, creating a ticket only for new work when GitHub is available;
 2. creates or reuses a ticket-named branch and worktree;
 3. inspects, plans, and writes the smallest complete code change;
 4. runs `test`, including real-browser verification when relevant;
 5. runs `review` with a fresh subagent;
-6. uses `improve`, then repeats tests and review until clean;
+6. addresses valid findings, then repeats tests and review until clean;
 7. creates Conventional Commits, pushes, and opens a ready PR;
 8. waits for CI and feedback, fixes important findings, and replies with evidence;
 9. stops at a green, mergeable PR for a human to merge.
@@ -87,7 +87,7 @@ The RAG chatbot example shows the full decision flow:
 
 1. [rough input](examples/input.md)
 2. [reviewed design](examples/rag-chatbot/design.md)
-3. [agent-ready plan](examples/rag-chatbot/plan.md)
+3. [captured chat plan](examples/rag-chatbot/plan.md)
 
 The [Dispatch control-plane design](examples/dispatch-control-plane/design.md) is a larger architecture example.
 

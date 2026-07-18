@@ -11,7 +11,7 @@ This release is intentionally breaking. Blueprint now contains five phase skills
 
 `branch`, `browser-verify`, `commit`, `debug`, `design-doc`, `goal-design`, `implement`, `milestone`, `multitask`, `pr`, `pr-to-ready`, `refactor`, `spec`, `task-to-pr`, and `tdd` are no longer shipped.
 
-The behavior is not all lost. Design docs and specs became `design`. Browser verification moved into `test`. Refactoring and feedback handling moved into `improve`. Ticket-to-PR delivery, commits, CI, and PR feedback moved into the `/implement` workflow. Debugging and TDD remain techniques an agent can use while implementing.
+The behavior is not all lost. Design docs and specs became `design`. Browser verification moved into `test`. Refactoring became `improve`. Ticket-to-PR delivery, commits, CI, feedback handling, and PR feedback moved into the `/implement` workflow. Debugging and TDD remain techniques an agent can use while implementing.
 
 ## Clean upgrade
 

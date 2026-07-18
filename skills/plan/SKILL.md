@@ -10,7 +10,7 @@ argument-hint: "<design, brief, issue, or request>"
 1. Read the source, repository instructions, and relevant code.
 2. Stop and return to design if product or technical choices remain open.
 3. Break the work into vertical, outcome-based tasks small enough for one agent run. Order them by dependency. Add milestones only when they create a useful delivery or review boundary.
-4. Put the plan in one place: create tracker tickets when asked, write `docs/<feature-slug>/plan.md` when a feature directory exists, or return it in chat.
+4. Return the plan in chat by default. Create tracker tickets only when the user asks. Never write a plan document.
 5. Stop after planning. Do not implement.
 
 Each task must stand alone:

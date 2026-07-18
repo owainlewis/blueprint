@@ -1,5 +1,7 @@
 # Plan: RAG Chatbot API
 
+> Captured chat output from the `plan` skill. A real run stays in chat or is published as tracker tickets when requested.
+
 ## Overview
 
 A FastAPI service for uploading PDFs and answering questions from their contents using PostgreSQL with pgvector and OpenAI.

@@ -20,31 +20,31 @@ Blueprint is a small, principles-first process for AI coding. It separates think
 - `plan`: split decided work into ordered, agent-ready tasks. Stop before implementation.
 - `test`: prove acceptance criteria and important failures, including browser checks when relevant.
 - `review`: use a fresh subagent for an independent, read-only review.
-- `improve`: fix valid findings and simplify the change without adding scope.
+- `improve`: inspect existing code and improve its clarity, simplicity, and structure without changing intended behavior.
 
 Writing code is a base capability, not a separate phase skill. Debugging and test-driven development are implementation techniques, not product-level entry points.
 
 ## Workflow: Code changes
 
-Use `/implement <ticket or task>` for one end-to-end code change. It composes the phase skills and repository tools.
+Use `/implement <ticket, task, or PR>` for one end-to-end code change. It composes the phase skills and repository tools.
 
-1. Fetch the ticket provided. If no ticket exists and `gh` is available, create one from the task before coding.
+1. Resolve the input. Resume an existing PR without manufacturing a ticket. Otherwise fetch the ticket, or create one from the task when `gh` is available.
 2. Read the repository instructions and inspect the relevant code.
-3. Create a plan and verify it against the ticket.
+3. Create a plan and verify it against the ticket, task, or PR.
 4. Implement the changes and add tests where necessary.
 5. Run the `test` phase, including real-browser checks for browser-rendered behavior.
 6. Run the `review` phase with a fresh subagent to review the diff independently.
-7. Run `improve` for valid review findings, then rerun affected tests and fresh review.
-8. Create a Conventional Commit, push the branch, and open a ready pull request linked to the ticket with evidence.
+7. Address valid review findings, then rerun affected tests and fresh review.
+8. Create a Conventional Commit, push the branch, and open or update a ready pull request. Link the ticket when one exists and include evidence.
 9. Wait for CI checks and current review feedback.
-10. Run `improve` for important CI or review feedback, reply to addressed comments with evidence, then repeat affected tests and fresh review until the PR is green and has no important unresolved feedback.
+10. Fix important CI or review feedback, reply to addressed comments with evidence, then repeat affected tests and fresh review until the PR is green and has no important unresolved feedback.
 
 Use a dedicated branch and worktree named with the ticket number or task slug. Never merge unless the user explicitly asks. Reuse a Codex-managed worktree when the task already has one. When creating one locally, use `~/Code/.worktrees/<repo>/<ticket-or-task>` and remove it after the PR is merged or closed.
 
 ## Outputs
 
 - Designs default to `docs/<feature-slug>/design.md`.
-- Plans go in one place: tracker tickets when asked, `docs/<feature-slug>/plan.md` when a feature directory exists, or chat.
+- Plans are returned in chat by default or published as tracker tickets when asked. They are not stored as plan documents.
 - Pull requests state the outcome, link the ticket, and include test, browser, and review evidence as relevant.
 
 Exploration does not require a design, plan, or ticket. Do not create process artifacts that do not improve a decision, handoff, or proof.
