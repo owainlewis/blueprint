@@ -75,7 +75,14 @@ Install the five skills:
 npx skills add owainlewis/blueprint
 ```
 
-Copy `commands/implement.md` to the custom-command directory used by your coding tool, or invoke it as an ordinary prompt. Repository policy stays in `AGENTS.md`; the delivery workflow stays in the command.
+The Skills CLI installs skills, not `commands/implement.md`. Download the command separately. For a project-level Claude Code command:
+
+```bash
+mkdir -p .claude/commands
+curl -fsSL https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md -o .claude/commands/implement.md
+```
+
+For another coding tool, change the output path to its custom-command directory. You can also [open the raw command](https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md) and invoke it as an ordinary prompt. Repository policy stays in `AGENTS.md`; the delivery workflow stays in the command.
 
 If you installed an older Blueprint release, read [MIGRATION.md](MIGRATION.md). Skill updaters may leave removed directories behind, so updating alone may not give you the new five-skill surface.
 

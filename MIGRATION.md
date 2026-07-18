@@ -23,7 +23,13 @@ npx skills add owainlewis/blueprint
 
 Do not delete the whole skills directory because it may contain unrelated skills. Some noninteractive skill updaters do not remove directories that disappeared upstream, so `npx skills update` alone can leave both models installed.
 
-Copy `commands/implement.md` to your tool's custom-command directory if it supports slash commands. Otherwise invoke that file as an ordinary prompt and keep only a reference to it in your repository instructions.
+The Skills CLI does not install commands. Download the workflow separately to your tool's custom-command directory:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md -o /path/to/custom/commands/implement.md
+```
+
+If the tool does not support slash commands, [open the raw command](https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md) and invoke it as an ordinary prompt. Keep only a reference to the canonical command in your repository instructions.
 
 Remove any copied `code-reviewer` agent definition. The `review` skill now asks the coding tool for a fresh generic subagent, which avoids a second source of review policy.
 
