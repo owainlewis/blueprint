@@ -1,6 +1,6 @@
 ---
 name: test
-description: "Prove a change meets its acceptance criteria with focused automated checks and real-browser verification when the behavior is browser-rendered."
+description: "Tests a code change against its acceptance criteria using focused automated checks and real-browser verification for browser-facing work. Use when the user asks to test, verify, validate, QA, check acceptance criteria, browser-test, or prove a diff, branch, PR, URL, or user flow works."
 user-invocable: true
 argument-hint: "<task, acceptance criteria, diff, branch, PR, URL, or flow>"
 ---

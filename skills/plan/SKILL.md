@@ -1,6 +1,6 @@
 ---
 name: plan
-description: "Turn a reviewed design, brief, or large request into ordered agent-ready tasks and optional milestones."
+description: "Breaks a reviewed design or brief into ordered, agent-ready tasks, tickets, and optional milestones. Use when the user asks to break a feature or project into implementation tasks, create implementation tickets or issues from a design, brief, or project, define milestones, or prepare work for multiple agent runs. Do not use for one ticket or the short execution plan inside one coding task."
 user-invocable: true
 argument-hint: "<design, brief, issue, or request>"
 ---

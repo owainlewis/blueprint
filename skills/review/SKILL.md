@@ -1,6 +1,6 @@
 ---
 name: review
-description: "Have a fresh subagent independently review a change for correctness, security, regressions, complexity, and missing proof. Never edit the code."
+description: "Independently reviews code for correctness, security, regressions, unnecessary complexity, and missing tests or evidence. Use when the user asks for a code review, PR review, diff review, security review, second opinion, or pre-merge review. Launches a fresh subagent and never edits the code."
 user-invocable: true
 argument-hint: "[ticket, design, diff, branch, commit, PR, or file path]"
 ---

@@ -1,6 +1,6 @@
 ---
 name: improve
-description: "Inspect existing code and improve its clarity, simplicity, and structure without changing intended behavior."
+description: "Improves existing code without changing intended behavior by simplifying structure, removing duplication and dead code, clarifying names, and reducing unnecessary abstractions. Use when the user asks to improve, simplify, clean up, refactor, reduce complexity, remove duplication, or make existing code easier to understand."
 user-invocable: true
 argument-hint: "[code, files, diff, branch, or improvement focus]"
 ---

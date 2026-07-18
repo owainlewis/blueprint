@@ -1,6 +1,6 @@
 ---
 name: design
-description: "Decide what to build and how it should work. Produce a short reviewed design with requirements, acceptance criteria, technical choices, constraints, risks, and scope."
+description: "Designs what to build and how it should work, including requirements, acceptance criteria, interfaces, data, errors, technical choices, constraints, risks, and scope. Use when the user asks to design or architect a feature, write a spec or design doc, define requirements, or resolve important product or technical decisions before implementation."
 user-invocable: true
 argument-hint: "<feature, problem, or brief>"
 ---
