@@ -2,7 +2,7 @@
 
 Use this when you want one attended Codex thread to work through a small, explicit issue set.
 It is a prompt pattern, not a skill.
-The skills still do the judgment: `implement`, `review`, `pr`, and `pr-to-ready`.
+The skills still do the judgment: `implement`, `review`, and `pr`.
 
 This loop is useful when:
 

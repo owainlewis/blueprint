@@ -10,7 +10,7 @@ Blueprint has two flows. The input to the next step is a spec, plan, or task wit
 
 **Decide** (`design-doc` -> `spec` -> `plan`): turn unclear work into reviewed decisions and tasks a new agent can do. Every stage pauses for human review. Start at `design-doc` when architecture, options, or tradeoffs are unclear. Use `spec` when requirements, function signatures, return values, data shapes, or error behavior need review. Use `plan` when the work just needs splitting. Skip stages when the change is small and already decided.
 
-**Deliver** (`implement`): turn one task into a PR that is ready for human merge, with the ticket as the record of the work. `implement` creates or reuses the ticket, uses a dedicated ticket-numbered branch and worktree from the latest remote default branch, implements the change, tests it, gets a fresh-agent review, checks each acceptance criterion, commits, pushes, opens the PR, handles current feedback, and updates the ticket. Use `milestone` to complete a GitHub milestone through `implement`, one issue at a time. Use `multitask` to run several independent tickets in parallel, one worker per ticket. Use `pr-to-ready` when later feedback exists. Merging is a human decision unless explicitly requested. Use `tdd` when a failing test can describe the behavior first, `refactor` to simplify changed code before review, and `debug` when something breaks.
+**Deliver** (`implement`): turn one ticket or task into a PR that is ready for human merge, with the ticket as the record of the work. For a task without a ticket, `implement` creates a GitHub issue with `gh` when available. It uses a dedicated ticket-numbered branch and worktree from the latest remote default branch, implements the change, tests it, gets a fresh-agent review, checks each acceptance criterion, commits, pushes, opens the PR, waits for feedback, fixes important items, and updates the ticket. Later runs resume the same PR. Use `milestone` to complete a GitHub milestone through `implement`, one issue at a time. Use `multitask` to run several independent tickets in parallel, one worker per ticket. Merging is a human decision unless explicitly requested. Use `tdd` when a failing test can describe the behavior first, `refactor` to simplify changed code before review, and `debug` when something breaks.
 
 Exploration is allowed without creating docs or issue tracker entries. Do not manufacture fake specs, plans, or issues for spikes.
 
@@ -25,7 +25,7 @@ Decide:
 
 Deliver:
 
-- `implement`: turn one task into a PR ready for human merge, keeping the ticket updated with proof; uses a dedicated branch and worktree, tests, review, acceptance checks, and current feedback.
+- `implement`: turn one ticket or task into a PR ready for human merge; creates missing GitHub issues with `gh`, uses a dedicated branch and worktree, tests, review, acceptance checks, and feedback handling.
 - `milestone`: complete all open issues in a GitHub milestone by running `implement` one issue at a time.
 - `multitask`: run several tickets to PRs in parallel, one worker per ticket.
 - `tdd`: test-first variant of implement.
@@ -33,7 +33,6 @@ Deliver:
 - `refactor`: simplify changed code without changing behavior.
 - `review`: pre-merge code review for correctness, security, simplicity, robustness, and tests.
 - `pr`: commit, push, and open a PR with a clear description.
-- `pr-to-ready`: drive an open PR with feedback to ready; never merges.
 - `browser-verify`: verify browser-rendered work in a real browser.
 
 Helper entry points:
@@ -51,7 +50,7 @@ Blueprint can run as scheduled loops over an issue tracker, with agents filing e
 
 1. **Ready**: turn ideas and specs into issues a new agent can do. The agent filing an issue judges it at creation: decided work gets `agent:ready`; real work with open decisions gets `needs:spec`. Nothing unjudged enters the tracker.
 2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `implement` to a PR ready for review.
-3. **Review**: humans, review bots, and checks leave feedback. A review-watch loop runs `pr-to-ready` after a short grace window, repeats until ready or blocked, and a human merges.
+3. **Review**: humans, review bots, and checks leave feedback. A review-watch loop resumes `implement` on the existing PR after a short grace window, repeats until ready or blocked, and a human merges.
 
 ### Definition of Ready
 

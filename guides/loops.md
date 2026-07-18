@@ -15,7 +15,7 @@ flowchart LR
     Ideas([Ideas, specs,<br/>rough captures])
     Ready["Ready<br/>agents file labeled issues<br/>spec loop resolves decisions"]
     Work["Work<br/>claim one ready issue<br/>implement to PR"]
-    Review["Review<br/>human reviews<br/>pr-to-ready fixes feedback"]
+    Review["Review<br/>human reviews<br/>implement fixes feedback"]
     Merge([Human merges])
 
     Ideas --> Ready --> Work --> Review --> Merge
@@ -33,7 +33,7 @@ flowchart LR
 
 1. **Ready**: plan, triage, and get work agent-ready. Agents file every issue and judge it at creation: decision-complete work gets `agent:ready`, real problems with open decisions get `needs:spec`. The spec loop turns the latter into reviewed specs; you flip the label after approving.
 2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `implement` to a PR ready for review, with the ticket as the work record.
-3. **Review**: humans and review systems leave feedback on PRs. The review loop watches for that feedback, runs `pr-to-ready`, and leaves merge decisions to you.
+3. **Review**: humans and review systems leave feedback on PRs. The review loop watches for that feedback, resumes `implement` on the existing PR, and leaves merge decisions to you.
 
 ## Labels at a Glance
 
@@ -169,11 +169,11 @@ One tick of the review loop.
 4. If the latest agent push is less than 10 minutes old and checks or
    review bots are still pending, skip the PR for this tick so feedback
    can arrive.
-5. Run pr-to-ready when any human review, bot comment, unresolved
-   thread, or failing required check is newer than the last agent
-   activity, or when older actionable feedback is still unresolved.
-6. After pr-to-ready, comment the readiness verdict with proof when
-   it changes the state of play. Leave ready PRs open for human merge.
+5. Resume implement with the existing PR when any human review, bot
+   comment, unresolved thread, or failing required check is newer than
+   the last agent activity, or when older actionable feedback remains.
+6. After implement, comment the readiness verdict with proof when it
+   changes the state of play. Leave ready PRs open for human merge.
 7. Stop on needs-human findings, repeated identical failures, missing
    permissions, or unclear repo policy. Never merge.
 ```
@@ -223,6 +223,6 @@ Start with one loop, the work loop, on a slow schedule. Add the spec and review 
 
 - Flipping `needs:spec` to `agent:ready` after reviewing a spec.
 - Reviewing PRs when human judgment is needed.
-- Merging. No unattended loop, skill, or prompt merges; `pr-to-ready` ends at a readiness verdict.
+- Merging. No unattended loop, skill, or prompt merges; `implement` ends at a readiness verdict unless the user explicitly authorizes merge.
 
 Everything else is the loops' job. If you find yourself doing it by hand, the fix is a better issue or a better prompt, not more hands.

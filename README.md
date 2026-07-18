@@ -2,7 +2,7 @@
 
 Coding agents don't fail for lack of intelligence. They fail for lack of process: no spec, no plan, no tests, no review, just a confident 2,000-line PR nobody asked for. Blueprint fixes the process and trusts the intelligence.
 
-It encodes how strong engineering teams ship: design when architecture is unclear, write specs when behavior or interfaces need review, plan when work needs splitting, test before ship, and review before merge. Core skills, plus two small Git helpers, let you run one step yourself or take tickets all the way to PRs ready for review.
+It encodes how strong engineering teams ship: design when architecture is unclear, write specs when behavior or interfaces need review, plan when work needs splitting, test before ship, and review before merge. Core skills, plus two small Git helpers, let you run one step yourself or take tickets all the way to PRs ready for human merge.
 
 Blueprint is deliberately small. No ceremony, no mazes of rules, no thousand-line process files before work starts. A short skill is easier for an agent to follow.
 
@@ -32,10 +32,9 @@ flowchart TD
     Handoff["tasks / tickets<br/>ready to build"]
 
     Count{How many<br/>tickets?}
-    Single["implement<br/>ticket + worktree -> code<br/>review + verify -> PR"]
+    Single["implement<br/>ticket + worktree -> code<br/>review + feedback -> ready PR"]
     Multi["multitask<br/>classify, isolate<br/>coordinate workers"]
-    PRs["PRs ready for review<br/>tests, review<br/>acceptance proof"]
-    Ready["pr-to-ready<br/>feedback to ready<br/>never merge"]
+    PRs["PRs ready for human merge<br/>tests, review<br/>acceptance proof"]
 
     Request --> Ambiguous
     Ambiguous -->|yes| Design --> Spec
@@ -48,21 +47,18 @@ flowchart TD
     Handoff --> Count
     Count -->|one| Single --> PRs
     Count -->|many| Multi --> PRs
-    PRs --> Ready
 
     classDef start fill:#0f172a,stroke:#38bdf8,stroke-width:3px,color:#f8fafc,font-size:18px;
     classDef decision fill:#431407,stroke:#fb923c,stroke-width:3px,color:#ffedd5,font-size:18px;
     classDef decide fill:#172554,stroke:#60a5fa,stroke-width:3px,color:#eff6ff,font-size:18px;
     classDef handoff fill:#4c1d95,stroke:#a78bfa,stroke-width:3px,color:#faf5ff,font-size:18px;
     classDef deliver fill:#052e16,stroke:#4ade80,stroke-width:3px,color:#f0fdf4,font-size:18px;
-    classDef feedback fill:#831843,stroke:#f472b6,stroke-width:3px,color:#fdf2f8,font-size:18px;
 
     class Request start;
     class Ambiguous,SpecGate,Split,Count decision;
     class Design,Spec,Plan,Direct decide;
     class Handoff handoff;
     class Single,Multi,PRs deliver;
-    class Ready feedback;
 ```
 
 **If implementation reveals the instructions are wrong, stop.** Update the task, spec, or plan, then continue from the updated source. Do not push through stale instructions. Clarifying costs minutes; pushing through wrong instructions costs the rest of the feature.
@@ -71,18 +67,17 @@ flowchart TD
 
 ## The Loops
 
-Most skills are steps: one phase, one human checkpoint. Four skills chain the steps into end-to-end loops:
+Most skills are steps: one phase, one human checkpoint. Three skills chain the steps into end-to-end loops:
 
 | Skill         | From                     | To                                                                         |
 | ------------- | ------------------------ | -------------------------------------------------------------------------- |
 | `implement`   | a task or ticket          | a PR ready for human merge, with code, tests, another review, acceptance checks, and proof |
 | `milestone`   | a GitHub milestone       | every open issue completed through `implement`, one PR at a time |
 | `multitask`   | several tickets          | several PRs ready for review, one separate worker per ticket or dependent group |
-| `pr-to-ready` | an open PR with human, bot, or check feedback | a PR that is ready to merge, with checks passing |
 
 Loops keep the ticket updated as they work: status moves, comments with proof, and PR links. They stop at human checkpoints. Human merge is the default; agents merge only with explicit permission.
 
-`implement` is the single-task loop: it creates or reuses the ticket, creates a dedicated ticket-numbered branch and worktree from the latest remote default branch, implements the acceptance criteria, reviews the diff, checks acceptance, opens a PR ready for review, handles current feedback, and writes proof back to the ticket. It leaves merging to a human unless the user explicitly asks for merge.
+`implement` is the single-task loop. Give it a ticket or describe the task. When no issue exists, it creates one with `gh` when available, then creates a dedicated ticket-numbered branch and worktree from the latest remote default branch. It implements the acceptance criteria, reviews the diff, checks acceptance, opens a PR, waits for feedback, fixes important items, and writes proof back to the ticket. Later runs resume the same PR. It leaves merging to a human unless the user explicitly asks for merge.
 
 `milestone` is the release-slice loop: it reads open issues in a GitHub milestone, orders them by dependency and risk, then runs `implement` for each issue. It stops for human merge unless merge permission was explicit. When merging is allowed, it merges only after checks and review are clean, syncs the default branch, then continues.
 
@@ -98,7 +93,7 @@ flowchart LR
     Ideas([Ideas, specs,<br/>rough captures])
     Ready["Ready<br/>agents file labeled issues<br/>spec loop resolves decisions"]
     Work["Work<br/>claim one ready issue<br/>implement to PR"]
-    Review["Review<br/>humans, bots, checks<br/>pr-to-ready fixes feedback"]
+    Review["Review<br/>humans, bots, checks<br/>implement fixes feedback"]
     Merge([Human merges])
 
     Ideas --> Ready --> Work --> Review --> Merge
@@ -115,8 +110,8 @@ flowchart LR
 ```
 
 1. **Ready**: turn ideas and specs into issues a new agent can do. The agent filing an issue judges it at creation: decided work gets `agent:ready`; real work with open decisions gets `needs:spec`, and the spec loop turns it into a reviewed spec. Nothing unjudged enters the tracker.
-2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `implement` to a PR ready for review, with the ticket as the work record. The loop throttles itself on review capacity: when too many agent PRs await review, it stops starting new work.
-3. **Review**: humans, review bots, and checks leave feedback. A review-watch loop runs `pr-to-ready` after a short grace window, repeats until the PR is ready or blocked, and a human merges.
+2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `implement` to an open PR, with the ticket as the work record. The loop throttles itself on review capacity: when too many agent PRs await review, it stops starting new work.
+3. **Review**: humans, review bots, and checks leave feedback. A review-watch loop resumes `implement` on the existing PR after a short grace window, repeats until the PR is ready or blocked, and a human merges.
 
 Humans do three things: flip `needs:spec` to `agent:ready` after reviewing a spec, review PRs when judgment is needed, and merge. Agents do everything else.
 
@@ -151,7 +146,7 @@ npx skills update
 | **Define**   | `spec`              | Writes `docs/<feature-slug>/spec.md`: requirements, interfaces, data shapes, and implementation design            | `Write a spec for user-auth`                 |
 | **Plan**     | `plan`              | Breaks a spec, brief, or request into tasks sized for agents, review, and rollback                               | `Create a plan for user-auth`                |
 | **Goal**     | `goal-design`       | Writes Codex and Claude Code `/goal` prompts with clear checks, proof, and stop rules                            | `Write a goal for this ticket-to-PR task`    |
-| **Deliver**  | `implement`         | Runs one task from ticket creation or reuse through a tested, reviewed PR ready for human merge                  | `Implement LIN-123 from user-auth`           |
+| **Deliver**  | `implement`         | Runs one ticket or task through issue creation, isolation, tests, review, feedback, and a PR ready for human merge | `Implement retry limits in the API client` |
 | **Build**    | `tdd`               | Implements behavior test-first                                                                                    | `Use TDD for retry logic in the API client`  |
 | **Debug**    | `debug`             | Finds the root cause of a failure, fixes it test-first when practical, and leaves a regression test              | `Debug the failing retry test`               |
 | **Improve**  | `refactor`          | Improves code shape without changing behavior                                                                     | `Refactor the current diff`                  |
@@ -159,7 +154,6 @@ npx skills update
 | **Deliver**  | `milestone`         | Completes a GitHub milestone through `implement`, one issue and PR at a time                                     | `milestone https://github.com/org/repo/milestone/1` |
 | **Deliver**  | `multitask`         | Coordinates several tickets to PRs at once, one isolated worker per ticket                                        | `multitask LIN-101 LIN-102 LIN-103`          |
 | **Deliver**  | `pr`                | Commits intended changes, pushes the branch, and opens a clear PR                                                 | `Open a PR for this change`                  |
-| **Feedback** | `pr-to-ready`       | Inspects live PR state, fixes actionable feedback, verifies checks, and reports merge readiness; never merges     | `Is PR #42 ready to merge?`                  |
 | **Browser**  | `browser-verify`    | Verifies rendered UI, HTML, visual docs, and browser-facing behavior in a real browser                            | `Browser-verify the local HTML report`       |
 
 Helper entry points, not core workflows; they stay installable so `implement`, `milestone`, `multitask`, and `pr` can expose the full delivery path consistently:
@@ -169,7 +163,7 @@ Helper entry points, not core workflows; they stay installable so `implement`, `
 | `branch` | Creates a Git branch with the ticket ID when available            | `Create a branch for LIN-123 user-auth` |
 | `commit` | Stages intended changes and writes one clear Conventional Commit  | `Commit the current changes`            |
 
-Renamed and removed skills are listed in [CHANGELOG.md](CHANGELOG.md).
+`task-to-pr` and `pr-to-ready` were removed as duplicate workflows. Use `implement` for the complete ticket-or-task to merge-ready PR loop, including later feedback.
 
 ## Agent Instructions
 
