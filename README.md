@@ -45,6 +45,7 @@ flowchart TB
     end
 
     PR --> Merge([Human merge])
+    Merge ~~~ Existing
     Existing([Existing code]) --> Improve["improve"] --> Simpler([Simpler code])
 ```
 
