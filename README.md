@@ -45,9 +45,9 @@ flowchart TB
     end
 
     PR --> Merge([Human merge])
-    Merge ~~~ Existing
-    Existing([Existing code]) --> Improve["improve"] --> Simpler([Simpler code])
 ```
+
+`improve` is a separate maintenance path for existing code, not a step every change must pass through.
 
 The model has three layers:
 
