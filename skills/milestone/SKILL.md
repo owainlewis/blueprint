@@ -1,6 +1,6 @@
 ---
 name: milestone
-description: "Complete all open GitHub issues in a milestone by running task-to-pr one issue at a time."
+description: "Complete all open GitHub issues in a milestone by running implement one issue at a time."
 user-invocable: true
 argument-hint: "<GitHub milestone URL>"
 ---
@@ -13,7 +13,7 @@ Goal: finish every open issue in a GitHub milestone.
 
 1. Inspect the milestone, repo, open issues, open PRs, and project state when accessible.
 2. Order issues by dependency, risk, and reviewability. Put blockers, bugs, and shared seams before dependent feature work.
-3. Work one issue at a time by running `task-to-pr`. Do not reimplement its inner loop.
+3. Work one issue at a time by running `implement`. Do not reimplement its inner loop.
 4. After each PR is ready, stop for human merge unless the user explicitly allowed merging for this run.
 5. If merging is allowed, merge only after local checks, CI, and review are clean. Then sync the default branch before starting the next issue.
 6. Keep the issue and project state updated with PR links, proof, blockers, and final status.

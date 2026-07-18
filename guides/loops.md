@@ -14,7 +14,7 @@ Adjust the prompts to your repo.
 flowchart LR
     Ideas([Ideas, specs,<br/>rough captures])
     Ready["Ready<br/>agents file labeled issues<br/>spec loop resolves decisions"]
-    Work["Work<br/>claim one ready issue<br/>task-to-pr to PR"]
+    Work["Work<br/>claim one ready issue<br/>implement to PR"]
     Review["Review<br/>human reviews<br/>pr-to-ready fixes feedback"]
     Merge([Human merges])
 
@@ -32,7 +32,7 @@ flowchart LR
 ```
 
 1. **Ready**: plan, triage, and get work agent-ready. Agents file every issue and judge it at creation: decision-complete work gets `agent:ready`, real problems with open decisions get `needs:spec`. The spec loop turns the latter into reviewed specs; you flip the label after approving.
-2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `task-to-pr` to a PR ready for review, with the ticket as the work record.
+2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `implement` to a PR ready for review, with the ticket as the work record.
 3. **Review**: humans and review systems leave feedback on PRs. The review loop watches for that feedback, runs `pr-to-ready`, and leaves merge decisions to you.
 
 ## Labels at a Glance
@@ -140,7 +140,7 @@ One tick of the work loop.
    risk:low; higher-risk work waits for an attended session. Assign
    yourself and swap agent:ready to agent:working before any other
    work. If none, exit and say so.
-4. Work. Run task-to-pr with the issue. When the PR opens, swap
+4. Work. Run implement with the issue. When the PR opens, swap
    agent:working to agent:complete.
 5. Blocked? Comment what blocked you on the issue, label it needs:human,
    remove agent:working, and exit cleanly. The ticket is the only

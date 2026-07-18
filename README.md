@@ -32,7 +32,7 @@ flowchart TD
     Handoff["tasks / tickets<br/>ready to build"]
 
     Count{How many<br/>tickets?}
-    Single["task-to-pr<br/>branch + worktree -> code<br/>review + verify -> PR"]
+    Single["implement<br/>ticket + worktree -> code<br/>review + verify -> PR"]
     Multi["multitask<br/>classify, isolate<br/>coordinate workers"]
     PRs["PRs ready for review<br/>tests, review<br/>acceptance proof"]
     Ready["pr-to-ready<br/>feedback to ready<br/>never merge"]
@@ -67,7 +67,7 @@ flowchart TD
 
 **If implementation reveals the instructions are wrong, stop.** Update the task, spec, or plan, then continue from the updated source. Do not push through stale instructions. Clarifying costs minutes; pushing through wrong instructions costs the rest of the feature.
 
-**Tests are the default proof.** The request or spec defines what to test. The implementation adds tests that prove the requirements. Browser-rendered work also gets checked with `browser-verify`. `task-to-pr` checks each acceptance criterion before opening the PR. Review checks that the proof is real. If you want stronger code review rules, write them into `REVIEW.md`; the review skill will pick them up.
+**Tests are the default proof.** The request or spec defines what to test. The implementation adds tests that prove the requirements. Browser-rendered work also gets checked with `browser-verify`. `implement` checks each acceptance criterion before opening the PR. Review checks that the proof is real. If you want stronger code review rules, write them into `REVIEW.md`; the review skill will pick them up.
 
 ## The Loops
 
@@ -75,16 +75,16 @@ Most skills are steps: one phase, one human checkpoint. Four skills chain the st
 
 | Skill         | From                     | To                                                                         |
 | ------------- | ------------------------ | -------------------------------------------------------------------------- |
-| `task-to-pr`  | a ticket                 | a PR ready for review, with code, tests, another review, acceptance checks, and proof |
-| `milestone`   | a GitHub milestone       | every open issue completed through `task-to-pr`, one PR at a time |
+| `implement`   | a task or ticket          | a PR ready for human merge, with code, tests, another review, acceptance checks, and proof |
+| `milestone`   | a GitHub milestone       | every open issue completed through `implement`, one PR at a time |
 | `multitask`   | several tickets          | several PRs ready for review, one separate worker per ticket or dependent group |
 | `pr-to-ready` | an open PR with human, bot, or check feedback | a PR that is ready to merge, with checks passing |
 
-Loops keep the ticket updated as they work: status moves, comments with proof, and PR links. They stop at human checkpoints. Merging is always a human decision.
+Loops keep the ticket updated as they work: status moves, comments with proof, and PR links. They stop at human checkpoints. Human merge is the default; agents merge only with explicit permission.
 
-`task-to-pr` is the single-ticket loop: it reads the ticket, creates a dedicated branch and worktree from the latest remote default branch, implements the acceptance criteria, reviews the diff, checks acceptance, opens a PR ready for review, handles current feedback, and writes proof back to the ticket.
+`implement` is the single-task loop: it creates or reuses the ticket, creates a dedicated ticket-numbered branch and worktree from the latest remote default branch, implements the acceptance criteria, reviews the diff, checks acceptance, opens a PR ready for review, handles current feedback, and writes proof back to the ticket. It leaves merging to a human unless the user explicitly asks for merge.
 
-`milestone` is the release-slice loop: it reads open issues in a GitHub milestone, orders them by dependency and risk, then runs `task-to-pr` for each issue. It stops for human merge unless merge permission was explicit. When merging is allowed, it merges only after checks and review are clean, syncs the default branch, then continues.
+`milestone` is the release-slice loop: it reads open issues in a GitHub milestone, orders them by dependency and risk, then runs `implement` for each issue. It stops for human merge unless merge permission was explicit. When merging is allowed, it merges only after checks and review are clean, syncs the default branch, then continues.
 
 `multitask` is the coordinator-worker loop for several tickets at once: it groups dependent work, starts one isolated worker per ticket, and reports each PR or blocker. The coordinator never edits code. See [guides/multitask.md](guides/multitask.md) for how it splits and coordinates work.
 
@@ -97,7 +97,7 @@ The loops above still start when you invoke them. They can also run on a schedul
 flowchart LR
     Ideas([Ideas, specs,<br/>rough captures])
     Ready["Ready<br/>agents file labeled issues<br/>spec loop resolves decisions"]
-    Work["Work<br/>claim one ready issue<br/>task-to-pr to PR"]
+    Work["Work<br/>claim one ready issue<br/>implement to PR"]
     Review["Review<br/>humans, bots, checks<br/>pr-to-ready fixes feedback"]
     Merge([Human merges])
 
@@ -115,7 +115,7 @@ flowchart LR
 ```
 
 1. **Ready**: turn ideas and specs into issues a new agent can do. The agent filing an issue judges it at creation: decided work gets `agent:ready`; real work with open decisions gets `needs:spec`, and the spec loop turns it into a reviewed spec. Nothing unjudged enters the tracker.
-2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `task-to-pr` to a PR ready for review, with the ticket as the work record. The loop throttles itself on review capacity: when too many agent PRs await review, it stops starting new work.
+2. **Work**: a scheduled agent claims one `agent:ready` issue and runs `implement` to a PR ready for review, with the ticket as the work record. The loop throttles itself on review capacity: when too many agent PRs await review, it stops starting new work.
 3. **Review**: humans, review bots, and checks leave feedback. A review-watch loop runs `pr-to-ready` after a short grace window, repeats until the PR is ready or blocked, and a human merges.
 
 Humans do three things: flip `needs:spec` to `agent:ready` after reviewing a spec, review PRs when judgment is needed, and merge. Agents do everything else.
@@ -151,19 +151,18 @@ npx skills update
 | **Define**   | `spec`              | Writes `docs/<feature-slug>/spec.md`: requirements, interfaces, data shapes, and implementation design            | `Write a spec for user-auth`                 |
 | **Plan**     | `plan`              | Breaks a spec, brief, or request into tasks sized for agents, review, and rollback                               | `Create a plan for user-auth`                |
 | **Goal**     | `goal-design`       | Writes Codex and Claude Code `/goal` prompts with clear checks, proof, and stop rules                            | `Write a goal for this ticket-to-PR task`    |
-| **Build**    | `implement`         | Executes one task with tests and checks                                                                           | `Implement LIN-123 from user-auth`           |
+| **Deliver**  | `implement`         | Runs one task from ticket creation or reuse through a tested, reviewed PR ready for human merge                  | `Implement LIN-123 from user-auth`           |
 | **Build**    | `tdd`               | Implements behavior test-first                                                                                    | `Use TDD for retry logic in the API client`  |
 | **Debug**    | `debug`             | Finds the root cause of a failure, fixes it test-first when practical, and leaves a regression test              | `Debug the failing retry test`               |
 | **Improve**  | `refactor`          | Improves code shape without changing behavior                                                                     | `Refactor the current diff`                  |
 | **Review**   | `review`            | Reviews code changes for correctness, security, simplicity, robustness, and tests                                | `Review the current diff`                    |
-| **Deliver**  | `task-to-pr`        | Runs the loop from ticket to PR: implement, test, review, check acceptance, open the PR, update the ticket with proof | `task-to-pr LIN-123`                    |
-| **Deliver**  | `milestone`         | Completes a GitHub milestone through `task-to-pr`, one issue and PR at a time                                    | `milestone https://github.com/org/repo/milestone/1` |
+| **Deliver**  | `milestone`         | Completes a GitHub milestone through `implement`, one issue and PR at a time                                     | `milestone https://github.com/org/repo/milestone/1` |
 | **Deliver**  | `multitask`         | Coordinates several tickets to PRs at once, one isolated worker per ticket                                        | `multitask LIN-101 LIN-102 LIN-103`          |
 | **Deliver**  | `pr`                | Commits intended changes, pushes the branch, and opens a clear PR                                                 | `Open a PR for this change`                  |
 | **Feedback** | `pr-to-ready`       | Inspects live PR state, fixes actionable feedback, verifies checks, and reports merge readiness; never merges     | `Is PR #42 ready to merge?`                  |
 | **Browser**  | `browser-verify`    | Verifies rendered UI, HTML, visual docs, and browser-facing behavior in a real browser                            | `Browser-verify the local HTML report`       |
 
-Helper entry points, not core workflows; they stay installable so `task-to-pr`, `milestone`, `multitask`, and `pr` can expose the full delivery path consistently:
+Helper entry points, not core workflows; they stay installable so `implement`, `milestone`, `multitask`, and `pr` can expose the full delivery path consistently:
 
 | Skill    | What it does                                                      | Example                                 |
 | -------- | ------------------------------------------------------------------ | ---------------------------------------- |

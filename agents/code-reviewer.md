@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: "Fresh-context adversarial code reviewer. Use for the fresh subagent review step in implement and task-to-pr, after any non-trivial change, or before opening a PR."
+description: "Fresh-context adversarial code reviewer. Use for the fresh subagent review step in implement, after any non-trivial change, or before opening a PR."
 tools: Read, Grep, Glob, Bash
 model: inherit
 ---

@@ -2,7 +2,7 @@
 
 Use this when you want one attended Codex thread to work through a small, explicit issue set.
 It is a prompt pattern, not a skill.
-The skills still do the judgment: `task-to-pr`, `implement`, `review`, `pr`, and `pr-to-ready`.
+The skills still do the judgment: `implement`, `review`, `pr`, and `pr-to-ready`.
 
 This loop is useful when:
 
@@ -139,6 +139,6 @@ Begin with the first issue.
 
 ## Notes
 
-This loop deliberately extends beyond `task-to-pr`.
+This loop deliberately extends beyond `implement`.
 It owns sequencing and, when explicitly authorized, merge.
 Use it for attended project pushes, not unattended background work.
