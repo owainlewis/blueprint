@@ -163,7 +163,7 @@ Helper entry points, not core workflows; they stay installable so `implement`, `
 | `branch` | Creates a Git branch with the ticket ID when available            | `Create a branch for LIN-123 user-auth` |
 | `commit` | Stages intended changes and writes one clear Conventional Commit  | `Commit the current changes`            |
 
-`task-to-pr` and `pr-to-ready` were removed as duplicate workflows. Use `implement` for the complete ticket-or-task to merge-ready PR loop, including later feedback.
+`task-to-pr` and `pr-to-ready` were removed as duplicate workflows. Use `implement` for the complete delivery loop from a ticket or task to a PR ready for human merge, including later feedback.
 
 ## Agent Instructions
 
