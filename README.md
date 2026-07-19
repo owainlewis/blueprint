@@ -16,28 +16,28 @@ Use the smallest entry point that resolves the uncertainty in front of you.
 
 | If you need to… | Start with | Result |
 | --- | --- | --- |
-| Decide what to build or resolve important technical choices | `design` | A reviewed design with requirements and acceptance criteria |
-| Split a decided feature into work for several agent runs | `plan` | Ordered tasks in chat or tracker tickets |
+| Decide what to build or resolve important technical choices | `/design` | A reviewed design with requirements and acceptance criteria |
+| Split a decided feature into work for several agent runs | `/plan` | Ordered tasks in chat or tracker tickets |
 | Take one task through delivery | `/implement` | A tested, reviewed, green pull request |
-| Prove a change works | `test` | Acceptance criteria mapped to evidence |
-| Get an independent second opinion | `review` | Findings and a pre-merge verdict from a fresh subagent |
-| Simplify existing code without changing behavior | `improve` | Clearer, smaller, better-structured code |
+| Prove a change works | `/test` | Acceptance criteria mapped to evidence |
+| Get an independent second opinion | `/review` | Findings and a pre-merge verdict from a fresh subagent |
+| Simplify existing code without changing behavior | `/improve` | Clearer, smaller, better-structured code |
 
-Small, decided work can go straight to `/implement`. Use `design` only when decisions need review, and `plan` only when the work needs splitting.
+Small, decided work can go straight to `/implement`. Use `/design` only when decisions need review, and `/plan` only when the work needs splitting.
 
 ## How Blueprint fits together
 
 ```mermaid
 flowchart TB
     subgraph Decide["Decide only as much as needed"]
-        Idea([Idea or problem]) --> Design["design"]
+        Idea([Idea or problem]) --> Design["/design"]
         Idea -->|already decided| Task([One task])
         Design -->|one task| Task
-        Design -->|needs splitting| Plan["plan"] --> Task
+        Design -->|needs splitting| Plan["/plan"] --> Task
     end
 
     subgraph Deliver["Deliver with /implement"]
-        Task --> Isolate["isolate"] --> Code["code"] --> Test["test"] --> Review["review"]
+        Task --> Isolate["isolate"] --> Code["code"] --> Test["/test"] --> Review["/review"]
         Review -->|findings| Fix["fix"] --> Test
         Review -->|clean| Publish["publish PR"] --> Validate["CI + current feedback"]
         Validate -->|failure or finding| Fix
@@ -47,7 +47,7 @@ flowchart TB
     PR --> Merge([Human merge])
 ```
 
-`improve` is a separate maintenance path for existing code, not a step every change must pass through.
+`/improve` is a separate maintenance path for existing code, not a step every change must pass through.
 
 The model has three layers:
 
@@ -59,11 +59,11 @@ The model has three layers:
 
 | Skill | Owns | Stops when |
 | --- | --- | --- |
-| `design` | What, why, requirements, acceptance criteria, technical design, constraints, risks, and scope | The design is ready for human review |
-| `plan` | Vertical, ordered tasks and optional milestones | The work is ready to hand off |
-| `test` | Automated checks, failure paths, and real-browser proof when relevant | Every criterion is pass, fail, or explicitly unverified |
-| `review` | Independent review of correctness, security, regressions, complexity, and proof | Findings and a verdict are reported |
-| `improve` | Behavior-preserving simplification of existing code | Relevant checks prove behavior was preserved |
+| `/design` | What, why, requirements, acceptance criteria, technical design, constraints, risks, and scope | The design is ready for human review |
+| `/plan` | Vertical, ordered tasks and optional milestones | The work is ready to hand off |
+| `/test` | Automated checks, failure paths, and real-browser proof when relevant | Every criterion is pass, fail, or explicitly unverified |
+| `/review` | Independent review of correctness, security, regressions, complexity, and proof | Findings and a verdict are reported |
+| `/improve` | Behavior-preserving simplification of existing code | Relevant checks prove behavior was preserved |
 
 Writing code is a base capability, not a phase skill. Branching, committing, opening a PR, debugging, TDD, browser checking, and addressing feedback are techniques or workflow steps, not separate product concepts.
 
@@ -73,7 +73,7 @@ Writing code is a base capability, not a phase skill. Branching, committing, ope
 
 1. resolves the source and isolates work before editing;
 2. implements the smallest complete change;
-3. runs `test` and independent `review` loops;
+3. runs `/test` and independent `/review` loops;
 4. creates Conventional Commits and opens or updates the PR;
 5. waits for CI, handles feedback that exists, and records evidence;
 6. stops at a green, mergeable PR for a human to merge.
