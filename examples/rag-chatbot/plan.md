@@ -1,6 +1,6 @@
 # Plan: RAG Chatbot API
 
-> Captured chat output from the `plan` skill. A real run stays in chat or is published as tracker tickets when requested.
+> Captured chat output from the `/plan` skill. A real run stays in chat or is published as tracker tickets when requested.
 
 ## Overview
 
