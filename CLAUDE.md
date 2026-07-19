@@ -1,6 +1,8 @@
+# Claude Code
+
 @AGENTS.md
 
-## Claude Code adapter
+Blueprint keeps shared repository policy in `AGENTS.md` and only Claude-specific setup here.
 
 Install Blueprint skills with `npx skills add owainlewis/blueprint`. The public skills are `design`, `plan`, `test`, `review`, and `improve`.
 
@@ -8,7 +10,8 @@ The Skills CLI does not install commands. Install `/implement` separately for a 
 
 ```bash
 mkdir -p .claude/commands
-curl -fsSL https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md -o .claude/commands/implement.md
+curl -fsSL https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md \
+  -o .claude/commands/implement.md
 ```
 
 Use `~/.claude/commands/implement.md` instead for a user command. The downloaded file is the canonical workflow; `AGENTS.md` contains portable repository policy.

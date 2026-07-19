@@ -9,6 +9,8 @@ argument-hint: "[ticket, design, diff, branch, commit, PR, or file path]"
 
 The reviewer must be a fresh subagent that did not implement the change. Do not edit files.
 
+## Workflow
+
 1. Give the reviewer the task, acceptance criteria, repository guidance, diff or PR, and test evidence.
 2. Have it read the relevant surrounding code and try to prove the change wrong. Check behavior, edge cases, failures, security boundaries, interfaces, compatibility, regressions, scope, complexity, and whether tests exercise the changed behavior.
 3. Have it run focused checks when practical.
@@ -18,8 +20,14 @@ The reviewer must be a fresh subagent that did not implement the change. Do not 
 - **important:** should fix before merge.
 - **nit:** optional; omit unless asked.
 
+## Verdict
+
 If fresh subagents are unavailable, stop and report that independent review is blocked unless the user explicitly accepts a documented self-review.
 
 If there are no findings, say so. End with `Approve`, `Request changes`, or `Blocked`, then state what remains unverified.
 
-Review only the change. Do not turn preferences into findings or approve solely because checks pass.
+## Boundaries
+
+- Review only the change.
+- Do not turn preferences into findings.
+- Do not approve solely because checks pass.

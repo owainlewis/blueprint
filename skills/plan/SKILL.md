@@ -7,6 +7,8 @@ argument-hint: "<design, brief, issue, or request>"
 
 # Plan
 
+## Workflow
+
 1. Read the source, repository instructions, and relevant code.
 2. Stop and return to design if product or technical choices remain open.
 3. Break the work into vertical, outcome-based tasks small enough for one agent run. Order them by dependency. Add milestones only when they create a useful delivery or review boundary.
@@ -18,23 +20,27 @@ Each task must stand alone:
 ```markdown
 ## <Task title>
 
-**Outcome**
+### Outcome
 The working result.
 
-**Context**
+### Context
 What a new agent needs with no session history.
 
-**Constraints**
+### Constraints
 Decisions and behavior that must not change.
 
-**Acceptance criteria**
+### Acceptance criteria
 - Testable condition.
 
-**Checks**
+### Checks
 Exact commands and any required manual verification.
 
-**Out of scope**
+### Out of scope
 Related work this task must not absorb.
 ```
 
-Do not split by file or technical layer when one vertical slice can deliver working behavior. Do not create scaffolding or cleanup tasks without a checked outcome.
+## Boundaries
+
+- Do not split by file or technical layer when one vertical slice can deliver working behavior.
+- Do not create scaffolding or cleanup tasks without a checked outcome.
+- Do not hide unresolved decisions inside implementation tickets.

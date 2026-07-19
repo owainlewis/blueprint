@@ -6,9 +6,9 @@
 
 A FastAPI service for uploading PDFs and answering questions from their contents using PostgreSQL with pgvector and OpenAI.
 
-Source design: `docs/rag-chatbot/design.md`
+Source design: [RAG chatbot design](design.md)
 
-## Shared Decisions
+## Shared decisions
 
 - Use FastAPI, PostgreSQL with pgvector, Docker Compose, and OpenAI.
 - Use fixed-size chunks with overlap for V1.
@@ -19,38 +19,38 @@ Source design: `docs/rag-chatbot/design.md`
 
 ---
 
-## Phase 1: Foundation
+## Milestone 1: Foundation
 
 Goal: the app starts, connects to the database, and exposes a healthy API shell.
 
 ### Task 1: Local API foundation
 
-**Outcome**
+#### Outcome
 
 The API and database can be started locally, configured from the environment, and checked with a health endpoint.
 
-**Context**
+#### Context
 
 This task creates the base service shape for every later endpoint. It should establish local startup, settings, database connectivity, and the test runner without adding document or chat behavior.
 
-**Constraints**
+#### Constraints
 
 - Use `uv` for Python package management.
 - Use Docker Compose for the API and PostgreSQL with pgvector.
 - Keep configuration in environment variables.
 
-**Acceptance Criteria**
+#### Acceptance criteria
 
 - The API and database start with Docker Compose.
 - `GET /health` returns `{"status":"ok"}` when the API can reach the database.
 - The app fails clearly when required database configuration is missing.
 - A baseline `pytest` run is available for later tasks.
 
-**Design Reference**
+#### Design reference
 
-`docs/rag-chatbot/design.md` covers the stack, Docker Compose surface, environment configuration, and JSON response expectations.
+The [RAG chatbot design](design.md) covers the stack, Docker Compose surface, environment configuration, and JSON response expectations.
 
-**Checks**
+#### Checks
 
 ```bash
 docker compose up -d
@@ -58,33 +58,33 @@ curl http://localhost:8000/health
 pytest
 ```
 
-**Out of Scope**
+#### Out of scope
 
 Document upload, embeddings, retrieval, chat, auth, and deployment beyond local Docker Compose.
 
 ---
 
-## Phase 2: Document Ingestion
+## Milestone 2: Document ingestion
 
 Goal: PDFs can be uploaded, processed, and stored for later retrieval.
 
 ### Task 2: PDF upload and ingestion
 
-**Outcome**
+#### Outcome
 
 Users can upload a PDF and receive a stored document record with chunk count.
 
-**Context**
+#### Context
 
 This task proves the ingestion path: validation, text extraction, chunking, embeddings, and persistence. Later document and chat tasks depend on the stored document and chunk data.
 
-**Constraints**
+#### Constraints
 
 - Accept PDFs only.
 - Use fixed-size chunks of about 500 tokens with about 50 tokens of overlap.
 - Mock OpenAI calls in tests.
 
-**Acceptance Criteria**
+#### Acceptance criteria
 
 - `POST /api/v1/documents` accepts a PDF and returns `{id, filename, uploaded_at, chunk_count}`.
 - Uploaded PDFs are stored with chunks and embeddings that can be queried later.
@@ -92,48 +92,48 @@ This task proves the ingestion path: validation, text extraction, chunking, embe
 - OpenAI embedding failures return `502` with `{error: {code, message}}`.
 - A PDF fixture exists with known text for later retrieval tests.
 
-**Design Reference**
+#### Design reference
 
-`docs/rag-chatbot/design.md` covers document storage, chunking defaults, embedding behavior, upload validation, and upstream OpenAI error behavior.
+The [RAG chatbot design](design.md) covers document storage, chunking defaults, embedding behavior, upload validation, and upstream OpenAI error behavior.
 
-**Checks**
+#### Checks
 
 ```bash
 pytest
 curl -F "file=@tests/fixtures/test.pdf" http://localhost:8000/api/v1/documents
 ```
 
-**Out of Scope**
+#### Out of scope
 
 Document listing, deletion, retrieval, chat, auth, and non-PDF formats.
 
 ### Task 3: Document listing and deletion
 
-**Outcome**
+#### Outcome
 
 Users can list uploaded documents and delete a document with all of its chunks and embeddings.
 
-**Context**
+#### Context
 
 Documents and chunks exist after Task 2. This task adds the document management behavior needed before chat can rely on the stored corpus.
 
-**Constraints**
+#### Constraints
 
 - Do not change upload behavior from Task 2.
 - Deleted chunks must not remain retrievable.
 
-**Acceptance Criteria**
+#### Acceptance criteria
 
 - `GET /api/v1/documents` returns documents with `id`, `filename`, `uploaded_at`, and `chunk_count`.
 - `DELETE /api/v1/documents/{id}` removes the document and its related chunks.
 - Deleting a missing document returns `404` with `{error: {code, message}}`.
 - After deletion, the document no longer appears in the list and its chunks are gone.
 
-**Design Reference**
+#### Design reference
 
-`docs/rag-chatbot/design.md` defines the document listing/deletion API shapes and the invariant that deleting a document also removes its chunks and embeddings.
+The [RAG chatbot design](design.md) defines the document listing/deletion API shapes and the invariant that deleting a document also removes its chunks and embeddings.
 
-**Checks**
+#### Checks
 
 ```bash
 pytest
@@ -141,33 +141,33 @@ pytest
 
 Manual smoke check: upload `tests/fixtures/test.pdf`, list documents, delete the returned ID, then confirm the ID no longer appears in `GET /api/v1/documents`.
 
-**Out of Scope**
+#### Out of scope
 
 Search, chat, cross-user permissions, and soft delete.
 
 ---
 
-## Phase 3: Chat
+## Milestone 3: Grounded chat
 
 Goal: users can ask questions and get grounded answers from uploaded documents.
 
 ### Task 4: Retrieval-backed chat endpoint
 
-**Outcome**
+#### Outcome
 
 Users can ask a question and receive a grounded answer with source references from uploaded PDFs.
 
-**Context**
+#### Context
 
 This task combines vector retrieval, prompt construction, OpenAI chat completion, source formatting, and no-result behavior.
 
-**Constraints**
+#### Constraints
 
 - Retrieve at most 5 chunks for each question.
 - Return sources ordered by relevance.
 - Do not add conversation history or streaming.
 
-**Acceptance Criteria**
+#### Acceptance criteria
 
 - `POST /api/v1/chat` accepts a message and returns `{answer, sources}`.
 - Sources include `document_id`, `filename`, `chunk_index`, and `content`.
@@ -175,11 +175,11 @@ This task combines vector retrieval, prompt construction, OpenAI chat completion
 - If no relevant chunks are found, the endpoint returns `{"answer":"No relevant information found in uploaded documents.","sources":[]}`.
 - OpenAI embedding or chat failures return `502` with `{error: {code, message}}`.
 
-**Design Reference**
+#### Design reference
 
-`docs/rag-chatbot/design.md` covers retrieval defaults, chat response shape, source references, no-information behavior, and upstream OpenAI failure handling.
+The [RAG chatbot design](design.md) covers retrieval defaults, chat response shape, source references, no-information behavior, and upstream OpenAI failure handling.
 
-**Checks**
+#### Checks
 
 ```bash
 pytest
@@ -187,6 +187,6 @@ pytest
 
 Manual smoke check: upload `tests/fixtures/test.pdf`, ask `What database is used for embeddings?`, and confirm the response mentions PostgreSQL with pgvector and includes at least one source.
 
-**Out of Scope**
+#### Out of scope
 
 Conversation history, streaming responses, reranking, and retrieval tuning beyond the V1 defaults.

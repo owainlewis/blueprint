@@ -1,5 +1,9 @@
 # RAG Chatbot API
 
+> **Status:** Reviewed example
+>
+> **Source:** [`examples/input.md`](../input.md)
+
 ## What and why
 
 Build a Python API that lets one user upload PDFs and ask questions answered from their contents. Answers must be grounded in retrieved chunks so the service does not invent information outside the uploaded documents.
@@ -27,6 +31,21 @@ Build a Python API that lets one user upload PDFs and ask questions answered fro
 ## Design
 
 Use FastAPI for HTTP, PostgreSQL with pgvector for metadata and vector search, and the OpenAI API for embeddings and answer generation. Keep OpenAI behind a small adapter so tests can replace embedding and chat calls with deterministic fakes.
+
+```mermaid
+flowchart TB
+    subgraph Ingest["Document ingestion"]
+        direction LR
+        Upload([Upload PDF]) --> Extract["extract"] --> Chunk["chunk"] --> Embed["embed"] --> Store[("PostgreSQL<br/>+ pgvector")]
+    end
+
+    subgraph Answer["Grounded answer"]
+        direction LR
+        Question([Ask question]) --> Query["embed query"] --> Retrieve["retrieve chunks"] --> Generate["generate from context"] --> Response([Answer + sources])
+    end
+
+    Store --> Retrieve
+```
 
 Store one row per document and many related chunk rows. Each chunk holds text, position, embedding, and document ID. Database cascading removes chunks when a document is deleted.
 

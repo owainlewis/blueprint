@@ -1,36 +1,49 @@
-# Migration to the phase model
+# Migrate to the phase model
 
-This release is intentionally breaking. Blueprint now contains five phase skills and one `/implement` workflow.
+> **Breaking change:** Blueprint now ships five phase skills and one separate `/implement` workflow. Old skill directories must be removed manually.
 
-## New surface
+## What changed
 
-- Skills: `design`, `plan`, `test`, `review`, `improve`
-- Workflow command: `/implement`
+| Before | Now |
+| --- | --- |
+| `design-doc`, `spec` | `design` |
+| `browser-verify` | Browser proof inside `test` |
+| `refactor` | `improve` |
+| `branch`, `commit`, `implement`, `pr`, `pr-to-ready`, `task-to-pr` | `/implement` workflow |
+| `debug`, `tdd` | Techniques used while implementing |
+| `goal-design`, `milestone`, `multitask` | Ordinary instructions or project-specific workflows |
+| `code-reviewer` agent definition | A fresh generic subagent launched by `review` |
 
-## Removed skills
+The public skill surface is now:
 
-`branch`, `browser-verify`, `commit`, `debug`, `design-doc`, `goal-design`, `implement`, `milestone`, `multitask`, `pr`, `pr-to-ready`, `refactor`, `spec`, `task-to-pr`, and `tdd` are no longer shipped.
-
-The behavior is not all lost. Design docs and specs became `design`. Browser verification moved into `test`. Refactoring became `improve`. Ticket-to-PR delivery, commits, CI, feedback handling, and PR feedback moved into the `/implement` workflow. Debugging and TDD remain techniques an agent can use while implementing.
+```text
+design · plan · test · review · improve
+```
 
 ## Clean upgrade
 
-First remove only the old Blueprint skill directories from the skill location used by your agent. Then reinstall:
+1. **Find the skill directory used by your coding tool.** Remove only the old Blueprint skill folders listed above. Do not delete the whole directory; it may contain unrelated skills.
+2. **Reinstall the phase skills.**
 
-```bash
-npx skills add owainlewis/blueprint
-```
+   ```bash
+   npx skills add owainlewis/blueprint
+   ```
 
-Do not delete the whole skills directory because it may contain unrelated skills. Some noninteractive skill updaters do not remove directories that disappeared upstream, so `npx skills update` alone can leave both models installed.
+3. **Install `/implement` separately.** The Skills CLI does not install commands. For Claude Code at project scope:
 
-The Skills CLI does not install commands. Download the workflow separately to your tool's custom-command directory:
+   ```bash
+   mkdir -p .claude/commands
+   curl -fsSL https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md \
+     -o .claude/commands/implement.md
+   ```
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md -o /path/to/custom/commands/implement.md
-```
+   For another tool, change the output path to its custom-command directory. Without custom commands, use the [raw workflow](https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md) as an ordinary prompt.
 
-If the tool does not support slash commands, [open the raw command](https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md) and invoke it as an ordinary prompt. Keep only a reference to the canonical command in your repository instructions.
+4. **Remove copied reviewer agents.** Delete any old Blueprint `code-reviewer` definition. The `review` skill now launches a fresh generic subagent.
+5. **Check the result.** Skill discovery should list exactly `design`, `plan`, `test`, `review`, and `improve` for Blueprint.
 
-Remove any copied `code-reviewer` agent definition. The `review` skill now asks the coding tool for a fresh generic subagent, which avoids a second source of review policy.
+## Why cleanup is manual
 
-There are no compatibility aliases. Keeping old and new entry points together makes routing ambiguous and defeats the purpose of the smaller model.
+Some noninteractive skill updaters add and replace skills but do not remove directories that disappeared upstream. Running `npx skills update` alone can therefore leave the old and new models installed together.
+
+Blueprint intentionally provides no compatibility aliases. Duplicate entry points make routing ambiguous and defeat the smaller phase model.
