@@ -10,10 +10,10 @@ Follow this workflow for `$ARGUMENTS`:
 1. **Resolve the source.** Resume an existing PR and its linked ticket when one exists. Otherwise fetch the ticket or use the task as the source. Create a ticket only when the user asks or durable tracking improves the handoff or proof. Do not duplicate tickets or PRs.
 2. **Isolate the work before editing.** Resume the branch and worktree for an existing PR. For new work, fetch the remote and create a dedicated branch and worktree from the latest remote default branch, named with the ticket number or task slug. Follow the repository's location convention and reuse a suitable existing worktree. Remove a manually created worktree after its PR is merged or closed.
 3. **Read the context.** Read the repository instructions and inspect the relevant code.
-4. **Outline the change.** Define the smallest complete change and check it against the ticket, task, or PR. This is a local execution outline, not the `plan` phase. Do not create tickets or a plan document.
+4. **Outline the change.** Define the smallest complete change and check it against the ticket, task, or PR. This is a local execution outline, not the `/plan` phase. Do not create tickets or a plan document.
 5. **Implement.** Make the change and add tests where necessary.
-6. **Test.** Run the `test` phase, including real-browser checks for browser-rendered behavior.
-7. **Review.** Run the `review` phase with a fresh subagent.
+6. **Test.** Run the `/test` phase, including real-browser checks for browser-rendered behavior.
+7. **Review.** Run the `/review` phase with a fresh subagent.
 8. **Address findings.** Fix valid review findings, then rerun affected tests and fresh review.
 9. **Publish.** Create a Conventional Commit, push the branch, and open or update a ready pull request. Link the ticket when one exists and include test and review evidence.
 10. **Finish CI.** Wait for checks to finish. Fix relevant failures and rerun affected tests and review until required checks pass. If no checks are configured, continue.

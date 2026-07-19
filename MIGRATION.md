@@ -6,18 +6,18 @@
 
 | Before | Now |
 | --- | --- |
-| `design-doc`, `spec` | `design` |
-| `browser-verify` | Browser proof inside `test` |
-| `refactor` | `improve` |
+| `design-doc`, `spec` | `/design` |
+| `browser-verify` | Browser proof inside `/test` |
+| `refactor` | `/improve` |
 | `branch`, `commit`, `implement`, `pr`, `pr-to-ready`, `task-to-pr` | `/implement` workflow |
 | `debug`, `tdd` | Techniques used while implementing |
 | `goal-design`, `milestone`, `multitask` | Ordinary instructions or project-specific workflows |
-| `code-reviewer` agent definition | A fresh generic subagent launched by `review` |
+| `code-reviewer` agent definition | A fresh generic subagent launched by `/review` |
 
 The public skill surface is now:
 
 ```text
-design · plan · test · review · improve
+/design · /plan · /test · /review · /improve
 ```
 
 ## Clean upgrade
@@ -39,8 +39,8 @@ design · plan · test · review · improve
 
    For another tool, change the output path to its custom-command directory. Without custom commands, use the [raw workflow](https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md) as an ordinary prompt.
 
-4. **Remove copied reviewer agents.** Delete any old Blueprint `code-reviewer` definition. The `review` skill now launches a fresh generic subagent.
-5. **Check the result.** Skill discovery should list exactly `design`, `plan`, `test`, `review`, and `improve` for Blueprint.
+4. **Remove copied reviewer agents.** Delete any old Blueprint `code-reviewer` definition. The `/review` skill now launches a fresh generic subagent.
+5. **Check the result.** The `/design`, `/plan`, `/test`, `/review`, and `/improve` skills should be available.
 
 ## Why cleanup is manual
 

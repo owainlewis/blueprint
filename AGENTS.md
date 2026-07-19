@@ -16,11 +16,11 @@ Blueprint is a small, principles-first process for AI coding. It separates think
 
 ## Phases
 
-- `design`: decide what to build, why, and how. Stop for human review.
-- `plan`: split decided work into ordered, agent-ready tasks. Stop before implementation.
-- `test`: prove acceptance criteria and important failures, including browser checks when relevant.
-- `review`: use a fresh subagent for an independent, read-only review.
-- `improve`: inspect existing code and improve its clarity, simplicity, and structure without changing intended behavior.
+- `/design`: decide what to build, why, and how. Stop for human review.
+- `/plan`: split decided work into ordered, agent-ready tasks. Stop before implementation.
+- `/test`: prove acceptance criteria and important failures, including browser checks when relevant.
+- `/review`: use a fresh subagent for an independent, read-only review.
+- `/improve`: inspect existing code and improve its clarity, simplicity, and structure without changing intended behavior.
 
 Writing code is a base capability, not a separate phase skill. Debugging and test-driven development are implementation techniques, not product-level entry points.
 
