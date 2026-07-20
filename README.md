@@ -18,13 +18,13 @@ Use the smallest entry point that resolves the uncertainty in front of you.
 | --- | --- | --- |
 | Decide what to build or resolve important technical choices | `/design` | A reviewed design with requirements and acceptance criteria |
 | Split a decided feature into work for several agent runs | `/plan` | Ordered tasks in chat or tracker tickets |
-| Take one task through delivery | `/implement` or `/task-to-pr` | A tested, reviewed, green pull request |
+| Take one task through delivery | `/task-to-pr` | A tested, reviewed, green pull request |
 | Complete every issue in a GitHub milestone | `/milestone` | One green pull request at a time, with human merge checkpoints |
 | Prove a change works | `/test` | Acceptance criteria mapped to evidence |
 | Get an independent second opinion | `/review` | Findings and a pre-merge verdict from a fresh subagent |
 | Simplify existing code without changing behavior | `/improve` | Clearer, smaller, better-structured code |
 
-Small, decided work can go straight to `/implement`. Use `/design` only when decisions need review, and `/plan` only when the work needs splitting.
+Small, decided work can go straight to `/task-to-pr`. Use `/design` only when decisions need review, and `/plan` only when the work needs splitting.
 
 ## How Blueprint fits together
 
@@ -37,7 +37,7 @@ flowchart TB
         Design -->|needs splitting| Plan["/plan"] --> Task
     end
 
-    subgraph Deliver["Deliver with /implement"]
+    subgraph Deliver["Deliver with /task-to-pr"]
         Task --> Isolate["isolate"] --> Code["code"] --> Test["/test"] --> Review["/review"]
         Review -->|findings| Fix["fix"] --> Test
         Review -->|clean| Publish["publish PR"] --> Validate["CI + current feedback"]
@@ -50,11 +50,10 @@ flowchart TB
 
 `/improve` is a separate maintenance path for existing code, not a step every change must pass through.
 
-The model has three layers:
+The model has two layers:
 
 1. **Repository instructions define policy.** `AGENTS.md` says what good work means in a codebase.
-2. **Skills define phases and reusable coordination.** Each skill has one durable engineering outcome and a clear stopping point.
-3. **Commands compose workflows.** `/implement` connects normal delivery steps without turning each one into a skill.
+2. **Skills define phases and workflows.** Each skill has one durable engineering outcome and a clear stopping point. `/task-to-pr` and `/milestone` compose the phases into delivery paths.
 
 ## The five phases
 
@@ -70,7 +69,7 @@ Writing code is a base capability, not a phase skill. Branching, committing, ope
 
 ## One task to one pull request
 
-[`commands/implement.md`](commands/implement.md) is the single authority for delivery. Given a ticket, task, or existing PR, it:
+[`skills/task-to-pr/SKILL.md`](skills/task-to-pr/SKILL.md) is the single authority for delivery. Given a ticket, task, or existing PR, it:
 
 1. resolves the source and isolates work before editing;
 2. implements the smallest complete change;
@@ -81,40 +80,24 @@ Writing code is a base capability, not a phase skill. Branching, committing, ope
 
 It does not wait forever for future human feedback, manufacture tracker artifacts for trivial work, or merge without explicit permission.
 
-[`commands/task-to-pr.md`](commands/task-to-pr.md) restores the explicit `/task-to-pr` workflow name. It delegates to `/implement` rather than duplicating the delivery loop.
-
 ## One milestone to completed issues
 
 `/milestone` is the release-slice workflow. It reads a GitHub milestone, orders open issues by dependency and risk, then runs `/task-to-pr` for one issue at a time. It stops for human merge after each green pull request unless the user explicitly delegates merging for that run.
 
 ## Install
 
-Install the five phase skills and the milestone workflow:
+Install all seven skills:
 
 ```bash
 npx skills add owainlewis/blueprint
 ```
-
-The Skills CLI does not install commands. For the project-level Claude Code workflows:
-
-```bash
-mkdir -p .claude/commands
-curl -fsSL https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md \
-  -o .claude/commands/implement.md
-curl -fsSL https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/task-to-pr.md \
-  -o .claude/commands/task-to-pr.md
-```
-
-For another coding tool, download the [raw implementation workflow](https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md) and [raw task-to-PR workflow](https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/task-to-pr.md) to its custom-command directory or use them as ordinary prompts.
 
 Upgrading from the older skill catalogue? Follow the [migration guide](MIGRATION.md). Removed skills can remain installed after a normal update, so the cleanup step matters.
 
 ## Repository map
 
 ```text
-skills/                 five reusable phases and the milestone workflow
-commands/implement.md   canonical implementation workflow
-commands/task-to-pr.md  named task-to-PR workflow entry point
+skills/                 five phases and two delivery workflow skills
 AGENTS.md                portable repository policy
 CLAUDE.md                Claude Code adapter
 REVIEW.md                review standard for Blueprint itself
@@ -135,7 +118,7 @@ For a larger architecture example, read the [Dispatch local control-plane design
 ## Principles
 
 - **Encode process, not knowledge.** Give agents outcomes, constraints, and proof; trust them with local mechanics.
-- **One skill per phase.** A skill represents a durable mode of work, not a command or job title.
+- **One skill per phase or delivery outcome.** Skills share one installation and invocation model.
 - **Proof is part of the work.** Tests establish behavior. Review checks that the implementation and proof are sound.
 - **Use the real surface.** Browser behavior is checked in a browser. Live PR feedback is read from the PR.
 - **Fix the source of truth.** If implementation exposes a bad requirement, update the task or design before continuing.

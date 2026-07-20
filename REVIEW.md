@@ -2,10 +2,10 @@
 
 Review Blueprint as a small process product, not a prompt catalogue. Read the issue, complete diff, rendered public docs, and relevant surrounding files.
 
-- Does each skill represent one meaningful engineering phase?
-- Is policy in `AGENTS.md`, phase behavior in a skill, and orchestration in a command?
+- Does each skill represent one meaningful engineering phase or delivery outcome?
+- Is policy in `AGENTS.md`, with phase behavior and delivery orchestration in skills?
 - Are triggers, outputs, boundaries, proof, and stop conditions clear?
-- Does `/implement` reach a tested, independently reviewed, green PR without merging by default?
+- Does `/task-to-pr` reach a tested, independently reviewed, green PR without merging by default?
 - Is browser-rendered behavior checked in a real browser?
 - Can a capable agent choose local mechanics without redundant instructions?
 - Are removed concepts handled by an explicit migration instead of compatibility clutter?
