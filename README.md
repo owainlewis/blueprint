@@ -18,7 +18,8 @@ Use the smallest entry point that resolves the uncertainty in front of you.
 | --- | --- | --- |
 | Decide what to build or resolve important technical choices | `/design` | A reviewed design with requirements and acceptance criteria |
 | Split a decided feature into work for several agent runs | `/plan` | Ordered tasks in chat or tracker tickets |
-| Take one task through delivery | `/implement` | A tested, reviewed, green pull request |
+| Take one task through delivery | `/implement` or `/task-to-pr` | A tested, reviewed, green pull request |
+| Complete every issue in a GitHub milestone | `/milestone` | One green pull request at a time, with human merge checkpoints |
 | Prove a change works | `/test` | Acceptance criteria mapped to evidence |
 | Get an independent second opinion | `/review` | Findings and a pre-merge verdict from a fresh subagent |
 | Simplify existing code without changing behavior | `/improve` | Clearer, smaller, better-structured code |
@@ -52,7 +53,7 @@ flowchart TB
 The model has three layers:
 
 1. **Repository instructions define policy.** `AGENTS.md` says what good work means in a codebase.
-2. **Skills define phases.** Each skill has one durable engineering outcome and a clear stopping point.
+2. **Skills define phases and reusable coordination.** Each skill has one durable engineering outcome and a clear stopping point.
 3. **Commands compose workflows.** `/implement` connects normal delivery steps without turning each one into a skill.
 
 ## The five phases
@@ -80,31 +81,40 @@ Writing code is a base capability, not a phase skill. Branching, committing, ope
 
 It does not wait forever for future human feedback, manufacture tracker artifacts for trivial work, or merge without explicit permission.
 
+[`commands/task-to-pr.md`](commands/task-to-pr.md) restores the explicit `/task-to-pr` workflow name. It delegates to `/implement` rather than duplicating the delivery loop.
+
+## One milestone to completed issues
+
+`/milestone` is the release-slice workflow. It reads a GitHub milestone, orders open issues by dependency and risk, then runs `/task-to-pr` for one issue at a time. It stops for human merge after each green pull request unless the user explicitly delegates merging for that run.
+
 ## Install
 
-Install the five skills:
+Install the five phase skills and the milestone workflow:
 
 ```bash
 npx skills add owainlewis/blueprint
 ```
 
-The Skills CLI does not install commands. For a project-level Claude Code command:
+The Skills CLI does not install commands. For the project-level Claude Code workflows:
 
 ```bash
 mkdir -p .claude/commands
 curl -fsSL https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md \
   -o .claude/commands/implement.md
+curl -fsSL https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/task-to-pr.md \
+  -o .claude/commands/task-to-pr.md
 ```
 
-For another coding tool, download the [raw command](https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md) to its custom-command directory or use it as an ordinary prompt.
+For another coding tool, download the [raw implementation workflow](https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md) and [raw task-to-PR workflow](https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/task-to-pr.md) to its custom-command directory or use them as ordinary prompts.
 
 Upgrading from the older skill catalogue? Follow the [migration guide](MIGRATION.md). Removed skills can remain installed after a normal update, so the cleanup step matters.
 
 ## Repository map
 
 ```text
-skills/                 five reusable engineering phases
-commands/implement.md   canonical task-to-PR workflow
+skills/                 five reusable phases and the milestone workflow
+commands/implement.md   canonical implementation workflow
+commands/task-to-pr.md  named task-to-PR workflow entry point
 AGENTS.md                portable repository policy
 CLAUDE.md                Claude Code adapter
 REVIEW.md                review standard for Blueprint itself

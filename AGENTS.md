@@ -22,11 +22,15 @@ Blueprint is a small, principles-first process for AI coding. It separates think
 - `/review`: use a fresh subagent for an independent, read-only review.
 - `/improve`: inspect existing code and improve its clarity, simplicity, and structure without changing intended behavior.
 
+## Workflow: Milestones
+
+For a GitHub milestone, use `/milestone`. It orders open issues and runs `/task-to-pr` one issue at a time. Stop for human merge after each green pull request unless the user explicitly delegates merging for that run.
+
 Writing code is a base capability, not a separate phase skill. Debugging and test-driven development are implementation techniques, not product-level entry points.
 
 ## Workflow: Code changes
 
-For one end-to-end code change, follow the canonical [`/implement` workflow](commands/implement.md). It owns ticket handling, worktree isolation, coding, tests, independent review, commits, pull requests, CI, and current feedback. Never merge unless the user explicitly asks.
+For one end-to-end code change, follow the canonical [`/implement` workflow](commands/implement.md). `/task-to-pr` is the named ticket-to-PR entry point and delegates to that workflow. It owns ticket handling, worktree isolation, coding, tests, independent review, commits, pull requests, CI, and current feedback. Never merge unless the user explicitly asks.
 
 ## Outputs
 
