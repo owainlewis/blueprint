@@ -4,18 +4,8 @@
 
 Blueprint keeps shared repository policy in `AGENTS.md` and only Claude-specific setup here.
 
-Install Blueprint skills with `npx skills add owainlewis/blueprint`. Invoke the phase skills as `/design`, `/plan`, `/test`, `/review`, and `/improve`. Use `/milestone` to deliver every issue in a GitHub milestone through `/task-to-pr`.
+Install Blueprint with `npx skills add owainlewis/blueprint`. Invoke the phase skills as `/design`, `/plan`, `/test`, `/review`, and `/improve`. Use `/task-to-pr` for one end-to-end code change and `/milestone` for every issue in a GitHub milestone.
 
-The Skills CLI does not install commands. Install `/implement` and `/task-to-pr` separately for a project:
-
-```bash
-mkdir -p .claude/commands
-curl -fsSL https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/implement.md \
-  -o .claude/commands/implement.md
-curl -fsSL https://raw.githubusercontent.com/owainlewis/blueprint/main/commands/task-to-pr.md \
-  -o .claude/commands/task-to-pr.md
-```
-
-Use `~/.claude/commands/` instead for user commands. `/implement` remains the canonical workflow; `/task-to-pr` is its named ticket-to-PR entry point. `AGENTS.md` contains portable repository policy.
+All Blueprint entry points are skills. `/task-to-pr` is the canonical delivery workflow, and `/milestone` runs it one issue at a time. `AGENTS.md` contains portable repository policy.
 
 The `/review` phase uses a fresh generic subagent. Blueprint does not require a separate reviewer agent definition.

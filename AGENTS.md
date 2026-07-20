@@ -5,7 +5,7 @@ Blueprint is a small, principles-first process for AI coding. It separates think
 ## Principles
 
 - Give agents outcomes, constraints, and proof. Trust them with mechanics.
-- Keep one skill per meaningful engineering phase.
+- Keep one skill per meaningful engineering phase or delivery outcome.
 - Skip phases that add no value. Small, decided work can go straight to implementation.
 - A task is ready when a new agent can finish it without asking product or technical questions.
 - Tests prove the requested behavior. Review checks that the proof and implementation are sound.
@@ -30,7 +30,7 @@ Writing code is a base capability, not a separate phase skill. Debugging and tes
 
 ## Workflow: Code changes
 
-For one end-to-end code change, follow the canonical [`/implement` workflow](commands/implement.md). `/task-to-pr` is the named ticket-to-PR entry point and delegates to that workflow. It owns ticket handling, worktree isolation, coding, tests, independent review, commits, pull requests, CI, and current feedback. Never merge unless the user explicitly asks.
+For one end-to-end code change, follow the canonical [`/task-to-pr` skill](skills/task-to-pr/SKILL.md). It owns ticket handling, worktree isolation, coding, tests, independent review, commits, pull requests, CI, and current feedback. Never merge unless the user explicitly asks.
 
 ## Outputs
 
