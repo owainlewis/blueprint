@@ -13,7 +13,7 @@ Finish every open issue in a GitHub milestone.
 
 1. Resolve the milestone and repository. Inspect its open issues, dependencies, linked pull requests, checks, and current project state.
 2. Order the remaining issues by dependency, risk, and reviewability. Put blockers, bugs, and shared seams before dependent feature work.
-3. Take one issue at a time to a tested, reviewed, green pull request: branch and worktree, implement the smallest complete change, test it, get it reviewed by a fresh agent, then open the PR. Resume a matching pull request instead of creating duplicate work.
+3. Take one issue at a time to a tested, reviewed, green pull request: branch and worktree, implement the smallest complete change, test it, review it with a fresh agent, then open the PR. Resume a matching pull request instead of creating duplicate work.
 4. After each pull request is ready, stop for human merge unless the user explicitly allowed merging for this run.
 5. When merging is allowed, merge only after required checks and review are clean. Sync the latest remote default branch before starting the next issue.
 6. Refresh the milestone before each issue. Record pull request links, proof, blockers, and final state in the tracker when access permits.
