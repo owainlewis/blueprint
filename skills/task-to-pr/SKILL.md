@@ -10,7 +10,7 @@ argument-hint: "<ticket, task, or pull request>"
 Follow this workflow for the requested task, ticket, or pull request:
 
 1. **Resolve the source.** Resume an existing pull request and its linked ticket when one exists. Otherwise fetch the ticket or use the task as the source. Create a ticket only when the user asks or durable tracking improves the handoff or proof. Do not duplicate tickets or pull requests.
-2. **Isolate the work before editing.** Resume the branch and worktree for an existing pull request. For new work, fetch the remote and create a dedicated branch and worktree from the latest remote default branch, named with the ticket number or task slug. Follow the repository's location convention and reuse a suitable existing worktree. Remove a manually created worktree after its pull request is merged or closed.
+2. **Branch.** Resume the branch and worktree for an existing pull request. For new work, fetch the remote and create a dedicated branch and worktree from the latest remote default branch, named with the ticket number or task slug. Follow the repository's location convention and reuse a suitable existing worktree. Remove a manually created worktree after its pull request is merged or closed.
 3. **Read the context.** Read the repository instructions and inspect the relevant code.
 4. **Outline the change.** Define the smallest complete change and check it against the ticket, task, or pull request. This is a local execution outline for this one task, not a multi-task plan document. Do not create tickets or a plan document.
 5. **Implement.** Make the change and add tests where necessary.
@@ -18,8 +18,8 @@ Follow this workflow for the requested task, ticket, or pull request:
 7. **Review.** Review the change with a fresh subagent that did not implement it.
 8. **Address findings.** Fix valid review findings, then rerun affected tests and fresh review.
 9. **Publish.** Create a Conventional Commit, push the branch, and open or update a ready pull request. Link the ticket when one exists and include test and review evidence.
-10. **Finish CI.** Wait for checks to finish. Fix relevant failures and rerun affected tests and review until required checks pass. If no checks are configured, continue.
-11. **Handle current feedback.** Inspect the human and bot feedback available at that point. Fix important findings, reply to addressed comments with evidence, and rerun affected tests and fresh review. Do not wait indefinitely for future human feedback.
+10. **Pass CI.** Wait for checks, fix relevant failures, and rerun affected tests and review until required checks pass. If no checks are configured, continue.
+11. **Address feedback.** Inspect current human and bot feedback. Fix important findings, reply to addressed comments with evidence, and rerun affected tests and fresh review. Do not wait indefinitely for future human feedback.
 
 Commit and push every post-PR fix before reassessing checks or feedback.
 
