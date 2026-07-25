@@ -47,5 +47,5 @@ How each important requirement will be proved.
 
 ## Boundaries
 
-- Prefer one clear recommendation over a catalogue of options.
+- Prefer one clear recommendation over a list of options.
 - Record rejected options only when the tradeoff matters later.
