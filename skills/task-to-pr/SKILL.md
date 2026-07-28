@@ -12,21 +12,21 @@ Follow this workflow for the requested task, ticket, or pull request:
 1. **Resolve the source.** Resume an existing pull request and its linked ticket when one exists. Otherwise fetch the ticket or use the task as the source. Create a ticket only when the user asks or durable tracking improves the handoff or proof. Do not duplicate tickets or pull requests.
 2. **Branch.** Resume the branch and worktree for an existing pull request. For new work, fetch the remote and create a dedicated branch and worktree from the latest remote default branch, named with the ticket number or task slug. Follow the repository's location convention and reuse a suitable existing worktree. Remove a manually created worktree after its pull request is merged or closed.
 3. **Read the context.** Read the repository instructions and inspect the relevant code.
-4. **Outline the change.** Define the smallest complete change and check it against the ticket, task, or pull request. This is a local execution outline for this one task, not a multi-task plan document. Do not create tickets or a plan document.
-5. **Implement.** Make the change and add tests where necessary.
-6. **Test.** Run any automated checks and tests, including real-browser checks for browser-rendered behavior.
+4. **Outline the change.** Define one focused, self-contained outcome with its related proof. A reviewer must be able to understand its behavior and proof without first separating unrelated work. If the source requires several such changes, split it or return to planning before coding. Separate refactoring when it would obscure the behavior diff. Small local cleanup may remain when it makes the changed behavior easier to review. This is a local execution outline, not a plan document.
+5. **Implement.** Make the change. Test changed behavior, failure paths affected by the change or named in its acceptance criteria, and behavior a refactor must preserve. If the change has no executable behavior, or the affected behavior cannot be exercised through available automated interfaces, record the concrete reason and substitute evidence.
+6. **Test and self-review.** Run tests and checks that cover the changed behavior and affected interfaces, including a real browser when browser-rendered behavior changes. Inspect the final diff for accidental scope, unclear code, and missing proof before independent review.
 7. **Review.** Review the change with a fresh subagent that did not implement it.
 8. **Address findings.** Fix valid review findings, then rerun affected tests and fresh review.
 9. **Publish.** Create a Conventional Commit, push the branch, and open or update a ready pull request that meets the pull request standard below.
-10. **Pass CI.** Wait for checks, fix relevant failures, and rerun affected tests and review until required checks pass. If no checks are configured, continue.
-11. **Address feedback.** Inspect current human and bot feedback. Fix important findings, reply to addressed comments with evidence, and rerun affected tests and fresh review. Do not wait indefinitely for future human feedback.
+10. **Pass CI.** Wait for checks, fix failures caused by the change or required by repository policy, and rerun affected tests and review until required checks pass. If no checks are configured, continue.
+11. **Address feedback.** Inspect every current human and bot comment and review thread. Give each one a disposition: change the code or durable documentation, answer the question, push back with technical evidence, link a tracked follow-up and explain why a non-blocking suggestion is outside this pull request, or mark informational feedback as requiring no action. If a reviewer cannot understand the code, clarify the code or documentation before relying on a thread reply. Resolve a thread only when fully addressed. Rerun affected tests and fresh review after requested changes. Do not wait indefinitely for future feedback.
 12. **Refresh the pull request.** Update the title, description, and checklist to match the final head, verification, CI state, review findings, and feedback disposition.
 
 Commit and push every post-PR fix before reassessing checks or feedback.
 
 If the ticket, task, or design is wrong or incomplete, update the source of truth before continuing. Prefer the smallest complete change and no unrelated cleanup.
 
-Stop when the pull request is green, mergeable, and has no important unresolved feedback currently available. Never merge unless the user explicitly asks. Report an exact blocker when required access, checks, or independent review remain unavailable after safe alternatives are exhausted.
+Stop when the pull request is green, mergeable, every current comment has a disposition, and no required change remains unresolved. Never merge unless the user explicitly asks. Report an exact blocker when required access, checks, or independent review remain unavailable after safe alternatives are exhausted.
 
 ## Pull request standard
 
@@ -70,11 +70,11 @@ change, tell the reviewer where to start and what needs the closest scrutiny.
 - **Did you write or update tests?** <Yes | No | Not applicable>
   Evidence or why tests do not apply.
 - **Did you run the relevant tests and checks?** <Yes | No>
-  Commands, browser or manual checks, results, and important gaps.
+  Commands, browser or manual checks, results, and any unverified criteria or affected failure paths.
 - **Did you independently review the final diff and address valid findings?** <Yes | No>
   Review evidence, findings fixed, and anything unresolved.
 - **Did you update documentation when behavior changed?** <Yes | No | Not applicable>
   Documentation changed or why it was not needed.
 - **Did required CI checks pass?** <Yes | No | Pending | Not configured>
-  Result or relevant details.
+  Check names and results.
 ```

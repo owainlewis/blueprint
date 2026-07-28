@@ -8,7 +8,9 @@ Blueprint is a small, principles-first process for AI coding. It separates think
 - Keep one skill per meaningful engineering phase or delivery outcome.
 - Skip phases that add no value. Small, decided work can go straight to implementation.
 - A task is ready when a new agent can finish it without asking product or technical questions.
-- Tests prove the requested behavior. Review checks that the proof and implementation are sound.
+- Each pull request delivers one focused, self-contained outcome with its related proof. A change is reviewable when its outcome, behavior, and proof can be understood without first separating unrelated work. Separate refactoring when it would obscure the behavior diff. Small local cleanup may remain when it makes the changed behavior easier to review.
+- Logic changes include automated tests for changed behavior and failure paths affected by the change or named in its acceptance criteria. Refactors include tests for behavior that must not change. If the change has no executable behavior, or the affected behavior cannot be exercised through available automated interfaces, state the concrete reason and substitute evidence.
+- Review checks correctness. If the same outcome and proof can be delivered with less state, indirection, duplication, or operational work, request the simpler design. Do not block on personal taste. Cite technical evidence or repository conventions.
 - Browser behavior is proven in a real browser, not by reading source.
 - If the task, design, or plan is wrong, update it before changing more code.
 - Prefer the smallest complete change. Do not mix product work with unrelated cleanup.
@@ -18,7 +20,7 @@ Blueprint is a small, principles-first process for AI coding. It separates think
 
 - `/design`: decide what to build, why, and how. Stop for human review.
 - `/plan`: split decided work into ordered, agent-ready tasks. Stop before implementation.
-- `/test`: prove acceptance criteria and important failures, including browser checks when relevant.
+- `/test`: prove acceptance criteria and failure paths affected by the change, including real-browser checks when browser-rendered behavior changes.
 - `/review`: use a fresh subagent for an independent, read-only review.
 - `/improve`: inspect existing code and improve its clarity, simplicity, and structure without changing intended behavior.
 
