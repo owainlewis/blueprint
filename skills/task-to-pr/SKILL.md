@@ -36,7 +36,7 @@ Treat the pull request title and body as durable history for reviewers now and e
 - Include enough context to understand the change without opening the ticket or reading the entire diff.
 - Answer the reviewer questions with concrete behavior, decisions, risks, shortcomings, and evidence. Do not write an inventory of edited files.
 - For a complex change, say where to start and which parts need the closest scrutiny.
-- Mark a checklist item only when its answer and evidence are present. When an item does not apply, mark it complete and state why.
+- Answer every checklist item with an explicit status and evidence. Use `Not applicable`, `Not configured`, or `Pending` instead of a checked box that implies success.
 - Treat independent agent review as evidence, not GitHub approval or a replacement for human review.
 - Preserve useful human-written context when updating an existing pull request.
 - Keep the body current when later commits change behavior, risk, or verification.
@@ -64,16 +64,16 @@ change, tell the reviewer where to start and what needs the closest scrutiny.
 
 ## Checklist
 
-- [ ] Is this one focused, self-contained change?
-  - Evidence or why the size and scope are necessary.
-- [ ] Did you write or update tests?
-  - Evidence or why tests do not apply.
-- [ ] Did you run the relevant tests and checks?
-  - Commands, browser or manual checks, results, and important gaps.
-- [ ] Did you independently review the final diff and address valid findings?
-  - Review evidence, findings fixed, and anything unresolved.
-- [ ] Did you update documentation when behavior changed?
-  - Documentation changed or why it was not needed.
-- [ ] Did required CI checks pass?
-  - Result, pending state, or why no checks apply.
+- **Is this one focused, self-contained change?** <Yes | No>
+  Evidence or why the size and scope are necessary.
+- **Did you write or update tests?** <Yes | No | Not applicable>
+  Evidence or why tests do not apply.
+- **Did you run the relevant tests and checks?** <Yes | No>
+  Commands, browser or manual checks, results, and important gaps.
+- **Did you independently review the final diff and address valid findings?** <Yes | No>
+  Review evidence, findings fixed, and anything unresolved.
+- **Did you update documentation when behavior changed?** <Yes | No | Not applicable>
+  Documentation changed or why it was not needed.
+- **Did required CI checks pass?** <Yes | No | Pending | Not configured>
+  Result or relevant details.
 ```
