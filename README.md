@@ -18,7 +18,7 @@ Use the smallest entry point that resolves the uncertainty in front of you.
 | --- | --- | --- |
 | Decide what to build or resolve important technical choices | `/design` | A reviewed design with requirements and acceptance criteria |
 | Split a decided feature into work for several agent runs | `/plan` | Ordered tasks in chat or tracker tickets |
-| Take one task through delivery | `/task-to-pr` | A tested, reviewed, green pull request |
+| Take one task or prepared change through delivery | `/task-to-pr` | A tested, reviewed, green pull request |
 | Complete every issue in a GitHub milestone | `/milestone` | One green pull request at a time, with human merge checkpoints |
 | Prove a change works | `/test` | Acceptance criteria mapped to evidence |
 | Get an independent second opinion | `/review` | Findings and a pre-merge verdict from a fresh subagent |
@@ -74,7 +74,7 @@ Writing code is a base capability, not a phase skill. Branching, committing, ope
 1. resolves the source and isolates work before editing;
 2. implements the smallest complete change;
 3. runs `/test` and independent `/review` loops;
-4. creates Conventional Commits and opens or updates the PR;
+4. creates Conventional Commits and opens or updates a reviewer-focused PR that explains the outcome, behavior, risks, and actual verification;
 5. waits for CI, handles feedback that exists, and records evidence;
 6. stops at a green, mergeable PR for a human to merge.
 
