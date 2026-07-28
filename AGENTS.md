@@ -36,6 +36,6 @@ For one end-to-end code change, follow the canonical [`/task-to-pr` skill](skill
 
 - Designs default to `docs/<feature-slug>/design.md`.
 - Plans are returned in chat by default or published as tracker tickets when asked. They are not stored as plan documents.
-- Pull requests state the outcome, link the ticket, and include test, browser, and review evidence as relevant.
+- Pull requests explain what changed, why it matters, what the reviewer should consider, and a truthful checklist covering tests, checks, independent review, findings, documentation, and CI.
 
 Exploration does not require a design, plan, or ticket. Do not create process artifacts that do not improve a decision, handoff, or proof.

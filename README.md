@@ -74,7 +74,7 @@ Writing code is a base capability, not a phase skill. Branching, committing, ope
 1. resolves the source and isolates work before editing;
 2. implements the smallest complete change;
 3. runs `/test` and independent `/review` loops;
-4. creates Conventional Commits and opens or updates the PR;
+4. creates Conventional Commits and opens or updates a reviewer-focused PR that explains what changed, why it matters, what to review, and the evidence checklist;
 5. waits for CI, handles feedback that exists, and records evidence;
 6. stops at a green, mergeable PR for a human to merge.
 
