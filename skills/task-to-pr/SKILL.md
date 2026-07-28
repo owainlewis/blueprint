@@ -20,6 +20,7 @@ Follow this workflow for the requested task, ticket, or pull request:
 9. **Publish.** Create a Conventional Commit, push the branch, and open or update a ready pull request that meets the pull request standard below.
 10. **Pass CI.** Wait for checks, fix relevant failures, and rerun affected tests and review until required checks pass. If no checks are configured, continue.
 11. **Address feedback.** Inspect current human and bot feedback. Fix important findings, reply to addressed comments with evidence, and rerun affected tests and fresh review. Do not wait indefinitely for future human feedback.
+12. **Refresh the pull request.** Update the title, description, and checklist to match the final head, verification, CI state, review findings, and feedback disposition.
 
 Commit and push every post-PR fix before reassessing checks or feedback.
 
@@ -29,7 +30,7 @@ Stop when the pull request is green, mergeable, and has no important unresolved 
 
 ## Pull request standard
 
-Treat the pull request title and body as durable history for reviewers now and engineers later. Follow a required repository template when one exists. Otherwise use the structure below.
+Treat the pull request title and body as durable history for reviewers now and engineers later. Follow a required repository template and add any information or evidence below that it does not cover. If no template exists, use the structure below.
 
 - Follow the repository's title convention. Otherwise use a short, standalone title that states the delivered outcome.
 - Link the source ticket with the repository's closing syntax when the pull request completes it.
