@@ -1,16 +1,16 @@
 ---
 name: task-to-pr
-description: "Takes one task, ticket, prepared local change, branch, or existing pull request to a tested, independently reviewed, green pull request ready for human merge. Use when the user asks to implement, build, fix, deliver, publish changes, open or update a pull request, or improve a pull request description."
+description: "Takes one task, ticket, or existing pull request to a tested, independently reviewed, green pull request ready for human merge. Use when the user asks to implement, build, fix, deliver, or take one task or issue to a pull request."
 user-invocable: true
-argument-hint: "<ticket, task, local change, branch, or pull request>"
+argument-hint: "<ticket, task, or pull request>"
 ---
 
 # Task to PR
 
-Follow this workflow for the requested task, ticket, prepared change, branch, or pull request. For prepared changes or an existing pull request, inspect the implementation and current evidence, then perform only the missing or outdated steps. Never claim inherited checks or review unless they apply to the current head.
+Follow this workflow for the requested task, ticket, or pull request:
 
-1. **Resolve the source.** Inspect the current branch, worktree, local diff, existing pull request, and linked ticket. Resume an existing pull request when one exists. Treat prepared local changes as source material and preserve them. Otherwise fetch the ticket or use the task as the source. Create a ticket only when the user asks or durable tracking improves the handoff or proof. Do not duplicate tickets or pull requests.
-2. **Branch.** Reuse a suitable branch and worktree for prepared changes or an existing pull request. Do not move or discard local changes. For new work, fetch the remote and create a dedicated branch and worktree from the latest remote default branch, named with the ticket number or task slug. Follow the repository's location convention. Remove a manually created worktree after its pull request is merged or closed.
+1. **Resolve the source.** Resume an existing pull request and its linked ticket when one exists. Otherwise fetch the ticket or use the task as the source. Create a ticket only when the user asks or durable tracking improves the handoff or proof. Do not duplicate tickets or pull requests.
+2. **Branch.** Resume the branch and worktree for an existing pull request. For new work, fetch the remote and create a dedicated branch and worktree from the latest remote default branch, named with the ticket number or task slug. Follow the repository's location convention and reuse a suitable existing worktree. Remove a manually created worktree after its pull request is merged or closed.
 3. **Read the context.** Read the repository instructions and inspect the relevant code.
 4. **Outline the change.** Define the smallest complete change and check it against the ticket, task, or pull request. This is a local execution outline for this one task, not a multi-task plan document. Do not create tickets or a plan document.
 5. **Implement.** Make the change and add tests where necessary.
@@ -29,41 +29,51 @@ Stop when the pull request is green, mergeable, and has no important unresolved 
 
 ## Pull request standard
 
-Write the pull request for a reviewer deciding whether the change is safe and useful, not as an inventory of edited files.
+Treat the pull request title and body as durable history for reviewers now and engineers later. Follow a required repository template when one exists. Otherwise use the structure below.
 
-- Follow the repository's title convention. Otherwise use a title that states the delivered outcome.
-- Follow required repository pull request templates and preserve useful human-written context when updating an existing pull request.
+- Follow the repository's title convention. Otherwise use a short, standalone title that states the delivered outcome.
 - Link the source ticket with the repository's closing syntax when the pull request completes it.
-- Lead with why the change matters and what becomes possible or behaves differently.
-- Explain observable behavior, important safety rules, compatibility, failure behavior, and operational impact. Include implementation detail only when it helps review a decision or risk.
-- Report only verification that actually ran. Separate automated checks, browser evidence, and manual checks when more than one kind exists. State important gaps.
-- Summarize independent agent review as supporting evidence. Do not describe it as GitHub approval or imply that it replaces human review.
-- Omit empty headings, boilerplate, process narration, and claims the available evidence does not support.
+- Include enough context to understand the change without opening the ticket or reading the entire diff.
+- Answer the reviewer questions with concrete behavior, decisions, risks, shortcomings, and evidence. Do not write an inventory of edited files.
+- For a complex change, say where to start and which parts need the closest scrutiny.
+- Mark a checklist item only when its answer and evidence are present. When an item does not apply, mark it complete and state why.
+- Treat independent agent review as evidence, not GitHub approval or a replacement for human review.
+- Preserve useful human-written context when updating an existing pull request.
 - Keep the body current when later commits change behavior, risk, or verification.
-
-Use this shape when every section adds value:
 
 ```markdown
 Closes #<ticket>
 
-## Outcome
+## What is this change?
 
-Why this change matters and its user or operator impact.
+Summarize the major changes and observable behavior so a reader understands
+what changed without reading the entire diff.
 
-## Behavior
+## Why is it important?
 
-- Observable behavior and safety rules a reviewer must understand.
-- Compatibility, failure, migration, or operational notes when relevant.
+Explain the problem, who it affects, the context behind the change, and why
+this approach was chosen.
 
-## Verification
+## What should the reviewer know or consider?
 
-- `<command>`: what it proved
-- Browser or manual evidence when required
-- Any important unverified behavior
+Call out decisions not obvious from the code, scope boundaries, tradeoffs,
+shortcomings, safety rules, compatibility, migrations, failure behavior,
+operational impact, and known risks. Link relevant designs, benchmarks, or
+related changes while preserving the essential context here. For a complex
+change, tell the reviewer where to start and what needs the closest scrutiny.
 
-## Independent review
+## Checklist
 
-What was reviewed, which important findings were fixed, and whether actionable findings remain.
+- [ ] Is this one focused, self-contained change?
+  - Evidence or why the size and scope are necessary.
+- [ ] Did you write or update tests?
+  - Evidence or why tests do not apply.
+- [ ] Did you run the relevant tests and checks?
+  - Commands, browser or manual checks, results, and important gaps.
+- [ ] Did you independently review the final diff and address valid findings?
+  - Review evidence, findings fixed, and anything unresolved.
+- [ ] Did you update documentation when behavior changed?
+  - Documentation changed or why it was not needed.
+- [ ] Did required CI checks pass?
+  - Result, pending state, or why no checks apply.
 ```
-
-Adapt the headings to the work. A small fix may need only a short summary, ticket link, and verification.
