@@ -10,11 +10,11 @@ argument-hint: "[code, files, diff, branch, or improvement focus]"
 ## Workflow
 
 1. Identify the target from the request, current diff, or recently changed code.
-2. Read the target, its tests, and relevant surrounding code. Establish the behavior that must not change.
+2. Read the target, its tests, and relevant surrounding code. Establish the behavior that must not change. If behavior named by the task or a public interface lacks tests, add focused characterization coverage before refactoring. If the affected behavior cannot be exercised through available automated interfaces, state the concrete reason and substitute evidence.
 3. Find unnecessary complexity, duplication, dead code, weak names, awkward boundaries, and abstractions that cost more than they help.
 4. Make focused improvements by deleting, deduplicating, renaming, simplifying, extracting, or inlining.
 5. Preserve public interfaces, data shapes, errors, and user-visible behavior unless the user explicitly asks to change them.
-6. Run the relevant tests and checks. Report what improved, what behavior was preserved, and the evidence.
+6. Run tests and checks that cover behavior the refactor can affect. Report what improved, what behavior was preserved, and the evidence.
 
 ## Boundaries
 

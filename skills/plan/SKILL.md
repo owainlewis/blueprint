@@ -11,7 +11,7 @@ argument-hint: "<design, brief, issue, or request>"
 
 1. Read the source, repository instructions, and relevant code.
 2. Stop and return to design if product or technical choices remain open.
-3. Break the work into vertical, outcome-based tasks small enough for one agent run. Order them by dependency. Add milestones only when they create a useful delivery or review boundary.
+3. Break the work into vertical, outcome-based tasks. Each task must produce one focused, self-contained pull request whose outcome, behavior, and proof can be reviewed without separating unrelated work, and it must fit one agent run. Separate refactoring when it would obscure the behavior diff. Small local cleanup may remain when it makes the changed behavior easier to review. Order tasks by dependency. Add milestones only when they create a useful delivery or review boundary.
 4. Return the plan in chat by default. Create tracker tickets only when the user asks. Never write a plan document.
 5. Stop after planning. Do not implement.
 

@@ -119,7 +119,9 @@ For a larger architecture example, read the [Dispatch local control-plane design
 
 - **Encode process, not knowledge.** Give agents outcomes, constraints, and proof; trust them with local mechanics.
 - **One skill per phase or delivery outcome.** Skills share one installation and invocation model.
-- **Proof is part of the work.** Tests establish behavior. Review checks that the implementation and proof are sound.
+- **Keep changes reviewable.** Deliver one focused, self-contained outcome with its related proof. A reviewer should not need to separate unrelated work first. Separate refactoring when it would obscure the behavior diff. Small local cleanup may remain when it makes the changed behavior easier to review.
+- **Use concrete review standards.** Check correctness. If the same outcome and proof can be delivered with less state, indirection, duplication, or operational work, request the simpler design. Do not block on personal taste. Cite technical evidence or repository conventions.
+- **Proof is part of the work.** Test changed behavior, failure paths affected by the change or named in its acceptance criteria, and behavior a refactor must preserve. If the change has no executable behavior, or the affected behavior cannot be exercised through available automated interfaces, state the concrete reason and substitute evidence.
 - **Use the real surface.** Browser behavior is checked in a browser. Live PR feedback is read from the PR.
 - **Fix the source of truth.** If implementation exposes a bad requirement, update the task or design before continuing.
 - **Prefer less.** Keep the smallest complete change, shortest useful instruction, and no duplicate entry points.
