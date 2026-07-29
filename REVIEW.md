@@ -5,6 +5,7 @@ Review Blueprint as a small set of engineering instructions. Read the issue, com
 - Can a new teammate understand the summary without already knowing Blueprint terms?
 - Does the writing use short sentences, everyday words, and only useful detail?
 - Does each skill represent one meaningful engineering phase or delivery outcome?
+- Does each skill have one numbered workflow, with templates and rules kept outside the steps?
 - Is policy in `AGENTS.md`, with each phase and delivery workflow in its skill?
 - Does `/architecture` describe verified current implementation while `/design` describes a proposed feature or system-part change?
 - Does a read-only architecture explanation, mapping, review, or audit remain in chat unless the user asks for a document?

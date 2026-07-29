@@ -11,26 +11,36 @@ Finish every open issue in a GitHub milestone.
 
 ## Workflow
 
-1. Resolve the milestone and repository. Inspect its open issues, dependencies, linked pull requests, checks, and current project state.
-2. Order the remaining issues by dependency, risk, and how easy each change will be to review. Put blockers, bugs, and shared foundations before features that depend on them.
-3. Take one issue at a time to a ready pull request. Create the branch and worktree, implement the smallest complete change, test it, review it with a fresh agent, then open the PR. Resume a matching pull request instead of creating duplicate work.
-4. After each pull request is ready, stop for human merge unless the user explicitly allowed merging for this run.
-5. When merging is allowed, merge only when:
-   - Required checks pass or are confirmed unconfigured.
-   - The pull request is mergeable.
-   - Every current comment has a clear outcome.
-   - No required change remains unresolved.
-   - The description and checklist match the final commit.
-6. Sync the latest remote default branch before starting the next issue.
-7. Refresh the milestone before each issue. Record pull request links, proof, blockers, and final state in the tracker when access permits.
-8. Report completed issues, merged and open pull requests, blockers, checks, and anything not verified.
+1. **Read the milestone**
+   - Resolve the repository and milestone.
+   - Inspect its open issues, dependencies, linked pull requests, checks, and current project state.
 
-## Boundaries
+2. **Order the work**
+   - Order open issues by dependency, risk, and review cost.
+   - Put blockers, bugs, and shared foundations before work that depends on them.
+
+3. **Deliver one issue**
+   - Use `/task-to-pr` to take one issue to a ready pull request.
+   - Resume a matching pull request instead of creating another one.
+   - Keep one branch and pull request per issue unless separate issues must ship together to work.
+
+4. **Stop for merge**
+   - Stop after each ready pull request unless the user allowed merging for this run.
+   - When merging is allowed, merge only when the pull request is mergeable, required checks pass or are unconfigured, current comments are handled, no required change remains, and the description and checklist match the final commit.
+
+5. **Refresh and repeat**
+   - Sync the latest remote default branch.
+   - Refresh the milestone before choosing the next issue.
+   - Record pull request links, proof, blockers, and final state in the tracker when access permits.
+
+6. **Report**
+   - List completed issues, merged and open pull requests, blockers, checks, and anything not verified.
+
+## Rules
 
 - Work only on issues in the milestone.
-- Use one branch and pull request per issue unless combining issues is required for a working result. Explain any combination before starting it.
 - Do not batch unrelated issues.
+- Explain why issues must be combined before starting combined work.
 - Never merge without explicit permission.
-- Do not merge with failing required checks, missing acceptance criteria, a current comment without a clear outcome, or a required change still open.
-- Do not merge when an acceptance criterion or affected failure path is unverified unless the user accepts that exception.
+- Do not merge with missing acceptance criteria or unverified affected failure paths unless the user accepts the gap.
 - Stop when an issue has unresolved product or technical decisions, requires missing secrets or permissions, already has conflicting work, or grows beyond its acceptance criteria.

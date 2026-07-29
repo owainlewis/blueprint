@@ -7,48 +7,46 @@ argument-hint: "[ticket, design, diff, branch, commit, PR, or file path]"
 
 # Review
 
-The reviewer must be a fresh subagent that did not implement the change. Do not edit files.
+Use a fresh subagent that did not implement the change. Review without editing files.
 
-## Standard
+## Workflow
 
-Approve only when:
+1. **Set the frame**
+   - Give the reviewer the task, acceptance criteria, repository rules, complete diff or pull request, and test evidence.
+   - Name the user or developer affected by the change.
 
-- The change matches its source and behaves as required.
-- No known defect or unhandled risk could break the source or repository rules for security, data loss, compatibility, or operations.
-- No simpler design has been identified that delivers the same outcome and proof with less state, indirection, duplication, or operational work.
+2. **Check the outcome**
+   - Read the source design, ticket, or request.
+   - Confirm that the change belongs in the system, matches the requested behavior, and delivers one focused outcome.
+   - Report a mismatch before reviewing details.
 
-Do not demand perfection or block on personal taste. Cite technical evidence or repository conventions.
+3. **Check the change**
+   - Start with the files and flows that deliver the outcome.
+   - Check behavior, failures, security boundaries, interfaces, compatibility, migrations, concurrency, and operations.
+   - Review every human-written changed line in context for correctness, regressions, complexity, names, comments, style, and documentation.
+   - For generated files or large data, inspect the source and spot-check the result.
+   - Run focused checks when they can change a finding or verdict.
 
-The verdict is independent agent evidence. It is not GitHub approval or a replacement for human review.
+4. **Check the proof**
+   - Confirm that tests cover the acceptance criteria, changed behavior, and affected failure paths.
+   - Confirm that assertions would fail for a broken change.
+   - Prefer user-visible behavior or a documented internal contract over copied implementation logic.
+   - Confirm that test setup does not hide the scenario.
+   - Check whether security, privacy, concurrency, accessibility, internationalization, or domain work needs specialist evidence.
+   - Mark a risk unverified when the reviewer lacks the evidence or skill to judge it.
 
-## Review order
+5. **Give the verdict**
+   - Report findings in severity order. For each one, give the location, impact, evidence, and smallest fix direction.
+   - Use `blocker` for unsafe to merge and `important` for should fix before merge. Omit optional nits unless asked.
+   - End with `Approve`, `Request changes`, or `Blocked`.
+   - State anything that remains unverified.
 
-1. **Set the frame.** Give the reviewer the task, acceptance criteria, repository rules, complete diff or pull request, and test evidence. Name the user or developer affected by the change.
-2. **Take the broad view.** Read the change summary and the relevant design or ticket. Confirm that the change belongs in the system, matches the intended behavior, and delivers one reviewable outcome. Report a mismatch before reviewing details.
-3. **Review the main behavior.** Start with the files and flows that deliver the outcome. Check behavior, failures, security boundaries, interfaces, compatibility, migrations, concurrency, and operations.
-4. **Review every human-written changed line in context.** Read enough surrounding code to judge correctness, regressions, complexity, names, comments, style, and docs. For generated files or large data, inspect the source and spot-check the output. Keep findings within the change's scope.
-5. **Review the proof.** Check that tests:
-   - Cover the changed behavior and affected failure paths.
-   - Prove the acceptance criteria.
-   - Assert behavior a user or caller can observe, or a documented internal contract.
-   - Would fail under a broken implementation.
-   - Do not copy implementation logic or hide the scenario in setup.
-6. Run focused checks that can confirm or disprove a claim that could change a finding or verdict.
-7. **Check specialist coverage.** Identify security, privacy, concurrency, accessibility, internationalization, or domain-specific work. Mark a risk unverified when the reviewer lacks the evidence or skill to judge it. Use `Blocked` when that gap could hide a problem that breaks a rule and no qualified reviewer covers it.
-8. **Report findings.** Return actionable findings in severity order. For each finding give the location, impact, evidence, and smallest fix direction.
+## Rules
 
-- **blocker:** unsafe to merge.
-- **important:** should fix before merge.
-- **nit:** optional; omit unless asked.
-
-## Verdict
-
-If fresh subagents are unavailable, stop and report that independent review is blocked unless the user explicitly accepts a documented self-review.
-
-If there are no findings, say so. End with `Approve`, `Request changes`, or `Blocked`, then state what remains unverified.
-
-## Boundaries
-
-- Keep findings within the change, but inspect enough surrounding code to judge each changed line and its system effect.
-- Do not turn preferences into findings. Use technical evidence and repository conventions.
-- Do not approve solely because checks pass.
+- Approve only when the change matches its source, no known defect or unhandled risk threatens security, data, compatibility, or operations, and no simpler design delivers the same outcome and proof.
+- Keep findings within the change, but inspect enough context to judge its system effect.
+- Cite technical evidence or repository conventions. Do not block on personal taste.
+- Do not approve only because checks pass.
+- Use `Blocked` when missing specialist evidence could hide a rule-breaking problem.
+- If a fresh subagent is unavailable, report that independent review is blocked unless the user accepts a documented self-review.
+- Treat the verdict as independent evidence, not GitHub approval or a replacement for human review.

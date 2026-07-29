@@ -62,6 +62,8 @@ The model has two layers:
 1. **Repository instructions define policy.** `AGENTS.md` says what good work means in a codebase.
 2. **Skills define each kind of work.** Each skill produces one clear result and has a clear stopping point. `/task-to-pr` and `/milestone` join the needed steps.
 
+Each skill uses one numbered workflow. Templates and rules support that workflow instead of creating another path through the work.
+
 ## The six phase skills
 
 | Skill | Owns | Stops when |

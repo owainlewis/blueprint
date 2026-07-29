@@ -7,19 +7,45 @@ argument-hint: "[repository, system, subsystem, or existing ARCHITECTURE.md]"
 
 # Architecture
 
+Explain the system that exists now.
+
 ## Workflow
 
-1. Read the request and repository instructions. Then inspect existing architecture docs, manifests, entry points, configuration, schemas, migrations, infrastructure, tests, and a few important flows.
-2. Choose the output:
+1. **Read**
+   - Read the request and repository instructions.
+   - Inspect existing architecture docs, manifests, entry points, configuration, schemas, migrations, infrastructure, tests, and a few important flows.
+
+2. **Choose the output**
    - For a whole repository document, use root `ARCHITECTURE.md`.
    - For a named subsystem, use its existing document or `docs/<subsystem>/architecture.md`.
    - For an explanation, map, review, or audit, answer in chat and do not modify files.
-3. Treat code, schemas, configuration, infrastructure, and executable tests as evidence. Treat existing prose as a claim to verify. Resolve contradictions before repeating them.
-4. Describe the system that exists now. Use the shape below for a document. For a chat report, use only the sections that answer the request. Link proposed changes to their design documents.
-5. Run the review pass. Correct every claim you can verify, identify unresolved evidence gaps, and keep limitations restricted to verified implementation gaps.
-6. Return the document or report for human review. Do not design future behavior, plan work, or change implementation.
 
-## Document shape
+3. **Verify the current system**
+   - Treat code, schemas, configuration, infrastructure, and executable tests as evidence.
+   - Treat existing prose as a claim to check.
+   - Resolve contradictions before repeating a claim.
+   - Check facts that change often, such as counts, limits, ports, timeouts, and dependency versions.
+
+4. **Write**
+   - Describe what is implemented now.
+   - For a document, use the template below.
+   - For chat, use only the sections that answer the request.
+   - Link proposed changes to their design documents.
+
+5. **Review**
+   - Check that a new teammate can explain the system, its main parts, where data lives, and the main rule to preserve.
+   - Check ownership, dependency direction, public contracts, critical flow order, side effects, cleanup, and failure paths against current evidence.
+   - Check authentication, authorization, isolation, untrusted input, secret access, and fail-open or fail-closed behavior.
+   - Check limited resources, concurrency, retries, startup, shutdown, monitoring, recovery, and how the system slows incoming work when full.
+   - Check repeated claims against repository instructions, README files, schemas, configuration, and tests.
+   - Fix verified errors. Put unresolved evidence gaps under Verification.
+   - Keep Known limitations to present gaps proved by current evidence.
+
+6. **Stop**
+   - Return the document or report for human review.
+   - Do not design future behavior, plan work, or change implementation.
+
+## Document template
 
 ```markdown
 # <System> architecture
@@ -62,36 +88,17 @@ List gaps that current evidence confirms. Do not mix in goals, roadmap items, or
 Link the small set of files that define entry points, boundaries, schemas, configuration, and critical flows.
 ```
 
-## Writing rules
+## Rules
 
 - Keep explanation, mapping, review, and audit requests read-only. Create or update a file only when the user asks for an architecture document.
-- Describe implemented reality, not intended architecture. Use a design document for future behavior.
 - Use `working tree based on <commit>` when the document and code change together before commit. Do not claim that uncommitted code was verified at the base commit.
-- Start with the simplest useful explanation. Write for a new teammate, not someone who already knows the project.
 - Use short sentences and everyday words. Define technical terms before using them.
-- Put detail after the reader understands the main idea. Do not turn the document into a file inventory.
-- Keep the length proportional to the system. A small repository may satisfy a section with one paragraph; do not pad it to resemble a large platform.
+- Start with the main idea. Put detail later. Do not turn the document into a file inventory.
+- Keep the length proportional to the system. Do not pad a small system.
 - Prefer exact execution order, ownership, and failure behavior over broad labels such as "service layer" or "robust".
 - Give every component a positive and negative boundary: what it owns and what it does not own.
 - Use diagrams for system context, dependencies, or flows only when they make a relationship materially clearer.
-- Check facts that can change immediately before writing them. Examples include counts, limits, ports, timeouts, and dependency versions.
 - Omit facts that add maintenance work without helping a contributor make a decision.
 - Link to detailed protocol, operations, or testing documents instead of duplicating them.
 - Keep proposed work in linked designs. Known limitations describe present gaps only.
-- Use plain words, define project-specific terms, and do not use em dashes.
-
-## Review pass
-
-Reread the draft and check each category against current evidence.
-
-1. **Clear summary.** Can a new teammate explain what the system does, how its main parts work together, where the real data lives, and the main rule to preserve?
-2. **Current state.** Does every statement describe code and configuration that exist at the stated verification basis?
-3. **Ownership.** Is each stored value, identifier, policy, and public contract owned in one named place?
-4. **Boundaries.** Does every component say what it owns, depends on, and does not own? Does the dependency direction match imports and runtime calls?
-5. **Flows.** Do the critical paths include their real ordering, response point, side effects, cleanup, and failure branches?
-6. **Security.** Are authentication, authorization, tenant or user isolation, untrusted input, secret access, and fail-open or fail-closed behavior explicit?
-7. **Operations.** Does the document cover limited resources, concurrency, retries, startup, shutdown, monitoring, and recovery? Does it say how the system slows incoming work when full?
-8. **Consistency.** Do repeated claims agree with README, repository instructions, contributor docs, schemas, config, and tests? Remove duplication or name the source when they do not.
-9. **Limitations.** Are gaps verified and current, with planned changes kept out of the current-system explanation?
-
-Put unresolved evidence gaps under Verification and state what would verify them.
+- Do not use em dashes.

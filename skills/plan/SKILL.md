@@ -7,20 +7,34 @@ argument-hint: "<design, brief, issue, or request>"
 
 # Plan
 
+Turn decided work into ordered tasks for separate agent runs.
+
 ## Workflow
 
-1. Read the source, repository instructions, and relevant code.
-2. Stop and return to design if product or technical choices remain open.
-3. Break the work into tasks that each deliver working behavior. Each task must:
-   - Fit one agent run.
-   - Produce one focused pull request.
-   - Let a reviewer understand the outcome, behavior, and proof without separating unrelated work.
-4. Separate refactoring when it would hide the behavior change. Small local cleanup may stay when it makes the change easier to review.
-5. Order tasks by dependency. Add milestones only when they create a useful delivery or review boundary.
-6. Return the plan in chat by default. Create tracker tickets only when the user asks. Never write a plan document.
-7. Stop after planning. Do not implement.
+1. **Read**
+   - Read the source, repository instructions, and relevant code.
+   - Identify the outcome, fixed decisions, constraints, and proof.
 
-Each task must stand alone:
+2. **Check readiness**
+   - Stop and return to design if a product or technical choice remains open.
+   - Continue only when a new agent could complete each task without asking those questions.
+
+3. **Create tasks**
+   - Make each task fit one agent run and one focused pull request.
+   - Make each task deliver working behavior and its proof.
+   - Separate refactoring when it would hide a behavior change. Keep small local cleanup only when it makes that change easier to review.
+   - Use the task template below.
+
+4. **Order tasks**
+   - Put dependencies before the work that needs them.
+   - Add a milestone only when it creates a useful delivery or review point.
+
+5. **Publish and stop**
+   - Return the plan in chat by default.
+   - Create tracker tickets only when the user asks.
+   - Do not write a plan document or implement the work.
+
+## Task template
 
 ```markdown
 ## <Task title>
@@ -44,8 +58,9 @@ Exact commands and any required manual verification.
 Related work this task must not absorb.
 ```
 
-## Boundaries
+## Rules
 
 - Do not split one piece of working behavior into separate file or technical-layer tasks.
 - Do not create scaffolding or cleanup tasks without a checked outcome.
 - Do not hide unresolved decisions inside implementation tickets.
+- Give each task enough context to stand alone.

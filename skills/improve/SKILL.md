@@ -7,18 +7,34 @@ argument-hint: "[code, files, diff, branch, or improvement focus]"
 
 # Improve
 
+Make existing code easier to understand without changing what it does.
+
 ## Workflow
 
-1. Identify the target from the request, current diff, or recently changed code.
-2. Read the target, its tests, and relevant surrounding code. State the behavior that must not change.
-3. If that behavior lacks tests, add focused coverage before refactoring. If automated tests cannot exercise it, explain why and give other evidence.
-4. Find unnecessary complexity, duplication, dead code, weak names, awkward boundaries, and abstractions that cost more than they help.
-5. Make focused improvements by deleting, deduplicating, renaming, simplifying, extracting, or inlining.
-6. Preserve public interfaces, data shapes, errors, and user-visible behavior unless the user explicitly asks to change them.
-7. Run tests and checks that cover behavior the refactor can affect. Report what improved, what behavior was preserved, and the evidence.
+1. **Choose the target**
+   - Use the request, current diff, or recently changed code.
+   - Read the target, its tests, and the surrounding code needed to understand it.
 
-## Boundaries
+2. **Protect existing behavior**
+   - State what must not change.
+   - Add focused tests first when that behavior lacks proof.
+   - If automated tests cannot cover it, explain why and name other evidence.
+
+3. **Simplify**
+   - Find duplication, dead code, weak names, awkward boundaries, and abstractions that cost more than they help.
+   - Delete, combine, rename, extract, inline, or reorder code where it makes the target clearer.
+   - Prefer a few focused edits over a broad rewrite.
+
+4. **Verify**
+   - Run checks that cover every behavior the refactor could affect.
+   - Confirm that public interfaces, data shapes, errors, and user-visible behavior did not change.
+
+5. **Report**
+   - Say what became simpler.
+   - Say what behavior stayed the same.
+   - Give the test or other evidence.
+
+## Rules
 
 - Do not add product scope or absorb unrelated cleanup.
-- Prefer a few clear edits over a broad rewrite.
-- Preserve behavior even when a redesign would be easier.
+- Preserve behavior unless the user explicitly asks to change it.

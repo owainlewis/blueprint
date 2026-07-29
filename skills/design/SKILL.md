@@ -7,16 +7,39 @@ argument-hint: "<feature, problem, or brief>"
 
 # Design
 
+Write a spec for a proposed feature or system change.
+
 ## Workflow
 
-1. Read the request, repository instructions, relevant code, and linked material.
-2. Resolve choices that would change behavior, interfaces, data, errors, security, operations, or tests.
-3. Ask only questions whose answers would change the design. Recommend an answer when asking.
-4. Write `docs/<feature-slug>/design.md` using the numbered shape below. Keep it short and in order. Omit only sections that do not apply.
-5. Run the review pass. Fix what you can. List the rest under Open questions.
-6. Stop for human review. Do not plan or implement.
+1. **Read**
+   - Read the request, repository instructions, relevant code, current architecture, and linked material.
 
-## Document shape
+2. **Decide**
+   - Resolve choices that change behavior, interfaces, data, errors, security, operations, or tests.
+   - Ask only questions whose answers would change the design.
+   - Recommend one answer when asking.
+
+3. **Write**
+   - Write `docs/<feature-slug>/design.md` using the template below.
+   - Keep sections short and in order.
+   - Omit only sections that do not apply.
+
+4. **Review**
+   - Check that a new teammate can understand the problem, outcome, approach, and main downside from the executive summary.
+   - Check the current boundary, the boundary being changed, and the owner of each new responsibility.
+   - Check where every stored name and identifier comes from, and what happens when it is missing or later changes.
+   - Check failure, retry timing, recovery without restart, config and enable or disable changes, work in flight, and shutdown.
+   - Check what happens when every dependency is unavailable at startup.
+   - Check identity, authorization, untrusted input, sensitive data, limited resources, and behavior at each limit.
+   - Replace words such as "eventually" and "will not starve" with a bound that can be tested.
+   - Make every acceptance criterion choose one observable result.
+   - Fix gaps supported by current evidence. Put the rest under Open questions and say whether each one blocks task breakdown.
+
+5. **Stop**
+   - Return the design for human review.
+   - Do not plan or implement.
+
+## Document template
 
 ```markdown
 # <Title>
@@ -73,18 +96,18 @@ How each invariant and each important requirement will be proved.
 - Risk and mitigation.
 
 ## 12. Open questions
-- Question, and whether it blocks starting work.
+- Question, and whether it blocks task breakdown.
 
 ## 13. Out of scope
 - Related work this design does not include.
 ```
 
-## Writing rules
+## Rules
 
-- Start with the simplest useful explanation. Write for a new teammate, not someone who already knows the project.
+- Write for a new teammate. Start with the simplest useful explanation.
 - Prose is the default. Use bullets only for real lists, such as config fields, acceptance criteria, risks, and out of scope.
-- A bullet cannot carry a decision by itself. Write the reason next to it in a sentence.
-- Use plain words. Say "the process crashed" instead of "an availability event occurred". Prefer short sentences.
+- Put the reason for a decision in a sentence, not a bare bullet.
+- Use plain words and short sentences. Say "the process crashed" instead of "an availability event occurred".
 - Define a term the first time you use it, or do not use it.
 - Keep current architecture and proposed behavior distinct. Link to `ARCHITECTURE.md` when it exists and say exactly which current boundary changes.
 - Give each changed component a positive and negative boundary: what it owns and what it does not own.
@@ -94,20 +117,3 @@ How each invariant and each important requirement will be proved.
 - Record rejected options only when the tradeoff matters later.
 - Do not repeat the same fact in several sections with different wording.
 - Do not use em dashes.
-
-## Review pass
-
-Reread the draft once and check each category. Fix any gap you can resolve from the available evidence.
-
-1. **Executive summary.** Can a new teammate understand the problem, outcome, approach, and main downside without reading the rest of the document?
-2. **Architecture fit.** Does the design show the current system boundary, the boundary being changed, and the owner of each new responsibility?
-3. **Names and identity.** Where does every stored identifier come from? What happens when it is missing, unclear, or changes after data exists?
-4. **Failure and recovery.** What creates a bad state? Does the system retry, how long does it wait between attempts, and can it recover without a restart? What happens when everything is bad at startup?
-5. **Security and privacy.** Where is identity established, authorization enforced, untrusted input validated, and sensitive data exposed or retained?
-6. **Shared resources.** What limited resource does the feature use? State the budget and what happens at the limit.
-7. **Timing and fairness.** Replace words such as "eventually" and "will not starve" with a bound someone can test.
-8. **Lifecycle.** Cover config reload, enable and disable behavior, work already in flight, and shutdown.
-9. **Undefined terms.** Define words that carry a specific meaning in the design.
-10. **Either/or acceptance criteria.** Do not allow both sides of "recovers or retains" to pass. Choose one observable behavior.
-
-Put anything you cannot resolve under Open questions and state whether it blocks task breakdown.

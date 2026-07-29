@@ -10,6 +10,7 @@ Blueprint is a small set of instructions for AI coding. It separates deciding wh
 - Update an existing architecture document when code changes ownership, dependency direction, protocols, stored data, trust boundaries, deployment topology, or hard limits.
 - Start with the simplest useful explanation. Use short sentences and everyday words. Define technical terms before using them.
 - Write for a new teammate. Put detail after the main idea. Remove anything that does not help someone decide, build, test, or review the work.
+- Give each skill one numbered workflow. Keep templates and rules separate from the steps.
 - Skip phases that add no value. Small, decided work can go straight to implementation.
 - A task is ready when a new agent can finish it without asking product or technical questions.
 - Each pull request delivers one focused outcome and its proof. A reviewer should not have to separate unrelated work to understand it.
