@@ -43,7 +43,7 @@ Use a fresh subagent that did not implement the change. Review without editing f
 
 ## Rules
 
-- Approve only when the change matches its source, no known defect or unhandled risk threatens security, data, compatibility, or operations, and no simpler design delivers the same outcome and proof.
+- Approve only when the change matches its source and repository rules, no known defect or unhandled risk threatens security, data, compatibility, or operations, and no simpler design delivers the same outcome and proof.
 - Keep findings within the change, but inspect enough context to judge its system effect.
 - Cite technical evidence or repository conventions. Do not block on personal taste.
 - Do not approve only because checks pass.

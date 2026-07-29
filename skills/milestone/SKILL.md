@@ -42,5 +42,6 @@ Finish every open issue in a GitHub milestone.
 - Do not batch unrelated issues.
 - Explain why issues must be combined before starting combined work.
 - Never merge without explicit permission.
-- Do not merge with missing acceptance criteria or unverified affected failure paths unless the user accepts the gap.
+- Do not merge with missing acceptance criteria.
+- Do not merge with unverified acceptance criteria or affected failure paths unless the user accepts the evidence gap.
 - Stop when an issue has unresolved product or technical decisions, requires missing secrets or permissions, already has conflicting work, or grows beyond its acceptance criteria.
