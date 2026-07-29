@@ -1,14 +1,16 @@
 # RAG Chatbot API
 
-> **Status:** Reviewed example
+> **Status:** Proposed for review
 >
 > **Source:** [`examples/input.md`](../input.md)
+>
+> **Example:** Reviewed golden output
 
 ## 1. Executive summary
 
 Build a single-user Python API for uploading PDFs and asking questions answered from their contents. Answers must be grounded in retrieved chunks and include source references so the service does not invent information outside the uploaded documents.
 
-Use FastAPI, PostgreSQL with pgvector, and the OpenAI API behind a replaceable adapter. Keep ingestion synchronous and the retrieval model deliberately small. This favors a clear local system and deterministic tests over background processing or retrieval sophistication.
+Use FastAPI, PostgreSQL with pgvector, and the OpenAI API behind a replaceable adapter, with `uv` managing the Python project. Keep ingestion synchronous and the retrieval model deliberately small. This favors a clear local system and deterministic tests over background processing or retrieval sophistication.
 
 ## 2. Context and scope
 
@@ -67,7 +69,7 @@ Deleting a document removes its chunks through a database cascade. Later retriev
 
 ### Invariants
 
-1. Every returned factual answer is generated only from chunks included in its source list.
+1. The answer generator receives no document context except the chunks returned in that response's source list.
 2. A deleted document has no chunks available to retrieval.
 3. A failed upload leaves no document or chunk rows behind.
 4. Provider failures never appear as successful grounded answers.
@@ -80,25 +82,32 @@ Deleting a document removes its chunks through a database cascade. Later retriev
 - Answer a question with an answer and ordered source references from relevant chunks.
 - Return a fixed no-information response when no relevant chunk exists.
 - Run locally with Docker Compose using FastAPI and PostgreSQL with pgvector.
+- Use `uv` for Python package and environment management.
 - Keep configuration in environment variables and OpenAI calls replaceable in tests.
+- Expose a health endpoint that reports whether the API can reach PostgreSQL.
 
 ## 6. Interfaces and data
 
 ```text
-POST   /api/v1/documents      -> {id, filename, uploaded_at, chunk_count}
+GET    /health                -> {status: "ok"}
+POST   /api/v1/documents      <- multipart/form-data with one file field
+                              -> {id, filename, uploaded_at, chunk_count}
 GET    /api/v1/documents      -> [{id, filename, uploaded_at, chunk_count}]
 DELETE /api/v1/documents/{id} -> {deleted: true}
-POST   /api/v1/chat           -> {answer, sources: [{document_id, filename, chunk_index, content}]}
+POST   /api/v1/chat           <- {message}
+                              -> {answer, sources: [{document_id, filename, chunk_index, content}]}
 Errors                        -> {error: {code, message}}
 ```
 
-Error codes are `bad_request`, `payload_too_large`, `not_found`, and `upstream_error`.
+Error codes are `bad_request`, `payload_too_large`, `not_found`, `internal_error`, `service_unavailable`, and `upstream_error`.
 
 Store one row per document and many related chunk rows. Each chunk holds its text, zero-based position, embedding, and document ID. The document foreign key cascades on delete.
 
 `RAG_RELEVANCE_THRESHOLD` configures the minimum inclusive cosine similarity and defaults to `0.75`. Startup accepts both `0` and `1` and fails unless the value is numeric and satisfies `0 <= value <= 1`.
 
 `SERVER_GRACEFUL_SHUTDOWN_SECONDS` configures the shutdown deadline and defaults to `10`. Startup fails unless it is an integer from `1` through `60`.
+
+`DATABASE_URL` and `OPENAI_API_KEY` are required. Startup fails before serving traffic when either setting is missing.
 
 ### Naming and identity
 
@@ -110,8 +119,10 @@ The service generates an opaque UUID for each uploaded document. The original fi
 - Reject a PDF over 25 MiB using `413` and `payload_too_large`.
 - Return `404` and `not_found` when deleting a missing document.
 - Return `502` and `upstream_error` when embedding or answer generation fails.
-- Roll back the upload transaction when persistence fails.
+- Return `503` and `service_unavailable` when `/health` cannot reach PostgreSQL. The health check does not call OpenAI.
+- Return `500` and `internal_error` when a document or chat database operation fails. A failed upload transaction rolls back before this response is returned.
 - Return the fixed no-information response with status `200` when retrieval has no qualifying chunks.
+- Return `400` and `bad_request` when the chat message is missing or empty.
 - Fail startup before serving traffic when required database or OpenAI configuration is missing.
 - On shutdown, stop accepting new requests and wait up to `SERVER_GRACEFUL_SHUTDOWN_SECONDS` for in-flight requests. After the deadline, cancel remaining requests and let open database transactions roll back.
 
@@ -124,28 +135,39 @@ Uploads are limited to 25 MiB and rejected before extraction when larger. Chat r
 ## 9. Acceptance criteria
 
 - `POST /api/v1/documents` accepts a PDF up to 25 MiB and returns its ID, filename, upload time, and chunk count.
+- `GET /health` returns `200` with `{"status":"ok"}` when the API can reach PostgreSQL and `503` with `service_unavailable` when it cannot.
 - Uploading a non-PDF, an empty-text PDF, or a file over 25 MiB returns `400` with `bad_request`, `400` with `bad_request`, or `413` with `payload_too_large` respectively and creates no rows.
 - `GET /api/v1/documents` lists uploaded documents.
 - `DELETE /api/v1/documents/{id}` removes the document and makes its chunks unavailable to retrieval.
 - `POST /api/v1/chat` returns a grounded answer and ordered source references for known fixture content.
+- Chat retrieves at most five qualifying chunks, and the mocked answer generator receives exactly the same ordered chunk content returned in `sources`.
 - A chunk with cosine similarity exactly equal to `RAG_RELEVANCE_THRESHOLD` qualifies; a lower score does not.
 - Chunks with equal similarity are ordered by document ID and then chunk index.
 - Threshold configuration accepts `0` and `1` and rejects non-numeric values, values below `0`, and values above `1` before startup.
 - Chat with no relevant content returns `{"answer":"No relevant information found in uploaded documents.","sources":[]}`.
+- After a failed upload or document deletion, chat for that document's fixture content returns the fixed no-information response with no sources.
+- A missing or empty chat message returns `400` with `bad_request`.
 - Missing deletion returns `404`, and upstream OpenAI failures return `502`, both with the documented error shape.
+- A forced upload persistence failure returns `500` with `internal_error` and leaves no document or chunk rows.
+- Database failures while listing, deleting, or retrieving for chat return `500` with `internal_error`.
+- Startup fails before serving traffic when `DATABASE_URL` or `OPENAI_API_KEY` is missing or when either bounded numeric setting is invalid.
 - Shutdown stops new requests, gives in-flight requests 10 seconds by default, then cancels remaining work without committing a partial upload.
 - The full test suite passes against PostgreSQL with pgvector while OpenAI calls are mocked.
+- `uv sync --frozen` and `uv run pytest` are the supported local dependency and test commands.
 
 ## 10. Test approach
 
 - Use `pytest` and `httpx` for endpoint tests.
 - Test persistence and vector behavior against PostgreSQL with pgvector.
 - Mock OpenAI calls with deterministic embeddings and answers.
-- Use a small PDF fixture containing known text to prove grounded chat and source references.
+- Use a small PDF fixture containing the sentence "PostgreSQL with pgvector stores the embeddings." to prove grounded chat and source references.
 - Use deterministic embeddings that produce scores equal to, immediately below, and immediately above `RAG_RELEVANCE_THRESHOLD`.
+- Create more than five qualifying chunks, then assert that retrieval, generator context, and returned sources use the same ordered first five chunks.
 - Cover threshold configuration at `0`, at `1`, below `0`, above `1`, and with a non-numeric value.
 - Start a deliberately slow upload, request shutdown, and cover completion before the configured deadline and cancellation with transaction rollback after it.
-- Cover upload, list, delete, relevant chat, no-result chat, transaction rollback, and the `400`, `404`, `413`, and `502` paths.
+- Cover upload, list, delete, relevant chat, no-result chat, transaction rollback, and the `400`, `404`, `413`, `500`, and `502` paths.
+- Cover health with PostgreSQL available and unavailable, missing or empty chat messages, and database failures during list, delete, and chat retrieval.
+- Cover startup with each required setting missing.
 - Assert through the public API that a deleted document and a failed upload leave no retrievable chunks.
 
 ## 11. Risks and tradeoffs
