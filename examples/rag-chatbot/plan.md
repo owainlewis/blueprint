@@ -12,9 +12,11 @@ Source design: [RAG chatbot design](design.md)
 
 - Use FastAPI, PostgreSQL with pgvector, Docker Compose, and OpenAI.
 - Use fixed-size chunks with overlap for V1.
+- Limit PDF uploads to 25 MiB.
+- Store a document and all of its chunks atomically.
 - Mock OpenAI in tests.
 - Add focused tests with each task and run them against PostgreSQL with pgvector.
-- Keep API errors shaped as `{error: {code, message}}`.
+- Keep API errors shaped as `{error: {code, message}}`, including `payload_too_large` for a PDF over 25 MiB.
 - Return a fixed no-information answer instead of hallucinating when retrieval has no relevant chunks.
 
 ---
@@ -38,12 +40,15 @@ This task creates the base service shape for every later endpoint. It should est
 - Use `uv` for Python package management.
 - Use Docker Compose for the API and PostgreSQL with pgvector.
 - Keep configuration in environment variables.
+- Read the shutdown deadline from `SERVER_GRACEFUL_SHUTDOWN_SECONDS`, defaulting to `10`, and fail startup unless it is an integer from `1` through `60`.
 
 #### Acceptance criteria
 
 - The API and database start with Docker Compose.
 - `GET /health` returns `{"status":"ok"}` when the API can reach the database.
-- The app fails clearly when required database configuration is missing.
+- The app fails clearly when required database or OpenAI configuration is missing.
+- Graceful shutdown stops new requests, waits up to `SERVER_GRACEFUL_SHUTDOWN_SECONDS`, then cancels remaining requests.
+- The README states that V1 is for one trusted user and sends document text to OpenAI.
 - A baseline `pytest` run is available for later tasks.
 
 #### Design reference
@@ -57,6 +62,8 @@ docker compose up -d
 curl http://localhost:8000/health
 pytest
 ```
+
+Also start a deliberately slow request, signal shutdown, and verify both completion before the deadline and cancellation after it.
 
 #### Out of scope
 
@@ -81,15 +88,20 @@ This task proves the ingestion path: validation, text extraction, chunking, embe
 #### Constraints
 
 - Accept PDFs only.
+- Reject uploads over 25 MiB before text extraction.
 - Use fixed-size chunks of about 500 tokens with about 50 tokens of overlap.
+- Commit the document and all chunks in one database transaction.
 - Mock OpenAI calls in tests.
 
 #### Acceptance criteria
 
 - `POST /api/v1/documents` accepts a PDF and returns `{id, filename, uploaded_at, chunk_count}`.
 - Uploaded PDFs are stored with chunks and embeddings that can be queried later.
-- Non-PDF uploads return `400` with `{error: {code, message}}`.
+- Non-PDF and empty-text PDF uploads return `400` with `{error: {code, message}}`.
+- Uploads over 25 MiB return `413` with `payload_too_large` and create no rows.
 - OpenAI embedding failures return `502` with `{error: {code, message}}`.
+- Embedding and persistence failures leave no document or chunk rows behind.
+- Cancelling a deliberately slow upload at the graceful shutdown deadline leaves no document or chunk rows behind.
 - A PDF fixture exists with known text for later retrieval tests.
 
 #### Design reference
@@ -102,6 +114,8 @@ The [RAG chatbot design](design.md) covers document storage, chunking defaults, 
 pytest
 curl -F "file=@tests/fixtures/test.pdf" http://localhost:8000/api/v1/documents
 ```
+
+Also run focused tests for a non-PDF, an empty-text PDF, an oversized upload, an embedding failure, a forced persistence failure, and shutdown cancellation during a slow upload. Each failure must leave the document list unchanged.
 
 #### Out of scope
 
@@ -164,7 +178,9 @@ This task combines vector retrieval, prompt construction, OpenAI chat completion
 #### Constraints
 
 - Retrieve at most 5 chunks for each question.
-- Return sources ordered by relevance.
+- Calculate cosine similarity as `1 - (embedding <=> query_embedding)`.
+- Read the inclusive threshold from `RAG_RELEVANCE_THRESHOLD`, defaulting to `0.75`, accept `0` and `1`, and fail startup unless it is numeric and satisfies `0 <= value <= 1`.
+- Return sources by descending similarity, then document ID and chunk index for stable ties.
 - Do not add conversation history or streaming.
 
 #### Acceptance criteria
@@ -172,6 +188,9 @@ This task combines vector retrieval, prompt construction, OpenAI chat completion
 - `POST /api/v1/chat` accepts a message and returns `{answer, sources}`.
 - Sources include `document_id`, `filename`, `chunk_index`, and `content`.
 - A question answerable from the fixture returns an answer grounded in that fixture and at least one source.
+- A chunk scoring exactly `RAG_RELEVANCE_THRESHOLD` qualifies, while a lower score does not.
+- Chunks with equal similarity are ordered by document ID and then chunk index.
+- Threshold configuration accepts `0` and `1` and rejects non-numeric values, values below `0`, and values above `1` before startup.
 - If no relevant chunks are found, the endpoint returns `{"answer":"No relevant information found in uploaded documents.","sources":[]}`.
 - OpenAI embedding or chat failures return `502` with `{error: {code, message}}`.
 
@@ -184,6 +203,8 @@ The [RAG chatbot design](design.md) covers retrieval defaults, chat response sha
 ```bash
 pytest
 ```
+
+Focused tests use deterministic embeddings with scores equal to, immediately below, and immediately above the configured threshold. Configuration tests cover `0`, `1`, values below `0`, values above `1`, and a non-numeric value.
 
 Manual smoke check: upload `tests/fixtures/test.pdf`, ask `What database is used for embeddings?`, and confirm the response mentions PostgreSQL with pgvector and includes at least one source.
 

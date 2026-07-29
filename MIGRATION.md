@@ -1,11 +1,12 @@
 # Migrate to the phase model
 
-> **Breaking change:** Blueprint now ships five phase skills and two delivery skills. Old skill directories and copied workflow commands must be removed manually.
+> **Breaking change:** Blueprint now ships six phase skills and two delivery skills. Old skill directories and copied workflow commands must be removed manually.
 
 ## What changed
 
 | Before | Now |
 | --- | --- |
+| No previous equivalent | `/architecture` |
 | `design-doc`, `spec` | `/design` |
 | `browser-verify` | Browser proof inside `/test` |
 | `refactor` | `/improve` |
@@ -19,20 +20,20 @@
 The public skill surface is now:
 
 ```text
-/design · /plan · /test · /review · /improve · /task-to-pr · /milestone
+/architecture · /design · /plan · /test · /review · /improve · /task-to-pr · /milestone
 ```
 
 ## Clean upgrade
 
 1. **Remove old Blueprint entry points.** In the skill directory used by your coding tool, remove only the old Blueprint skill folders listed above. Also remove copied Blueprint `implement.md` and `task-to-pr.md` command files. Do not delete whole skill or command directories; they may contain unrelated files.
-2. **Install all seven skills.**
+2. **Install all eight skills.**
 
    ```bash
    npx skills add owainlewis/blueprint
    ```
 
 3. **Remove copied reviewer agents.** Delete any old Blueprint `code-reviewer` definition. The `/review` skill now launches a fresh generic subagent.
-4. **Check the result.** The `/design`, `/plan`, `/test`, `/review`, `/improve`, `/task-to-pr`, and `/milestone` skills should be available.
+4. **Check the result.** The `/architecture`, `/design`, `/plan`, `/test`, `/review`, `/improve`, `/task-to-pr`, and `/milestone` skills should be available.
 
 ## Why cleanup is manual
 
