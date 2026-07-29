@@ -1,17 +1,24 @@
 # Blueprint repository policy
 
-Blueprint is a small, principles-first process for AI coding. It separates thinking phases from the workflow that ships code.
+Blueprint is a small set of instructions for AI coding. It separates deciding what to build from shipping code.
 
 ## Principles
 
 - Give agents outcomes, constraints, and proof. Trust them with mechanics.
 - Keep one skill per meaningful engineering phase or delivery outcome.
-- Keep current architecture separate from proposed design. Update existing architecture documents when implementation changes ownership, dependency direction, protocols, durable data, trust boundaries, deployment topology, or hard limits.
+- Keep current architecture separate from proposed design.
+- Update an existing architecture document when code changes ownership, dependency direction, protocols, stored data, trust boundaries, deployment topology, or hard limits.
+- Start with the simplest useful explanation. Use short sentences and everyday words. Define technical terms before using them.
+- Write for a new teammate. Put detail after the main idea. Remove anything that does not help someone decide, build, test, or review the work.
 - Skip phases that add no value. Small, decided work can go straight to implementation.
 - A task is ready when a new agent can finish it without asking product or technical questions.
-- Each pull request delivers one focused, self-contained outcome with its related proof. A change is reviewable when its outcome, behavior, and proof can be understood without first separating unrelated work. Separate refactoring when it would obscure the behavior diff. Small local cleanup may remain when it makes the changed behavior easier to review.
-- Logic changes include automated tests for changed behavior and failure paths affected by the change or named in its acceptance criteria. Refactors include tests for behavior that must not change. If the change has no executable behavior, or the affected behavior cannot be exercised through available automated interfaces, state the concrete reason and substitute evidence.
-- Review checks correctness. If the same outcome and proof can be delivered with less state, indirection, duplication, or operational work, request the simpler design. Do not block on personal taste. Cite technical evidence or repository conventions.
+- Each pull request delivers one focused outcome and its proof. A reviewer should not have to separate unrelated work to understand it.
+- Separate refactoring when it would hide the behavior change. Small local cleanup may stay when it makes that change easier to review.
+- Logic changes include automated tests for changed behavior and affected failure paths, including any named in the acceptance criteria.
+- Refactors include tests for behavior that must not change.
+- If automated tests cannot exercise the affected behavior, explain why and give other evidence.
+- Review checks correctness. Ask for a simpler design when it can deliver the same outcome and proof with less state, indirection, duplication, or operational work.
+- Do not block on personal taste. Cite technical evidence or repository conventions.
 - Browser behavior is proven in a real browser, not by reading source.
 - If the task, design, or plan is wrong, update it before changing more code.
 - Prefer the smallest complete change. Do not mix product work with unrelated cleanup.
@@ -19,7 +26,7 @@ Blueprint is a small, principles-first process for AI coding. It separates think
 
 ## Phases
 
-- `/architecture`: explain the verified current system in chat, or document it when a durable artifact is requested. Stop for human review.
+- `/architecture`: explain the verified current system in chat, or write an architecture document when asked. Stop for human review.
 - `/design`: decide what to build, why, and how. Stop for human review.
 - `/plan`: split decided work into ordered, agent-ready tasks. Stop before implementation.
 - `/test`: prove acceptance criteria and failure paths affected by the change, including real-browser checks when browser-rendered behavior changes.
@@ -28,19 +35,23 @@ Blueprint is a small, principles-first process for AI coding. It separates think
 
 ## Workflow: Milestones
 
-For a GitHub milestone, use `/milestone`. It orders open issues and runs `/task-to-pr` one issue at a time. Stop for human merge after each green pull request unless the user explicitly delegates merging for that run.
+For a GitHub milestone, use `/milestone`. It orders open issues and runs `/task-to-pr` one issue at a time.
 
-Writing code is a base capability, not a separate phase skill. Debugging and test-driven development are implementation techniques, not product-level entry points.
+Stop for human merge after each pull request passes its required checks. Continue through merges only when the user explicitly allows it for that run.
+
+Writing code is a basic agent ability, not a separate skill. Debugging and test-driven development are ways to implement a change, not separate product skills.
 
 ## Workflow: Code changes
 
-For one end-to-end code change, follow the canonical [`/task-to-pr` skill](skills/task-to-pr/SKILL.md). It owns ticket handling, worktree isolation, coding, tests, independent review, commits, pull requests, CI, and current feedback. Never merge unless the user explicitly asks.
+For one code change, follow the [`/task-to-pr` skill](skills/task-to-pr/SKILL.md). It covers the work from the source task through a tested and reviewed pull request. Never merge unless the user explicitly asks.
 
 ## Outputs
 
-- When a durable document is requested, whole-system architecture defaults to `ARCHITECTURE.md`. Explicitly scoped subsystem architecture defaults to its established document or `docs/<subsystem>/architecture.md`.
+- A whole-system architecture document defaults to `ARCHITECTURE.md`.
+- A named subsystem uses its existing document or `docs/<subsystem>/architecture.md`.
 - Designs default to `docs/<feature-slug>/design.md`.
 - Plans are returned in chat by default or published as tracker tickets when asked. They are not stored as plan documents.
-- Pull requests explain what changed, why it matters, what the reviewer should consider, and a truthful checklist covering tests, checks, independent review, findings, documentation, and CI.
+- Pull requests start with a short plain English summary. They then explain only the detail a reviewer needs.
+- The checklist states the real status of tests, checks, independent review, findings, documentation, and CI.
 
 Exploration does not require a design, plan, or ticket. Do not create process artifacts that do not improve a decision, handoff, or proof.

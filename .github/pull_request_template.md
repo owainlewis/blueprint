@@ -1,14 +1,14 @@
-## What is this change?
+## Plain English summary
 
-<!-- Summarize the major changes and observable behavior. -->
+<!-- In two to four short sentences, explain the problem, what changed, and why it matters. Use everyday words. Do not list files or use unexplained technical terms. -->
 
-## Why is it important?
+## Details
 
-<!-- Explain the problem, who it affects, and why this approach was chosen. -->
+<!-- Add only the behavior or decisions that are not clear from the summary. Skip this section when the summary is enough. -->
 
-## What should the reviewer know or consider?
+## Reviewer notes
 
-<!-- Call out decisions, scope boundaries, tradeoffs, shortcomings, safety, compatibility, failure behavior, operational impact, known risks, and where to start. -->
+<!-- Include only facts that change how this PR should be reviewed: risk, tradeoff, failure behavior, compatibility, migration, or where to start. Write "None" when none apply. -->
 
 ## Checklist
 

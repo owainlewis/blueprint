@@ -1,6 +1,6 @@
-# Migrate to the phase model
+# Migrate from older Blueprint skills
 
-> **Breaking change:** Blueprint now ships six phase skills and two delivery skills. Old skill directories and copied workflow commands must be removed manually.
+> **Breaking change:** Blueprint now ships eight skills. You must remove old Blueprint skill folders and copied commands by hand.
 
 ## What changed
 
@@ -11,13 +11,13 @@
 | `browser-verify` | Browser proof inside `/test` |
 | `refactor` | `/improve` |
 | `branch`, `commit`, `implement`, `pr`, `pr-to-ready` | Steps inside `/task-to-pr` |
-| `task-to-pr` | Canonical `/task-to-pr` delivery skill |
+| `task-to-pr` | `/task-to-pr` |
 | `debug`, `tdd` | Techniques used while implementing |
 | `goal-design`, `multitask` | Ordinary instructions or project-specific workflows |
 | `milestone` | `/milestone` skill, backed by `/task-to-pr` |
 | `code-reviewer` agent definition | A fresh generic subagent launched by `/review` |
 
-The public skill surface is now:
+These are the eight skills you can call:
 
 ```text
 /architecture · /design · /plan · /test · /review · /improve · /task-to-pr · /milestone
@@ -25,7 +25,7 @@ The public skill surface is now:
 
 ## Clean upgrade
 
-1. **Remove old Blueprint entry points.** In the skill directory used by your coding tool, remove only the old Blueprint skill folders listed above. Also remove copied Blueprint `implement.md` and `task-to-pr.md` command files. Do not delete whole skill or command directories; they may contain unrelated files.
+1. **Remove old Blueprint skills and commands.** In the skill directory used by your coding tool, remove only the old Blueprint skill folders listed above. Also remove copied Blueprint `implement.md` and `task-to-pr.md` command files. Do not delete whole skill or command directories because they may contain unrelated files.
 2. **Install all eight skills.**
 
    ```bash
@@ -37,6 +37,6 @@ The public skill surface is now:
 
 ## Why cleanup is manual
 
-Some noninteractive skill updaters add and replace skills but do not remove directories that disappeared upstream. Running `npx skills update` alone can therefore leave the old and new models installed together.
+Some update commands add or replace skills but do not remove folders from an older version. Running `npx skills update` alone can therefore leave both the old and new skills installed.
 
-`/task-to-pr` is the only one-task delivery entry point. Keeping implementation, testing, review, publication, CI, and feedback in that skill avoids duplicate workflow names and routing ambiguity.
+Use `/task-to-pr` to deliver one task. It keeps implementation, testing, review, publication, CI, and feedback in one place so a reader does not have to choose between overlapping workflow names.
