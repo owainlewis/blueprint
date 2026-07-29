@@ -41,12 +41,15 @@ flowchart TB
     end
 
     subgraph Deliver["Deliver with /task-to-pr"]
-        Task --> Isolate["isolate"] --> Code["code"] --> Review["/review"] --> Test["/test"]
+        Task --> Isolate["isolate"] --> Code["code"] --> Review["review code"] --> Test["/test"]
         Review -->|findings| Fix["fix"] --> Review
         Test -->|failure| Fix
-        Test -->|pass| Publish["publish PR"] --> Validate["CI + current feedback"]
+        Test -->|pass| ProofReview["review proof"] --> Publish["publish PR"] --> Validate["latest commit checks"]
+        ProofReview -->|findings| Fix
         Validate -->|failure or finding| Fix
-        Validate -->|clean| PR["ready PR"]
+        Validate -->|clean| Human["check current comments once"]
+        Human -->|finding| Fix
+        Human -->|clean| PR["ready PR"]
     end
 
     PR --> Merge([Human merge])
@@ -77,10 +80,10 @@ Writing code is a basic agent ability, not a separate skill. Branching, committi
 [`skills/task-to-pr/SKILL.md`](skills/task-to-pr/SKILL.md) is the single authority for delivery. Given a ticket, task, or existing PR, it:
 
 1. codes one focused change in an isolated worktree;
-2. gets a fresh independent review;
-3. proves the change with tests;
+2. reviews the code before testing;
+3. proves the change with tests, then gets a fresh independent review;
 4. opens a pull request;
-5. waits for CI and feedback, then repeats review and tests after code changes.
+5. passes configured CI and automated review for the latest commit, then checks current human comments once.
 
 It stops when the pull request is ready for human merge. It never merges without explicit permission.
 
