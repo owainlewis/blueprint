@@ -181,7 +181,7 @@ Uploads are limited to 25 MiB and rejected before extraction when larger. Chat r
 
 ## 12. Open questions
 
-None block implementation. Authentication, provider selection, and asynchronous ingestion require new designs if the deployment scope expands beyond one trusted user.
+None block task breakdown. Authentication, provider selection, and asynchronous ingestion require new designs if the deployment scope expands beyond one trusted user.
 
 ## 13. Out of scope
 
