@@ -1,6 +1,6 @@
 ---
 name: architecture
-description: "Documents the current architecture of an implemented system, including its context, invariants, components, dependencies, critical flows, interfaces, data ownership, security boundaries, operations, and verified limitations. Use when the user asks to create, explain, audit, or update ARCHITECTURE.md or map how an existing system works. Do not use for a proposed feature or future system design; use the design skill instead."
+description: "Documents or explains the current architecture of an implemented system, including its context, invariants, components, dependencies, critical flows, interfaces, data ownership, security boundaries, operations, and verified limitations. Use when the user asks to create, explain, audit, or update ARCHITECTURE.md or map how an existing system works. Do not use for a proposed feature or future system design; use the design skill instead."
 user-invocable: true
 argument-hint: "[repository, system, subsystem, or existing ARCHITECTURE.md]"
 ---
@@ -10,13 +10,13 @@ argument-hint: "[repository, system, subsystem, or existing ARCHITECTURE.md]"
 ## Workflow
 
 1. Read the request, repository instructions, existing architecture material, manifests, entry points, configuration, schemas, migrations, infrastructure, tests, and the implementation of representative flows.
-2. Establish the document boundary. For a whole repository, write or update `ARCHITECTURE.md` at the root. For an explicitly scoped subsystem, update its established architecture document or write `docs/<subsystem>/architecture.md`.
+2. Choose the requested output. When the user asks to create or update a durable architecture document, establish its boundary: use root `ARCHITECTURE.md` for a whole repository, or the established document or `docs/<subsystem>/architecture.md` for an explicitly scoped subsystem. When the user asks only to explain, map, review, or audit the current system, return a report in chat and do not modify files.
 3. Treat code, schemas, configuration, infrastructure, and executable tests as evidence. Treat existing prose as a claim to verify. Resolve contradictions before repeating them.
-4. Write the current implemented system using the shape below. Link proposed changes to their design documents instead of presenting them as current behavior.
-5. Run the review pass. Correct every claim you can verify, mark unresolved evidence gaps under Verification, and keep Known limitations restricted to verified implementation gaps.
-6. Stop for human review. Do not design future behavior, plan work, or change implementation.
+4. Describe the current implemented system. For a durable document, use the shape below. For a chat report, keep the same evidence priorities and use only the sections that help answer the request. Link proposed changes to their design documents instead of presenting them as current behavior.
+5. Run the review pass. Correct every claim you can verify, identify unresolved evidence gaps, and keep limitations restricted to verified implementation gaps.
+6. Return the document or report for human review. Do not design future behavior, plan work, or change implementation.
 
-## Document shape
+## Durable document shape
 
 ```markdown
 # <System> architecture
@@ -61,6 +61,7 @@ Link the small set of files that are authoritative for entry points, boundaries,
 
 ## Writing rules
 
+- Keep read-only explanation, mapping, review, and audit requests read-only. Create or update a file only when the user asks for a durable architecture document.
 - Describe implemented reality, not intended architecture. Use a design document for future behavior.
 - Use `working tree based on <commit>` when the architecture document and implementation change together before commit. Do not claim that an uncommitted state was verified at the base commit.
 - Start with the mental model and boundaries. Do not turn the document into a file inventory.

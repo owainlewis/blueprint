@@ -19,7 +19,7 @@ Blueprint is a small, principles-first process for AI coding. It separates think
 
 ## Phases
 
-- `/architecture`: document the verified current system and its boundaries. Stop for human review.
+- `/architecture`: explain the verified current system in chat, or document it when a durable artifact is requested. Stop for human review.
 - `/design`: decide what to build, why, and how. Stop for human review.
 - `/plan`: split decided work into ordered, agent-ready tasks. Stop before implementation.
 - `/test`: prove acceptance criteria and failure paths affected by the change, including real-browser checks when browser-rendered behavior changes.
@@ -38,7 +38,7 @@ For one end-to-end code change, follow the canonical [`/task-to-pr` skill](skill
 
 ## Outputs
 
-- Whole-system architecture defaults to `ARCHITECTURE.md`. Explicitly scoped subsystem architecture defaults to its established document or `docs/<subsystem>/architecture.md`.
+- When a durable document is requested, whole-system architecture defaults to `ARCHITECTURE.md`. Explicitly scoped subsystem architecture defaults to its established document or `docs/<subsystem>/architecture.md`.
 - Designs default to `docs/<feature-slug>/design.md`.
 - Plans are returned in chat by default or published as tracker tickets when asked. They are not stored as plan documents.
 - Pull requests explain what changed, why it matters, what the reviewer should consider, and a truthful checklist covering tests, checks, independent review, findings, documentation, and CI.

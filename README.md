@@ -16,7 +16,7 @@ Use the smallest entry point that resolves the uncertainty in front of you.
 
 | If you need to… | Start with | Result |
 | --- | --- | --- |
-| Document or audit how an implemented system works | `/architecture` | A verified current-state architecture reference |
+| Explain, document, or audit how an implemented system works | `/architecture` | A verified current-state report or architecture reference |
 | Specify a feature or change to part of a system | `/design` | A reviewed design with requirements and acceptance criteria |
 | Split a decided feature into work for several agent runs | `/plan` | Ordered tasks in chat or tracker tickets |
 | Take one task through delivery | `/task-to-pr` | A tested, reviewed, green pull request |
@@ -64,7 +64,7 @@ The model has two layers:
 
 | Skill | Owns | Stops when |
 | --- | --- | --- |
-| `/architecture` | Current system context, invariants, components, dependencies, flows, boundaries, operations, and verified limitations | The architecture reference is ready for human review |
+| `/architecture` | Current system context, invariants, components, dependencies, flows, boundaries, operations, and verified limitations | The requested report or architecture reference is ready for human review |
 | `/design` | A proposed feature or system-part specification: executive summary, system fit, behavior, boundaries, decisions, requirements, proof, and scope | The design is ready for human review |
 | `/plan` | Vertical, ordered tasks and optional milestones | The work is ready to hand off |
 | `/test` | Automated checks, failure paths, and real-browser proof when relevant | Every criterion is pass, fail, or explicitly unverified |
