@@ -41,11 +41,15 @@ flowchart TB
     end
 
     subgraph Deliver["Deliver with /task-to-pr"]
-        Task --> Isolate["isolate"] --> Code["code"] --> Test["/test"] --> Review["/review"]
-        Review -->|findings| Fix["fix"] --> Test
-        Review -->|clean| Publish["publish PR"] --> Validate["CI + current feedback"]
+        Task --> Isolate["isolate"] --> Code["code"] --> Review["review code"] --> Test["/test"]
+        Review -->|findings| Fix["fix"] --> Review
+        Test -->|failure| Fix
+        Test -->|pass| ProofReview["review proof"] --> Publish["publish PR"] --> Validate["latest commit checks"]
+        ProofReview -->|findings| Fix
         Validate -->|failure or finding| Fix
-        Validate -->|clean| PR["ready PR"]
+        Validate -->|clean| Human["check current comments once"]
+        Human -->|finding| Fix
+        Human -->|clean| PR["ready PR"]
     end
 
     PR --> Merge([Human merge])
@@ -75,14 +79,13 @@ Writing code is a basic agent ability, not a separate skill. Branching, committi
 
 [`skills/task-to-pr/SKILL.md`](skills/task-to-pr/SKILL.md) is the single authority for delivery. Given a ticket, task, or existing PR, it:
 
-1. resolves the source and isolates work before editing;
-2. implements the smallest complete change;
-3. runs `/test` and independent `/review` loops;
-4. creates Conventional Commits and opens or updates a PR with a plain summary, review notes, and an evidence checklist;
-5. waits for CI, handles feedback that exists, and records evidence;
-6. stops at a mergeable PR whose required checks pass.
+1. codes one focused change in an isolated worktree;
+2. reviews the code before testing;
+3. proves the change with tests, then gets a fresh independent review;
+4. opens a pull request;
+5. passes configured CI and automated review for the latest commit, then checks current human comments once.
 
-It does not wait forever for future human feedback, manufacture tracker artifacts for trivial work, or merge without explicit permission.
+It stops when the pull request is ready for human merge. It never merges without explicit permission.
 
 ## One milestone to completed issues
 
