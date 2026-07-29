@@ -6,6 +6,7 @@ Blueprint is a small, principles-first process for AI coding. It separates think
 
 - Give agents outcomes, constraints, and proof. Trust them with mechanics.
 - Keep one skill per meaningful engineering phase or delivery outcome.
+- Keep current architecture separate from proposed design. Update existing architecture documents when implementation changes ownership, dependency direction, protocols, durable data, trust boundaries, deployment topology, or hard limits.
 - Skip phases that add no value. Small, decided work can go straight to implementation.
 - A task is ready when a new agent can finish it without asking product or technical questions.
 - Each pull request delivers one focused, self-contained outcome with its related proof. A change is reviewable when its outcome, behavior, and proof can be understood without first separating unrelated work. Separate refactoring when it would obscure the behavior diff. Small local cleanup may remain when it makes the changed behavior easier to review.
@@ -18,6 +19,7 @@ Blueprint is a small, principles-first process for AI coding. It separates think
 
 ## Phases
 
+- `/architecture`: explain the verified current system in chat, or document it when a durable artifact is requested. Stop for human review.
 - `/design`: decide what to build, why, and how. Stop for human review.
 - `/plan`: split decided work into ordered, agent-ready tasks. Stop before implementation.
 - `/test`: prove acceptance criteria and failure paths affected by the change, including real-browser checks when browser-rendered behavior changes.
@@ -36,6 +38,7 @@ For one end-to-end code change, follow the canonical [`/task-to-pr` skill](skill
 
 ## Outputs
 
+- When a durable document is requested, whole-system architecture defaults to `ARCHITECTURE.md`. Explicitly scoped subsystem architecture defaults to its established document or `docs/<subsystem>/architecture.md`.
 - Designs default to `docs/<feature-slug>/design.md`.
 - Plans are returned in chat by default or published as tracker tickets when asked. They are not stored as plan documents.
 - Pull requests explain what changed, why it matters, what the reviewer should consider, and a truthful checklist covering tests, checks, independent review, findings, documentation, and CI.

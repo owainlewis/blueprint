@@ -13,7 +13,7 @@ Follow this workflow for the requested task, ticket, or pull request:
 2. **Branch.** Resume the branch and worktree for an existing pull request. For new work, fetch the remote and create a dedicated branch and worktree from the latest remote default branch, named with the ticket number or task slug. Follow the repository's location convention and reuse a suitable existing worktree. Remove a manually created worktree after its pull request is merged or closed.
 3. **Read the context.** Read the repository instructions and inspect the relevant code.
 4. **Outline the change.** Define one focused, self-contained outcome with its related proof. A reviewer must be able to understand its behavior and proof without first separating unrelated work. If the source requires several such changes, split it or return to planning before coding. Separate refactoring when it would obscure the behavior diff. Small local cleanup may remain when it makes the changed behavior easier to review. This is a local execution outline, not a plan document.
-5. **Implement.** Make the change. Test changed behavior, failure paths affected by the change or named in its acceptance criteria, and behavior a refactor must preserve. If the change has no executable behavior, or the affected behavior cannot be exercised through available automated interfaces, record the concrete reason and substitute evidence.
+5. **Implement.** Make the change. Test changed behavior, failure paths affected by the change or named in its acceptance criteria, and behavior a refactor must preserve. If implementation changes documented ownership, dependency direction, protocols, durable data, trust boundaries, deployment topology, or hard limits, update the existing architecture reference in the same change. If the change has no executable behavior, or the affected behavior cannot be exercised through available automated interfaces, record the concrete reason and substitute evidence.
 6. **Test and self-review.** Run tests and checks that cover the changed behavior and affected interfaces, including a real browser when browser-rendered behavior changes. Inspect the final diff for accidental scope, unclear code, and missing proof before independent review.
 7. **Review.** Review the change with a fresh subagent that did not implement it.
 8. **Address findings.** Fix valid review findings, then rerun affected tests and fresh review.
@@ -74,7 +74,7 @@ change, tell the reviewer where to start and what needs the closest scrutiny.
 - **Did you independently review the final diff and address valid findings?** <Yes | No>
   Review evidence, findings fixed, and anything unresolved.
 - **Did you update documentation when behavior changed?** <Yes | No | Not applicable>
-  Documentation changed or why it was not needed.
+  User, contributor, and architecture documentation changed or why each was not needed.
 - **Did required CI checks pass?** <Yes | No | Pending | Not configured>
   Check names and results.
 ```

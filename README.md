@@ -16,7 +16,8 @@ Use the smallest entry point that resolves the uncertainty in front of you.
 
 | If you need to… | Start with | Result |
 | --- | --- | --- |
-| Decide what to build or resolve important technical choices | `/design` | A reviewed design with requirements and acceptance criteria |
+| Explain, document, or audit how an implemented system works | `/architecture` | A verified current-state report or architecture reference |
+| Specify a feature or change to part of a system | `/design` | A reviewed design with requirements and acceptance criteria |
 | Split a decided feature into work for several agent runs | `/plan` | Ordered tasks in chat or tracker tickets |
 | Take one task through delivery | `/task-to-pr` | A tested, reviewed, green pull request |
 | Complete every issue in a GitHub milestone | `/milestone` | One green pull request at a time, with human merge checkpoints |
@@ -24,15 +25,19 @@ Use the smallest entry point that resolves the uncertainty in front of you.
 | Get an independent second opinion | `/review` | Findings and a pre-merge verdict from a fresh subagent |
 | Simplify existing code without changing behavior | `/improve` | Clearer, smaller, better-structured code |
 
-Small, decided work can go straight to `/task-to-pr`. Use `/design` only when decisions need review, and `/plan` only when the work needs splitting.
+Small, decided work can go straight to `/task-to-pr`. Use `/architecture` for implemented reality, `/design` when proposed behavior needs review, and `/plan` only when the work needs splitting.
 
 ## How Blueprint fits together
 
 ```mermaid
 flowchart TB
+    Existing([Implemented system]) --> Architecture["/architecture"]
+    Architecture --> Current["Current architecture"]
+
     subgraph Decide["Decide only as much as needed"]
         Idea([Idea or problem]) --> Design["/design"]
         Idea -->|already decided| Task([One task])
+        Current -.-> Design
         Design -->|one task| Task
         Design -->|needs splitting| Plan["/plan"] --> Task
     end
@@ -48,18 +53,19 @@ flowchart TB
     PR --> Merge([Human merge])
 ```
 
-`/improve` is a separate maintenance path for existing code, not a step every change must pass through.
+`/architecture` is a current-system documentation path, and `/improve` is a behavior-preserving maintenance path. Neither is a step every change must pass through.
 
 The model has two layers:
 
 1. **Repository instructions define policy.** `AGENTS.md` says what good work means in a codebase.
 2. **Skills define phases and workflows.** Each skill has one durable engineering outcome and a clear stopping point. `/task-to-pr` and `/milestone` compose the phases into delivery paths.
 
-## The five phases
+## The six phase skills
 
 | Skill | Owns | Stops when |
 | --- | --- | --- |
-| `/design` | What, why, requirements, acceptance criteria, technical design, constraints, risks, and scope | The design is ready for human review |
+| `/architecture` | Current system context, invariants, components, dependencies, flows, boundaries, operations, and verified limitations | The requested report or architecture reference is ready for human review |
+| `/design` | A proposed feature or system-part specification: executive summary, system fit, behavior, boundaries, decisions, requirements, proof, and scope | The design is ready for human review |
 | `/plan` | Vertical, ordered tasks and optional milestones | The work is ready to hand off |
 | `/test` | Automated checks, failure paths, and real-browser proof when relevant | Every criterion is pass, fail, or explicitly unverified |
 | `/review` | Independent review of correctness, security, regressions, complexity, and proof | Findings and a verdict are reported |
@@ -86,7 +92,7 @@ It does not wait forever for future human feedback, manufacture tracker artifact
 
 ## Install
 
-Install all seven skills:
+Install all eight skills:
 
 ```bash
 npx skills add owainlewis/blueprint
@@ -97,7 +103,7 @@ Upgrading from the older skill catalogue? Follow the [migration guide](MIGRATION
 ## Repository map
 
 ```text
-skills/                 five phases and two delivery workflow skills
+skills/                 six phase skills and two delivery workflow skills
 AGENTS.md                portable repository policy
 CLAUDE.md                Claude Code adapter
 REVIEW.md                review standard for Blueprint itself
@@ -113,12 +119,13 @@ The RAG chatbot example follows one idea through the decision flow:
 2. [reviewed design](examples/rag-chatbot/design.md)
 3. [captured chat plan](examples/rag-chatbot/plan.md)
 
-For a larger architecture example, read the [Dispatch local control-plane design](examples/dispatch-control-plane/design.md).
+For a larger system-part specification, read the [Dispatch local control-plane design](examples/dispatch-control-plane/design.md).
 
 ## Principles
 
 - **Encode process, not knowledge.** Give agents outcomes, constraints, and proof; trust them with local mechanics.
 - **One skill per phase or delivery outcome.** Skills share one installation and invocation model.
+- **Separate current state from proposals.** Architecture documents describe verified implemented reality. Design documents specify future changes.
 - **Keep changes reviewable.** Deliver one focused, self-contained outcome with its related proof. A reviewer should not need to separate unrelated work first. Separate refactoring when it would obscure the behavior diff. Small local cleanup may remain when it makes the changed behavior easier to review.
 - **Use concrete review standards.** Check correctness. If the same outcome and proof can be delivered with less state, indirection, duplication, or operational work, request the simpler design. Do not block on personal taste. Cite technical evidence or repository conventions.
 - **Proof is part of the work.** Test changed behavior, failure paths affected by the change or named in its acceptance criteria, and behavior a refactor must preserve. If the change has no executable behavior, or the affected behavior cannot be exercised through available automated interfaces, state the concrete reason and substitute evidence.
