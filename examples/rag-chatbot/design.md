@@ -8,13 +8,13 @@
 
 ## 1. Executive summary
 
-Build a single-user Python API for uploading PDFs and asking questions answered from their contents. Answers must be grounded in retrieved chunks and include source references so the service does not invent information outside the uploaded documents.
+Build a small API where one person can upload PDFs and ask questions about them. Each answer must use the uploaded text and show which parts it used. If the documents do not contain the answer, the API says so.
 
-Use FastAPI, PostgreSQL with pgvector, and the OpenAI API behind a replaceable adapter, with `uv` managing the Python project. Keep ingestion synchronous and the retrieval model deliberately small. This favors a clear local system and deterministic tests over background processing or retrieval sophistication.
+Use FastAPI, OpenAI, and PostgreSQL with its pgvector search extension. Keep uploads in the request instead of using a background job. This makes the first version easier to run and test, but large uploads take longer.
 
 ## 2. Context and scope
 
-The project starts with no existing application. V1 must support the complete local path from PDF upload to grounded answer, plus listing and deleting documents. It runs with Docker Compose and assumes one trusted user, so authentication and tenant isolation are outside this design.
+The project starts with no application. The first version must support the full local path from PDF upload to an answer based on that PDF. It must also list and delete documents. It runs with Docker Compose and assumes one trusted user, so login and separation between users are outside this design.
 
 ## 3. System context
 
@@ -36,15 +36,17 @@ flowchart TB
     Provider --> OpenAI["OpenAI API"]
 ```
 
-The API owns request validation and orchestration. PostgreSQL is the source of truth for documents and chunks. OpenAI supplies embeddings and answer generation but owns no application state.
+The API checks requests and runs each step in the right order. PostgreSQL stores the documents and text chunks. OpenAI turns text into vectors for search and writes answers, but it stores no application data.
 
 ## 4. Proposed design
 
 ### How it works
 
-For upload, the API validates the file, extracts text, creates overlapping chunks, requests embeddings, and writes the document and all chunks in one database transaction. It returns document metadata only after the transaction commits.
+For upload, the API checks the file and extracts its text. It splits the text into overlapping chunks and asks OpenAI to turn them into search vectors, called embeddings. It writes the document and all chunks in one database transaction. It returns document details only after that transaction succeeds.
 
-For chat, the API embeds the question and calculates cosine similarity as `1 - (embedding <=> query_embedding)` in pgvector. A chunk qualifies when its score is greater than or equal to `RAG_RELEVANCE_THRESHOLD`, which defaults to `0.75` and must satisfy `0 <= value <= 1`. The API retrieves at most five qualifying chunks. If nothing qualifies, it returns the fixed no-information response. Otherwise it sends only those chunks to the answer generator and returns the answer with sources ordered by descending score, then document ID and chunk index for stable ties.
+For chat, the API turns the question into a vector and compares it with each text chunk. It calculates similarity as `1 - (embedding <=> query_embedding)` in pgvector. A chunk qualifies when its score is at least `RAG_RELEVANCE_THRESHOLD`. This value defaults to `0.75` and must be between `0` and `1`, including both limits.
+
+The API retrieves at most five matching chunks. If none match, it returns the fixed no-information response. Otherwise it sends only those chunks to OpenAI. It returns the answer and sources in score order. Equal scores are ordered by document ID and then chunk index.
 
 Deleting a document removes its chunks through a database cascade. Later retrieval therefore cannot return deleted content.
 

@@ -121,7 +121,9 @@ uv run pytest
 curl -F "file=@tests/fixtures/test.pdf" http://localhost:8000/api/v1/documents
 ```
 
-Also run focused tests for a non-PDF, an empty-text PDF, an oversized upload, an embedding failure, a forced persistence failure returning `500` with `internal_error`, shutdown completion and cancellation during slow uploads, and each shutdown setting boundary. Query PostgreSQL in the test fixture and prove each failed upload leaves document and chunk row counts unchanged.
+Also run focused tests for a non-PDF, an empty-text PDF, and an oversized upload. Test embedding failure and a forced database failure that returns `500` with `internal_error`. Cover shutdown completion and cancellation during slow uploads. Test each shutdown setting boundary.
+
+For every failed upload, query PostgreSQL in the test fixture and prove that document and chunk row counts did not change.
 
 #### Out of scope
 
@@ -217,7 +219,13 @@ The [RAG chatbot design](design.md) covers retrieval defaults, chat response sha
 uv run pytest
 ```
 
-Focused tests cover a missing and empty message, a forced retrieval database failure, and deterministic embeddings with scores equal to, immediately below, and immediately above the configured threshold. A test with more than five qualifying chunks inspects the mocked generator call and proves its context matches the ordered first five returned sources. Force a fixture upload to fail, then ask about its known text and verify the fixed no-information response. Upload and delete the fixture, ask the same question, and verify the same response. Configuration tests cover `0`, `1`, values below `0`, values above `1`, and a non-numeric value.
+Run focused tests for a missing or empty message and for a database failure during retrieval. Use fixed vectors with scores equal to, just below, and just above the threshold.
+
+Create more than five matching chunks. Check that the mocked answer generator receives the same first five chunks returned in the sources.
+
+Force a fixture upload to fail, then ask about its known text. Check the fixed no-information response. Upload and delete the fixture, ask the same question, and check the same response.
+
+Test threshold settings at `0`, `1`, below `0`, above `1`, and with a non-numeric value.
 
 Manual smoke check: upload `tests/fixtures/test.pdf`, ask `What database is used for embeddings?`, and confirm the response mentions PostgreSQL with pgvector and includes at least one source.
 

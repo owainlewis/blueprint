@@ -8,13 +8,13 @@
 
 ## 1. Executive summary
 
-Dispatch lets a developer delegate agent work from a web control plane instead of managing every run in an interactive terminal. A local worker claims tasks, runs explicit shell and agent steps, streams evidence back, and preserves enough run history for review and follow-up.
+Dispatch gives a developer a local web page for giving work to coding agents and checking the results. This web app is the control plane: it stores tasks and decides what runs next. A separate worker runs shell commands and agent prompts, then sends output back to the page.
 
-Use a Next.js control plane with JSON-backed local state and a separate Go worker for execution. This proves the delegation loop with inspectable state and explicit commands, while accepting single-process storage and developer-machine trust boundaries that are unsuitable for production.
+The first version uses Next.js for the web app, a Go worker, and one JSON file for data. This makes the system easy to run and inspect, but it is not safe or reliable enough for a shared production service.
 
 ## 2. Context and scope
 
-The current workflow requires a developer to start and supervise each agent in a terminal. Dispatch adds a local task queue, execution history, and web UI without hiding checkout, setup, test, or push behavior inside the platform.
+Today, a developer must start and watch each agent in a terminal. Dispatch adds a local task queue, run history, and web page. Checkout, setup, test, and push commands stay visible in each task.
 
 V1 covers one local control-plane process and developer-controlled workers. It does not promise production durability, multi-user isolation, remote-machine provisioning, or automatic recovery of abandoned tasks.
 
@@ -30,17 +30,23 @@ flowchart TB
     Worker -->|delegate| Agent["Claude Code or compatible command"]
 ```
 
-The control plane is authoritative for task definitions, assignments, status, and history. Workers own local process execution but do not decide task ordering or durable state.
+The web app decides which task runs next and stores task status and history. Workers run local processes, but they do not choose task order or own stored data.
 
 ## 4. Proposed design
 
 ### How it works
 
-A developer creates a task containing a title and prompt, with an optional working directory and optional ordered steps. When no usable steps are supplied, the control plane creates one default agent step from the prompt. A worker registers, heartbeats every 5 seconds, and polls every 2 seconds while idle. The control plane atomically changes one pending task to running and creates a run before returning its steps.
+A developer creates a task with a title and prompt. The task may also name a working directory and an ordered set of steps. If it has no usable steps, the web app creates one agent step from the prompt.
 
-The worker executes each step in order. It marks the run-specific step record running, streams system, stdout, stderr, and agent events with stable sequence numbers, and records the result. A failed step marks every later run step skipped. If every step succeeds, the worker completes the run and task as succeeded.
+A worker registers and sends a heartbeat every 5 seconds. While idle, it asks for work every 2 seconds. The web app changes one pending task to running and creates its run in a single write before returning the steps.
 
-A user follow-up on a terminal task, either `succeeded` or `failed`, atomically changes the task back to `pending` and stores that comment ID as the pending trigger. The next claim consumes the pending trigger and creates one run linked to it in the same store mutation. An initial run uses the task prompt. A follow-up run stores an effective prompt containing the original task prompt followed by the triggering comment body under a `Follow-up:` label. Further comments while the task is pending or running are recorded but do not queue more runs. When the previous run recorded a Claude session ID, the first Claude agent step in the new run resumes that session with the effective prompt while preserving the earlier history. Any later Claude agent steps start new sessions with the same effective prompt, and the run records the most recently returned session ID.
+The worker runs each step in order. It marks the step as running, then sends four kinds of event: system messages, standard output (`stdout`), standard error (`stderr`), and agent events. Each event has a stable sequence number. The worker then records the result. A failed step marks every later step as skipped. If every step succeeds, the worker marks the run and task as succeeded.
+
+A user can follow up after a task has `succeeded` or `failed`. In one write, the web app changes the task back to `pending` and stores the new comment as its trigger. The next worker claim consumes that trigger and creates exactly one linked run.
+
+The first run uses the task prompt. A follow-up run uses the original prompt followed by the triggering comment under a `Follow-up:` label. More comments are saved while the task is pending or running, but they do not queue more runs.
+
+When the previous run has a Claude session ID, the first Claude step resumes that session with the follow-up prompt and keeps the earlier history. Later Claude steps start new sessions with the same prompt. The run stores the latest session ID it receives.
 
 ```mermaid
 sequenceDiagram
@@ -126,7 +132,15 @@ The shared TypeScript model is the contract used by the UI, API, store, and work
 
 Task creation accepts a title, prompt, optional working directory, and optional step definitions. When no usable steps are supplied, the control plane creates one default agent step from the task prompt.
 
-Every comment belongs to one task and is immutable. When the first terminal-task follow-up moves the task to `pending`, the task stores that comment ID as its pending trigger. A successful claim atomically copies the ID and resolved effective prompt to the new run, records the claiming worker ID as the immutable owner, and clears the trigger from the task. An initial claim copies the task prompt instead. The claim response includes this effective prompt. The JSON store preserves the trigger across control-plane restarts, and serialized mutation means only one of several concurrent comments can perform the terminal-to-pending transition. Other comments have no run link.
+Every comment belongs to one task and cannot change. The first follow-up on a finished task moves it to `pending` and stores that comment ID as the trigger.
+
+A successful claim makes these changes in one write:
+
+1. Copy the trigger ID and resolved prompt to the new run.
+2. Record the claiming worker ID as the run owner.
+3. Clear the trigger from the task.
+
+The first claim copies the task prompt because it has no follow-up. Every claim response includes the prompt to run. The JSON file keeps a pending trigger across web app restarts. Since writes run one at a time, only one of several comments can move a finished task to `pending`. The other comments stay in history but link to no run.
 
 The worker protocol uses these operations:
 
@@ -144,7 +158,11 @@ POST /api/runs/{run_id}/fail               -> worker-reported run failure
 POST /api/runs/{run_id}/recover            -> guarded manual recovery
 ```
 
-Task status moves from `pending` to `running` to `succeeded` or `failed`. A follow-up can move a terminal task back to `pending`. Run status is `running`, `succeeded`, or `failed`; a run is created only by a successful claim. Run-step status moves from `pending` to `running` to `succeeded` or `failed`, while unstarted steps after a failure move from `pending` to `skipped`. A claim from a worker that already owns a running run returns `409` with `worker_busy` and changes no task. Every worker mutation includes its worker ID, and the control plane rejects it unless it matches the run's immutable owner. The control plane also validates every transition and rejects updates to terminal runs.
+Task status moves from `pending` to `running`, then to `succeeded` or `failed`. A follow-up can move a finished task back to `pending`.
+
+A run is created only after a worker claims a task. Its status is `running`, `succeeded`, or `failed`. Each step moves from `pending` to `running`, then to `succeeded` or `failed`. After a failure, unstarted steps move to `skipped`.
+
+A worker that already owns a running run receives `409` with `worker_busy` when it tries to claim more work. The claim changes no task. Every worker update includes its worker ID. The web app rejects the update unless that ID owns the run. It also rejects invalid status changes and all updates to finished runs.
 
 Claude Code has a structured adapter. Every agent step receives the run's effective prompt. Other agent commands receive that prompt as a direct argument without shell interpolation:
 
@@ -156,7 +174,9 @@ argv[2] = <run effective prompt>
 
 ### Naming and identity
 
-On first start, a worker generates an opaque host ID and stores it in its local configuration directory. Later worker processes reuse that host ID and fail startup if the identity file exists but cannot be read. Deleting the file deliberately creates a new host identity on the next start; existing records keep the old ID. Each process registration receives a new opaque worker ID, so a restart preserves host identity but creates a new worker session.
+On first start, a worker creates an opaque host ID, which carries no user data, and stores it in its local configuration directory. Later worker processes reuse that ID. Startup fails if the identity file exists but cannot be read.
+
+Deleting the file creates a new host identity on the next start. Existing records keep the old ID. Each process registration receives a new opaque worker ID. A restart therefore keeps the host identity but creates a new worker session.
 
 The control plane generates opaque IDs for tasks, runs, comments, and events. A task step is identified by its task ID and stable zero-based index. Event sequence numbers are allocated by the control plane, not accepted from workers. A resumed Claude session ID is provider metadata attached to a run and never used as Dispatch identity.
 
@@ -164,20 +184,22 @@ The control plane generates opaque IDs for tasks, runs, comments, and events. A 
 
 - A failed step records its output and exit status, marks later run steps skipped, marks the run and task failed, and stops execution.
 - A worker claims one task at a time. The UI marks it disconnected when no heartbeat arrives for 15 seconds, but V1 does not reassign its running task automatically.
-- A developer may recover an abandoned run only after the owning worker has been disconnected for at least 15 seconds. One atomic store mutation marks a running step failed with reason `worker_lost`, or the lowest-index pending step when none is running, then marks later pending steps skipped and marks the run and task failed. If every run step already succeeded but the worker disappeared before completing the run, recovery preserves those step results and marks only the run and task failed with reason `worker_lost`.
+- A developer may recover an abandoned run only after its worker has been disconnected for at least 15 seconds. One store write marks the running step as failed with reason `worker_lost`. If no step is running, it fails the first pending step. It then skips later pending steps and fails the run and task. If all steps had succeeded, it keeps those results and fails only the run and task with reason `worker_lost`.
 - Worker event, step, completion, and failure reports with a missing or different worker ID are rejected.
 - After manual recovery, the control plane rejects late events and completion reports from the abandoned run because terminal history cannot be rewritten.
 - A corrupt store file stops mutations and reports an operator-visible error instead of replacing the file with empty state.
 - A failed store replacement leaves the previous complete file in place.
 - Restarting the control plane reloads the JSON store. Restarting a worker registers a new worker session and does not silently resume an in-flight command.
 - Control-plane shutdown stops new claims and lets the active serialized store mutation finish before exit.
-- Worker shutdown stops polling, sends `SIGTERM` to an active child process, waits up to 10 seconds, then sends `SIGKILL`. It then reports the run and task failed with reason `worker_shutdown`. The same transition rule fails the running step or next pending step and skips later pending steps; if all steps succeeded, their results remain unchanged. If the worker cannot reach the control plane, the run remains non-terminal until the developer uses the disconnected-worker recovery action.
+- Worker shutdown stops polling and sends `SIGTERM` to an active child process. It waits up to 10 seconds, then sends `SIGKILL`. It reports the run and task as failed with reason `worker_shutdown`. The running step, or next pending step, fails and later pending steps are skipped. Completed steps keep their results. If the worker cannot reach the web app, the run stays open until the developer recovers it.
 
 ## 8. Security, privacy, and operations
 
 Shell commands and agent runtimes execute with the worker user's permissions. V1 has no sandbox, secret boundary, authentication, or tenant isolation and must stay on developer-controlled machines and networks.
 
-Each worker runs at most one task at a time, heartbeats every 5 seconds, and polls every 2 seconds only while idle. One control-plane process serializes all store mutations. Task events and output grow the JSON file without a retention cap in V1. If a write or atomic replacement fails, including from a full disk, the API returns an operator-visible error and keeps the previous complete file. The UI and documentation must describe manual cleanup and the lack of a production capacity guarantee.
+Each worker runs at most one task at a time. It sends a heartbeat every 5 seconds and asks for work every 2 seconds while idle. One web app process runs all file changes one at a time.
+
+Task events and output make the JSON file grow without a limit in V1. If a write fails, including when the disk is full, the API shows an error and keeps the previous complete file. The UI and docs must explain manual cleanup and that this version has no production capacity promise.
 
 The control plane exposes worker heartbeat age, task and run status, step exit codes, and ordered event history. Logs include task and run IDs but must not copy secrets from command output into separate metadata.
 

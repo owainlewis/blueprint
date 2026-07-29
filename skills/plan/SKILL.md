@@ -1,6 +1,6 @@
 ---
 name: plan
-description: "Breaks a reviewed design or brief into ordered, agent-ready tasks, tickets, and optional milestones. Use when the user asks to break a feature or project into implementation tasks, create implementation tickets or issues from a design, brief, or project, define milestones, or prepare work for multiple agent runs. Do not use for one ticket or the short execution plan inside one coding task."
+description: "Turns a reviewed design or brief into ordered tasks for separate agent runs. Use for implementation tasks, tracker tickets, or useful milestones. Do not use for one coding task or its short execution outline."
 user-invocable: true
 argument-hint: "<design, brief, issue, or request>"
 ---
@@ -11,9 +11,14 @@ argument-hint: "<design, brief, issue, or request>"
 
 1. Read the source, repository instructions, and relevant code.
 2. Stop and return to design if product or technical choices remain open.
-3. Break the work into vertical, outcome-based tasks. Each task must produce one focused, self-contained pull request whose outcome, behavior, and proof can be reviewed without separating unrelated work, and it must fit one agent run. Separate refactoring when it would obscure the behavior diff. Small local cleanup may remain when it makes the changed behavior easier to review. Order tasks by dependency. Add milestones only when they create a useful delivery or review boundary.
-4. Return the plan in chat by default. Create tracker tickets only when the user asks. Never write a plan document.
-5. Stop after planning. Do not implement.
+3. Break the work into tasks that each deliver working behavior. Each task must:
+   - Fit one agent run.
+   - Produce one focused pull request.
+   - Let a reviewer understand the outcome, behavior, and proof without separating unrelated work.
+4. Separate refactoring when it would hide the behavior change. Small local cleanup may stay when it makes the change easier to review.
+5. Order tasks by dependency. Add milestones only when they create a useful delivery or review boundary.
+6. Return the plan in chat by default. Create tracker tickets only when the user asks. Never write a plan document.
+7. Stop after planning. Do not implement.
 
 Each task must stand alone:
 
@@ -41,6 +46,6 @@ Related work this task must not absorb.
 
 ## Boundaries
 
-- Do not split by file or technical layer when one vertical slice can deliver working behavior.
+- Do not split one piece of working behavior into separate file or technical-layer tasks.
 - Do not create scaffolding or cleanup tasks without a checked outcome.
 - Do not hide unresolved decisions inside implementation tickets.
