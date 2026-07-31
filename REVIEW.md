@@ -7,6 +7,9 @@ Review Blueprint as a small set of engineering instructions. Read the issue, com
 - Does each skill represent one meaningful engineering phase or delivery outcome?
 - Is policy in `AGENTS.md`, with each phase and delivery workflow in its skill?
 - Does `/architecture` describe verified current implementation while `/design` describes a proposed feature or system-part change?
+- Does `/architecture-review` challenge a technical proposal while `/review` checks an implementation change?
+- Does architecture review surface only questions that could materially change behavior, data, interfaces, security, scale, performance, operations, cost, compatibility, or proof?
+- Does architecture review test the goal, clarity, chosen design, failure behavior, limits, security, operations, and proof without requiring irrelevant sections?
 - Does a read-only architecture explanation, mapping, review, or audit remain in chat unless the user asks for a document?
 - When a change affects ownership, dependency direction, protocols, stored data, trust boundaries, topology, or hard limits, is the current architecture document updated?
 - Are triggers, outputs, boundaries, proof, and stop conditions clear?

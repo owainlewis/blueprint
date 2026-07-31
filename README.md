@@ -15,15 +15,16 @@ Choose the first skill based on what you need.
 | If you need to… | Start with | Result |
 | --- | --- | --- |
 | Explain, document, or audit how an implemented system works | `/architecture` | A checked explanation of how the system works now |
-| Specify a feature or change to part of a system | `/design` | A reviewed spec for a proposed change |
+| Specify a feature or change to part of a system | `/design` | A proposed technical design |
+| Challenge a technical proposal before implementation | `/architecture-review` | Material flaws, open questions, and a verdict |
 | Split a decided feature into work for several agent runs | `/plan` | Ordered tasks in chat or tracker tickets |
 | Take one task through delivery | `/task-to-pr` | A tested and reviewed pull request, ready for human merge |
 | Complete every issue in a GitHub milestone | `/milestone` | One ready pull request per issue, with human merge checkpoints |
 | Prove a change works | `/test` | Acceptance criteria mapped to evidence |
-| Get an independent second opinion | `/review` | Findings and a pre-merge verdict from a fresh subagent |
+| Review an implementation change | `/review` | Findings and a pre-merge verdict from a fresh subagent |
 | Simplify existing code without changing behavior | `/improve` | Clearer, smaller, better-structured code |
 
-Small, decided work can go straight to `/task-to-pr`. Use `/architecture` for the system as it works now. Use `/design` when a proposed change needs review. Use `/plan` only when the work needs splitting.
+Small, decided work can go straight to `/task-to-pr`. Use `/architecture` for the system as it works now. Use `/design` to write a proposal and `/architecture-review` to challenge important technical choices before implementation. The proposal may be in a design, RFC, ADR, architecture document, or issue. Use `/plan` only when the work needs splitting.
 
 ## How Blueprint fits together
 
@@ -36,8 +37,10 @@ flowchart TB
         Idea([Idea or problem]) --> Design["/design"]
         Idea -->|already decided| Task([One task])
         Current -.-> Design
-        Design -->|one task| Task
-        Design -->|needs splitting| Plan["/plan"] --> Task
+        Design --> Proposal["Technical proposal"] --> ArchitectureReview["/architecture-review"]
+        ArchitectureReview -->|findings| Design
+        ArchitectureReview -->|approved, one task| Task
+        ArchitectureReview -->|approved, needs splitting| Plan["/plan"] --> Task
     end
 
     subgraph Deliver["Deliver with /task-to-pr"]
@@ -62,15 +65,16 @@ The model has two layers:
 1. **Repository instructions define policy.** `AGENTS.md` says what good work means in a codebase.
 2. **Skills define each kind of work.** Each skill produces one clear result and has a clear stopping point. `/task-to-pr` and `/milestone` join the needed steps.
 
-## The six phase skills
+## The seven phase skills
 
 | Skill | Owns | Stops when |
 | --- | --- | --- |
 | `/architecture` | A checked explanation of the current system, its rules, parts, flows, boundaries, operations, and limits | The explanation is ready for human review |
-| `/design` | A spec for a proposed feature or system change | The spec is ready for human review |
+| `/design` | A spec for a proposed feature or system change | The proposed design is ready for review |
+| `/architecture-review` | Independent review of a technical proposal's goal, clarity, choices, risks, limits, and proof | Findings, open questions, and a verdict are reported |
 | `/plan` | Ordered tasks that each deliver working behavior, plus useful milestones | The work is ready to hand off |
 | `/test` | Automated checks, failure paths, and real-browser proof when relevant | Every criterion is pass, fail, or explicitly unverified |
-| `/review` | Independent review of correctness, security, regressions, complexity, and proof | Findings and a verdict are reported |
+| `/review` | Independent review of an implementation's correctness, security, regressions, complexity, and proof | Findings and a verdict are reported |
 | `/improve` | Behavior-preserving simplification of existing code | Relevant checks prove behavior was preserved |
 
 Writing code is a basic agent ability, not a separate skill. Branching, committing, debugging, browser checks, and feedback are steps inside a workflow.
@@ -93,7 +97,7 @@ It stops when the pull request is ready for human merge. It never merges without
 
 ## Install
 
-Install all eight skills:
+Install all nine skills:
 
 ```bash
 npx skills add owainlewis/blueprint
@@ -104,7 +108,7 @@ Upgrading from the older set of skills? Follow the [migration guide](MIGRATION.m
 ## Repository map
 
 ```text
-skills/                 six phase skills and two delivery workflow skills
+skills/                 seven phase skills and two delivery workflow skills
 AGENTS.md                portable repository policy
 CLAUDE.md                Claude Code adapter
 REVIEW.md                review standard for Blueprint itself
@@ -128,7 +132,8 @@ For a larger system-part specification, read the [Dispatch local control-plane d
 - **One skill per phase or delivery outcome.** Skills share one installation and invocation model.
 - **Separate current state from proposals.** Architecture documents describe verified implemented reality. Design documents specify future changes.
 - **Keep changes reviewable.** Deliver one focused outcome and its proof. A reviewer should not need to separate unrelated work. Keep refactoring separate when it would hide the behavior change.
-- **Use clear review standards.** Check correctness. Ask for a simpler design when it can deliver the same result with less state, indirection, duplication, or operational work. Do not block on personal taste.
+- **Review choices before code.** Surface material ambiguity and ask for a simpler design when it can deliver the same result with less state, indirection, duplication, or operational work.
+- **Review implementation independently.** Check correctness and proof. Do not block on personal taste.
 - **Proof is part of the work.** Test changed behavior and affected failure paths. Test behavior that a refactor must preserve. If automated tests cannot exercise the behavior, explain why and give other evidence.
 - **Use the real surface.** Browser behavior is checked in a browser. Live PR feedback is read from the PR.
 - **Fix the original instruction.** If implementation exposes a bad requirement, update the task or design before continuing.

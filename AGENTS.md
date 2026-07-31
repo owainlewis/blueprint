@@ -7,6 +7,7 @@ Blueprint is a small set of instructions for AI coding. It separates deciding wh
 - Give agents outcomes, constraints, and proof. Trust them with mechanics.
 - Keep one skill per meaningful engineering phase or delivery outcome.
 - Keep current architecture separate from proposed design.
+- Review technical proposals before implementation when a wrong choice could materially affect behavior, data, security, scale, performance, compatibility, operations, cost, or proof.
 - Update an existing architecture document when code changes ownership, dependency direction, protocols, stored data, trust boundaries, deployment topology, or hard limits.
 - Start with the simplest useful explanation. Use short sentences and everyday words. Define technical terms before using them.
 - Write for a new teammate. Put detail after the main idea. Remove anything that does not help someone decide, build, test, or review the work.
@@ -27,10 +28,11 @@ Blueprint is a small set of instructions for AI coding. It separates deciding wh
 ## Phases
 
 - `/architecture`: explain the verified current system in chat, or write an architecture document when asked. Stop for human review.
-- `/design`: decide what to build, why, and how. Stop for human review.
+- `/design`: decide what to build, why, and how. Stop with a proposed design.
+- `/architecture-review`: challenge a technical proposal and surface material flaws or open questions before implementation.
 - `/plan`: split decided work into ordered, agent-ready tasks. Stop before implementation.
 - `/test`: prove acceptance criteria and failure paths affected by the change, including real-browser checks when browser-rendered behavior changes.
-- `/review`: use a fresh subagent for an independent, read-only review.
+- `/review`: use a fresh subagent for an independent, read-only implementation review.
 - `/improve`: inspect existing code and improve its clarity, simplicity, and structure without changing intended behavior.
 
 ## Workflow: Milestones
