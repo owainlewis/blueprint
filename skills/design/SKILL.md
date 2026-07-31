@@ -14,7 +14,7 @@ argument-hint: "<feature, problem, or brief>"
 3. Ask only questions whose answers would change the design. Recommend an answer when asking.
 4. Write `docs/<feature-slug>/design.md` using the numbered shape below. Keep it short and in order. Omit only sections that do not apply.
 5. Run the review pass. Fix what you can. List the rest under Open questions.
-6. Stop for human review. Do not plan or implement.
+6. Stop with the proposed design ready for review. Do not plan or implement it.
 
 ## Document shape
 

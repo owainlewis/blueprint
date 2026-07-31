@@ -1,8 +1,8 @@
 ---
 name: review
-description: "Uses a fresh agent to review a design or code change without editing it. Checks behavior, security, regressions, complexity, tests, docs, and missing proof. Use for code, PR, diff, security, second-opinion, or pre-merge reviews."
+description: "Uses a fresh agent to review an implementation change without editing it. Checks behavior, security, regressions, complexity, tests, docs, and missing proof. Use for code, PR, diff, security, second-opinion, or pre-merge reviews."
 user-invocable: true
-argument-hint: "[ticket, design, diff, branch, commit, PR, or file path]"
+argument-hint: "[diff, branch, commit, PR, or file path]"
 ---
 
 # Review
@@ -11,7 +11,7 @@ The reviewer must be a fresh subagent that did not implement the change. Do not 
 
 ## Scope
 
-Review the target named by the user. It may be a ticket, design, file, diff, branch, commit, pull request, or other change on GitHub.
+Review the implementation target named by the user. It may be a file, diff, branch, commit, pull request, or other code change on GitHub. Use `/architecture-review` for a technical proposal that has not been implemented.
 
 If the user does not name a target, review the current repository's complete local change set: commits on the current branch relative to the repository's default branch, staged changes, unstaged changes, and untracked files. Use the repository and immediate surrounding code as context. If there are no local changes, say so instead of substituting a whole-repository audit.
 
@@ -73,8 +73,6 @@ Confidence means:
 - **0–2:** Do not report. Investigate further or mark the area unverified.
 
 Write so the developer can quickly understand what is broken, who it affects, and why they should care. Be concise. Do not report style preferences, theoretical concerns, or problems outside the changed code and its immediate context.
-
-For design reviews, report each finding with its priority, location, impact, evidence, and smallest fix direction. Do not force the code finding format onto a design.
 
 ## Verdict
 

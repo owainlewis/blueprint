@@ -1,6 +1,6 @@
 ---
 name: plan
-description: "Turns a reviewed design or brief into ordered tasks for separate agent runs. Use for implementation tasks, tracker tickets, or useful milestones. Do not use for one coding task or its short execution outline."
+description: "Turns an approved design or decided brief into ordered tasks for separate agent runs. Use for implementation tasks, tracker tickets, or useful milestones. Do not use for one coding task or its short execution outline."
 user-invocable: true
 argument-hint: "<design, brief, issue, or request>"
 ---
