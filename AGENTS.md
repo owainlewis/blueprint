@@ -35,17 +35,13 @@ Blueprint is a small set of instructions for AI coding. It separates deciding wh
 - `/review`: use a fresh subagent for an independent, read-only implementation review.
 - `/improve`: inspect existing code and improve its clarity, simplicity, and structure without changing intended behavior.
 
-## Workflow: Milestones
-
-For a GitHub milestone, use `/milestone`. It orders open issues and runs `/task-to-pr` one issue at a time.
-
-Stop for human merge after each pull request passes its required checks. Continue through merges only when the user explicitly allows it for that run.
-
-Writing code is a basic agent ability, not a separate skill. Debugging and test-driven development are ways to implement a change, not separate product skills.
-
 ## Workflow: Code changes
 
-For one code change, follow the [`/task-to-pr` skill](skills/task-to-pr/SKILL.md). It covers the work from the source task through a tested and reviewed pull request. Never merge unless the user explicitly asks.
+For one or more code changes, follow the [`/task-to-pr` skill](skills/task-to-pr/SKILL.md). It waits for prerequisite pull requests to merge, runs independent work at the same time when useful, and takes each task through a tested and reviewed pull request. A milestone is one possible source of tasks.
+
+Merge pull requests only when the user asks. Otherwise, leave them open.
+
+Writing code is a basic agent ability, not a separate skill. Debugging and test-driven development are ways to implement a change, not separate product skills.
 
 ## Outputs
 
