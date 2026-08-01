@@ -7,9 +7,9 @@ argument-hint: "<tasks, tickets, pull requests, or milestone>"
 
 # Task to PR
 
-Review the tasks you were given. Decide which order to do them in and make a short plan.
+Review the tasks you were given. Decide the order and which tasks can run at the same time. Make a short plan.
 
-Complete each task in two phases.
+Complete each task in two phases. Keep working without waiting for the user while any task can make progress.
 
 ## Phase 1: Build the code
 
@@ -32,4 +32,4 @@ Complete each task in two phases.
 
 If the user asked you to merge the pull requests, merge each one after its automated checks pass. Otherwise, leave it open.
 
-After the automated checks pass, move to the next task. Continue until every task has a pull request with all available checks passing and no unresolved automated review findings. If you are blocked, explain what is needed.
+Continue with every task that can make progress. Stop when every task has a pull request with all available checks passing and no unresolved automated review findings. If no remaining task can move forward, explain what is needed.

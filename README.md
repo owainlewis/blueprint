@@ -43,13 +43,11 @@ flowchart TB
     end
 
     subgraph Deliver["Deliver with /task-to-pr"]
-        Tasks --> Order["order and plan"] --> NextTask["next task"] --> Code["write code"] --> Test["test"] --> Review["subagent review"]
+        Tasks --> Order["order and plan"] --> Task["each task"] --> Code["write code"] --> Test["test"] --> Review["subagent review"]
         Review -->|finding| Code
         Review -->|approved| PR["open or update PR"] --> Automated["CI + automated review"]
         Automated -->|finding| Code
-        Automated -->|clean| Next{"more tasks?"}
-        Next -->|yes| NextTask
-        Next -->|no| Done([Done])
+        Automated -->|clean| Done([Task done])
     end
 ```
 
@@ -76,7 +74,7 @@ Writing code is a basic agent ability, not a separate skill. Branching, committi
 
 ## Tasks to pull requests
 
-[`skills/task-to-pr/SKILL.md`](skills/task-to-pr/SKILL.md) is the single authority for delivery. It accepts one or more tasks, tickets, pull requests, or a milestone. It creates one pull request for each task.
+[`skills/task-to-pr/SKILL.md`](skills/task-to-pr/SKILL.md) is the single authority for delivery. It accepts one or more tasks, tickets, pull requests, or a milestone. It orders dependent tasks, can run independent tasks at the same time, and creates one pull request for each task.
 
 For each task, it:
 
