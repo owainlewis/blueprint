@@ -29,8 +29,10 @@ Do not start a task until the tasks it depends on are merged.
 1. Use the GitHub CLI to wait for CI and automated code review when the repository uses them.
 2. Fix failures caused by your changes and valid review findings.
 3. After changing code, repeat the tests, quality checks, and subagent review.
-4. Commit and push the changes. Update the pull request summary and proof, then wait for the automated checks again.
-5. Repeat until all available checks pass and the automated review has no unresolved findings.
+4. If you changed code, commit and push it. Update the pull request summary and proof when needed.
+5. Reply to every automated review finding. Say what you changed or why you made no change. Resolve the thread when it is fully addressed.
+6. Wait for the automated checks again.
+7. Repeat until all available checks pass and the automated review has no unresolved findings.
 
 If the user asked you to merge the pull requests, merge each one after its automated checks pass. Otherwise, leave it open.
 

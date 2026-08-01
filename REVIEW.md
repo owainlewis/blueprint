@@ -17,6 +17,7 @@ Review Blueprint as a small set of engineering instructions. Read the issue, com
 - Does `/task-to-pr` order one or more tasks and create one tested and independently reviewed pull request for each task?
 - Does each task use its own branch and worktree, with independent tasks allowed to run at the same time and dependent tasks waiting for prerequisite pull requests to merge?
 - Does it stop after configured CI and automated review instead of waiting for human feedback?
+- Does it reply to every automated review finding and resolve threads only after they are fully addressed?
 - Does it merge only when the user asks?
 - Is browser-rendered behavior checked in a real browser?
 - Can a capable agent choose local mechanics without redundant instructions?
