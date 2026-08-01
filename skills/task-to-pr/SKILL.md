@@ -26,7 +26,7 @@ Complete each task in two phases.
 1. Use the GitHub CLI to wait for CI and automated code review.
 2. Skip CI or automated review if the repository does not use it.
 3. Fix any failures or review findings.
-4. Run the relevant tests and quality checks again.
+4. After changing code, repeat the tests, quality checks, and subagent review.
 5. Push the changes and wait for the automated checks again.
 6. Repeat until all available checks pass and the automated review has no unresolved findings.
 
