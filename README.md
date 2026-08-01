@@ -74,7 +74,7 @@ Writing code is a basic agent ability, not a separate skill. Branching, committi
 
 ## Tasks to pull requests
 
-[`skills/task-to-pr/SKILL.md`](skills/task-to-pr/SKILL.md) is the single authority for delivery. It accepts one or more tasks, tickets, pull requests, or a milestone. It orders dependent tasks, can run independent tasks at the same time, and creates one pull request for each task.
+[`skills/task-to-pr/SKILL.md`](skills/task-to-pr/SKILL.md) is the single authority for delivery. It accepts one or more tasks, tickets, pull requests, or a milestone. It waits for prerequisite pull requests to merge, can run independent tasks at the same time, and creates one pull request for each task.
 
 For each task, it:
 

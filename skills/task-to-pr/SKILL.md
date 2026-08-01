@@ -11,13 +11,15 @@ Review the tasks you were given. Decide the order and which tasks can run at the
 
 Complete each task in two phases. Keep working without waiting for the user while any task can make progress.
 
+Do not start a task until the tasks it depends on are merged.
+
 ## Phase 1: Build the code
 
 1. Create or reuse a branch and worktree for the task. Start new work from the latest default branch.
 2. Write the code.
 3. Run the tests and relevant quality checks.
 4. Ask a subagent to review the code.
-5. Fix any problems, then repeat the tests and review.
+5. Fix valid problems, then repeat the tests, quality checks, and review.
 6. Commit and push the changes.
 7. Create or update one pull request on GitHub.
 8. Mark the ticket as `In Review` when possible.
@@ -25,7 +27,7 @@ Complete each task in two phases. Keep working without waiting for the user whil
 ## Phase 2: Pass the automated checks
 
 1. Use the GitHub CLI to wait for CI and automated code review when the repository uses them.
-2. Fix any failures or review findings.
+2. Fix failures caused by your changes and valid review findings.
 3. After changing code, repeat the tests, quality checks, and subagent review.
 4. Commit and push the changes. Update the pull request summary and proof, then wait for the automated checks again.
 5. Repeat until all available checks pass and the automated review has no unresolved findings.

@@ -37,7 +37,7 @@ Blueprint is a small set of instructions for AI coding. It separates deciding wh
 
 ## Workflow: Code changes
 
-For one or more code changes, follow the [`/task-to-pr` skill](skills/task-to-pr/SKILL.md). It orders dependent tasks, runs independent work at the same time when useful, and takes each task through a tested and reviewed pull request. A milestone is one possible source of tasks.
+For one or more code changes, follow the [`/task-to-pr` skill](skills/task-to-pr/SKILL.md). It waits for prerequisite pull requests to merge, runs independent work at the same time when useful, and takes each task through a tested and reviewed pull request. A milestone is one possible source of tasks.
 
 Merge pull requests only when the user asks. Otherwise, leave them open.
 
