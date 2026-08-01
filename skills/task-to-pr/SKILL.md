@@ -1,48 +1,34 @@
 ---
 name: task-to-pr
-description: "Takes one task from its source to a tested and independently reviewed pull request. Use to implement, build, fix, or deliver one task, ticket, or existing pull request."
+description: "Completes one or more tasks. Creates one tested and reviewed pull request for each task. Use to implement, build, fix, or deliver tasks, tickets, pull requests, or a milestone."
 user-invocable: true
-argument-hint: "<ticket, task, or pull request>"
+argument-hint: "<tasks, tickets, pull requests, or milestone>"
 ---
 
 # Task to PR
 
-Take one task to a pull request that is ready for human merge.
+Review the tasks you were given. Decide which order to do them in and make a short plan.
 
-## Workflow
+Complete each task in two phases.
 
-1. **Code**
-   - Read the task, repository instructions, and relevant code.
-   - For an existing pull request, use its branch in a worktree. Otherwise fetch the remote and create both from the latest default branch.
-   - Define one focused outcome and its proof. If the task is wrong, unclear, or too large, update it or return to design or planning.
-   - Implement the smallest complete change. Update the architecture document when system boundaries or contracts change.
+## Phase 1: Build the code
 
-2. **Review**
-   - Inspect the complete diff for mistakes, unrelated changes, unclear code, and missing proof.
-   - Fix problems before testing.
+1. Write the code.
+2. Run the tests and relevant quality checks.
+3. Ask a subagent to review the code.
+4. Fix any problems, then repeat the tests and review.
+5. Commit and push the changes.
+6. Create or update one pull request on GitHub.
+7. Mark the ticket as `In Review` when possible.
 
-3. **Test**
-   - Prove the acceptance criteria, changed behavior, affected failure paths, and behavior a refactor must preserve.
-   - Run focused automated checks. Run wider checks when shared behavior changed.
-   - Use a real browser when browser-rendered behavior changed.
-   - If automated tests cannot cover something, explain why and give other evidence.
-   - Give the task, repository instructions, complete diff, and final evidence to a fresh subagent.
-   - Fix valid findings. After any code change, repeat Test and this final Review until approved.
+## Phase 2: Pass the automated checks
 
-4. **Open the PR**
-   - Create a Conventional Commit, push the branch, and open or update a ready pull request.
-   - Use the repository template. If none exists, use `Plain English summary`, `Reviewer notes`, and `Proof`.
-   - Link the source task. Explain the change without requiring the ticket or diff. Do not list files.
-   - Keep the summary to two to four short sentences. Give the status and evidence for tests, checks, review findings, documentation, CI, and anything unverified.
+1. Use the GitHub CLI to wait for CI and automated code review.
+2. Fix any failures or review findings.
+3. Run the relevant tests and quality checks again.
+4. Push the changes and wait for the automated checks again.
+5. Repeat until CI passes and the automated review has no unresolved findings.
 
-5. **Pass checks**
-   - Wait for configured CI and automated review of the latest commit. Request a new automated review after a push when needed.
-   - Continue when CI or automated review is not configured.
-   - Fix CI failures caused by the change and valid automated feedback.
-   - After a code change, repeat Review and Test. Commit, push, and start Pass checks again.
-   - When automated checks pass, inspect human comments once. Address those present, but do not wait for future comments.
-   - If a human comment changes the code, repeat Review and Test, commit, push, and start Pass checks again.
-   - Update the pull request with the final check state, feedback outcome, and proof.
-   - Stop when the pull request is mergeable, required CI passes or is not configured, automated review covers the latest commit or is not configured, every current comment is handled, and no required change remains.
+If the user asked you to merge the pull requests, merge each one after its automated checks pass. Otherwise, leave it open for human review. Do not wait for human review.
 
-Never merge unless the user explicitly asks.
+After the automated checks pass, move to the next task. Continue until every task has a pull request with passing CI and no unresolved automated review findings. If you are blocked, explain what is needed.

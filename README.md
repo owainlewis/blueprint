@@ -6,7 +6,7 @@
 
 </div>
 
-Blueprint helps agents decide what to build, make one focused change, test it, get an independent review, and open a pull request for a human to merge.
+Blueprint helps agents decide what to build, make focused changes, test them, get an independent review, and open pull requests.
 
 ## Start with the work, not the process
 
@@ -18,8 +18,7 @@ Choose the first skill based on what you need.
 | Specify a feature or change to part of a system | `/design` | A proposed technical design |
 | Challenge a technical proposal before implementation | `/architecture-review` | Material flaws, open questions, and a verdict |
 | Split a decided feature into work for several agent runs | `/plan` | Ordered tasks in chat or tracker tickets |
-| Take one task through delivery | `/task-to-pr` | A tested and reviewed pull request, ready for human merge |
-| Complete every issue in a GitHub milestone | `/milestone` | One ready pull request per issue, with human merge checkpoints |
+| Deliver one or more tasks | `/task-to-pr` | One tested and reviewed pull request per task |
 | Prove a change works | `/test` | Acceptance criteria mapped to evidence |
 | Review an implementation change | `/review` | Findings and a pre-merge verdict from a fresh subagent |
 | Simplify existing code without changing behavior | `/improve` | Clearer, smaller, better-structured code |
@@ -35,27 +34,23 @@ flowchart TB
 
     subgraph Decide["Decide only as much as needed"]
         Idea([Idea or problem]) --> Design["/design"]
-        Idea -->|already decided| Task([One task])
+        Idea -->|already decided| Tasks([Tasks])
         Current -.-> Design
         Design --> Proposal["Technical proposal"] --> ArchitectureReview["/architecture-review"]
         ArchitectureReview -->|findings| Design
-        ArchitectureReview -->|approved, one task| Task
-        ArchitectureReview -->|approved, needs splitting| Plan["/plan"] --> Task
+        ArchitectureReview -->|approved, one task| Tasks
+        ArchitectureReview -->|approved, needs splitting| Plan["/plan"] --> Tasks
     end
 
     subgraph Deliver["Deliver with /task-to-pr"]
-        Task --> Isolate["isolate"] --> Code["code"] --> Review["review code"] --> Test["/test"]
-        Review -->|findings| Fix["fix"] --> Review
-        Test -->|failure| Fix
-        Test -->|pass| ProofReview["review proof"] --> Publish["publish PR"] --> Validate["latest commit checks"]
-        ProofReview -->|findings| Fix
-        Validate -->|failure or finding| Fix
-        Validate -->|clean| Human["check current comments once"]
-        Human -->|finding| Fix
-        Human -->|clean| PR["ready PR"]
+        Tasks --> Order["order and plan"] --> NextTask["next task"] --> Code["write code"] --> Test["test"] --> Review["subagent review"]
+        Review -->|finding| Code
+        Review -->|approved| PR["open or update PR"] --> Automated["CI + automated review"]
+        Automated -->|finding| Code
+        Automated -->|clean| Next{"more tasks?"}
+        Next -->|yes| NextTask
+        Next -->|no| Done([Done])
     end
-
-    PR --> Merge([Human merge])
 ```
 
 Use `/architecture` when you need to understand or document existing code. Use `/improve` to simplify code without changing what it does. Not every change needs either skill.
@@ -63,7 +58,7 @@ Use `/architecture` when you need to understand or document existing code. Use `
 The model has two layers:
 
 1. **Repository instructions define policy.** `AGENTS.md` says what good work means in a codebase.
-2. **Skills define each kind of work.** Each skill produces one clear result and has a clear stopping point. `/task-to-pr` and `/milestone` join the needed steps.
+2. **Skills define each kind of work.** Each skill produces one clear result and has a clear stopping point. `/task-to-pr` joins the steps needed to deliver code.
 
 ## The seven phase skills
 
@@ -79,25 +74,23 @@ The model has two layers:
 
 Writing code is a basic agent ability, not a separate skill. Branching, committing, debugging, browser checks, and feedback are steps inside a workflow.
 
-## One task to one pull request
+## Tasks to pull requests
 
-[`skills/task-to-pr/SKILL.md`](skills/task-to-pr/SKILL.md) is the single authority for delivery. Given a ticket, task, or existing PR, it:
+[`skills/task-to-pr/SKILL.md`](skills/task-to-pr/SKILL.md) is the single authority for delivery. It accepts one or more tasks, tickets, pull requests, or a milestone. It creates one pull request for each task.
 
-1. codes one focused change in an isolated worktree;
-2. reviews the code before testing;
-3. proves the change with tests, then gets a fresh independent review;
-4. opens a pull request;
-5. passes configured CI and automated review for the latest commit, then checks current human comments once.
+For each task, it:
 
-It stops when the pull request is ready for human merge. It never merges without explicit permission.
+1. writes the code;
+2. runs tests and relevant quality checks;
+3. asks a subagent to review the code;
+4. opens or updates a pull request;
+5. waits for CI and automated code review, then fixes any problems.
 
-## One milestone to completed issues
-
-`/milestone` reads a GitHub milestone and orders open issues by dependency and risk. It runs `/task-to-pr` for one issue at a time. It stops for human merge after each ready pull request unless the user explicitly allows merging for that run.
+It does not wait for human review. It merges only when the user asks.
 
 ## Install
 
-Install all nine skills:
+Install all eight skills:
 
 ```bash
 npx skills add owainlewis/blueprint
@@ -108,7 +101,7 @@ Upgrading from the older set of skills? Follow the [migration guide](MIGRATION.m
 ## Repository map
 
 ```text
-skills/                 seven phase skills and two delivery workflow skills
+skills/                 seven phase skills and one delivery workflow skill
 AGENTS.md                portable repository policy
 CLAUDE.md                Claude Code adapter
 REVIEW.md                review standard for Blueprint itself
