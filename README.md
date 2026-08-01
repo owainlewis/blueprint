@@ -84,7 +84,7 @@ For each task, it:
 2. runs tests and relevant quality checks;
 3. asks a subagent to review the code;
 4. opens or updates a pull request;
-5. waits for CI and automated code review, then fixes any problems.
+5. waits for configured CI and automated code review, then fixes any problems.
 
 It does not wait for human review. It merges only when the user asks.
 

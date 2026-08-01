@@ -24,11 +24,12 @@ Complete each task in two phases.
 ## Phase 2: Pass the automated checks
 
 1. Use the GitHub CLI to wait for CI and automated code review.
-2. Fix any failures or review findings.
-3. Run the relevant tests and quality checks again.
-4. Push the changes and wait for the automated checks again.
-5. Repeat until CI passes and the automated review has no unresolved findings.
+2. Skip CI or automated review if the repository does not use it.
+3. Fix any failures or review findings.
+4. Run the relevant tests and quality checks again.
+5. Push the changes and wait for the automated checks again.
+6. Repeat until all available checks pass and the automated review has no unresolved findings.
 
 If the user asked you to merge the pull requests, merge each one after its automated checks pass. Otherwise, leave it open for human review. Do not wait for human review.
 
-After the automated checks pass, move to the next task. Continue until every task has a pull request with passing CI and no unresolved automated review findings. If you are blocked, explain what is needed.
+After the automated checks pass, move to the next task. Continue until every task has a pull request with all available checks passing and no unresolved automated review findings. If you are blocked, explain what is needed.

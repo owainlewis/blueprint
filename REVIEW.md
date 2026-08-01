@@ -15,7 +15,7 @@ Review Blueprint as a small set of engineering instructions. Read the issue, com
 - Are triggers, outputs, boundaries, proof, and stop conditions clear?
 - Is the change one focused, self-contained, reviewable outcome with its related proof?
 - Does `/task-to-pr` order one or more tasks and create one tested and independently reviewed pull request for each task?
-- Does it wait for CI and automated review without waiting for human review?
+- Does it wait for configured CI and automated review without waiting for human review?
 - Does it merge only when the user asks?
 - Is browser-rendered behavior checked in a real browser?
 - Can a capable agent choose local mechanics without redundant instructions?
