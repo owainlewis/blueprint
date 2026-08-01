@@ -104,6 +104,7 @@ AGENTS.md                portable repository policy
 CLAUDE.md                Claude Code adapter
 REVIEW.md                review standard for Blueprint itself
 MIGRATION.md             clean upgrade from the old skill set
+CHANGELOG.md             notable changes to Blueprint
 examples/                reviewed design and planning examples
 ```
 
