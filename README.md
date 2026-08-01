@@ -80,13 +80,13 @@ Writing code is a basic agent ability, not a separate skill. Branching, committi
 
 For each task, it:
 
-1. writes the code;
-2. runs tests and relevant quality checks;
+1. creates or reuses a branch and worktree from the latest default branch;
+2. writes and tests the code;
 3. asks a subagent to review the code;
 4. opens or updates a pull request;
 5. waits for configured CI and automated code review, then fixes and reviews any changes.
 
-It does not wait for human review. It merges only when the user asks.
+It leaves pull requests open unless the user asks to merge them.
 
 ## Install
 

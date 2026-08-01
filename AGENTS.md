@@ -39,7 +39,7 @@ Blueprint is a small set of instructions for AI coding. It separates deciding wh
 
 For one or more code changes, follow the [`/task-to-pr` skill](skills/task-to-pr/SKILL.md). It orders the tasks and takes each one through a tested and reviewed pull request. A milestone is one possible source of tasks.
 
-Merge pull requests only when the user asks. Otherwise, leave them open for human review.
+Merge pull requests only when the user asks. Otherwise, leave them open.
 
 Writing code is a basic agent ability, not a separate skill. Debugging and test-driven development are ways to implement a change, not separate product skills.
 
