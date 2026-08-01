@@ -17,11 +17,11 @@ Do not start a task until the tasks it depends on are merged.
 
 1. Create or reuse a branch and worktree for the task. Start new work from the latest default branch.
 2. Write the code.
-3. Run the tests and relevant quality checks.
-4. Ask a subagent to review the code.
+3. Run tests that prove the task works, affected failures are handled, and refactors preserve behavior. Run relevant quality checks. If tests cannot cover something, give other proof.
+4. Ask a fresh subagent that did not write the code to review it without editing.
 5. Fix valid problems, then repeat the tests, quality checks, and review.
 6. Commit and push the changes.
-7. Create or update one pull request on GitHub.
+7. Create or update one pull request on GitHub. Include a short summary and the current proof.
 8. Mark the ticket as `In Review` when possible.
 
 ## Phase 2: Pass the automated checks

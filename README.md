@@ -80,8 +80,8 @@ For each task, it:
 
 1. creates or reuses a branch and worktree from the latest default branch;
 2. writes and tests the code;
-3. asks a subagent to review the code;
-4. opens or updates a pull request;
+3. asks a fresh subagent that did not write the code to review it;
+4. opens or updates a pull request with a short summary and proof;
 5. waits for configured CI and automated code review, then fixes and reviews any changes.
 
 It leaves pull requests open unless the user asks to merge them.
