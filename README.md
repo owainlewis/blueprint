@@ -96,6 +96,8 @@ npx skills add owainlewis/blueprint
 
 Upgrading from the older set of skills? Follow the [migration guide](MIGRATION.md). A normal update may leave removed skills installed, so the cleanup step matters.
 
+Read the [changelog](CHANGELOG.md) for notable changes.
+
 ## Repository map
 
 ```text
