@@ -103,7 +103,7 @@ Users can upload a PDF and receive a stored document record with the number of t
 
 #### Context
 
-This task proves the path from upload to stored search data. It validates the file, extracts its text, and divides that text into small sections called chunks. It turns each chunk into a numeric representation called an embedding, which the service uses to find text with similar meaning. It then stores the document and its chunks for later document and chat tasks.
+This task depends on Task 1, which creates the local API and database. It proves the path from upload to stored search data. It validates the file, extracts its text, and divides that text into small sections called chunks. It turns each chunk into a numeric representation called an embedding, which the service uses to find text with similar meaning. It then stores the document and its chunks for later document and chat tasks.
 
 #### Constraints
 
@@ -167,7 +167,7 @@ Users can list uploaded documents and delete a document with all searchable data
 
 #### Context
 
-Task 2 stores each uploaded document as small text sections, called chunks, with numeric embeddings used to find text with similar meaning. Those documents form the collection that chat will search. This task lets users manage that collection before chat relies on it.
+This task depends on Task 2. Task 2 stores each uploaded document as small text sections, called chunks, with numeric embeddings used to find text with similar meaning. Those documents form the collection that chat will search. This task lets users manage that collection before chat relies on it.
 
 #### Constraints
 
@@ -224,7 +224,7 @@ Users can ask a question and receive an answer based on uploaded PDFs, with refe
 
 #### Context
 
-Task 2 stores each PDF as small text sections, called chunks, and creates a numeric embedding for each chunk. This task creates the same kind of embedding for a question and compares the numbers to find text with similar meaning. It gives the matching text to OpenAI, formats the answer and source references, and handles questions that have no useful match.
+This task depends on Tasks 2 and 3. Task 2 stores each PDF as small text sections, called chunks, and creates a numeric embedding for each chunk. Task 3 adds the deletion endpoint used to prove that removed documents no longer affect answers. This task creates the same kind of embedding for a question and compares the numbers to find text with similar meaning. It gives the matching text to OpenAI, formats the answer and source references, and handles questions that have no useful match.
 
 #### Constraints
 
