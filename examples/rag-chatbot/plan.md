@@ -48,16 +48,19 @@ This task creates the base service shape for every later endpoint. It should est
 #### Constraints
 
 - Build the API with FastAPI and use PostgreSQL with pgvector.
+- Keep HTTP validation and response formatting in FastAPI routes. Put health-check ordering in an application service and PostgreSQL access in a repository.
 - Use `uv` for Python package management.
 - Use Docker Compose for the API and PostgreSQL with pgvector.
 - Keep configuration in environment variables.
 - Require `DATABASE_URL` and `OPENAI_API_KEY`.
+- Make `/health` check PostgreSQL only. It must not call OpenAI.
 - Return API errors as `{error: {code, message}}`.
 
 #### Acceptance criteria
 
 - The API and database start with Docker Compose.
 - `GET /health` returns `200` with `{"status":"ok"}` when the API can reach the database and `503` with `service_unavailable` when it cannot.
+- With PostgreSQL reachable and OpenAI unavailable, `GET /health` returns `200` and makes no OpenAI request.
 - The app fails before serving traffic when `DATABASE_URL` or `OPENAI_API_KEY` is missing.
 - The README states that V1 is for one trusted user and sends document text to OpenAI.
 - A baseline `uv run pytest` succeeds for later tasks.
@@ -75,7 +78,7 @@ uv sync --frozen
 uv run pytest
 ```
 
-Also make PostgreSQL unavailable and verify that `/health` returns the documented `503`. Cover each missing required setting.
+Also make PostgreSQL unavailable and verify that `/health` returns the documented `503`. Make the OpenAI test adapter fail while PostgreSQL remains reachable, then verify that `/health` still returns `200` without calling the adapter. Cover each missing required setting.
 
 #### Out of scope
 
@@ -108,16 +111,20 @@ This task depends on Task 1, which creates the local API and database. It proves
 #### Constraints
 
 - Add the endpoint to the existing FastAPI service.
+- Keep HTTP validation and response formatting in the FastAPI route. Put upload ordering in an application service, PostgreSQL access in a repository, and provider request translation in an OpenAI adapter.
 - Accept PDFs only.
 - Reject uploads over 25 MiB before text extraction.
 - Use fixed-size chunks of about 500 tokens with about 50 tokens of overlap.
 - Store documents, chunks, and embeddings in PostgreSQL with pgvector.
 - Generate an opaque UUID for each uploaded document. Treat the original filename as display metadata, never identity.
 - Identify each chunk by its document UUID and zero-based position. Keep that position stable for the lifetime of the document.
+- Make each chunk's document foreign key cascade on delete.
 - Commit the document and all chunks in one database transaction.
+- Send document chunks to OpenAI for embeddings. Keep durable application data in PostgreSQL.
 - Use the existing `DATABASE_URL` and `OPENAI_API_KEY` settings.
 - Return API errors as `{error: {code, message}}`.
 - Mock OpenAI calls in tests.
+- On shutdown, stop accepting new requests. Let active requests finish until the configured deadline, then cancel them and roll back open database transactions.
 - Read the shutdown deadline from `SERVER_GRACEFUL_SHUTDOWN_SECONDS`, defaulting to `10`, and fail startup unless it is an integer from `1` through `60`.
 
 #### Acceptance criteria
@@ -126,12 +133,14 @@ This task depends on Task 1, which creates the local API and database. It proves
 - Uploading two documents with the same filename returns two distinct valid UUIDs and stores both documents.
 - Uploaded PDFs are stored with chunks and embeddings that can be queried later.
 - Stored chunks have unique positions from `0` through `chunk_count - 1` within their document.
+- Deleting a document row through PostgreSQL also deletes all of its chunks through the foreign-key cascade.
 - Non-PDF and empty-text PDF uploads return `400` with `bad_request`.
 - Uploads over 25 MiB return `413` with `payload_too_large` and create no rows.
 - OpenAI embedding failures return `502` with `upstream_error`.
 - A persistence failure returns `500` with `internal_error`.
 - Embedding and persistence failures leave no document or chunk rows behind.
 - A slow upload that finishes before the graceful shutdown deadline commits normally.
+- After shutdown begins, a new upload is not accepted and creates no rows.
 - Cancelling a deliberately slow upload at the graceful shutdown deadline leaves no document or chunk rows behind.
 - Startup accepts shutdown values from `1` through `60` and rejects zero, negative, greater values, and non-integers.
 - A PDF fixture contains the sentence "PostgreSQL with pgvector stores the embeddings." for later retrieval tests.
@@ -147,9 +156,11 @@ uv run pytest
 curl -F "file=@tests/fixtures/test.pdf" http://localhost:8000/api/v1/documents
 ```
 
-Also run focused tests for a non-PDF, an empty-text PDF, and an oversized upload. Test embedding failure and a forced database failure that returns `500` with `internal_error`. Cover shutdown completion and cancellation during slow uploads. Test each shutdown setting boundary.
+Also run focused tests for a non-PDF, an empty-text PDF, and an oversized upload. Test embedding failure and a forced database failure that returns `500` with `internal_error`. During shutdown, prove that an active upload can finish before the deadline, a new upload is not accepted or stored, and an upload still running at the deadline is cancelled and rolled back. Test each shutdown setting boundary.
 
 Upload the same fixture twice with the same filename. Prove that the returned IDs are distinct UUIDs and query each document's chunks to confirm unique zero-based positions.
+
+Inspect the schema migration for the cascading foreign key. In a focused database test, delete a document row and prove that PostgreSQL removes its chunks without a separate chunk delete.
 
 For every failed upload, query PostgreSQL in the test fixture and prove that document and chunk row counts did not change.
 
@@ -178,15 +189,17 @@ This task depends on Task 2. Task 2 stores each uploaded document as small text 
 #### Constraints
 
 - Add the endpoints to the existing FastAPI service and use the PostgreSQL document and chunk records created by Task 2.
+- Keep HTTP validation and response formatting in FastAPI routes. Put list and delete ordering in an application service and PostgreSQL access in a repository.
 - Use the opaque document UUID as API identity. Treat the filename as display metadata only.
 - Do not change upload behavior from Task 2.
+- Delete the document row and rely on its database foreign-key cascade to remove chunks and embeddings.
 - Deleted chunks must not remain retrievable.
 - Return API errors as `{error: {code, message}}`.
 
 #### Acceptance criteria
 
-- `GET /api/v1/documents` returns documents with `id`, `filename`, `uploaded_at`, and `chunk_count`.
-- `DELETE /api/v1/documents/{id}` removes the document and its related chunks.
+- `GET /api/v1/documents` returns a bare JSON array of documents with `id`, `filename`, `uploaded_at`, and `chunk_count`.
+- `DELETE /api/v1/documents/{id}` returns `200` with `{"deleted":true}` and removes the document and its related chunks.
 - Deleting a missing document returns `404` with `not_found`.
 - Database failures during listing or deletion return `500` with `internal_error`; a failed deletion leaves the document and chunks intact.
 - After deletion, the document no longer appears in the list and its chunks are gone.
@@ -201,9 +214,9 @@ The [RAG chatbot design](design.md) defines the document listing/deletion API sh
 uv run pytest
 ```
 
-Focused tests force database failures during listing and deletion and assert `500` with `internal_error`. After a failed deletion, query PostgreSQL and prove the document and chunks remain.
+Focused tests assert that listing returns a top-level JSON array without a wrapper object. Force database failures during listing and deletion and assert `500` with `internal_error`. After a failed deletion, query PostgreSQL and prove the document and chunks remain.
 
-Manual smoke check: upload `tests/fixtures/test.pdf`, list documents, delete the returned ID, then confirm the ID no longer appears in `GET /api/v1/documents`.
+Manual smoke check: upload `tests/fixtures/test.pdf`, list documents, delete the returned ID, confirm the response is `200` with `{"deleted":true}`, then confirm the ID no longer appears in `GET /api/v1/documents`.
 
 #### Out of scope
 
@@ -236,8 +249,10 @@ This task depends on Tasks 2 and 3. Task 2 stores each PDF as small text section
 #### Constraints
 
 - Add the endpoint to the existing FastAPI service and query PostgreSQL with pgvector.
+- Keep HTTP validation and response formatting in the FastAPI route. Put retrieval and answer ordering in an application service, PostgreSQL vector queries in a repository, and provider request translation in an OpenAI adapter.
 - Return each source's opaque document UUID and stable zero-based chunk position as `document_id` and `chunk_index`.
 - Use the existing `DATABASE_URL` and `OPENAI_API_KEY` settings.
+- Send only the chunks returned in `sources` to OpenAI for answer generation. Keep durable application data in PostgreSQL.
 - Return API errors as `{error: {code, message}}`.
 - Mock OpenAI calls in tests.
 - Retrieve at most 5 chunks for each question.
@@ -248,7 +263,7 @@ This task depends on Tasks 2 and 3. Task 2 stores each PDF as small text section
 
 #### Acceptance criteria
 
-- `POST /api/v1/chat` accepts a message and returns `{answer, sources}`.
+- `POST /api/v1/chat` accepts a JSON body shaped as `{"message":"..."}` and returns `{answer, sources}`.
 - A missing or empty message returns `400` with `bad_request`.
 - Sources include `document_id`, `filename`, `chunk_index`, and `content`.
 - A question answerable from the fixture returns an answer based on that fixture and at least one source.
@@ -271,7 +286,7 @@ The [RAG chatbot design](design.md) covers retrieval defaults, chat response sha
 uv run pytest
 ```
 
-Run focused tests for a missing or empty message and for a database failure during retrieval. Use fixed vectors with scores equal to, just below, and just above the threshold.
+Run focused tests that send the documented JSON request body, omit `message`, and send an empty `message`. Cover a database failure during retrieval. Use fixed vectors with scores equal to, just below, and just above the threshold.
 
 Create more than five matching chunks. Check that the mocked answer generator receives the same first five chunks returned in the sources.
 
