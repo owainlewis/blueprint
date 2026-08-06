@@ -112,6 +112,8 @@ This task depends on Task 1, which creates the local API and database. It proves
 - Reject uploads over 25 MiB before text extraction.
 - Use fixed-size chunks of about 500 tokens with about 50 tokens of overlap.
 - Store documents, chunks, and embeddings in PostgreSQL with pgvector.
+- Generate an opaque UUID for each uploaded document. Treat the original filename as display metadata, never identity.
+- Identify each chunk by its document UUID and zero-based position. Keep that position stable for the lifetime of the document.
 - Commit the document and all chunks in one database transaction.
 - Use the existing `DATABASE_URL` and `OPENAI_API_KEY` settings.
 - Return API errors as `{error: {code, message}}`.
@@ -121,7 +123,9 @@ This task depends on Task 1, which creates the local API and database. It proves
 #### Acceptance criteria
 
 - `POST /api/v1/documents` accepts a PDF and returns `{id, filename, uploaded_at, chunk_count}`.
+- Uploading two documents with the same filename returns two distinct valid UUIDs and stores both documents.
 - Uploaded PDFs are stored with chunks and embeddings that can be queried later.
+- Stored chunks have unique positions from `0` through `chunk_count - 1` within their document.
 - Non-PDF and empty-text PDF uploads return `400` with `bad_request`.
 - Uploads over 25 MiB return `413` with `payload_too_large` and create no rows.
 - OpenAI embedding failures return `502` with `upstream_error`.
@@ -144,6 +148,8 @@ curl -F "file=@tests/fixtures/test.pdf" http://localhost:8000/api/v1/documents
 ```
 
 Also run focused tests for a non-PDF, an empty-text PDF, and an oversized upload. Test embedding failure and a forced database failure that returns `500` with `internal_error`. Cover shutdown completion and cancellation during slow uploads. Test each shutdown setting boundary.
+
+Upload the same fixture twice with the same filename. Prove that the returned IDs are distinct UUIDs and query each document's chunks to confirm unique zero-based positions.
 
 For every failed upload, query PostgreSQL in the test fixture and prove that document and chunk row counts did not change.
 
@@ -172,6 +178,7 @@ This task depends on Task 2. Task 2 stores each uploaded document as small text 
 #### Constraints
 
 - Add the endpoints to the existing FastAPI service and use the PostgreSQL document and chunk records created by Task 2.
+- Use the opaque document UUID as API identity. Treat the filename as display metadata only.
 - Do not change upload behavior from Task 2.
 - Deleted chunks must not remain retrievable.
 - Return API errors as `{error: {code, message}}`.
@@ -229,6 +236,7 @@ This task depends on Tasks 2 and 3. Task 2 stores each PDF as small text section
 #### Constraints
 
 - Add the endpoint to the existing FastAPI service and query PostgreSQL with pgvector.
+- Return each source's opaque document UUID and stable zero-based chunk position as `document_id` and `chunk_index`.
 - Use the existing `DATABASE_URL` and `OPENAI_API_KEY` settings.
 - Return API errors as `{error: {code, message}}`.
 - Mock OpenAI calls in tests.
