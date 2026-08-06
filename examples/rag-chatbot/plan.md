@@ -4,7 +4,7 @@
 
 ## Overview
 
-A FastAPI service for uploading PDFs and answering questions from their contents using PostgreSQL with pgvector and OpenAI.
+A FastAPI service for uploading PDFs and answering questions from their contents. It uses retrieval-augmented generation (RAG): the service finds relevant text in PostgreSQL with pgvector, then gives that text to OpenAI to answer the question.
 
 Source design: [RAG chatbot design](design.md)
 
@@ -18,16 +18,24 @@ Source design: [RAG chatbot design](design.md)
 - Mock OpenAI in tests.
 - Add focused tests with each task and run them against PostgreSQL with pgvector.
 - Keep API errors shaped as `{error: {code, message}}`, including `payload_too_large` for a PDF over 25 MiB.
-- Return a fixed no-information answer instead of hallucinating when retrieval has no relevant chunks.
+- Return a fixed no-information answer instead of inventing an answer when the search finds no relevant text.
 - Require `DATABASE_URL` and `OPENAI_API_KEY`.
 
 ---
 
-## Milestone 1: Foundation
+## Milestone 1: Run the service locally
 
 Goal: the app starts, connects to the database, and exposes a healthy API shell.
 
-### Task 1: Local API foundation
+### Task 1: Start and check the API locally
+
+#### Summary
+
+Developers cannot build later features until they can start the API and its database in a repeatable way. This task adds local startup, required configuration, and a health check so a developer can tell whether the base service is ready.
+
+#### User stories
+
+- As a developer, I want to start the API and database locally and check their health so that I can build and test features on a known working service.
 
 #### Outcome
 
@@ -73,19 +81,27 @@ Document upload, embeddings, retrieval, chat, auth, and deployment beyond local 
 
 ---
 
-## Milestone 2: Document ingestion
+## Milestone 2: Store uploaded documents
 
 Goal: PDFs can be uploaded, processed, and stored for later retrieval.
 
-### Task 2: PDF upload and ingestion
+### Task 2: Upload and store PDFs
+
+#### Summary
+
+Users cannot ask questions about their documents until the service can turn an uploaded PDF into searchable text. This task validates each upload and stores its text for later searching without leaving partial data after a failure.
+
+#### User stories
+
+- As a user, I want to upload a PDF so that the service can use its contents when answering my questions.
 
 #### Outcome
 
-Users can upload a PDF and receive a stored document record with chunk count.
+Users can upload a PDF and receive a stored document record with the number of text sections created from it.
 
 #### Context
 
-This task proves the ingestion path: validation, text extraction, chunking, embeddings, and persistence. Later document and chat tasks depend on the stored document and chunk data.
+This task proves the path from upload to stored search data. It validates the file, extracts its text, and divides that text into small sections called chunks. It turns each chunk into a numeric representation called an embedding, which the service uses to find text with similar meaning. It then stores the document and its chunks for later document and chat tasks.
 
 #### Constraints
 
@@ -129,15 +145,23 @@ For every failed upload, query PostgreSQL in the test fixture and prove that doc
 
 Document listing, deletion, retrieval, chat, auth, and non-PDF formats.
 
-### Task 3: Document listing and deletion
+### Task 3: List and delete uploaded documents
+
+#### Summary
+
+After uploading documents, users need to see what the service holds and remove material they no longer want searched. This task adds listing and deletion while ensuring removed text cannot appear in later answers.
+
+#### User stories
+
+- As a user, I want to list and delete uploaded documents so that I can control which material the service searches.
 
 #### Outcome
 
-Users can list uploaded documents and delete a document with all of its chunks and embeddings.
+Users can list uploaded documents and delete a document with all searchable data created from it.
 
 #### Context
 
-Documents and chunks exist after Task 2. This task adds the document management behavior needed before chat can rely on the stored corpus.
+Task 2 stores each uploaded document as small text sections, called chunks, with numeric embeddings used to find text with similar meaning. Those documents form the collection that chat will search. This task lets users manage that collection before chat relies on it.
 
 #### Constraints
 
@@ -172,19 +196,27 @@ Search, chat, cross-user permissions, and soft delete.
 
 ---
 
-## Milestone 3: Grounded chat
+## Milestone 3: Answer questions from documents
 
-Goal: users can ask questions and get grounded answers from uploaded documents.
+Goal: users can ask questions and get answers based on uploaded documents.
 
-### Task 4: Retrieval-backed chat endpoint
+### Task 4: Answer questions from uploaded PDFs
+
+#### Summary
+
+Stored PDFs are not useful until users can ask questions and receive answers based on their contents. This task finds the most relevant stored text, gives it to OpenAI, cites the source passages, and says clearly when the documents do not contain an answer.
+
+#### User stories
+
+- As a user, I want answers based on my uploaded PDFs so that I can use the documents without searching them by hand.
 
 #### Outcome
 
-Users can ask a question and receive a grounded answer with source references from uploaded PDFs.
+Users can ask a question and receive an answer based on uploaded PDFs, with references to the source text.
 
 #### Context
 
-This task combines vector retrieval, prompt construction, OpenAI chat completion, source formatting, and no-result behavior.
+Task 2 stores each PDF as small text sections, called chunks, and creates a numeric embedding for each chunk. This task creates the same kind of embedding for a question and compares the numbers to find text with similar meaning. It gives the matching text to OpenAI, formats the answer and source references, and handles questions that have no useful match.
 
 #### Constraints
 
@@ -199,7 +231,7 @@ This task combines vector retrieval, prompt construction, OpenAI chat completion
 - `POST /api/v1/chat` accepts a message and returns `{answer, sources}`.
 - A missing or empty message returns `400` with `bad_request`.
 - Sources include `document_id`, `filename`, `chunk_index`, and `content`.
-- A question answerable from the fixture returns an answer grounded in that fixture and at least one source.
+- A question answerable from the fixture returns an answer based on that fixture and at least one source.
 - With more than five qualifying chunks, retrieval returns five and the mocked generator receives exactly the same ordered content returned in `sources`.
 - A chunk scoring exactly `RAG_RELEVANCE_THRESHOLD` qualifies, while a lower score does not.
 - Chunks with equal similarity are ordered by document ID and then chunk index.
