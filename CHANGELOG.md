@@ -6,6 +6,7 @@ This file records notable changes to Blueprint.
 
 ### Changed
 
+- `/plan` now writes each task as a cold handoff with a plain title, standalone summary, useful user stories, defined project terms, and enough context and proof for a new engineer to complete it.
 - `/task-to-pr` now accepts one or more tasks. It orders dependent work, can run independent tasks at the same time, and creates one pull request for each task.
 - Delivery now has two clear phases: build and review the code, then pass CI and automated code review.
 - Automated review findings require a reply that says what changed or why no change was needed.
