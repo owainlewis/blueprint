@@ -47,10 +47,12 @@ This task creates the base service shape for every later endpoint. It should est
 
 #### Constraints
 
+- Build the API with FastAPI and use PostgreSQL with pgvector.
 - Use `uv` for Python package management.
 - Use Docker Compose for the API and PostgreSQL with pgvector.
 - Keep configuration in environment variables.
 - Require `DATABASE_URL` and `OPENAI_API_KEY`.
+- Return API errors as `{error: {code, message}}`.
 
 #### Acceptance criteria
 
@@ -105,10 +107,14 @@ This task proves the path from upload to stored search data. It validates the fi
 
 #### Constraints
 
+- Add the endpoint to the existing FastAPI service.
 - Accept PDFs only.
 - Reject uploads over 25 MiB before text extraction.
 - Use fixed-size chunks of about 500 tokens with about 50 tokens of overlap.
+- Store documents, chunks, and embeddings in PostgreSQL with pgvector.
 - Commit the document and all chunks in one database transaction.
+- Use the existing `DATABASE_URL` and `OPENAI_API_KEY` settings.
+- Return API errors as `{error: {code, message}}`.
 - Mock OpenAI calls in tests.
 - Read the shutdown deadline from `SERVER_GRACEFUL_SHUTDOWN_SECONDS`, defaulting to `10`, and fail startup unless it is an integer from `1` through `60`.
 
@@ -165,8 +171,10 @@ Task 2 stores each uploaded document as small text sections, called chunks, with
 
 #### Constraints
 
+- Add the endpoints to the existing FastAPI service and use the PostgreSQL document and chunk records created by Task 2.
 - Do not change upload behavior from Task 2.
 - Deleted chunks must not remain retrievable.
+- Return API errors as `{error: {code, message}}`.
 
 #### Acceptance criteria
 
@@ -220,6 +228,10 @@ Task 2 stores each PDF as small text sections, called chunks, and creates a nume
 
 #### Constraints
 
+- Add the endpoint to the existing FastAPI service and query PostgreSQL with pgvector.
+- Use the existing `DATABASE_URL` and `OPENAI_API_KEY` settings.
+- Return API errors as `{error: {code, message}}`.
+- Mock OpenAI calls in tests.
 - Retrieve at most 5 chunks for each question.
 - Calculate cosine similarity as `1 - (embedding <=> query_embedding)`.
 - Read the inclusive threshold from `RAG_RELEVANCE_THRESHOLD`, defaulting to `0.75`, accept `0` and `1`, and fail startup unless it is numeric and satisfies `0 <= value <= 1`.
