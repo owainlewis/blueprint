@@ -10,8 +10,8 @@ argument-hint: "<design, brief, issue, or request>"
 ## Workflow
 
 1. Read the source, repository instructions, and relevant code.
-2. Stop and return to design if product or technical choices remain open.
-3. Break the work into tasks that each deliver working behavior. Each task must:
+2. Stop and return to design if unresolved product or technical choices would change behavior, interfaces, data, security, scale, performance, compatibility, operations, cost, or proof.
+3. Choose task boundaries and break the work into tasks that each deliver working behavior. Do not require two tasks to answer the same open question or define the same shared contract independently. Each task must:
    - Fit one agent run.
    - Produce one focused pull request.
    - Let a reviewer understand the outcome, behavior, and proof without separating unrelated work.
@@ -42,6 +42,7 @@ Each task must stand alone:
 ### Summary
 In two to four sentences, explain the current behavior, who it affects, what will change, and why that change matters.
 
+<!-- Optional: include this section only when the task serves an honest user goal. -->
 ### User stories
 - As a <role>, I want <capability> so that <benefit>.
 
@@ -71,6 +72,8 @@ Related work this task must not absorb.
 - Do not hide unresolved decisions inside implementation tickets.
 - Use a short title that names the action and result in plain words, such as `Remove expired event details automatically`. Do not use only component names or an internal project label.
 - Use plain words in the title, Summary, User stories, and Outcome. Define any project term needed there.
-- Keep implementation steps out of user stories and acceptance criteria. State observable behavior and proof instead.
+- Keep implementation mechanics out of user stories.
+- In Acceptance criteria, state observable behavior and any internal contract that must hold.
+- Put decided technical choices and non-negotiable implementation constraints in Constraints. Leave interchangeable local mechanics to the implementing agent.
 - Give each section one job. Summary orients the reader. User stories state people's goals. Outcome states the working result. Context explains the system and dependencies. Some meaning will overlap, but do not copy sentences or add repetition that does not help the reader.
 - Reread each task alone. A cold reader must be able to explain why it exists, identify the relevant system boundary, implement the decided behavior, and prove it works. Add anything missing before returning the plan.
