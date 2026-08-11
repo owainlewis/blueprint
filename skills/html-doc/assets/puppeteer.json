@@ -1,0 +1,11 @@
+{
+  "args": [
+    "--proxy-server=http://127.0.0.1:9",
+    "--proxy-bypass-list=<-loopback>",
+    "--host-resolver-rules=MAP * ~NOTFOUND",
+    "--disable-background-networking",
+    "--disable-component-update",
+    "--disable-domain-reliability",
+    "--disable-sync"
+  ]
+}

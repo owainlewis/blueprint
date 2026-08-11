@@ -22,6 +22,7 @@ Choose the first skill based on what you need.
 | Prove a change works | `/test` | Acceptance criteria mapped to evidence |
 | Review an implementation change | `/review` | Findings and a pre-merge verdict from a fresh subagent |
 | Simplify existing code without changing behavior | `/improve` | Clearer, smaller, better-structured code |
+| Make an existing PRD or design easier to read | `/html-doc` | A verified static HTML reading view |
 
 Small, decided work can go straight to `/task-to-pr`. Use `/architecture` for the system as it works now. Use `/design` to write a proposal and `/architecture-review` to challenge important technical choices before implementation. The proposal may be in a design, RFC, ADR, architecture document, or issue. Use `/plan` only when the work needs splitting.
 
@@ -58,7 +59,7 @@ The model has two layers:
 1. **Repository instructions define policy.** `AGENTS.md` says what good work means in a codebase.
 2. **Skills define each kind of work.** Each skill produces one clear result and has a clear stopping point. `/task-to-pr` joins the steps needed to deliver code.
 
-## The seven phase skills
+## The skills
 
 | Skill | Owns | Stops when |
 | --- | --- | --- |
@@ -69,6 +70,7 @@ The model has two layers:
 | `/test` | Automated checks, failure paths, and real-browser proof when relevant | Every criterion is pass, fail, or explicitly unverified |
 | `/review` | Independent review of an implementation's correctness, security, regressions, complexity, and proof | Findings and a verdict are reported |
 | `/improve` | Behavior-preserving simplification of existing code | Relevant checks prove behavior was preserved |
+| `/html-doc` | A static HTML reading view of a complete Markdown PRD or technical design | The browser-verified candidate atomically replaces the prior generated view |
 
 Writing code is a basic agent ability, not a separate skill. Branching, committing, debugging, browser checks, and feedback are steps inside a workflow.
 
@@ -88,7 +90,7 @@ It leaves pull requests open unless the user asks to merge them.
 
 ## Install
 
-Install all eight skills:
+Install all nine skills:
 
 ```bash
 npx skills add owainlewis/blueprint
@@ -101,7 +103,7 @@ Read the [changelog](CHANGELOG.md) for notable changes.
 ## Repository map
 
 ```text
-skills/                 seven phase skills and one delivery workflow skill
+skills/                 seven phase skills, one delivery workflow, and one presentation skill
 AGENTS.md                portable repository policy
 CLAUDE.md                Claude Code adapter
 REVIEW.md                review standard for Blueprint itself
