@@ -89,6 +89,7 @@ How each `INV-n` and `AC-n` will be proved. Cite the IDs.
 - Keep current architecture and proposed behavior distinct. Link to `ARCHITECTURE.md` when it exists and say exactly which current boundary changes.
 - Give each changed component a positive and negative boundary: what it owns and what it does not own.
 - Use numbered top-level sections so reviewers can refer to stable parts of the design.
+- Once another artifact cites an `INV-n` or `AC-n`, keep that ID attached to the same rule. Do not renumber or reuse existing IDs. Give additions the next unused ID.
 - Use diagrams only when they make system context, dependency direction, data flow, or lifecycle materially clearer.
 - Prefer one clear recommendation over a list of options.
 - Record rejected options only when the tradeoff matters later.

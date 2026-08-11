@@ -11,7 +11,7 @@ Review the tasks you were given. Decide the order and which tasks can run at the
 
 Complete each task in two phases. Keep working without waiting for the user while any task can make progress.
 
-Independent tasks may start together. Start a dependent task after every prerequisite has an open pull request, an independent `/review` verdict of `Approve`, and no known blocking finding. Stack dependent work on the prerequisite branch. If several unmerged prerequisites feed one task, stack those prerequisite branches in dependency order before branching the dependent task. Retarget each stacked pull request to the default branch after its prerequisite merges.
+Independent tasks may start together. Start a dependent task after every prerequisite has an open pull request, an independent `/review` verdict of `Approve`, and no known blocking finding. Stack dependent work on the prerequisite branch. If several unmerged prerequisites feed one task, stack those prerequisite branches in dependency order before branching the dependent task. When a prerequisite branch or pull request base changes, update every dependent branch to that reviewed state and repeat `/test` and `/review`. Retarget each stacked pull request to the default branch after its prerequisite merges, then repeat the proof against that base.
 
 ## Phase 1: Build the code
 
@@ -36,6 +36,6 @@ Independent tasks may start together. Start a dependent task after every prerequ
 8. Repeat until all available checks pass and the automated review has no unresolved findings.
 9. Update the ticket with final proof and the pull request link when possible. Keep it in the repository's review state while the pull request is open.
 
-If the user asked you to merge the pull requests, merge each one after its automated checks pass, then mark its ticket complete when possible. Otherwise, leave it open.
+If the user asked you to merge the pull requests, merge each one after its automated checks pass. Wait until GitHub reports the pull request as merged before marking its ticket complete when possible. Otherwise, leave it open.
 
 Continue with every task that can make progress. Stop when every task has a pull request with all available checks passing and no unresolved automated review findings. If no remaining task can move forward, explain what is needed.

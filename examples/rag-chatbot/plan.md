@@ -144,13 +144,13 @@ This task depends on Task 1, which creates the local API and database. It proves
 - Deleting a document row through PostgreSQL also deletes all of its chunks through the foreign-key cascade. (`INV-2`)
 - Non-PDF and empty-text PDF uploads return `400` with `bad_request` and create no rows. (`AC-3`)
 - Uploads over 25 MiB return `413` with `payload_too_large` and create no rows. (`AC-3`; `INV-3`)
-- OpenAI embedding failures return `502` with `upstream_error`. (`AC-14`; `INV-4`)
+- OpenAI embedding failures return `502` with `upstream_error`. (`AC-21`; `INV-4`)
 - A persistence failure returns `500` with `internal_error`. (`AC-15`)
 - Embedding and persistence failures leave no document or chunk rows behind. (`AC-15`; `INV-3`)
 - A slow upload that finishes before the graceful shutdown deadline commits normally. (`AC-18`)
 - After shutdown begins, a new upload is not accepted and creates no rows. (`AC-18`)
 - Cancelling a deliberately slow upload at the graceful shutdown deadline leaves no document or chunk rows behind. (`AC-18`; `INV-3`)
-- Startup accepts shutdown values from `1` through `60` and rejects zero, negative, greater values, and non-integers. (`AC-17`)
+- Startup accepts shutdown values from `1` through `60` and rejects zero, negative, greater values, and non-integers. (`AC-23`)
 - A PDF fixture contains the sentence "PostgreSQL with pgvector stores the embeddings." for later retrieval tests.
 
 #### Design reference
@@ -226,7 +226,7 @@ The [RAG chatbot design](design.md) defines the document listing/deletion API sh
 uv run pytest
 ```
 
-Focused tests assert that listing returns a top-level JSON array without a wrapper object. Force database failures during listing and deletion and assert `500` with `internal_error`. After a failed deletion, query PostgreSQL and prove the document and chunks remain.
+Focused tests assert that listing returns a top-level JSON array without a wrapper object. Delete an unknown document ID and assert `404` with `not_found` in the documented error shape. Force database failures during listing and deletion and assert `500` with `internal_error`. After a failed deletion, query PostgreSQL and prove the document and chunks remain.
 
 Manual smoke check: upload `tests/fixtures/test.pdf`, list documents, delete the returned ID, confirm the response is `200` with `{"deleted":true}`, then confirm the ID no longer appears in `GET /api/v1/documents`.
 
@@ -287,11 +287,11 @@ This task depends on Tasks 2 and 3. Task 2 stores each PDF as small text section
 - With more than five qualifying chunks, retrieval returns five and the mocked generator receives exactly the same ordered content returned in `sources`. (`AC-7`; `INV-1`)
 - A chunk scoring exactly `RAG_RELEVANCE_THRESHOLD` qualifies, while a lower score does not. (`AC-8`)
 - Chunks with equal similarity are ordered by document ID and then chunk index. (`AC-9`)
-- Threshold configuration accepts `0` and `1` and rejects non-numeric values, values below `0`, and values above `1` before startup. (`AC-10`, `AC-17`)
+- Threshold configuration accepts `0` and `1` and rejects non-numeric values, values below `0`, and values above `1` before startup. (`AC-10`)
 - If no relevant chunks are found, the endpoint returns `{"answer":"No relevant information found in uploaded documents.","sources":[]}`. (`AC-11`)
 - After a failed fixture upload or deletion of an uploaded fixture, asking about its known text returns the fixed no-information response with no sources. (`AC-12`; `INV-2`, `INV-3`)
-- OpenAI embedding or chat failures return `502` with `upstream_error`. (`AC-14`; `INV-4`)
-- A database failure during retrieval returns `500` with `internal_error`. (`AC-16`)
+- OpenAI embedding or chat failures return `502` with `upstream_error`. (`AC-21`; `INV-4`)
+- A database failure during retrieval returns `500` with `internal_error`. (`AC-22`)
 - The full `uv run pytest` suite passes against PostgreSQL with pgvector while OpenAI calls are mocked. (`AC-19`)
 
 #### Design reference
@@ -304,7 +304,7 @@ The [RAG chatbot design](design.md) covers retrieval defaults, chat response sha
 uv run pytest
 ```
 
-Run focused tests that send the documented JSON request body, omit `message`, and send an empty `message`. Cover a database failure during retrieval. Use fixed vectors with scores equal to, just below, and just above the threshold.
+Run focused tests that send the documented JSON request body, omit `message`, and send an empty `message`. Cover a database failure during retrieval. Force embedding and answer-generation failures and assert `502` with `upstream_error` in the documented error shape. Use fixed vectors with scores equal to, just below, and just above the threshold.
 
 Create more than five matching chunks. Check that the mocked answer generator receives the same first five chunks returned in the sources.
 

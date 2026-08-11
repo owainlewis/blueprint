@@ -149,27 +149,34 @@ Uploads are limited to 25 MiB and rejected before extraction when larger. Chat r
 - `AC-11`: Chat with no relevant content returns `{"answer":"No relevant information found in uploaded documents.","sources":[]}`.
 - `AC-12`: After a failed upload or document deletion, chat for that document's fixture content returns the fixed no-information response with no sources.
 - `AC-13`: A missing or empty chat message returns `400` with `bad_request`.
-- `AC-14`: Missing deletion returns `404`, and upstream OpenAI failures return `502`, both with the documented error shape.
+- `AC-14`: Missing deletion returns `404` with the documented error shape.
 - `AC-15`: A forced upload persistence failure returns `500` with `internal_error` and leaves no document or chunk rows.
-- `AC-16`: Database failures while listing, deleting, or retrieving for chat return `500` with `internal_error`.
-- `AC-17`: Startup fails before serving traffic when `DATABASE_URL` or `OPENAI_API_KEY` is missing or when either bounded numeric setting is invalid.
+- `AC-16`: Database failures while listing or deleting return `500` with `internal_error`.
+- `AC-17`: Startup fails before serving traffic when `DATABASE_URL` or `OPENAI_API_KEY` is missing.
 - `AC-18`: Shutdown stops new requests, gives in-flight requests 10 seconds by default, then cancels remaining work without committing a partial upload.
 - `AC-19`: The full test suite passes against PostgreSQL with pgvector while OpenAI calls are mocked.
 - `AC-20`: `uv sync --frozen` and `uv run pytest` are the supported local dependency and test commands.
+- `AC-21`: Upstream OpenAI failures return `502` with the documented error shape.
+- `AC-22`: A database failure while retrieving for chat returns `500` with `internal_error`.
+- `AC-23`: Startup fails before serving traffic when `SERVER_GRACEFUL_SHUTDOWN_SECONDS` is outside `1` through `60` or is not an integer.
 
 ## 10. Test approach
 
 - Use `pytest` and `httpx` for endpoint tests.
-- Test persistence and vector behavior against PostgreSQL with pgvector. (`AC-1`, `AC-3`, `AC-4`, `AC-5`, `AC-6`, `AC-7`, `AC-8`, `AC-9`, `AC-11`, `AC-12`, `AC-15`, `AC-16`, `AC-19`; `INV-1`, `INV-2`, `INV-3`)
-- Mock OpenAI calls with deterministic embeddings and answers. (`AC-1`, `AC-6`, `AC-7`, `AC-8`, `AC-9`, `AC-11`, `AC-12`, `AC-14`, `AC-19`; `INV-1`, `INV-4`)
+- Test persistence and vector behavior against PostgreSQL with pgvector. (`AC-1`, `AC-3`, `AC-4`, `AC-5`, `AC-6`, `AC-7`, `AC-8`, `AC-9`, `AC-11`, `AC-12`, `AC-15`, `AC-19`; `INV-1`, `INV-2`, `INV-3`)
+- Mock OpenAI calls with deterministic embeddings and answers. (`AC-1`, `AC-6`, `AC-7`, `AC-8`, `AC-9`, `AC-11`, `AC-12`, `AC-19`, `AC-21`; `INV-1`, `INV-4`)
 - Use a small PDF fixture containing the sentence "PostgreSQL with pgvector stores the embeddings." to prove grounded chat and source references. (`AC-6`, `AC-12`)
 - Use deterministic embeddings that produce scores equal to, immediately below, and immediately above `RAG_RELEVANCE_THRESHOLD`. (`AC-8`)
 - Create more than five qualifying chunks, then assert that retrieval, generator context, and returned sources use the same ordered first five chunks. (`AC-7`, `AC-9`; `INV-1`)
-- Cover threshold configuration at `0`, at `1`, below `0`, above `1`, and with a non-numeric value. (`AC-10`, `AC-17`)
-- Cover `SERVER_GRACEFUL_SHUTDOWN_SECONDS` at `1`, at `60`, below `1`, above `60`, and with a non-integer value. (`AC-17`)
+- Cover threshold configuration at `0`, at `1`, below `0`, above `1`, and with a non-numeric value. (`AC-10`)
+- Cover `SERVER_GRACEFUL_SHUTDOWN_SECONDS` at `1`, at `60`, below `1`, above `60`, and with a non-integer value. (`AC-23`)
 - Start a deliberately slow upload, request shutdown, and cover completion before the configured deadline and cancellation with transaction rollback after it. (`AC-18`; `INV-3`)
-- Cover upload, list, delete, relevant chat, no-result chat, transaction rollback, and the `400`, `404`, `413`, `500`, and `502` paths. (`AC-1`, `AC-3`, `AC-4`, `AC-5`, `AC-6`, `AC-11`, `AC-14`, `AC-15`, `AC-16`; `INV-2`, `INV-3`, `INV-4`)
-- Cover health with PostgreSQL available and unavailable, missing or empty chat messages, and database failures during list, delete, and chat retrieval. (`AC-2`, `AC-13`, `AC-16`)
+- Cover upload, list, delete, relevant chat, no-result chat, transaction rollback, and the `400`, `413`, and upload-persistence `500` paths. (`AC-1`, `AC-3`, `AC-4`, `AC-5`, `AC-6`, `AC-11`, `AC-15`; `INV-2`, `INV-3`)
+- Delete an unknown document ID and assert `404` with `not_found` in the documented error shape. (`AC-14`)
+- Force embedding and answer-generation failures and assert `502` with `upstream_error` in the documented error shape. (`AC-21`; `INV-4`)
+- Cover health with PostgreSQL available and unavailable and missing or empty chat messages. (`AC-2`, `AC-13`)
+- Force database failures while listing and deleting and assert `500` with `internal_error`. (`AC-16`)
+- Force a database failure while retrieving for chat and assert `500` with `internal_error`. (`AC-22`)
 - Cover startup with each required setting missing. (`AC-17`)
 - Assert through the public API that a deleted document and a failed upload leave no retrievable chunks. (`AC-5`, `AC-12`, `AC-15`; `INV-2`, `INV-3`)
 - Run `uv sync --frozen`, then run the full suite with `uv run pytest`. (`AC-19`, `AC-20`)
