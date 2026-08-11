@@ -1,0 +1,1001 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; script-src 'none'; object-src 'none'; frame-src 'none'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="document-kind" content="Technical design">
+  <meta name="source-path" content="docs/html-doc/design.md">
+  <meta name="source-sha256" content="d56b026571bdb9de09b99a95a00a684755d82d9eb67c521fe9e8d965cee03497">
+  <meta name="generator" content="blueprint/html-doc@1">
+  <title>HTML PRD and design document skill</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #e8edf0;
+      --sheet: #fbfcfd;
+      --ink: #202a31;
+      --muted: #5c6d78;
+      --line: #c7d2d9;
+      --accent: #536f82;
+      --accent-soft: #dce6ec;
+      --secondary: #3f6575;
+      --secondary-soft: #dbe8eb;
+      --note-soft: #e8eef2;
+      --code: #202a32;
+      --shadow: 0 22px 60px rgba(39, 56, 67, 0.1);
+      --sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: Iowan Old Style, Baskerville, "Times New Roman", serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: var(--paper); }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 3%, rgba(83, 111, 130, 0.12), transparent 24rem),
+        radial-gradient(circle at 92% 12%, rgba(63, 101, 117, 0.08), transparent 26rem),
+        var(--paper);
+      font-family: var(--sans);
+      font-size: 17px;
+      line-height: 1.68;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: var(--secondary); text-underline-offset: 0.16em; }
+    a:hover { color: var(--accent); }
+    a:focus-visible, [tabindex="-1"]:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 4px;
+      border-radius: 3px;
+    }
+
+    .skip-link {
+      position: fixed;
+      z-index: 20;
+      top: 0.75rem;
+      left: 0.75rem;
+      transform: translateY(-180%);
+      padding: 0.65rem 0.9rem;
+      color: white;
+      background: var(--ink);
+      border-radius: 0.35rem;
+    }
+    .skip-link:focus { transform: translateY(0); }
+
+    .masthead {
+      border-bottom: 1px solid rgba(63, 78, 88, 0.18);
+      background: rgba(251, 252, 253, 0.76);
+    }
+    .masthead-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 1.1rem clamp(1rem, 4vw, 3rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.25rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-weight: 760;
+      letter-spacing: -0.015em;
+    }
+    .brand-mark {
+      width: 2.1rem;
+      height: 2.1rem;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--sheet);
+      background: var(--accent);
+      font-family: var(--serif);
+      font-size: 1.15rem;
+    }
+    .meta-strip {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+    .pill {
+      padding: 0.28rem 0.55rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--sheet);
+    }
+    .pill strong { color: var(--ink); }
+
+    .shell {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      padding: clamp(1rem, 3vw, 2.6rem);
+      display: grid;
+      grid-template-columns: minmax(220px, 270px) minmax(0, 1fr);
+      gap: clamp(1rem, 3vw, 2.5rem);
+      align-items: start;
+    }
+
+    #TOC {
+      position: sticky;
+      top: 1.5rem;
+      max-height: calc(100vh - 3rem);
+      overflow-y: auto;
+      padding: 1.15rem 0.35rem 1.15rem 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.35;
+      scrollbar-width: thin;
+    }
+    #TOC::before {
+      content: "On this page";
+      display: block;
+      margin: 0 0 0.85rem 0.75rem;
+      color: var(--ink);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+    }
+    #TOC ul { margin: 0; padding: 0; list-style: none; }
+    #TOC ul ul { padding-left: 0.85rem; margin-top: 0.15rem; }
+    #TOC li { margin: 0.12rem 0; }
+    #TOC a {
+      display: block;
+      padding: 0.38rem 0.72rem;
+      color: var(--muted);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      border-radius: 0 0.3rem 0.3rem 0;
+    }
+    #TOC a:hover, #TOC a:focus-visible {
+      color: var(--ink);
+      border-left-color: var(--accent);
+      background: rgba(251, 252, 253, 0.82);
+    }
+    .mobile-toc { display: none; }
+
+    main {
+      min-width: 0;
+      background: var(--sheet);
+      border: 1px solid rgba(85, 104, 116, 0.22);
+      box-shadow: var(--shadow);
+    }
+    main > .level1 > h1 {
+      margin: 0;
+      padding: clamp(2.2rem, 7vw, 6.2rem) clamp(1.2rem, 6vw, 5.5rem) 1rem;
+      max-width: 18ch;
+      font-family: var(--serif);
+      font-size: clamp(3rem, 6vw, 6.3rem);
+      line-height: 0.96;
+      font-weight: 500;
+      letter-spacing: -0.045em;
+      text-wrap: balance;
+    }
+    main > .level1 > blockquote {
+      margin: 1.2rem clamp(1.2rem, 6vw, 5.5rem) clamp(2.5rem, 7vw, 5.5rem);
+      width: fit-content;
+      padding: 0.4rem 0.75rem;
+      color: #314d5e;
+      background: var(--accent-soft);
+      border: 1px solid #b9cbd4;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 740;
+    }
+    blockquote p { margin: 0; }
+
+    section.level2 {
+      padding: clamp(2.3rem, 6vw, 5rem) clamp(1.2rem, 6vw, 5.5rem);
+      border-top: 1px solid var(--line);
+    }
+    section.level2 > h2 {
+      margin: 0 0 1.7rem;
+      max-width: 24ch;
+      font-family: var(--serif);
+      font-size: clamp(2rem, 3.4vw, 3.5rem);
+      line-height: 1.04;
+      font-weight: 500;
+      letter-spacing: -0.028em;
+      text-wrap: balance;
+    }
+    section.level3 { margin-top: 2.8rem; }
+    section.level3 > h3 {
+      margin: 0 0 1rem;
+      color: var(--secondary);
+      font-size: 0.78rem;
+      line-height: 1.3;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    p { max-width: 76ch; margin: 0.85rem 0; }
+    strong { font-weight: 780; }
+
+    [id="1-executive-summary"] {
+      position: relative;
+      background: var(--ink);
+      color: #f4f7f9;
+      border-top: 0;
+    }
+    [id="1-executive-summary"]::after {
+      content: "Source of truth → Human reading view";
+      display: block;
+      margin-top: 2.2rem;
+      color: #bad0da;
+      font-size: 0.76rem;
+      font-weight: 750;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    [id="1-executive-summary"] h2 { color: white; }
+    [id="1-executive-summary"] p { color: #dce5e9; font-size: 1.08rem; }
+
+    [id="12-open-questions"] { background: var(--note-soft); }
+    [id="8-security-privacy-and-operations"] { background: #edf3f5; }
+    [id="13-out-of-scope"] { background: #f1f4f6; }
+
+    ul, ol { max-width: 80ch; padding-left: 1.25rem; }
+    li { margin: 0.48rem 0; padding-left: 0.28rem; }
+    li::marker { color: var(--accent); font-weight: 800; }
+
+    #decisions > p {
+      padding: 1rem 1.1rem 1rem 1.25rem;
+      border-left: 4px solid var(--secondary);
+      background: var(--secondary-soft);
+      border-radius: 0 0.45rem 0.45rem 0;
+    }
+    #invariants ol {
+      list-style: none;
+      padding: 0;
+      counter-reset: invariant;
+      display: grid;
+      gap: 0.7rem;
+    }
+    #invariants li {
+      counter-increment: invariant;
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 0.8rem;
+      align-items: start;
+      margin: 0;
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--line);
+      background: white;
+    }
+    #invariants li::before {
+      content: counter(invariant);
+      width: 2rem;
+      height: 2rem;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      background: var(--accent);
+      font-weight: 800;
+    }
+
+    .table-wrap { width: 100%; overflow-x: auto; margin: 1.5rem 0; }
+    table {
+      width: 100%;
+      min-width: 640px;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+    th, td { padding: 0.85rem 0.9rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+    th { color: var(--sheet); background: var(--ink); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; }
+    tbody tr:nth-child(even) { background: #eff3f5; }
+
+    code {
+      padding: 0.12rem 0.32rem;
+      border-radius: 0.25rem;
+      color: #315565;
+      background: #e2ebf0;
+      font-family: var(--mono);
+      font-size: 0.86em;
+    }
+    pre {
+      max-width: 100%;
+      overflow-x: auto;
+      margin: 1.35rem 0;
+      padding: 1.15rem 1.25rem;
+      color: #edf3f6;
+      background: var(--code);
+      border-radius: 0.5rem;
+      line-height: 1.55;
+      white-space: pre;
+    }
+    pre code { padding: 0; color: inherit; background: transparent; white-space: pre; }
+
+    figure.diagram {
+      margin: 2rem 0;
+      padding: clamp(0.7rem, 2vw, 1.5rem);
+      background: #f0f4f6;
+      border: 1px solid var(--line);
+      border-radius: 0.65rem;
+    }
+    figure.diagram svg { display: block; width: min(100%, 720px); height: auto; margin: 0 auto; }
+    figure.diagram figcaption { margin-top: 0.8rem; color: var(--muted); text-align: center; font-size: 0.82rem; }
+    .diagram .node { fill: var(--sheet); stroke: #82939e; stroke-width: 2; }
+    .diagram .node-source { fill: var(--secondary-soft); stroke: var(--secondary); }
+    .diagram .node-output { fill: var(--accent-soft); stroke: var(--accent); }
+    .diagram .label { fill: var(--ink); font-family: var(--sans); font-size: 25px; font-weight: 730; text-anchor: middle; dominant-baseline: middle; }
+    .diagram .small-label { fill: var(--accent); font-family: var(--sans); font-size: 18px; font-weight: 760; text-anchor: middle; }
+    .diagram .arrow { fill: none; stroke: #687984; stroke-width: 3; marker-end: url(#arrowhead); }
+    .diagram .return { fill: none; stroke: var(--accent); stroke-width: 3; stroke-dasharray: 9 8; marker-end: url(#accent-arrow); }
+
+    footer {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0.2rem clamp(1rem, 4vw, 3rem) 2.5rem;
+      color: var(--muted);
+      font-size: 0.76rem;
+      text-align: right;
+    }
+
+    @media (max-width: 900px) {
+      .masthead-inner { align-items: flex-start; flex-direction: column; }
+      .meta-strip { justify-content: flex-start; }
+      .shell { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+      #TOC { display: none; }
+      .mobile-toc {
+        display: block;
+        margin: 1rem 1rem 0;
+        background: rgba(251, 252, 253, 0.82);
+        border: 1px solid var(--line);
+      }
+      .mobile-toc summary {
+        padding: 0.8rem 1rem;
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 0.75rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .mobile-toc nav { padding: 0 1rem 1rem; font-size: 0.82rem; }
+      .mobile-toc ul { margin: 0; padding-left: 1rem; }
+      .mobile-toc li { margin: 0.25rem 0; }
+      .mobile-toc a { color: var(--muted); text-decoration: none; }
+    }
+
+    @media (max-width: 560px) {
+      body { font-size: 16px; }
+      .masthead-inner { padding: 0.85rem 1rem; }
+      .meta-strip { gap: 0.4rem; }
+      .pill { max-width: 100%; overflow-wrap: anywhere; }
+      .shell { padding: 0.75rem; }
+      main > .level1 > h1 { font-size: clamp(2.7rem, 14vw, 4rem); padding-top: 2.6rem; }
+      main > .level1 > blockquote { border-radius: 0.4rem; }
+      section.level2 { padding-top: 2.8rem; padding-bottom: 2.8rem; }
+      section.level2 > h2 { font-size: 2.15rem; }
+      #invariants li { grid-template-columns: 1.8rem 1fr; padding: 0.8rem; }
+      #invariants li::before { width: 1.8rem; height: 1.8rem; }
+      figure.diagram { overflow-x: auto; }
+      figure.diagram svg { width: 520px; max-width: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+    @media print {
+      @page { size: auto; margin: 16mm; }
+      html, body { background: white; }
+      body { font-size: 10.5pt; line-height: 1.45; }
+      .masthead, #TOC, .skip-link { display: none; }
+      .shell { display: block; width: auto; margin: 0; padding: 0; }
+      main { border: 0; box-shadow: none; }
+      main > .level1 > h1 { padding: 0 0 8mm; font-size: 32pt; }
+      main > .level1 > blockquote { margin: 0 0 10mm; }
+      section.level2 { padding: 9mm 0; break-inside: auto; }
+      section.level2 > h2, section.level3 > h3 { break-after: avoid; }
+      p, li { orphans: 3; widows: 3; }
+      table { min-width: 0; font-size: 8pt; }
+      thead { display: table-header-group; }
+      tr, figure, pre { break-inside: avoid; }
+      pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+      a { color: inherit; text-decoration: none; }
+      footer { padding: 8mm 0 0; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to document</a>
+  <header class="masthead" aria-label="Document metadata">
+    <div class="masthead-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">B</span>Blueprint document</div>
+      <div class="meta-strip">
+        <span class="pill"><strong>Kind:</strong> Technical
+design</span>
+        <span class="pill"><strong>Source:</strong> docs/html-doc/design.md</span>
+        <span class="pill"><strong>Revision:</strong> <span title="d56b026571bdb9de09b99a95a00a684755d82d9eb67c521fe9e8d965cee03497">d56b026571bd</span></span>
+      </div>
+    </div>
+  </header>
+  <aside class="mobile-toc" aria-label="Document navigation">
+    <details>
+      <summary>Contents</summary>
+      <nav aria-label="Document sections on small screens">
+<ul>
+<li><a href="#html-prd-and-design-document-skill"
+id="toc-html-prd-and-design-document-skill">HTML PRD and design document
+skill</a>
+<ul>
+<li><a href="#1-executive-summary" id="toc-1-executive-summary">1.
+Executive summary</a></li>
+<li><a href="#2-context-and-scope" id="toc-2-context-and-scope">2.
+Context and scope</a></li>
+<li><a href="#3-system-context" id="toc-3-system-context">3. System
+context</a></li>
+<li><a href="#4-proposed-design" id="toc-4-proposed-design">4. Proposed
+design</a>
+<ul>
+<li><a href="#how-it-works" id="toc-how-it-works">How it works</a></li>
+<li><a href="#page-structure" id="toc-page-structure">Page
+structure</a></li>
+<li><a href="#components-and-responsibilities"
+id="toc-components-and-responsibilities">Components and
+responsibilities</a></li>
+<li><a href="#decisions" id="toc-decisions">Decisions</a></li>
+</ul></li>
+<li><a href="#5-invariants-and-requirements"
+id="toc-5-invariants-and-requirements">5. Invariants and
+requirements</a>
+<ul>
+<li><a href="#invariants" id="toc-invariants">Invariants</a></li>
+<li><a href="#requirements" id="toc-requirements">Requirements</a></li>
+</ul></li>
+<li><a href="#6-interfaces-and-data" id="toc-6-interfaces-and-data">6.
+Interfaces and data</a>
+<ul>
+<li><a href="#naming-and-identity" id="toc-naming-and-identity">Naming
+and identity</a></li>
+</ul></li>
+<li><a href="#7-failure-behavior-and-lifecycle"
+id="toc-7-failure-behavior-and-lifecycle">7. Failure behavior and
+lifecycle</a></li>
+<li><a href="#8-security-privacy-and-operations"
+id="toc-8-security-privacy-and-operations">8. Security, privacy, and
+operations</a></li>
+<li><a href="#9-acceptance-criteria" id="toc-9-acceptance-criteria">9.
+Acceptance criteria</a></li>
+<li><a href="#10-test-approach" id="toc-10-test-approach">10. Test
+approach</a></li>
+<li><a href="#11-risks-and-tradeoffs"
+id="toc-11-risks-and-tradeoffs">11. Risks and tradeoffs</a></li>
+<li><a href="#12-open-questions" id="toc-12-open-questions">12. Open
+questions</a></li>
+<li><a href="#13-out-of-scope" id="toc-13-out-of-scope">13. Out of
+scope</a></li>
+</ul></li>
+</ul>
+      </nav>
+    </details>
+  </aside>
+  <div class="shell">
+    <nav id="TOC" aria-label="Document sections">
+<ul>
+<li><a href="#html-prd-and-design-document-skill"
+id="toc-html-prd-and-design-document-skill">HTML PRD and design document
+skill</a>
+<ul>
+<li><a href="#1-executive-summary" id="toc-1-executive-summary">1.
+Executive summary</a></li>
+<li><a href="#2-context-and-scope" id="toc-2-context-and-scope">2.
+Context and scope</a></li>
+<li><a href="#3-system-context" id="toc-3-system-context">3. System
+context</a></li>
+<li><a href="#4-proposed-design" id="toc-4-proposed-design">4. Proposed
+design</a>
+<ul>
+<li><a href="#how-it-works" id="toc-how-it-works">How it works</a></li>
+<li><a href="#page-structure" id="toc-page-structure">Page
+structure</a></li>
+<li><a href="#components-and-responsibilities"
+id="toc-components-and-responsibilities">Components and
+responsibilities</a></li>
+<li><a href="#decisions" id="toc-decisions">Decisions</a></li>
+</ul></li>
+<li><a href="#5-invariants-and-requirements"
+id="toc-5-invariants-and-requirements">5. Invariants and
+requirements</a>
+<ul>
+<li><a href="#invariants" id="toc-invariants">Invariants</a></li>
+<li><a href="#requirements" id="toc-requirements">Requirements</a></li>
+</ul></li>
+<li><a href="#6-interfaces-and-data" id="toc-6-interfaces-and-data">6.
+Interfaces and data</a>
+<ul>
+<li><a href="#naming-and-identity" id="toc-naming-and-identity">Naming
+and identity</a></li>
+</ul></li>
+<li><a href="#7-failure-behavior-and-lifecycle"
+id="toc-7-failure-behavior-and-lifecycle">7. Failure behavior and
+lifecycle</a></li>
+<li><a href="#8-security-privacy-and-operations"
+id="toc-8-security-privacy-and-operations">8. Security, privacy, and
+operations</a></li>
+<li><a href="#9-acceptance-criteria" id="toc-9-acceptance-criteria">9.
+Acceptance criteria</a></li>
+<li><a href="#10-test-approach" id="toc-10-test-approach">10. Test
+approach</a></li>
+<li><a href="#11-risks-and-tradeoffs"
+id="toc-11-risks-and-tradeoffs">11. Risks and tradeoffs</a></li>
+<li><a href="#12-open-questions" id="toc-12-open-questions">12. Open
+questions</a></li>
+<li><a href="#13-out-of-scope" id="toc-13-out-of-scope">13. Out of
+scope</a></li>
+</ul></li>
+</ul>
+    </nav>
+    <main id="main-content" tabindex="-1">
+<section id="html-prd-and-design-document-skill" class="level1">
+<h1>HTML PRD and design document skill</h1>
+<blockquote>
+<p><strong>Status:</strong> Proposed for review</p>
+</blockquote>
+<section id="1-executive-summary" class="level2">
+<h2>1. Executive summary</h2>
+<p>Add an <code>/html-doc</code> skill that turns an existing Markdown
+product requirements document (PRD) or technical design into a clear,
+static HTML document. The Markdown file remains the source of truth. The
+HTML adds navigation, stronger visual hierarchy, useful callouts,
+readable diagrams, responsive layout, and print styles without changing
+the document's meaning.</p>
+<p>The skill is a presentation step, not another product or technical
+design workflow. This avoids competing with <code>/design</code> and
+prevents requirements from changing during rendering. The main downside
+is a second file that can drift from its source. The generated page
+records the source path and content hash, and the skill regenerates
+rather than edits HTML by hand.</p>
+</section>
+<section id="2-context-and-scope" class="level2">
+<h2>2. Context and scope</h2>
+<p>Markdown is good for writing and source review. Long PRDs and design
+documents are harder to scan in raw form because summaries, decisions,
+requirements, risks, diagrams, and open questions have similar visual
+weight.</p>
+<p>The new skill accepts a Markdown file or exact Markdown supplied in
+the request. It creates one sibling HTML file for people to read in a
+browser, print, or attach to a review. It preserves all source content
+and order while changing its presentation.</p>
+<p>This design covers PRDs and proposed technical designs. It does not
+decide product requirements, settle technical choices, host documents,
+or replace the Markdown source.</p>
+</section>
+<section id="3-system-context" class="level2">
+<h2>3. System context</h2>
+<figure class="diagram" aria-labelledby="flow-title flow-caption">
+  <svg role="img" viewBox="0 0 720 900" xmlns="http://www.w3.org/2000/svg">
+    <title id="flow-title">From idea to human review</title>
+    <desc>An idea becomes a PRD or technical design in canonical Markdown. The HTML document skill turns it into generated HTML for human review. Content changes return to the Markdown source.</desc>
+    <defs>
+      <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#687984"/></marker>
+      <marker id="accent-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#536f82"/></marker>
+    </defs>
+    <rect class="node" x="190" y="25" width="340" height="86" rx="43"/>
+    <text class="label" x="360" y="69">Idea or problem</text>
+    <path class="arrow" d="M360 111 L360 153"/>
+
+    <rect class="node" x="120" y="160" width="480" height="90" rx="14"/>
+    <text class="label" x="360" y="205">PRD authoring or /design</text>
+    <path class="arrow" d="M360 250 L360 292"/>
+
+    <rect class="node node-source" x="120" y="300" width="480" height="90" rx="14"/>
+    <text class="label" x="360" y="345">Canonical Markdown</text>
+    <path class="arrow" d="M360 390 L360 432"/>
+
+    <rect class="node" x="120" y="440" width="480" height="90" rx="14"/>
+    <text class="label" x="360" y="485">/html-doc</text>
+    <path class="arrow" d="M360 530 L360 572"/>
+
+    <rect class="node node-output" x="120" y="580" width="480" height="90" rx="14"/>
+    <text class="label" x="360" y="625">Generated HTML</text>
+    <path class="arrow" d="M360 670 L360 712"/>
+
+    <rect class="node" x="190" y="720" width="340" height="86" rx="43"/>
+    <text class="label" x="360" y="764">Human review</text>
+
+    <path class="return" d="M530 763 C670 763 674 345 610 345"/>
+    <rect x="552" y="510" width="145" height="54" rx="27" fill="#fbfcfd" stroke="#c7d2d9"/>
+    <text class="small-label" x="624" y="543">content changes</text>
+  </svg>
+  <figcaption id="flow-caption">Meaning stays in Markdown. HTML is the human reading view.</figcaption>
+</figure>
+
+<p>The authoring step owns meaning. <code>/html-doc</code> owns
+presentation. Review comments that change behavior, scope, requirements,
+or decisions go back into the Markdown source before the page is
+regenerated.</p>
+</section>
+<section id="4-proposed-design" class="level2">
+<h2>4. Proposed design</h2>
+<section id="how-it-works" class="level3">
+<h3>How it works</h3>
+<p>A user invokes <code>/html-doc</code> with a Markdown path and may
+state whether it is a PRD or design document. The skill reads the
+complete source and detects the kind only when the user did not provide
+it. It refuses to guess when the structure is ambiguous.</p>
+<p>The skill copies the bundled HTML template to a sibling output such
+as <code>docs/payments/prd.html</code>. It maps the source into semantic
+HTML in the same order. It adds a document header, status and source
+metadata, a linked table of contents, and presentation treatments based
+on section meaning. Unknown sections remain normal sections and are
+never dropped.</p>
+<p>The page uses semantic HTML, inline CSS, and no runtime JavaScript.
+Mermaid diagrams become sanitized inline SVG during generation and
+retain an accessible text description. The result works as a local file
+without a server or network connection.</p>
+<p>The skill opens the result in a real browser. It checks desktop and
+mobile widths, keyboard navigation, diagrams, long tables, code blocks,
+links, and print preview. It compares the rendered content with the
+source. It fixes presentation defects in the generated file or template,
+but sends content defects back to the source.</p>
+</section>
+<section id="page-structure" class="level3">
+<h3>Page structure</h3>
+<pre class="text"><code>+------------------------------------------------------------------+
+| Document kind  Status                          Source and revision |
+| Title                                                            |
+| Existing summary from the source                                 |
++-------------------+----------------------------------------------+
+| Contents          | Main document                                |
+| 1. Problem        |                                              |
+| 2. Goals          | Clear section rhythm                         |
+| 3. Requirements   | Decision, risk, and question callouts        |
+| ...               | Readable tables, code, and diagrams          |
+|                   |                                              |
++-------------------+----------------------------------------------+
+| Source path and generator version                                |
++------------------------------------------------------------------+</code></pre>
+<p>On narrow screens, the contents move above the document and the page
+becomes one column. Print hides navigation and source-control details
+that do not help the paper reader. Visual callouts use a label, border,
+icon or shape, and text so color is never the only signal.</p>
+</section>
+<section id="components-and-responsibilities" class="level3">
+<h3>Components and responsibilities</h3>
+<div class="table-wrap" role="region" aria-label="Scrollable table" tabindex="0">
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Owns</th>
+<th>Depends on</th>
+<th>Does not own</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SKILL.md</code></td>
+<td>Input rules, generation workflow, parity checks, browser proof, and
+stop condition</td>
+<td>Repository policy and supplied source</td>
+<td>Product or technical decisions</td>
+</tr>
+<tr>
+<td>HTML template</td>
+<td>Page structure, design tokens, responsive layout, print rules, and
+accessibility defaults</td>
+<td>Browser standards</td>
+<td>Document content</td>
+</tr>
+<tr>
+<td>Generated HTML</td>
+<td>One reviewable view of one source revision</td>
+<td>Markdown source and template</td>
+<td>Canonical content or later edits</td>
+</tr>
+<tr>
+<td>Markdown source</td>
+<td>All claims, requirements, decisions, and document order</td>
+<td>Its authoring workflow</td>
+<td>Browser presentation</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="decisions" class="level3">
+<h3>Decisions</h3>
+<p><strong>Keep Markdown canonical.</strong> A paired Markdown and HTML
+document makes writing, diffing, and agent review simple while giving
+humans a better reading surface. Making HTML canonical would improve
+direct presentation but make content changes harder to inspect and
+merge.</p>
+<p><strong>Make the skill presentation-only.</strong>
+<code>/design</code> already owns technical design in this repository.
+Letting <code>/html-doc</code> also settle requirements or architecture
+would create two conflicting workflows. A user with only a rough idea
+must first supply or create the source document.</p>
+<p><strong>Generate a static, offline page.</strong> The output uses
+inline CSS and generated inline SVG with no fonts, scripts, images, or
+style sheets fetched at runtime. This makes a file easy to share and
+avoids broken pages behind network or content-security restrictions. It
+costs more generation work than loading a web framework.</p>
+<p><strong>Use one restrained visual system for both document
+kinds.</strong> Both layouts share typography, spacing, navigation,
+metadata, tables, code, and print behavior. PRDs emphasize users, goals,
+requirements, and measures. Designs emphasize system context, decisions,
+invariants, interfaces, failures, and risks. Separate templates would
+drift and add little value.</p>
+<p><strong>Preserve source order and wording.</strong> Presentation
+treatments may group a heading with its own content, but may not
+summarize, rewrite, rank, or omit source claims. This keeps the HTML
+trustworthy. A separate executive overview may appear only when that
+overview exists in the source.</p>
+</section>
+</section>
+<section id="5-invariants-and-requirements" class="level2">
+<h2>5. Invariants and requirements</h2>
+<section id="invariants" class="level3">
+<h3>Invariants</h3>
+<ol type="1">
+<li>Every source heading and content block appears once in the HTML and
+in the same order.</li>
+<li>The HTML introduces no new requirement, decision, claim, priority,
+or status.</li>
+<li>Content changes happen in Markdown, followed by regeneration.
+Generated HTML is not hand-edited.</li>
+<li>The generated page needs no network connection at read time.</li>
+<li>Navigation, reading order, and meaning remain usable without color,
+a mouse, or a wide screen.</li>
+<li>The page identifies the exact source content revision from which it
+was generated.</li>
+</ol>
+</section>
+<section id="requirements" class="level3">
+<h3>Requirements</h3>
+<ul>
+<li>Accept a repository-relative or absolute Markdown path. Also accept
+exact inline Markdown when the user explicitly provides the full
+document.</li>
+<li>Support <code>prd</code> and <code>design</code> document kinds.
+Prefer an explicit kind and use heading-based detection only when
+unambiguous.</li>
+<li>Write <code>&lt;source-basename&gt;.html</code> beside the source by
+default. Accept an explicit output path.</li>
+<li>Leave the Markdown source unchanged.</li>
+<li>Show title, document kind, status when supplied, source path, and a
+SHA-256 source hash in the page header.</li>
+<li>Add a linked table of contents for second-level and third-level
+headings.</li>
+<li>Give stable, readable anchor IDs to headings and deduplicate
+repeated headings with numeric suffixes.</li>
+<li>Render Markdown paragraphs, emphasis, links, lists, tasks, tables,
+blockquotes, code, and fenced diagrams without data loss.</li>
+<li>Use specific treatments for summary, goals, non-goals, requirements,
+acceptance criteria, decisions, invariants, failures, risks, and open
+questions when those sections exist.</li>
+<li>Include responsive styles for a 390-pixel viewport and a print
+stylesheet for A4 and US Letter.</li>
+<li>Use no external runtime assets and no runtime JavaScript.</li>
+<li>Verify the result in a real browser before reporting
+completion.</li>
+</ul>
+</section>
+</section>
+<section id="6-interfaces-and-data" class="level2">
+<h2>6. Interfaces and data</h2>
+<p>The skill accepts these request shapes:</p>
+<pre class="text"><code>/html-doc docs/billing/prd.md
+/html-doc docs/billing/design.md as design
+/html-doc docs/billing/design.md --out artifacts/billing-design.html</code></pre>
+<p>The syntax describes intent rather than a shell command. The skill
+resolves paths from the repository root, unless the user gives an
+absolute path.</p>
+<p>The generated page includes machine-readable metadata:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">meta</span><span class="ot"> name</span><span class="op">=</span><span class="st">&quot;document-kind&quot;</span><span class="ot"> content</span><span class="op">=</span><span class="st">&quot;design&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">meta</span><span class="ot"> name</span><span class="op">=</span><span class="st">&quot;source-path&quot;</span><span class="ot"> content</span><span class="op">=</span><span class="st">&quot;docs/billing/design.md&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">meta</span><span class="ot"> name</span><span class="op">=</span><span class="st">&quot;source-sha256&quot;</span><span class="ot"> content</span><span class="op">=</span><span class="st">&quot;...&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">meta</span><span class="ot"> name</span><span class="op">=</span><span class="st">&quot;generator&quot;</span><span class="ot"> content</span><span class="op">=</span><span class="st">&quot;blueprint/html-doc@1&quot;</span><span class="dt">&gt;</span></span></code></pre></div>
+<p>The visible header repeats the document kind, source path, and source
+status. It does not show a generation time because timestamps create
+noisy diffs without proving content identity.</p>
+<p>Heading IDs use a lowercase ASCII slug made from visible heading
+text. Runs of other characters become one hyphen. Leading and trailing
+hyphens are removed. An empty result becomes <code>section</code>.
+Repeated IDs receive <code>-2</code>, <code>-3</code>, and so on in
+source order. Existing explicit IDs are preserved when they are valid
+and unique.</p>
+<section id="naming-and-identity" class="level3">
+<h3>Naming and identity</h3>
+<p>The source file path identifies the document. Its SHA-256 hash
+identifies the rendered revision. Renaming the source changes the
+default output path but not its content identity. If the source is
+missing or unreadable, the skill creates no output. Inline Markdown has
+no durable source path, so the skill requires an explicit output path
+and records <code>inline-input</code> as the source.</p>
+</section>
+</section>
+<section id="7-failure-behavior-and-lifecycle" class="level2">
+<h2>7. Failure behavior and lifecycle</h2>
+<ul>
+<li>A missing, unreadable, or non-Markdown source stops generation and
+names the failed path.</li>
+<li>An ambiguous document kind stops generation and asks for
+<code>prd</code> or <code>design</code>.</li>
+<li>Invalid Markdown is preserved as visible text where safe. The skill
+reports the affected source location instead of silently dropping
+it.</li>
+<li>A diagram that cannot be rendered remains as a clearly labeled code
+block. The skill reports that browser proof is incomplete.</li>
+<li>Unsafe raw HTML is escaped by default. If the user explicitly
+permits trusted raw HTML, it is sanitized before inclusion.</li>
+<li>An existing output file is overwritten only when its generator
+metadata points to the same source path, or when the user explicitly
+chose that output. Otherwise the skill stops to avoid replacing
+unrelated work.</li>
+<li>A failed generation or browser check does not replace a previously
+valid output. Generation writes a temporary sibling file, verifies it,
+then moves it into place.</li>
+<li>Regeneration replaces the entire generated page. It never attempts
+to merge hand edits.</li>
+<li>The skill stops after the HTML passes parity and browser checks. It
+does not publish or host the file.</li>
+</ul>
+</section>
+<section id="8-security-privacy-and-operations" class="level2">
+<h2>8. Security, privacy, and operations</h2>
+<p>Markdown is untrusted input. Text and attributes are HTML-escaped.
+Links allow <code>http</code>, <code>https</code>, <code>mailto</code>,
+relative paths, and fragment targets. Other URL schemes are rendered as
+text. External links use <code>rel="noopener noreferrer"</code>.</p>
+<p>Generated SVG allows only the elements and attributes needed for
+diagrams. It excludes scripts, event attributes, embedded HTML, and
+remote resources. The page uses no runtime JavaScript. A restrictive
+content security policy blocks scripts, objects, frames, and network
+connections.</p>
+<p>The skill reads one source file and writes one output file. A default
+maximum source size of 2 MiB prevents accidental rendering of generated
+data or logs. The skill stops with a clear error at that limit. It never
+sends document content to an external service.</p>
+</section>
+<section id="9-acceptance-criteria" class="level2">
+<h2>9. Acceptance criteria</h2>
+<ul>
+<li>Given representative PRD and design Markdown fixtures, the skill
+creates sibling HTML pages and leaves both sources byte-for-byte
+unchanged.</li>
+<li>Every source heading, paragraph, list item, table cell, code block,
+and diagram label appears once and in source order in the rendered
+document.</li>
+<li>The page header contains the correct kind, source path, status, and
+SHA-256 hash.</li>
+<li>Repeated, Unicode-only, and punctuation-only headings receive unique
+working anchors according to the naming rules.</li>
+<li>The table of contents links to every second-level and third-level
+heading.</li>
+<li>A generated page opens from disk with network access disabled and
+has no failed runtime resource requests.</li>
+<li>At 390, 768, and 1440 CSS pixels, text does not overlap, navigation
+remains usable, code scrolls within its container, and tables remain
+readable without widening the page.</li>
+<li>Keyboard-only navigation can reach the skip link, table of contents,
+document links, and section targets in a clear order with a visible
+focus indicator.</li>
+<li>Screen-reader inspection finds one page title, one <code>main</code>
+landmark, ordered headings without skipped levels introduced by the
+template, useful link names, and text alternatives for diagrams.</li>
+<li>Print preview on A4 and US Letter hides navigation, preserves
+headings with their first content block where practical, repeats table
+headers, and does not clip code or diagrams.</li>
+<li>Script tags, event attributes, unsafe URL schemes, embedded HTML,
+and remote SVG resources in a hostile fixture do not execute or enter
+the generated DOM.</li>
+<li>A browser check failure or interrupted generation leaves the
+previous verified output unchanged.</li>
+<li>An unrelated existing HTML file is not overwritten without explicit
+user direction.</li>
+</ul>
+</section>
+<section id="10-test-approach" class="level2">
+<h2>10. Test approach</h2>
+<ul>
+<li>Keep one compact PRD fixture and one compact design fixture
+containing every supported Markdown block and semantic section.</li>
+<li>Compare extracted normalized text and block order between each
+source and generated page. Separately assert source files are
+unchanged.</li>
+<li>Use hostile Markdown fixtures for raw HTML, unsafe links, SVG
+content, duplicate headings, deeply nested lists, wide tables, and long
+unbroken code.</li>
+<li>Serve nothing and disable browser networking while opening each
+output through a local file URL.</li>
+<li>Run browser checks at 390, 768, and 1440 CSS pixels. Capture
+screenshots for review and inspect overflow, focus order, landmarks,
+headings, anchors, and console errors.</li>
+<li>Open print preview for A4 and US Letter and inspect each page for
+clipping and isolated headings.</li>
+<li>Force diagram conversion, verification, and final replacement
+failures. Confirm that each failure is reported and that an earlier
+valid output remains byte-for-byte unchanged.</li>
+<li>Run the repository's skill review against the new instruction and
+template. Check that <code>/html-doc</code> stays a presentation outcome
+and does not duplicate PRD or design decisions.</li>
+</ul>
+</section>
+<section id="11-risks-and-tradeoffs" class="level2">
+<h2>11. Risks and tradeoffs</h2>
+<div class="table-wrap" role="region" aria-label="Scrollable table" tabindex="0">
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Consequence</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Markdown and HTML drift</td>
+<td>Reviewers read stale requirements</td>
+<td>Record the source hash, regenerate whole files, and forbid hand
+edits</td>
+</tr>
+<tr>
+<td>Visual treatment changes meaning</td>
+<td>A callout can imply priority or status not present in source</td>
+<td>Map only known section roles and preserve wording and order</td>
+</tr>
+<tr>
+<td>Generated HTML creates noisy diffs</td>
+<td>Pull requests become harder to review</td>
+<td>Keep output deterministic and omit timestamps or random IDs</td>
+</tr>
+<tr>
+<td>Complex Markdown exceeds the template</td>
+<td>Content is clipped or dropped</td>
+<td>Preserve unknown blocks plainly and prove parity with adversarial
+fixtures</td>
+</tr>
+<tr>
+<td>Offline diagram generation varies by environment</td>
+<td>A document can lose its clearest visual</td>
+<td>Bundle or pin the generation path during implementation and retain
+labeled source fallback</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="12-open-questions" class="level2">
+<h2>12. Open questions</h2>
+<ul>
+<li>Should generated HTML be committed beside Markdown by default, or
+treated as a local review artifact? This changes repository policy and
+does not block implementing the skill.</li>
+<li>Which pinned diagram renderer can meet the offline, sanitization,
+and portability requirements without adding a large bundle? This blocks
+implementation of rendered Mermaid diagrams.</li>
+<li>Does the first version need exact text parity for inline formatting
+such as footnotes and definition lists, or may unsupported syntax remain
+in a source block? This blocks final fixture selection, not the basic
+workflow.</li>
+</ul>
+</section>
+<section id="13-out-of-scope" class="level2">
+<h2>13. Out of scope</h2>
+<ul>
+<li>Deciding PRD content, product priorities, or technical
+architecture</li>
+<li>Editing the Markdown source during presentation work</li>
+<li>A browser-based editor or review-comment system</li>
+<li>Hosting, publishing, access control, or analytics</li>
+<li>PDF generation</li>
+<li>Slide decks or marketing pages</li>
+<li>Live synchronization between Markdown and an open browser</li>
+</ul>
+</section>
+</section>
+    </main>
+  </div>
+  <footer>Generated from <strong>docs/html-doc/design.md</strong> by blueprint/html-doc@1</footer>
+</body>
+</html>
