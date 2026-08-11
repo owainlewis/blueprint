@@ -164,7 +164,7 @@ uv run pytest
 curl -F "file=@tests/fixtures/test.pdf" http://localhost:8000/api/v1/documents
 ```
 
-Also run focused tests for a non-PDF, an empty-text PDF, a successful upload at exactly 25 MiB, and an oversized upload. Test embedding failure and a forced database failure that returns `500` with `internal_error`. During shutdown, prove that an active upload can finish before the deadline, a new upload is not accepted or stored, and an upload still running at the deadline is cancelled and rolled back. Test each shutdown setting boundary.
+Also run focused tests for a non-PDF, an empty-text PDF, a successful upload at exactly 25 MiB, and an oversized upload. Force an upload embedding failure and assert `502` with `upstream_error` in the documented error shape. Force a database failure and assert `500` with `internal_error`. During shutdown, prove that an active upload can finish before the deadline, a new upload is not accepted or stored, and an upload still running at the deadline is cancelled and rolled back. Test each shutdown setting boundary.
 
 Upload the same fixture twice with the same filename. Prove that the returned IDs are distinct UUIDs and query each document's chunks to confirm unique zero-based positions.
 
@@ -290,7 +290,7 @@ This task depends on Tasks 2 and 3. Task 2 stores each PDF as small text section
 - Threshold configuration accepts `0` and `1` and rejects non-numeric values, values below `0`, and values above `1` before startup. (`AC-10`)
 - If no relevant chunks are found, the endpoint returns `{"answer":"No relevant information found in uploaded documents.","sources":[]}`. (`AC-11`)
 - After a failed fixture upload or deletion of an uploaded fixture, asking about its known text returns the fixed no-information response with no sources. (`AC-12`; `INV-2`, `INV-3`)
-- OpenAI embedding or chat failures return `502` with `upstream_error`. (`AC-21`; `INV-4`)
+- OpenAI embedding or answer-generation failures during chat return `502` with `upstream_error`. (`AC-24`; `INV-4`)
 - A database failure during retrieval returns `500` with `internal_error`. (`AC-22`)
 - The full `uv run pytest` suite passes against PostgreSQL with pgvector while OpenAI calls are mocked. (`AC-19`)
 

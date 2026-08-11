@@ -156,15 +156,16 @@ Uploads are limited to 25 MiB and rejected before extraction when larger. Chat r
 - `AC-18`: Shutdown stops new requests, gives in-flight requests 10 seconds by default, then cancels remaining work without committing a partial upload.
 - `AC-19`: The full test suite passes against PostgreSQL with pgvector while OpenAI calls are mocked.
 - `AC-20`: `uv sync --frozen` and `uv run pytest` are the supported local dependency and test commands.
-- `AC-21`: Upstream OpenAI failures return `502` with the documented error shape.
+- `AC-21`: An OpenAI embedding failure during upload returns `502` with the documented error shape.
 - `AC-22`: A database failure while retrieving for chat returns `500` with `internal_error`.
 - `AC-23`: Startup fails before serving traffic when `SERVER_GRACEFUL_SHUTDOWN_SECONDS` is outside `1` through `60` or is not an integer.
+- `AC-24`: An OpenAI embedding or answer-generation failure during chat returns `502` with the documented error shape.
 
 ## 10. Test approach
 
 - Use `pytest` and `httpx` for endpoint tests.
 - Test persistence and vector behavior against PostgreSQL with pgvector. (`AC-1`, `AC-3`, `AC-4`, `AC-5`, `AC-6`, `AC-7`, `AC-8`, `AC-9`, `AC-11`, `AC-12`, `AC-15`, `AC-19`; `INV-1`, `INV-2`, `INV-3`)
-- Mock OpenAI calls with deterministic embeddings and answers. (`AC-1`, `AC-6`, `AC-7`, `AC-8`, `AC-9`, `AC-11`, `AC-12`, `AC-19`, `AC-21`; `INV-1`, `INV-4`)
+- Mock OpenAI calls with deterministic embeddings and answers. (`AC-1`, `AC-6`, `AC-7`, `AC-8`, `AC-9`, `AC-11`, `AC-12`, `AC-19`, `AC-21`, `AC-24`; `INV-1`, `INV-4`)
 - Use a small PDF fixture containing the sentence "PostgreSQL with pgvector stores the embeddings." to prove grounded chat and source references. (`AC-6`, `AC-12`)
 - Use deterministic embeddings that produce scores equal to, immediately below, and immediately above `RAG_RELEVANCE_THRESHOLD`. (`AC-8`)
 - Create more than five qualifying chunks, then assert that retrieval, generator context, and returned sources use the same ordered first five chunks. (`AC-7`, `AC-9`; `INV-1`)
@@ -173,7 +174,8 @@ Uploads are limited to 25 MiB and rejected before extraction when larger. Chat r
 - Start a deliberately slow upload, request shutdown, and cover completion before the configured deadline and cancellation with transaction rollback after it. (`AC-18`; `INV-3`)
 - Cover upload, list, delete, relevant chat, no-result chat, transaction rollback, and the `400`, `413`, and upload-persistence `500` paths. (`AC-1`, `AC-3`, `AC-4`, `AC-5`, `AC-6`, `AC-11`, `AC-15`; `INV-2`, `INV-3`)
 - Delete an unknown document ID and assert `404` with `not_found` in the documented error shape. (`AC-14`)
-- Force embedding and answer-generation failures and assert `502` with `upstream_error` in the documented error shape. (`AC-21`; `INV-4`)
+- Force an upload embedding failure and assert `502` with `upstream_error` in the documented error shape. (`AC-21`; `INV-4`)
+- Force chat embedding and answer-generation failures and assert `502` with `upstream_error` in the documented error shape. (`AC-24`; `INV-4`)
 - Cover health with PostgreSQL available and unavailable and missing or empty chat messages. (`AC-2`, `AC-13`)
 - Force database failures while listing and deleting and assert `500` with `internal_error`. (`AC-16`)
 - Force a database failure while retrieving for chat and assert `500` with `internal_error`. (`AC-22`)
