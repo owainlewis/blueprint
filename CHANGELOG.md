@@ -11,6 +11,10 @@ This file records notable changes to Blueprint.
 - Delivery now has two clear phases: build and review the code, then pass CI and automated code review.
 - Automated review findings require a reply that says what changed or why no change was needed.
 - Pull requests stay open unless the user asks the agent to merge them.
+- Dependent work now stacks on open, independently approved prerequisite pull requests instead of waiting for merge.
+- Design invariants and acceptance criteria now use stable IDs that planning, testing, and review preserve.
+- Architecture invariants now name their enforcing mechanism, and architecture documents carry their own update triggers.
+- Delivery, design, review, testing, planning, and improvement now state their stop conditions and proof handoffs more precisely.
 
 ### Removed
 

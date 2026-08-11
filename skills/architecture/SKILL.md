@@ -35,7 +35,7 @@ In two or three short paragraphs, say what the system does, name its main parts,
 Show the users, outside systems, and what runs inside or outside this system. Include a small diagram when it makes those relationships clearer.
 
 ## 3. Architectural invariants
-List numbered rules that the current code must preserve. Each rule must be visible in behavior or backed by code, configuration, schemas, or tests.
+List numbered rules that the current code must preserve. For each rule, name the runtime or structural mechanism that enforces it, such as a schema constraint, transaction, authorization guard, type check, or test oracle. A file and line may support the claim but cannot replace the mechanism.
 
 ## 4. Components and dependencies
 For each important part, state what it owns, what it depends on, and what it does not own. Show which way a dependency points when crossing the boundary matters.
@@ -79,19 +79,14 @@ Link the small set of files that define entry points, boundaries, schemas, confi
 - Link to detailed protocol, operations, or testing documents instead of duplicating them.
 - Keep proposed work in linked designs. Known limitations describe present gaps only.
 - Use plain words, define project-specific terms, and do not use em dashes.
+- Update an existing architecture document when code changes ownership, dependency direction, protocols, stored data, trust boundaries, deployment topology, or hard limits.
 
 ## Review pass
 
-Reread the draft and check each category against current evidence.
+Reread the draft and check three things against current evidence.
 
-1. **Clear summary.** Can a new teammate explain what the system does, how its main parts work together, where the real data lives, and the main rule to preserve?
-2. **Current state.** Does every statement describe code and configuration that exist at the stated verification basis?
-3. **Ownership.** Is each stored value, identifier, policy, and public contract owned in one named place?
-4. **Boundaries.** Does every component say what it owns, depends on, and does not own? Does the dependency direction match imports and runtime calls?
-5. **Flows.** Do the critical paths include their real ordering, response point, side effects, cleanup, and failure branches?
-6. **Security.** Are authentication, authorization, tenant or user isolation, untrusted input, secret access, and fail-open or fail-closed behavior explicit?
-7. **Operations.** Does the document cover limited resources, concurrency, retries, startup, shutdown, monitoring, and recovery? Does it say how the system slows incoming work when full?
-8. **Consistency.** Do repeated claims agree with README, repository instructions, contributor docs, schemas, config, and tests? Remove duplication or name the source when they do not.
-9. **Limitations.** Are gaps verified and current, with planned changes kept out of the current-system explanation?
+1. **Verification basis.** Does the named commit or working tree contain the implementation every current-state claim describes?
+2. **Staleness.** Recheck facts that can change quickly, including counts, limits, ports, timeouts, versions, and deployment details.
+3. **Consistency.** Do repeated claims agree with README, repository instructions, contributor docs, schemas, configuration, and tests? Remove duplication or name the authoritative source when they do not.
 
 Put unresolved evidence gaps under Verification and state what would verify them.

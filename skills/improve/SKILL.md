@@ -11,7 +11,7 @@ argument-hint: "[code, files, diff, branch, or improvement focus]"
 
 1. Identify the target from the request, current diff, or recently changed code.
 2. Read the target, its tests, and relevant surrounding code. State the behavior that must not change.
-3. If that behavior lacks tests, add focused coverage before refactoring. If automated tests cannot exercise it, explain why and give other evidence.
+3. If that behavior lacks tests, add focused coverage and run it against the unchanged code. Commit the passing test-only change before refactoring. If automated tests cannot exercise the behavior, explain why and give other evidence.
 4. Find unnecessary complexity, duplication, dead code, weak names, awkward boundaries, and abstractions that cost more than they help.
 5. Make focused improvements by deleting, deduplicating, renaming, simplifying, extracting, or inlining.
 6. Preserve public interfaces, data shapes, errors, and user-visible behavior unless the user explicitly asks to change them.

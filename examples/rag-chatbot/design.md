@@ -71,10 +71,10 @@ Deleting a document removes its chunks through a database cascade. Later retriev
 
 ### Invariants
 
-1. The answer generator receives no document context except the chunks returned in that response's source list.
-2. A deleted document has no chunks available to retrieval.
-3. A failed upload leaves no document or chunk rows behind.
-4. Provider failures never appear as successful grounded answers.
+- `INV-1`: The answer generator receives no document context except the chunks returned in that response's source list.
+- `INV-2`: A deleted document has no chunks available to retrieval.
+- `INV-3`: A failed upload leaves no document or chunk rows behind.
+- `INV-4`: Provider failures never appear as successful grounded answers.
 
 ### Requirements
 
@@ -136,41 +136,52 @@ Uploads are limited to 25 MiB and rejected before extraction when larger. Chat r
 
 ## 9. Acceptance criteria
 
-- `POST /api/v1/documents` accepts a PDF up to 25 MiB and returns its ID, filename, upload time, and chunk count.
-- `GET /health` returns `200` with `{"status":"ok"}` when the API can reach PostgreSQL and `503` with `service_unavailable` when it cannot.
-- Uploading a non-PDF, an empty-text PDF, or a file over 25 MiB returns `400` with `bad_request`, `400` with `bad_request`, or `413` with `payload_too_large` respectively and creates no rows.
-- `GET /api/v1/documents` lists uploaded documents.
-- `DELETE /api/v1/documents/{id}` removes the document and makes its chunks unavailable to retrieval.
-- `POST /api/v1/chat` returns a grounded answer and ordered source references for known fixture content.
-- Chat retrieves at most five qualifying chunks, and the mocked answer generator receives exactly the same ordered chunk content returned in `sources`.
-- A chunk with cosine similarity exactly equal to `RAG_RELEVANCE_THRESHOLD` qualifies; a lower score does not.
-- Chunks with equal similarity are ordered by document ID and then chunk index.
-- Threshold configuration accepts `0` and `1` and rejects non-numeric values, values below `0`, and values above `1` before startup.
-- Chat with no relevant content returns `{"answer":"No relevant information found in uploaded documents.","sources":[]}`.
-- After a failed upload or document deletion, chat for that document's fixture content returns the fixed no-information response with no sources.
-- A missing or empty chat message returns `400` with `bad_request`.
-- Missing deletion returns `404`, and upstream OpenAI failures return `502`, both with the documented error shape.
-- A forced upload persistence failure returns `500` with `internal_error` and leaves no document or chunk rows.
-- Database failures while listing, deleting, or retrieving for chat return `500` with `internal_error`.
-- Startup fails before serving traffic when `DATABASE_URL` or `OPENAI_API_KEY` is missing or when either bounded numeric setting is invalid.
-- Shutdown stops new requests, gives in-flight requests 10 seconds by default, then cancels remaining work without committing a partial upload.
-- The full test suite passes against PostgreSQL with pgvector while OpenAI calls are mocked.
-- `uv sync --frozen` and `uv run pytest` are the supported local dependency and test commands.
+- `AC-1`: `POST /api/v1/documents` accepts a PDF up to 25 MiB and returns its ID, filename, upload time, and chunk count.
+- `AC-2`: `GET /health` returns `200` with `{"status":"ok"}` when the API can reach PostgreSQL and `503` with `service_unavailable` when it cannot.
+- `AC-3`: Uploading a non-PDF, an empty-text PDF, or a file over 25 MiB returns `400` with `bad_request`, `400` with `bad_request`, or `413` with `payload_too_large` respectively and creates no rows.
+- `AC-4`: `GET /api/v1/documents` lists uploaded documents.
+- `AC-5`: `DELETE /api/v1/documents/{id}` removes the document and makes its chunks unavailable to retrieval.
+- `AC-6`: `POST /api/v1/chat` returns a grounded answer and ordered source references for known fixture content.
+- `AC-7`: Chat retrieves at most five qualifying chunks, and the mocked answer generator receives exactly the same ordered chunk content returned in `sources`.
+- `AC-8`: A chunk with cosine similarity exactly equal to `RAG_RELEVANCE_THRESHOLD` qualifies; a lower score does not.
+- `AC-9`: Chunks with equal similarity are ordered by document ID and then chunk index.
+- `AC-10`: Threshold configuration accepts `0` and `1` and rejects non-numeric values, values below `0`, and values above `1` before startup.
+- `AC-11`: Chat with no relevant content returns `{"answer":"No relevant information found in uploaded documents.","sources":[]}`.
+- `AC-12`: After a failed upload or document deletion, chat for that document's fixture content returns the fixed no-information response with no sources.
+- `AC-13`: A missing or empty chat message returns `400` with `bad_request`.
+- `AC-14`: Missing deletion returns `404` with the documented error shape.
+- `AC-15`: A forced upload persistence failure returns `500` with `internal_error` and leaves no document or chunk rows.
+- `AC-16`: Database failures while listing or deleting return `500` with `internal_error`.
+- `AC-17`: Startup fails before serving traffic when `DATABASE_URL` or `OPENAI_API_KEY` is missing.
+- `AC-18`: Shutdown stops new requests, gives in-flight requests 10 seconds by default, then cancels remaining work without committing a partial upload.
+- `AC-19`: The full test suite passes against PostgreSQL with pgvector while OpenAI calls are mocked.
+- `AC-20`: `uv sync --frozen` and `uv run pytest` are the supported local dependency and test commands.
+- `AC-21`: An OpenAI embedding failure during upload returns `502` with the documented error shape.
+- `AC-22`: A database failure while retrieving for chat returns `500` with `internal_error`.
+- `AC-23`: Startup fails before serving traffic when `SERVER_GRACEFUL_SHUTDOWN_SECONDS` is outside `1` through `60` or is not an integer.
+- `AC-24`: An OpenAI embedding or answer-generation failure during chat returns `502` with the documented error shape.
 
 ## 10. Test approach
 
 - Use `pytest` and `httpx` for endpoint tests.
-- Test persistence and vector behavior against PostgreSQL with pgvector.
-- Mock OpenAI calls with deterministic embeddings and answers.
-- Use a small PDF fixture containing the sentence "PostgreSQL with pgvector stores the embeddings." to prove grounded chat and source references.
-- Use deterministic embeddings that produce scores equal to, immediately below, and immediately above `RAG_RELEVANCE_THRESHOLD`.
-- Create more than five qualifying chunks, then assert that retrieval, generator context, and returned sources use the same ordered first five chunks.
-- Cover threshold configuration at `0`, at `1`, below `0`, above `1`, and with a non-numeric value.
-- Start a deliberately slow upload, request shutdown, and cover completion before the configured deadline and cancellation with transaction rollback after it.
-- Cover upload, list, delete, relevant chat, no-result chat, transaction rollback, and the `400`, `404`, `413`, `500`, and `502` paths.
-- Cover health with PostgreSQL available and unavailable, missing or empty chat messages, and database failures during list, delete, and chat retrieval.
-- Cover startup with each required setting missing.
-- Assert through the public API that a deleted document and a failed upload leave no retrievable chunks.
+- Test persistence and vector behavior against PostgreSQL with pgvector. (`AC-1`, `AC-3`, `AC-4`, `AC-5`, `AC-6`, `AC-7`, `AC-8`, `AC-9`, `AC-11`, `AC-12`, `AC-15`, `AC-19`; `INV-1`, `INV-2`, `INV-3`)
+- Mock OpenAI calls with deterministic embeddings and answers. (`AC-1`, `AC-6`, `AC-7`, `AC-8`, `AC-9`, `AC-11`, `AC-12`, `AC-19`, `AC-21`, `AC-24`; `INV-1`, `INV-4`)
+- Use a small PDF fixture containing the sentence "PostgreSQL with pgvector stores the embeddings." to prove grounded chat and source references. (`AC-6`, `AC-12`)
+- Use deterministic embeddings that produce scores equal to, immediately below, and immediately above `RAG_RELEVANCE_THRESHOLD`. (`AC-8`)
+- Create more than five qualifying chunks, then assert that retrieval, generator context, and returned sources use the same ordered first five chunks. (`AC-7`, `AC-9`; `INV-1`)
+- Cover threshold configuration at `0`, at `1`, below `0`, above `1`, and with a non-numeric value. (`AC-10`)
+- Cover `SERVER_GRACEFUL_SHUTDOWN_SECONDS` at `1`, at `60`, below `1`, above `60`, and with a non-integer value. (`AC-23`)
+- Start a deliberately slow upload, request shutdown, and cover completion before the configured deadline and cancellation with transaction rollback after it. (`AC-18`; `INV-3`)
+- Cover upload, list, delete, relevant chat, no-result chat, transaction rollback, and the `400`, `413`, and upload-persistence `500` paths. (`AC-1`, `AC-3`, `AC-4`, `AC-5`, `AC-6`, `AC-11`, `AC-15`; `INV-2`, `INV-3`)
+- Delete an unknown document ID and assert `404` with `not_found` in the documented error shape. (`AC-14`)
+- Force an upload embedding failure and assert `502` with `upstream_error` in the documented error shape. (`AC-21`; `INV-4`)
+- Force chat embedding and answer-generation failures and assert `502` with `upstream_error` in the documented error shape. (`AC-24`; `INV-4`)
+- Cover health with PostgreSQL available and unavailable and missing or empty chat messages. (`AC-2`, `AC-13`)
+- Force database failures while listing and deleting and assert `500` with `internal_error`. (`AC-16`)
+- Force a database failure while retrieving for chat and assert `500` with `internal_error`. (`AC-22`)
+- Cover startup with each required setting missing. (`AC-17`)
+- Assert through the public API that a deleted document and a failed upload leave no retrievable chunks. (`AC-5`, `AC-12`, `AC-15`; `INV-2`, `INV-3`)
+- Run `uv sync --frozen`, then run the full suite with `uv run pytest`. (`AC-19`, `AC-20`)
 
 ## 11. Risks and tradeoffs
 

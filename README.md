@@ -63,7 +63,7 @@ The model has two layers:
 | Skill | Owns | Stops when |
 | --- | --- | --- |
 | `/architecture` | A checked explanation of the current system, its rules, parts, flows, boundaries, operations, and limits | The explanation is ready for human review |
-| `/design` | A spec for a proposed feature or system change | The proposed design is ready for review |
+| `/design` | A design for a proposed feature or system change | The proposed design is ready for review |
 | `/architecture-review` | Independent review of a technical proposal's goal, clarity, choices, risks, limits, and proof | Findings, open questions, and a verdict are reported |
 | `/plan` | Ordered tasks that each deliver working behavior, plus useful milestones | The work is ready to hand off |
 | `/test` | Automated checks, failure paths, and real-browser proof when relevant | Every criterion is pass, fail, or explicitly unverified |
@@ -74,11 +74,11 @@ Writing code is a basic agent ability, not a separate skill. Branching, committi
 
 ## Tasks to pull requests
 
-[`skills/task-to-pr/SKILL.md`](skills/task-to-pr/SKILL.md) is the single authority for delivery. It accepts one or more tasks, tickets, pull requests, or a milestone. It waits for prerequisite pull requests to merge, can run independent tasks at the same time, and creates one pull request for each task.
+[`skills/task-to-pr/SKILL.md`](skills/task-to-pr/SKILL.md) is the single authority for delivery. It accepts one or more tasks, tickets, pull requests, or a milestone. It stacks dependent work after prerequisite pull requests are open and independently approved, can run independent tasks at the same time, and creates one pull request for each task.
 
 For each task, it:
 
-1. creates or reuses a branch and worktree from the latest default branch;
+1. creates or reuses a branch and worktree from the latest default branch or the reviewed prerequisite base;
 2. writes and tests the code;
 3. asks a fresh subagent that did not write the code to review it;
 4. opens or updates a pull request with a short summary and proof;
@@ -118,7 +118,7 @@ The RAG chatbot example follows one idea through the decision flow:
 2. [reviewed design](examples/rag-chatbot/design.md)
 3. [captured chat plan](examples/rag-chatbot/plan.md)
 
-For a larger system-part specification, read the [Dispatch local control-plane design](examples/dispatch-control-plane/design.md).
+For a larger system-part design, read the [Dispatch local control-plane design](examples/dispatch-control-plane/design.md).
 
 ## Principles
 

@@ -49,6 +49,9 @@ In two to four sentences, explain the current behavior, who it affects, what wil
 ### Outcome
 The useful behavior that will work when the task is complete.
 
+### Depends on
+Other task titles, or `None`.
+
 ### Context
 Define the relevant parts of the system, prior work, dependencies, and source decisions that a new agent needs with no session history.
 
@@ -56,7 +59,7 @@ Define the relevant parts of the system, prior work, dependencies, and source de
 Decisions and behavior that must not change.
 
 ### Acceptance criteria
-- Testable condition.
+- Testable condition. Cite every applicable source `AC-n` and `INV-n` without changing their meaning.
 
 ### Checks
 Exact commands and any required manual verification.
@@ -70,6 +73,7 @@ Related work this task must not absorb.
 - Do not split one piece of working behavior into separate file or technical-layer tasks.
 - Do not create scaffolding or cleanup tasks without a checked outcome.
 - Do not hide unresolved decisions inside implementation tickets.
+- When the source uses requirement IDs, preserve them so `/task-to-pr`, `/test`, and `/review` can trace proof back to the approved design.
 - Use a short title that names the action and result in plain words, such as `Remove expired event details automatically`. Do not use only component names or an internal project label.
 - Use plain words in the title, Summary, User stories, and Outcome. Define any project term needed there.
 - Keep implementation mechanics out of user stories.
