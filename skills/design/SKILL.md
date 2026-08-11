@@ -1,6 +1,6 @@
 ---
 name: design
-description: "Writes a clear spec for a proposed feature or system change. Use when important product or technical choices must be settled before coding. Covers behavior, interfaces, failures, risks, acceptance criteria, and tests. Use architecture to explain the current system."
+description: "Writes a clear design for a proposed feature or system change. Use when important product or technical choices must be settled before coding. Covers behavior, interfaces, failures, risks, acceptance criteria, and tests. Use architecture to explain the current system."
 user-invocable: true
 argument-hint: "<feature, problem, or brief>"
 ---
@@ -10,8 +10,8 @@ argument-hint: "<feature, problem, or brief>"
 ## Workflow
 
 1. Read the request, repository instructions, relevant code, and linked material.
-2. Resolve choices that would change behavior, interfaces, data, errors, security, operations, or tests.
-3. Ask only questions whose answers would change the design. Recommend an answer when asking.
+2. Identify choices that would change behavior, interfaces, data, errors, security, operations, or tests.
+3. Ask blocking questions before drafting. Ask only when the answer would change the design, and recommend an answer. Record non-blocking questions and a recommended default under Open questions.
 4. Write `docs/<feature-slug>/design.md` using the numbered shape below. Keep it short and in order. Omit only sections that do not apply.
 5. Run the review pass. Fix what you can. List the rest under Open questions.
 6. Stop with the proposed design ready for review. Do not plan or implement it.
@@ -46,7 +46,7 @@ For each real choice, say what you chose, what you rejected, and what the choice
 ## 5. Invariants and requirements
 
 ### Invariants
-List numbered rules that must always hold. A reviewer checks the code against these rules, so keep them short and testable.
+List rules that must always hold as `INV-1`, `INV-2`, and so on. A reviewer checks the code against these rules, so keep them short and testable.
 
 ### Requirements
 - Observable behavior and constraints.
@@ -64,10 +64,10 @@ Say what can fail, what state follows, whether the system retries, and how it re
 State the trust boundary, authorization checks, sensitive data handling, and operational impact. Name shared limits such as rate limits, connections, disk, memory, or cost. Say what happens at each limit.
 
 ## 9. Acceptance criteria
-- Testable conditions that prove the work is complete.
+- `AC-1`: Testable condition that proves the work is complete.
 
 ## 10. Test approach
-How each invariant and each important requirement will be proved.
+How each `INV-n` and `AC-n` will be proved. Cite the IDs.
 
 ## 11. Risks and tradeoffs
 - Risk and mitigation.
@@ -88,7 +88,7 @@ How each invariant and each important requirement will be proved.
 - Define a term the first time you use it, or do not use it.
 - Keep current architecture and proposed behavior distinct. Link to `ARCHITECTURE.md` when it exists and say exactly which current boundary changes.
 - Give each changed component a positive and negative boundary: what it owns and what it does not own.
-- Use numbered top-level sections so reviewers can refer to stable parts of the specification.
+- Use numbered top-level sections so reviewers can refer to stable parts of the design.
 - Use diagrams only when they make system context, dependency direction, data flow, or lifecycle materially clearer.
 - Prefer one clear recommendation over a list of options.
 - Record rejected options only when the tradeoff matters later.

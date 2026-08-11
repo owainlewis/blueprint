@@ -41,6 +41,10 @@ Developers cannot build later features until they can start the API and its data
 
 The API and database can be started locally, configured from the environment, and checked with a health endpoint.
 
+#### Depends on
+
+None.
+
 #### Context
 
 This task creates the base service shape for every later endpoint. It should establish local startup, settings, database connectivity, and the test runner without adding document or chat behavior.
@@ -59,11 +63,11 @@ This task creates the base service shape for every later endpoint. It should est
 #### Acceptance criteria
 
 - The API and database start with Docker Compose.
-- `GET /health` returns `200` with `{"status":"ok"}` when the API can reach the database and `503` with `service_unavailable` when it cannot.
-- With PostgreSQL reachable and OpenAI unavailable, `GET /health` returns `200` and makes no OpenAI request.
-- The app fails before serving traffic when `DATABASE_URL` or `OPENAI_API_KEY` is missing.
+- `GET /health` returns `200` with `{"status":"ok"}` when the API can reach the database and `503` with `service_unavailable` when it cannot. (`AC-2`)
+- With PostgreSQL reachable and OpenAI unavailable, `GET /health` returns `200` and makes no OpenAI request. (`AC-2`)
+- The app fails before serving traffic when `DATABASE_URL` or `OPENAI_API_KEY` is missing. (`AC-17`)
 - The README states that V1 is for one trusted user and sends document text to OpenAI.
-- A baseline `uv run pytest` succeeds for later tasks.
+- `uv sync --frozen` installs the locked dependencies, and a baseline `uv run pytest` succeeds for later tasks. (`AC-20`)
 
 #### Design reference
 
@@ -104,6 +108,10 @@ Users cannot ask questions about their documents until the service can turn an u
 
 Users can upload a PDF and receive a stored document record with the number of text sections created from it.
 
+#### Depends on
+
+Task 1: Start and check the API locally.
+
 #### Context
 
 This task depends on Task 1, which creates the local API and database. It proves the path from upload to stored search data. It validates the file, extracts its text, and divides that text into small sections called chunks. It turns each chunk into a numeric representation called an embedding, which the service uses to find text with similar meaning. It then stores the document and its chunks for later document and chat tasks.
@@ -129,20 +137,20 @@ This task depends on Task 1, which creates the local API and database. It proves
 
 #### Acceptance criteria
 
-- `POST /api/v1/documents` accepts a PDF and returns `{id, filename, uploaded_at, chunk_count}`.
+- `POST /api/v1/documents` accepts a PDF up to and including 25 MiB and returns `{id, filename, uploaded_at, chunk_count}`. (`AC-1`)
 - Uploading two documents with the same filename returns two distinct valid UUIDs and stores both documents.
 - Uploaded PDFs are stored with chunks and embeddings that can be queried later.
 - Stored chunks have unique positions from `0` through `chunk_count - 1` within their document.
-- Deleting a document row through PostgreSQL also deletes all of its chunks through the foreign-key cascade.
-- Non-PDF and empty-text PDF uploads return `400` with `bad_request`.
-- Uploads over 25 MiB return `413` with `payload_too_large` and create no rows.
-- OpenAI embedding failures return `502` with `upstream_error`.
-- A persistence failure returns `500` with `internal_error`.
-- Embedding and persistence failures leave no document or chunk rows behind.
-- A slow upload that finishes before the graceful shutdown deadline commits normally.
-- After shutdown begins, a new upload is not accepted and creates no rows.
-- Cancelling a deliberately slow upload at the graceful shutdown deadline leaves no document or chunk rows behind.
-- Startup accepts shutdown values from `1` through `60` and rejects zero, negative, greater values, and non-integers.
+- Deleting a document row through PostgreSQL also deletes all of its chunks through the foreign-key cascade. (`INV-2`)
+- Non-PDF and empty-text PDF uploads return `400` with `bad_request` and create no rows. (`AC-3`)
+- Uploads over 25 MiB return `413` with `payload_too_large` and create no rows. (`AC-3`; `INV-3`)
+- OpenAI embedding failures return `502` with `upstream_error`. (`AC-14`; `INV-4`)
+- A persistence failure returns `500` with `internal_error`. (`AC-15`)
+- Embedding and persistence failures leave no document or chunk rows behind. (`AC-15`; `INV-3`)
+- A slow upload that finishes before the graceful shutdown deadline commits normally. (`AC-18`)
+- After shutdown begins, a new upload is not accepted and creates no rows. (`AC-18`)
+- Cancelling a deliberately slow upload at the graceful shutdown deadline leaves no document or chunk rows behind. (`AC-18`; `INV-3`)
+- Startup accepts shutdown values from `1` through `60` and rejects zero, negative, greater values, and non-integers. (`AC-17`)
 - A PDF fixture contains the sentence "PostgreSQL with pgvector stores the embeddings." for later retrieval tests.
 
 #### Design reference
@@ -156,7 +164,7 @@ uv run pytest
 curl -F "file=@tests/fixtures/test.pdf" http://localhost:8000/api/v1/documents
 ```
 
-Also run focused tests for a non-PDF, an empty-text PDF, and an oversized upload. Test embedding failure and a forced database failure that returns `500` with `internal_error`. During shutdown, prove that an active upload can finish before the deadline, a new upload is not accepted or stored, and an upload still running at the deadline is cancelled and rolled back. Test each shutdown setting boundary.
+Also run focused tests for a non-PDF, an empty-text PDF, a successful upload at exactly 25 MiB, and an oversized upload. Test embedding failure and a forced database failure that returns `500` with `internal_error`. During shutdown, prove that an active upload can finish before the deadline, a new upload is not accepted or stored, and an upload still running at the deadline is cancelled and rolled back. Test each shutdown setting boundary.
 
 Upload the same fixture twice with the same filename. Prove that the returned IDs are distinct UUIDs and query each document's chunks to confirm unique zero-based positions.
 
@@ -182,6 +190,10 @@ After uploading documents, users need to see what the service holds and remove m
 
 Users can list uploaded documents and delete a document with all searchable data created from it.
 
+#### Depends on
+
+Task 2: Upload and store PDFs.
+
 #### Context
 
 This task depends on Task 2. Task 2 stores each uploaded document as small text sections, called chunks, with numeric embeddings used to find text with similar meaning. Those documents form the collection that chat will search. This task lets users manage that collection before chat relies on it.
@@ -198,11 +210,11 @@ This task depends on Task 2. Task 2 stores each uploaded document as small text 
 
 #### Acceptance criteria
 
-- `GET /api/v1/documents` returns a bare JSON array of documents with `id`, `filename`, `uploaded_at`, and `chunk_count`.
-- `DELETE /api/v1/documents/{id}` returns `200` with `{"deleted":true}` and removes the document and its related chunks.
-- Deleting a missing document returns `404` with `not_found`.
-- Database failures during listing or deletion return `500` with `internal_error`; a failed deletion leaves the document and chunks intact.
-- After deletion, the document no longer appears in the list and its chunks are gone.
+- `GET /api/v1/documents` returns a bare JSON array of documents with `id`, `filename`, `uploaded_at`, and `chunk_count`. (`AC-4`)
+- `DELETE /api/v1/documents/{id}` returns `200` with `{"deleted":true}` and removes the document and its related chunks. (`AC-5`; `INV-2`)
+- Deleting a missing document returns `404` with `not_found`. (`AC-14`)
+- Database failures during listing or deletion return `500` with `internal_error`; a failed deletion leaves the document and chunks intact. (`AC-16`)
+- After deletion, the document no longer appears in the list and its chunks are gone. (`AC-5`; `INV-2`)
 
 #### Design reference
 
@@ -242,6 +254,11 @@ Stored PDFs are not useful until users can ask questions and receive answers bas
 
 Users can ask a question and receive an answer based on uploaded PDFs, with references to the source text.
 
+#### Depends on
+
+- Task 2: Upload and store PDFs
+- Task 3: List and delete uploaded documents
+
 #### Context
 
 This task depends on Tasks 2 and 3. Task 2 stores each PDF as small text sections, called chunks, and creates a numeric embedding for each chunk. Task 3 adds the deletion endpoint used to prove that removed documents no longer affect answers. This task creates the same kind of embedding for a question and compares the numbers to find text with similar meaning. It gives the matching text to OpenAI, formats the answer and source references, and handles questions that have no useful match.
@@ -263,18 +280,19 @@ This task depends on Tasks 2 and 3. Task 2 stores each PDF as small text section
 
 #### Acceptance criteria
 
-- `POST /api/v1/chat` accepts a JSON body shaped as `{"message":"..."}` and returns `{answer, sources}`.
-- A missing or empty message returns `400` with `bad_request`.
-- Sources include `document_id`, `filename`, `chunk_index`, and `content`.
-- A question answerable from the fixture returns an answer based on that fixture and at least one source.
-- With more than five qualifying chunks, retrieval returns five and the mocked generator receives exactly the same ordered content returned in `sources`.
-- A chunk scoring exactly `RAG_RELEVANCE_THRESHOLD` qualifies, while a lower score does not.
-- Chunks with equal similarity are ordered by document ID and then chunk index.
-- Threshold configuration accepts `0` and `1` and rejects non-numeric values, values below `0`, and values above `1` before startup.
-- If no relevant chunks are found, the endpoint returns `{"answer":"No relevant information found in uploaded documents.","sources":[]}`.
-- After a failed fixture upload or deletion of an uploaded fixture, asking about its known text returns the fixed no-information response with no sources.
-- OpenAI embedding or chat failures return `502` with `upstream_error`.
-- A database failure during retrieval returns `500` with `internal_error`.
+- `POST /api/v1/chat` accepts a JSON body shaped as `{"message":"..."}` and returns `{answer, sources}`. (`AC-6`)
+- A missing or empty message returns `400` with `bad_request`. (`AC-13`)
+- Sources include `document_id`, `filename`, `chunk_index`, and `content`. (`AC-6`)
+- A question answerable from the fixture returns an answer based on that fixture and at least one source. (`AC-6`)
+- With more than five qualifying chunks, retrieval returns five and the mocked generator receives exactly the same ordered content returned in `sources`. (`AC-7`; `INV-1`)
+- A chunk scoring exactly `RAG_RELEVANCE_THRESHOLD` qualifies, while a lower score does not. (`AC-8`)
+- Chunks with equal similarity are ordered by document ID and then chunk index. (`AC-9`)
+- Threshold configuration accepts `0` and `1` and rejects non-numeric values, values below `0`, and values above `1` before startup. (`AC-10`, `AC-17`)
+- If no relevant chunks are found, the endpoint returns `{"answer":"No relevant information found in uploaded documents.","sources":[]}`. (`AC-11`)
+- After a failed fixture upload or deletion of an uploaded fixture, asking about its known text returns the fixed no-information response with no sources. (`AC-12`; `INV-2`, `INV-3`)
+- OpenAI embedding or chat failures return `502` with `upstream_error`. (`AC-14`; `INV-4`)
+- A database failure during retrieval returns `500` with `internal_error`. (`AC-16`)
+- The full `uv run pytest` suite passes against PostgreSQL with pgvector while OpenAI calls are mocked. (`AC-19`)
 
 #### Design reference
 

@@ -21,7 +21,6 @@ Approve only when:
 
 - The change matches its source and behaves as required.
 - No known defect or unhandled risk could break the source or repository rules for security, data loss, compatibility, or operations.
-- No simpler design has been identified that delivers the same outcome and proof with less state, indirection, duplication, or operational work.
 
 Do not demand perfection or block on personal taste. Cite technical evidence or repository conventions.
 
@@ -29,13 +28,13 @@ The verdict is independent agent evidence. It is not GitHub approval or a replac
 
 ## Review order
 
-1. **Set the frame.** Give the reviewer the task, acceptance criteria, repository rules, complete diff or pull request, and test evidence. Name the user or developer affected by the change.
+1. **Set the frame.** Give the reviewer the task, acceptance criteria and invariant IDs from its task or design, repository rules, complete diff or pull request, and test evidence. Name the user or developer affected by the change.
 2. **Take the broad view.** Read the change summary and the relevant design or ticket. Confirm that the change belongs in the system, matches the intended behavior, and delivers one reviewable outcome. Report a mismatch before reviewing details.
 3. **Review the main behavior.** Start with the files and flows that deliver the outcome. Check behavior, failures, security boundaries, interfaces, compatibility, migrations, concurrency, and operations.
 4. **Review every human-written changed line in context.** Read enough surrounding code to judge correctness, regressions, complexity, names, comments, style, and docs. For generated files or large data, inspect the source and spot-check the output. Keep findings within the change's scope.
 5. **Review the proof.** Check that tests:
    - Cover the changed behavior and affected failure paths.
-   - Prove the acceptance criteria.
+   - Prove every cited `AC-n`, `INV-n`, or task criterion.
    - Assert behavior a user or caller can observe, or a documented internal contract.
    - Would fail under a broken implementation.
    - Do not copy implementation logic or hide the scenario in setup.
@@ -45,7 +44,7 @@ The verdict is independent agent evidence. It is not GitHub approval or a replac
 
 ## Code review findings
 
-For code, commit, branch, and pull request reviews, report only real bugs and customer-impacting issues introduced or exposed by the change. Check security, logic, behavior, reliability, compatibility, regressions, and affected failure paths. Inspect the immediate surrounding code needed to prove each finding.
+For code, commit, branch, and pull request reviews, report only real bugs, customer-impacting issues, and proven simplifications introduced or exposed by the change. Check security, logic, behavior, reliability, compatibility, regressions, and affected failure paths. Inspect the immediate surrounding code needed to prove each finding. A simplification must deliver the same outcome and proof with less state, indirection, duplication, or operational work. Report it only as `Could fix`.
 
 Use this format for every finding:
 
@@ -63,7 +62,7 @@ Priority means:
 
 - **Must fix:** Unsafe to merge. The change can cause a security failure, data loss, broken required behavior, or a serious service regression.
 - **Should fix:** A real defect or reliability risk that should be corrected before merge.
-- **Could fix:** A proven, limited problem that does not need to block merge. Do not use this for style preferences.
+- **Could fix:** A proven, limited problem or simplification that does not need to block merge. Do not use this for style preferences.
 
 Confidence means:
 

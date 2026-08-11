@@ -97,12 +97,12 @@ sequenceDiagram
 
 ### Invariants
 
-1. Each running run has one owning worker, and each worker owns at most one running run.
-2. A worker executes a run's steps in ascending index order.
-3. A failed step marks every later step in that run skipped before the run becomes failed.
-4. Event sequence numbers increase monotonically within a run.
-5. A terminal-task follow-up stores at most one pending trigger, which a claim consumes into exactly one new run without rewriting earlier history.
-6. The control plane, not a worker, is authoritative for task and run status.
+- `INV-1`: Each running run has one owning worker, and each worker owns at most one running run.
+- `INV-2`: A worker executes a run's steps in ascending index order.
+- `INV-3`: A failed step marks every later step in that run skipped before the run becomes failed.
+- `INV-4`: Event sequence numbers increase monotonically within a run.
+- `INV-5`: A terminal-task follow-up stores at most one pending trigger, which a claim consumes into exactly one new run without rewriting earlier history.
+- `INV-6`: The control plane, not a worker, is authoritative for task and run status.
 
 ### Requirements
 
@@ -205,41 +205,41 @@ The control plane exposes worker heartbeat age, task and run status, step exit c
 
 ## 9. Acceptance criteria
 
-- A developer can create a task and see it move from `pending` to `running` to `succeeded` or `failed`.
-- A worker claims at most one task at a time and executes its steps in order.
-- Concurrent claim requests assign a pending task to at most one worker.
-- A worker keeps one host ID across restarts, receives a new worker ID for each process, and appears disconnected after 15 seconds without a heartbeat.
-- Shell and agent output appears in the task event stream with stable sequence numbers.
-- A failed step stops the remaining steps and records the failure.
-- Every run has separate step status and exit records; a follow-up never resets or reuses an earlier run's step records.
-- A user follow-up on a succeeded or failed task persists its comment ID as the pending trigger. The next claim consumes that marker to create exactly one linked run, preserves previous history, and can reuse the prior Claude session ID. Extra or concurrent comments before that claim do not replace the marker or create extra runs.
-- The initial run uses the task prompt. A follow-up run uses the original task prompt plus the labeled triggering comment body, and its first Claude agent step receives that resolved text when resuming the prior session.
-- Agent prompts containing quotes or shell syntax arrive as one literal process argument.
-- A corrupt store or failed file replacement does not reset existing state.
-- Worker shutdown sends `SIGTERM`, escalates to `SIGKILL` after 10 seconds, and reports interrupted work as failed with reason `worker_shutdown` when the control plane is reachable.
-- A developer can recover abandoned work only after its worker has been disconnected for at least 15 seconds. Recovery handles disconnection before the first step, during a step, between steps, and after the last step but before run completion according to the documented atomic transition.
-- Late events or completion reports cannot change a manually failed run.
-- A worker that does not own a run cannot append events or change its step, run, or task state.
-- The full local flow works with `scripts/fake-claude` before a real agent runtime is required.
+- `AC-1`: A developer can create a task and see it move from `pending` to `running` to `succeeded` or `failed`.
+- `AC-2`: A worker claims at most one task at a time and executes its steps in order.
+- `AC-3`: Concurrent claim requests assign a pending task to at most one worker.
+- `AC-4`: A worker keeps one host ID across restarts, receives a new worker ID for each process, and appears disconnected after 15 seconds without a heartbeat.
+- `AC-5`: Shell and agent output appears in the task event stream with stable sequence numbers.
+- `AC-6`: A failed step stops the remaining steps and records the failure.
+- `AC-7`: Every run has separate step status and exit records; a follow-up never resets or reuses an earlier run's step records.
+- `AC-8`: A user follow-up on a succeeded or failed task persists its comment ID as the pending trigger. The next claim consumes that marker to create exactly one linked run, preserves previous history, and can reuse the prior Claude session ID. Extra or concurrent comments before that claim do not replace the marker or create extra runs.
+- `AC-9`: The initial run uses the task prompt. A follow-up run uses the original task prompt plus the labeled triggering comment body, and its first Claude agent step receives that resolved text when resuming the prior session.
+- `AC-10`: Agent prompts containing quotes or shell syntax arrive as one literal process argument.
+- `AC-11`: A corrupt store or failed file replacement does not reset existing state.
+- `AC-12`: Worker shutdown sends `SIGTERM`, escalates to `SIGKILL` after 10 seconds, and reports interrupted work as failed with reason `worker_shutdown` when the control plane is reachable.
+- `AC-13`: A developer can recover abandoned work only after its worker has been disconnected for at least 15 seconds. Recovery handles disconnection before the first step, during a step, between steps, and after the last step but before run completion according to the documented atomic transition.
+- `AC-14`: Late events or completion reports cannot change a manually failed run.
+- `AC-15`: A worker that does not own a run cannot append events or change its step, run, or task state.
+- `AC-16`: The full local flow works with `scripts/fake-claude` before a real agent runtime is required.
 
 ## 10. Test approach
 
-- Start the control plane and a worker using `scripts/fake-claude`.
-- Create a task containing both shell and agent steps and verify ordered execution, event sequence numbers, and terminal status in the UI.
-- Race two workers against one pending task and verify only one claim succeeds.
-- Give one worker two pending tasks, claim once, then verify its second claim returns `409` with `worker_busy` and leaves the other task pending.
-- Restart a worker and verify the host ID is stable, the worker ID changes, and the old worker becomes disconnected after 15 seconds.
-- Force a step failure and verify later run steps become skipped without starting.
-- Run a follow-up and verify it receives new run-step records while the previous run's records remain unchanged.
-- Add follow-ups to succeeded and failed tasks and verify each next claim creates exactly one linked run without rewriting history. Restart the control plane before the claim and verify the pending trigger survives. Race two follow-up comments and verify exactly one becomes the trigger while both remain in task history.
-- Inspect the claim and fake Claude invocation to verify an initial run receives the task prompt. Verify a follow-up run receives the original prompt plus one labeled copy of the triggering comment body in the resumed first Claude step.
-- Submit event, step, completion, and failure reports with a different worker ID and verify every mutation is rejected.
-- Pass a prompt containing spaces, quotes, `$()`, and semicolons through the fallback adapter and verify it arrives as one literal argument without shell execution.
-- Corrupt a copied store and force a replacement failure to verify the original state is not replaced.
+- Start the control plane and a worker using `scripts/fake-claude`. (`AC-16`)
+- Create a task containing both shell and agent steps and verify ordered execution, event sequence numbers, and terminal status in the UI. (`AC-1`, `AC-2`, `AC-5`; `INV-2`, `INV-4`)
+- Race two workers against one pending task and verify only one claim succeeds. (`AC-3`; `INV-1`, `INV-6`)
+- Give one worker two pending tasks, claim once, then verify its second claim returns `409` with `worker_busy` and leaves the other task pending. (`AC-2`; `INV-1`)
+- Restart a worker and verify the host ID is stable, the worker ID changes, and the old worker becomes disconnected after 15 seconds. (`AC-4`)
+- Force a step failure and verify later run steps become skipped without starting. (`AC-6`; `INV-3`)
+- Run a follow-up and verify it receives new run-step records while the previous run's records remain unchanged. (`AC-7`; `INV-5`)
+- Add follow-ups to succeeded and failed tasks and verify each next claim creates exactly one linked run without rewriting history. Restart the control plane before the claim and verify the pending trigger survives. Race two follow-up comments and verify exactly one becomes the trigger while both remain in task history. (`AC-8`; `INV-5`, `INV-6`)
+- Inspect the claim and fake Claude invocation to verify an initial run receives the task prompt. Verify a follow-up run receives the original prompt plus one labeled copy of the triggering comment body in the resumed first Claude step. (`AC-9`; `INV-5`)
+- Submit event, step, completion, and failure reports with a different worker ID and verify every mutation is rejected. (`AC-15`; `INV-1`, `INV-6`)
+- Pass a prompt containing spaces, quotes, `$()`, and semicolons through the fallback adapter and verify it arrives as one literal argument without shell execution. (`AC-10`)
+- Corrupt a copied store and force a replacement failure to verify the original state is not replaced. (`AC-11`)
 - Interrupt the control plane during a store mutation and verify the mutation finishes before exit.
-- Interrupt a worker during active work and verify `SIGTERM`, 10-second escalation, and the `worker_shutdown` failure when the control plane is reachable.
-- Make the control plane unreachable during worker shutdown, then verify the disconnected-worker recovery action is unavailable before 15 seconds. After 15 seconds, exercise recovery after claim but before step start, during a step, between steps, and after the final step but before run completion. Verify `worker_lost`, failed and skipped step states where applicable, and failed run and task state. Submit a late event and completion report from the old worker and verify both are rejected.
-- Repeat the happy path with a real Claude Code worker before declaring the adapter complete.
+- Interrupt a worker during active work and verify `SIGTERM`, 10-second escalation, and the `worker_shutdown` failure when the control plane is reachable. (`AC-12`; `INV-3`, `INV-6`)
+- Make the control plane unreachable during worker shutdown, then verify the disconnected-worker recovery action is unavailable before 15 seconds. After 15 seconds, exercise recovery after claim but before step start, during a step, between steps, and after the final step but before run completion. Verify `worker_lost`, failed and skipped step states where applicable, and failed run and task state. Submit a late event and completion report from the old worker and verify both are rejected. (`AC-13`, `AC-14`; `INV-3`, `INV-6`)
+- Repeat the happy path with a real Claude Code worker before declaring the adapter complete. (`AC-16`)
 
 ## 11. Risks and tradeoffs
 

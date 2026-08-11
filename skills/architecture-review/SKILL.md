@@ -1,8 +1,8 @@
 ---
 name: architecture-review
-description: "Reviews a technical proposal before implementation. Use for specs, designs, RFCs, ADRs, architecture proposals, and issues that specify how a system change should work. Finds material ambiguity and flaws in correctness, scalability, performance, security, operations, and proof."
+description: "Reviews a technical proposal before implementation. Use for designs, RFCs, ADRs, architecture proposals, and issues that define how a system change should work. Finds material ambiguity and flaws in correctness, scalability, performance, security, operations, and proof."
 user-invocable: true
-argument-hint: "[technical proposal, spec, design, RFC, ADR, or issue]"
+argument-hint: "[technical proposal, design, RFC, ADR, or issue]"
 ---
 
 # Architecture Review
@@ -15,6 +15,8 @@ Use one fresh subagent that did not write the proposal. Give it the complete
 review context and tell it to review directly without delegating. If you are
 that reviewer, review directly. Stay read-only.
 
+If fresh subagents are unavailable, stop and report that independent review is blocked unless the user explicitly accepts a documented self-review.
+
 ## Workflow
 
 1. Read the goal, proposal, repository instructions, relevant current code,
@@ -26,7 +28,7 @@ that reviewer, review directly. Stay read-only.
 3. Trace one real case from input to observable outcome. Include ownership,
    validation, state changes, side effects, response timing, failure, retry,
    cleanup, and what the user sees where they matter.
-4. Challenge the chosen design with the review lenses below. Look for a simpler
+4. Challenge the chosen design with the review focus below. Look for a simpler
    choice that reaches the same outcome and proof with less state, coupling,
    duplication, or operational work.
 5. Surface material open questions. Recommend an answer when evidence supports
@@ -35,54 +37,19 @@ that reviewer, review directly. Stay read-only.
    rewrite the proposal, plan the work, review implementation code, or implement
    changes.
 
-## Review lenses
+## Review focus
 
-### Purpose and scope
-
-- Does the proposal explain who has the problem, what happens now, why that is
-  insufficient, and what outcome matters?
-- Are success, constraints, non-goals, and the main cost clear?
-- Is implementation detail serving a stated goal?
-
-### Clarity and decisions
-
-- Can a new teammate explain the design in plain words?
-- Are terms defined and current behavior separated from proposed behavior?
-- Do sections agree, or do polished prose and repeated claims hide a missing
-  decision?
-- Replace words such as "robust", "scalable", "eventually", and "handle" with
-  behavior or a bound someone can verify.
-
-### System design
-
-- Does the change fit the current system and preserve its useful rules?
-- Does each responsibility, identifier, stored value, policy, and side effect
-  have one owner and a clear boundary?
-- Are interfaces, data, compatibility, migration, rollout, and rollback exact
-  where the change affects them?
-- Are success, partial failure, retry, cancellation, concurrency, startup,
-  shutdown, and recovery coherent where they apply?
-
-### Scale, performance, and operations
-
-- Are expected scale, limited resources, rate limits, latency, throughput,
-  storage, memory, connections, and cost stated where they affect the choice?
-- What happens at each claimed limit or when a dependency is unavailable?
-- Can an operator observe, stop, retry, drain, and recover the system?
-
-### Security and privacy
-
-- Where are identity and authorization established?
-- Which inputs are untrusted, and which component holds credentials or
-  destructive authority?
-- What sensitive data is stored, logged, retained, exported, or deleted?
-
-### Proof
-
-- Does each important rule and failure path have an observable acceptance
-  criterion and a test approach that would fail if the behavior broke?
-- Can an agent implement the proposal without inventing user-visible behavior,
-  interfaces, data rules, security policy, or failure behavior?
+- Check fit with the current system, ownership, boundaries, interfaces, data,
+  compatibility, migration, rollout, and rollback.
+- Trace partial failure, retry, cancellation, concurrency, startup, shutdown,
+  and recovery where they affect the proposal.
+- Check claimed scale, limited resources, latency, throughput, storage, cost,
+  dependency failure, and operator recovery only where they can change the choice.
+- Check identity, authorization, untrusted input, credentials, destructive
+  authority, and sensitive data handling.
+- Require observable acceptance criteria and proof for important rules and
+  failure paths. Do not let implementation invent user-visible behavior,
+  interfaces, data rules, security policy, or failure behavior.
 
 ## Material questions
 
