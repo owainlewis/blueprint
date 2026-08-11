@@ -1,0 +1,13 @@
+{
+  "name": "blueprint-html-doc",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Locked generation dependencies for the Blueprint html-doc skill",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "@mermaid-js/mermaid-cli": "11.16.0",
+    "puppeteer": "25.5.0"
+  }
+}

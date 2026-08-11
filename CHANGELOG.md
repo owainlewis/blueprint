@@ -4,6 +4,10 @@ This file records notable changes to Blueprint.
 
 ## Unreleased
 
+### Added
+
+- Added `/html-doc` to turn an existing Markdown PRD or technical design into a verified static HTML reading view with offline Mermaid diagrams, responsive layout, and print styles.
+
 ### Changed
 
 - `/plan` now writes each task as a cold handoff with a plain title, standalone summary, useful user stories, defined project terms, and enough context and proof for a new engineer to complete it.
