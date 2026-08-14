@@ -15,10 +15,18 @@ Review Blueprint as a small set of engineering instructions. Read the issue, com
 - Are triggers, outputs, boundaries, proof, and stop conditions clear?
 - Is the change one focused, self-contained, reviewable outcome with its related proof?
 - Does `/task-to-pr` order one or more tasks and create one tested and independently reviewed pull request for each task?
+- Does `/task-to-pr` mark each pull request ready before independent and GitHub review begin?
 - Does each task use its own branch and worktree, with independent tasks allowed to run at the same time and dependent tasks stacked after prerequisite pull requests are open and independently approved?
 - Does it stop after configured CI and automated review instead of waiting for human feedback?
 - Does it reply to every automated review finding and resolve threads only after they are fully addressed?
-- Does it merge only when the user asks?
+- Does it merge only when the user asks, including the explicit batch authority granted by `/issue-coordinator`?
+- Does `/issue-coordinator` use one visible Codex worker thread, worktree, branch, and pull request per GitHub issue?
+- Does it name workers after issue numbers, bound concurrency, wait for prerequisite merges, and keep implementation context out of the coordinator?
+- Does every worker test first, mark its pull request ready, obtain fresh approval, pass CI, resolve review feedback, and satisfy repository rules before merging?
+- Does coordinator merge authority require explicit user wording, remain limited to the supplied batch, and exclude deployment, releases, destructive actions, and unrelated pull requests?
+- Does the coordinator resume an open pull request from its exact head branch and reconcile already-merged pull requests with closed issue state only after the change and proof satisfy the issue?
+- In no-merge mode, does it record dependent issues as waiting for human merge instead of dispatching from an unmerged branch or waiting indefinitely?
+- In no-merge mode, does it stop after agent-completable gates and record required human approval or merge as a blocker instead of waiting indefinitely?
 - Is browser-rendered behavior checked in a real browser?
 - Can a capable agent choose local mechanics without redundant instructions?
 - Are removed concepts handled by an explicit migration instead of compatibility clutter?
