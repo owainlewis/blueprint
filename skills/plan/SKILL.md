@@ -10,74 +10,80 @@ argument-hint: "<design, brief, issue, or request>"
 ## Workflow
 
 1. Read the source, repository instructions, and relevant code.
-2. Stop and return to design if unresolved product or technical choices would change behavior, interfaces, data, security, scale, performance, compatibility, operations, cost, or proof.
-3. Choose task boundaries and break the work into tasks that each deliver working behavior. Do not require two tasks to answer the same open question or define the same shared contract independently. Each task must:
-   - Fit one agent run.
-   - Produce one focused pull request.
-   - Let a reviewer understand the outcome, behavior, and proof without separating unrelated work.
-4. Separate refactoring when it would hide the behavior change. Small local cleanup may stay when it makes the change easier to review.
-5. Order tasks by dependency. Add milestones only when they create a useful delivery or review boundary.
-6. Return the plan in chat by default. Create tracker tickets only when the user asks. When tickets are separate, copy every needed decision and definition into each ticket. Do not rely on a plan introduction or sibling ticket. Never write a plan document.
-7. Stop after planning. Do not implement.
+2. Stop and return to design if an unresolved choice would change behavior, interfaces, data, security, scale, performance, compatibility, operations, cost, or proof.
+3. Split the work into tasks that each deliver working behavior, fit one agent run, and produce one focused pull request.
+4. Keep shared contracts in one task. Do not make two tasks answer the same question independently.
+5. Separate refactoring when it would hide a behavior change.
+6. Order tasks by dependency. Add a milestone only when it creates a useful delivery or review boundary.
+7. Return the plan in chat. Create tracker tickets only when the user asks. Never write a plan document.
+8. Stop after planning. Do not implement.
 
-## Task writing
+## Write for two readers
 
-Treat each task as a cold handoff to a junior engineer with repository access. Assume they have not seen the conversation, design process, or other tickets. Give them enough purpose, system context, decisions, and proof to complete the work without asking for missing product or technical context. Link the source design for detail, not as a substitute for orientation.
+Each task is read by a human and executed by an agent.
 
-Name the current behavior, the affected person, the change, and its value before implementation detail. Define project-specific roles, records, states, and acronyms the first time they appear. Put database, framework, and code details in Context or Constraints.
+The first sections must let a human understand the task in under a minute. State the concrete problem, the result, and why it matters in everyday words. Do not use requirement IDs, implementation details, undefined project terms, or acronyms unfamiliar to the intended readers there.
 
-Use short, concrete sentences. Prefer familiar words and specific verbs. Do not use slogans, metaphors, filler, marketing language, or vague claims such as "robust", "seamless", "comprehensive", and "future-proof".
+Put task-specific decisions, interfaces, failure rules, and security constraints in Agent notes. Link the design or decided source for shared architecture and full requirement definitions. Use a repository path or URL that will resolve from the published ticket, and pin the decided version when later edits could change the contract. If no durable source exists, include the required shared decisions in Agent notes. Do not copy the whole source into every ticket.
 
-Use one user story for each distinct goal that the task serves. Operators, maintainers, and developers are valid users when they experience the problem. Omit the section when no honest user goal exists. Do not invent a story for every technical requirement.
+A task stands alone when its purpose, boundary, dependencies, non-negotiable decisions, and proof are clear. It does not need to repeat background that the linked source already explains.
 
-For example, explain that completed tasks currently keep every diagnostic event forever and can make the database grow without limit. Then use the story: `As an operator, I want old diagnostic events removed automatically so that storage stays bounded without losing task results.` Put retention timing, batch deletion, and database rules in Constraints.
+## Task shape
 
-For a migration, explain the old model, the new model, how records map between them, and why existing users need the move. Define names such as `Definition`, `Run`, `Job`, and `Runner` from the source material. Never use a list of new names as the explanation. Then state the user goal plainly: `As an operator, I want my existing schedules and audit history to keep working after the new scheduling model replaces the old one.` Put cutover, restart, compatibility, and legacy-data rules in Constraints.
-
-Each task must stand alone:
+Use this compact shape. Omit optional sections that add no information.
 
 ```markdown
-## <Task title>
+## <Plain action and result>
 
-### Summary
-In two to four sentences, explain the current behavior, who it affects, what will change, and why that change matters.
+### What are we building?
+In one to three short sentences, say what is wrong or missing and what will work after this task.
 
-<!-- Optional: include this section only when the task serves an honest user goal. -->
-### User stories
-- As a <role>, I want <capability> so that <benefit>.
+### Why?
+In one or two short sentences, explain the practical value to a user, operator, or developer.
 
-### Outcome
-The useful behavior that will work when the task is complete.
+### Done when
+- Three to seven observable results.
 
-### Depends on
-Other task titles, or `None`.
+### How to check
+Exact commands and required manual checks.
 
-### Context
-Define the relevant parts of the system, prior work, dependencies, and source decisions that a new agent needs with no session history.
-
-### Constraints
-Decisions and behavior that must not change.
-
-### Acceptance criteria
-- Testable condition. Cite every applicable source `AC-n` and `INV-n` without changing their meaning.
-
-### Checks
-Exact commands and any required manual verification.
+### Agent notes
+- Depends on: <task titles, or None>
+- Source: <durable design, brief, issue, or request path/URL, pinned when needed>
+- Only the definitions, decisions, constraints, and failure behavior specific to this task.
 
 ### Out of scope
-Related work this task must not absorb.
+- Related work this task is likely to absorb by mistake.
 ```
+
+## Writing rules
+
+- Use a short title that names an action and result.
+- Use familiar words and specific verbs.
+- Define a necessary technical term where it first appears. Otherwise replace it with observable behavior.
+- Say `sending the same event twice creates one reply`, not `prove idempotency`.
+- Say `the answer is supported by the cited document`, not `prove grounding`.
+- Do not add user stories by default. Add one only when it clarifies product behavior that the first two sections do not.
+- Keep implementation mechanics out of the first two sections.
+- Keep task-specific implementation choices in Agent notes. Leave interchangeable local mechanics to the implementing agent.
+- Preserve applicable `AC-n` and `INV-n` references in Done when or Agent notes without making a reader decode them to understand the task.
+- Aim for 250 to 500 words per ticket. Exceed 700 only when the extra text is required to prevent an unsafe or incompatible implementation. Otherwise split the task or link the shared source.
+- Do not repeat a fact in several sections.
+- Do not use slogans, metaphors, filler, or vague claims such as `robust`, `seamless`, `comprehensive`, and `future-proof`.
 
 ## Boundaries
 
-- Do not split one piece of working behavior into separate file or technical-layer tasks.
+- Do not split one working behavior into separate file or technical-layer tasks.
 - Do not create scaffolding or cleanup tasks without a checked outcome.
 - Do not hide unresolved decisions inside implementation tickets.
-- When the source uses requirement IDs, preserve them so `/task-to-pr`, `/test`, and `/review` can trace proof back to the approved design.
-- Use a short title that names the action and result in plain words, such as `Remove expired event details automatically`. Do not use only component names or an internal project label.
-- Use plain words in the title, Summary, User stories, and Outcome. Define any project term needed there.
-- Keep implementation mechanics out of user stories.
-- In Acceptance criteria, state observable behavior and any internal contract that must hold.
-- Put decided technical choices and non-negotiable implementation constraints in Constraints. Leave interchangeable local mechanics to the implementing agent.
-- Give each section one job. Summary orients the reader. User stories state people's goals. Outcome states the working result. Context explains the system and dependencies. Some meaning will overlap, but do not copy sentences or add repetition that does not help the reader.
-- Reread each task alone. A cold reader must be able to explain why it exists, identify the relevant system boundary, implement the decided behavior, and prove it works. Add anything missing before returning the plan.
+- Keep each task small enough for one agent run and one focused review.
+- In Done when, state observable behavior and any internal rule that must hold.
+- In How to check, include exact commands and manual proof when automation cannot cover the behavior.
+- If the source uses requirement IDs, keep each ID attached to the same rule. Do not renumber or reuse it.
+
+Before returning the plan, read each task twice:
+
+1. Human pass: can someone explain what will change and why after reading only the title and first two sections?
+2. Agent pass: can a fresh agent find the source, identify dependencies and fixed decisions, implement the task, and prove it without asking a product or architecture question?
+
+Delete repeated background after both passes succeed.
