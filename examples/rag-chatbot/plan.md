@@ -2,78 +2,30 @@
 
 > Captured chat output from the `/plan` skill. A real run stays in chat or is published as tracker tickets when requested.
 
-## Overview
-
-A FastAPI service for uploading PDFs and answering questions from their contents. It uses retrieval-augmented generation (RAG): the service finds relevant text in PostgreSQL with pgvector, then gives that text to OpenAI to answer the question.
-
-Source design: [RAG chatbot design](design.md)
-
-## Shared decisions
-
-- Use FastAPI, PostgreSQL with pgvector, Docker Compose, and OpenAI.
-- Use `uv` for Python package and environment management.
-- Use fixed-size chunks with overlap for V1.
-- Limit PDF uploads to 25 MiB.
-- Store a document and all of its chunks atomically.
-- Mock OpenAI in tests.
-- Add focused tests with each task and run them against PostgreSQL with pgvector.
-- Keep API errors shaped as `{error: {code, message}}`, including `payload_too_large` for a PDF over 25 MiB.
-- Return a fixed no-information answer instead of inventing an answer when the search finds no relevant text.
-- Require `DATABASE_URL` and `OPENAI_API_KEY`.
-
----
+Source design: [RAG chatbot design at the revision used for this example](https://github.com/owainlewis/blueprint/blob/9ec6081beeaff327a96fe60ef555ae52a504aa21/examples/rag-chatbot/design.md)
 
 ## Milestone 1: Run the service locally
 
-Goal: the app starts, connects to the database, and exposes a healthy API shell.
+### Task 1: Start the API and check its health
 
-### Task 1: Start and check the API locally
+#### What are we building?
 
-#### Summary
+Create the smallest version of the API that starts locally, connects to PostgreSQL, and reports whether the database is available.
 
-Developers cannot build later features until they can start the API and its database in a repeatable way. This task adds local startup, required configuration, and a health check so a developer can tell whether the base service is ready.
+#### Why?
 
-#### User stories
+Developers need a repeatable starting point before they can add document upload or question answering.
 
-- As a developer, I want to start the API and database locally and check their health so that I can build and test features on a known working service.
+#### Done when
 
-#### Outcome
+- Docker Compose starts the API and PostgreSQL with pgvector.
+- `GET /health` returns `200` when PostgreSQL is available and `503` when it is not. (`AC-2`)
+- The health check does not call OpenAI. (`AC-2`)
+- The app refuses to start when required settings are missing. (`AC-17`)
+- The README explains local startup and that document text will be sent to OpenAI.
+- The baseline test suite passes. (`AC-20`)
 
-The API and database can be started locally, configured from the environment, and checked with a health endpoint.
-
-#### Depends on
-
-None.
-
-#### Context
-
-This task creates the base service shape for every later endpoint. It should establish local startup, settings, database connectivity, and the test runner without adding document or chat behavior.
-
-#### Constraints
-
-- Build the API with FastAPI and use PostgreSQL with pgvector.
-- Keep HTTP validation and response formatting in FastAPI routes. Put health-check ordering in an application service and PostgreSQL access in a repository.
-- Use `uv` for Python package management.
-- Use Docker Compose for the API and PostgreSQL with pgvector.
-- Keep configuration in environment variables.
-- Require `DATABASE_URL` and `OPENAI_API_KEY`.
-- Make `/health` check PostgreSQL only. It must not call OpenAI.
-- Return API errors as `{error: {code, message}}`.
-
-#### Acceptance criteria
-
-- The API and database start with Docker Compose.
-- `GET /health` returns `200` with `{"status":"ok"}` when the API can reach the database and `503` with `service_unavailable` when it cannot. (`AC-2`)
-- With PostgreSQL reachable and OpenAI unavailable, `GET /health` returns `200` and makes no OpenAI request. (`AC-2`)
-- The app fails before serving traffic when `DATABASE_URL` or `OPENAI_API_KEY` is missing. (`AC-17`)
-- The README states that V1 is for one trusted user and sends document text to OpenAI.
-- `uv sync --frozen` installs the locked dependencies, and a baseline `uv run pytest` succeeds for later tasks. (`AC-20`)
-
-#### Design reference
-
-The [RAG chatbot design](design.md) covers the stack, Docker Compose surface, environment configuration, and JSON response expectations.
-
-#### Checks
+#### How to check
 
 ```bash
 docker compose up -d
@@ -82,238 +34,148 @@ uv sync --frozen
 uv run pytest
 ```
 
-Also make PostgreSQL unavailable and verify that `/health` returns the documented `503`. Make the OpenAI test adapter fail while PostgreSQL remains reachable, then verify that `/health` still returns `200` without calling the adapter. Cover each missing required setting.
+Also make PostgreSQL unavailable and verify the documented `503` response. Make the OpenAI test adapter fail and verify that `/health` still returns `200` while PostgreSQL is available.
+
+#### Agent notes
+
+- Depends on: None.
+- Source: [RAG chatbot design at the revision used for this example](https://github.com/owainlewis/blueprint/blob/9ec6081beeaff327a96fe60ef555ae52a504aa21/examples/rag-chatbot/design.md).
+- Use FastAPI, PostgreSQL with pgvector, Docker Compose, and `uv`.
+- Require `DATABASE_URL` and `OPENAI_API_KEY`.
+- Return errors as `{error: {code, message}}`.
+- Keep the health check limited to PostgreSQL.
 
 #### Out of scope
 
-Document upload, embeddings, retrieval, chat, auth, and deployment beyond local Docker Compose.
-
----
+- Document upload, search, chat, authentication, and cloud deployment.
 
 ## Milestone 2: Store uploaded documents
 
-Goal: PDFs can be uploaded, processed, and stored for later retrieval.
+### Task 2: Upload PDFs and make them searchable
 
-### Task 2: Upload and store PDFs
+#### What are we building?
 
-#### Summary
+Add an endpoint that accepts a PDF, extracts its text, and stores a document record with all extracted searchable sections in PostgreSQL.
 
-Users cannot ask questions about their documents until the service can turn an uploaded PDF into searchable text. This task validates each upload and stores its text for later searching without leaving partial data after a failure.
+#### Why?
 
-#### User stories
+The service cannot answer questions until it has safely stored material to search.
 
-- As a user, I want to upload a PDF so that the service can use its contents when answering my questions.
+#### Done when
 
-#### Outcome
+- `POST /api/v1/documents` accepts a PDF up to 25 MiB and returns its ID, filename, upload time, and section count. (`AC-1`)
+- Two files with the same name are stored as separate documents.
+- Invalid, empty, and oversized files return the documented errors and create no records. (`AC-3`; `INV-3`)
+- Each document and all its searchable sections are committed together or not at all. (`AC-15`; `INV-3`)
+- OpenAI and database failures return the documented errors without leaving partial data. (`AC-15`; `AC-21`; `INV-3`; `INV-4`)
+- Graceful shutdown lets short uploads finish, rejects new uploads, and rolls back work that exceeds the deadline. (`AC-18`)
+- Startup accepts shutdown deadlines from `1` through `60` seconds and rejects zero, negative, larger, and non-integer values. (`AC-23`)
 
-Users can upload a PDF and receive a stored document record with the number of text sections created from it.
-
-#### Depends on
-
-Task 1: Start and check the API locally.
-
-#### Context
-
-This task depends on Task 1, which creates the local API and database. It proves the path from upload to stored search data. It validates the file, extracts its text, and divides that text into small sections called chunks. It turns each chunk into a numeric representation called an embedding, which the service uses to find text with similar meaning. It then stores the document and its chunks for later document and chat tasks.
-
-#### Constraints
-
-- Add the endpoint to the existing FastAPI service.
-- Keep HTTP validation and response formatting in the FastAPI route. Put upload ordering in an application service, PostgreSQL access in a repository, and provider request translation in an OpenAI adapter.
-- Accept PDFs only.
-- Reject uploads over 25 MiB before text extraction.
-- Use fixed-size chunks of about 500 tokens with about 50 tokens of overlap.
-- Store documents, chunks, and embeddings in PostgreSQL with pgvector.
-- Generate an opaque UUID for each uploaded document. Treat the original filename as display metadata, never identity.
-- Identify each chunk by its document UUID and zero-based position. Keep that position stable for the lifetime of the document.
-- Make each chunk's document foreign key cascade on delete.
-- Commit the document and all chunks in one database transaction.
-- Send document chunks to OpenAI for embeddings. Keep durable application data in PostgreSQL.
-- Use the existing `DATABASE_URL` and `OPENAI_API_KEY` settings.
-- Return API errors as `{error: {code, message}}`.
-- Mock OpenAI calls in tests.
-- On shutdown, stop accepting new requests. Let active requests finish until the configured deadline, then cancel them and roll back open database transactions.
-- Read the shutdown deadline from `SERVER_GRACEFUL_SHUTDOWN_SECONDS`, defaulting to `10`, and fail startup unless it is an integer from `1` through `60`.
-
-#### Acceptance criteria
-
-- `POST /api/v1/documents` accepts a PDF up to and including 25 MiB and returns `{id, filename, uploaded_at, chunk_count}`. (`AC-1`)
-- Uploading two documents with the same filename returns two distinct valid UUIDs and stores both documents.
-- Uploaded PDFs are stored with chunks and embeddings that can be queried later.
-- Stored chunks have unique positions from `0` through `chunk_count - 1` within their document.
-- Deleting a document row through PostgreSQL also deletes all of its chunks through the foreign-key cascade. (`INV-2`)
-- Non-PDF and empty-text PDF uploads return `400` with `bad_request` and create no rows. (`AC-3`)
-- Uploads over 25 MiB return `413` with `payload_too_large` and create no rows. (`AC-3`; `INV-3`)
-- OpenAI embedding failures return `502` with `upstream_error`. (`AC-21`; `INV-4`)
-- A persistence failure returns `500` with `internal_error`. (`AC-15`)
-- Embedding and persistence failures leave no document or chunk rows behind. (`AC-15`; `INV-3`)
-- A slow upload that finishes before the graceful shutdown deadline commits normally. (`AC-18`)
-- After shutdown begins, a new upload is not accepted and creates no rows. (`AC-18`)
-- Cancelling a deliberately slow upload at the graceful shutdown deadline leaves no document or chunk rows behind. (`AC-18`; `INV-3`)
-- Startup accepts shutdown values from `1` through `60` and rejects zero, negative, greater values, and non-integers. (`AC-23`)
-- A PDF fixture contains the sentence "PostgreSQL with pgvector stores the embeddings." for later retrieval tests.
-
-#### Design reference
-
-The [RAG chatbot design](design.md) covers document storage, chunking defaults, embedding behavior, upload validation, and upstream OpenAI error behavior.
-
-#### Checks
+#### How to check
 
 ```bash
 uv run pytest
 curl -F "file=@tests/fixtures/test.pdf" http://localhost:8000/api/v1/documents
 ```
 
-Also run focused tests for a non-PDF, an empty-text PDF, a successful upload at exactly 25 MiB, and an oversized upload. Force an upload embedding failure and assert `502` with `upstream_error` in the documented error shape. Force a database failure and assert `500` with `internal_error`. During shutdown, prove that an active upload can finish before the deadline, a new upload is not accepted or stored, and an upload still running at the deadline is cancelled and rolled back. Test each shutdown setting boundary.
+Use focused tests to force extraction, OpenAI, persistence, and shutdown failures. Query PostgreSQL after each failure to prove that no partial document remains.
 
-Upload the same fixture twice with the same filename. Prove that the returned IDs are distinct UUIDs and query each document's chunks to confirm unique zero-based positions.
+#### Agent notes
 
-Inspect the schema migration for the cascading foreign key. In a focused database test, delete a document row and prove that PostgreSQL removes its chunks without a separate chunk delete.
-
-For every failed upload, query PostgreSQL in the test fixture and prove that document and chunk row counts did not change.
+- Depends on: Task 1.
+- Source: [RAG chatbot design at the revision used for this example](https://github.com/owainlewis/blueprint/blob/9ec6081beeaff327a96fe60ef555ae52a504aa21/examples/rag-chatbot/design.md).
+- Accept PDF files only. Reject files over 25 MiB before extraction.
+- Use opaque UUIDs for document identity. The filename is display data only.
+- Divide text into sections of about 500 tokens with about 50 tokens of overlap.
+- Store sections and OpenAI embeddings in PostgreSQL with pgvector.
+- Identify each section by its document UUID and stable zero-based position.
+- Delete sections through a cascading foreign key when their document is deleted. (`INV-2`)
+- Read the shutdown deadline from `SERVER_GRACEFUL_SHUTDOWN_SECONDS`. Default to `10`; accept integers from `1` through `60`.
+- Mock OpenAI in tests.
 
 #### Out of scope
 
-Document listing, deletion, retrieval, chat, auth, and non-PDF formats.
+- Listing, deletion, search, chat, and non-PDF formats.
 
-### Task 3: List and delete uploaded documents
+### Task 3: List and delete documents
 
-#### Summary
+#### What are we building?
 
-After uploading documents, users need to see what the service holds and remove material they no longer want searched. This task adds listing and deletion while ensuring removed text cannot appear in later answers.
+Add endpoints to show stored documents and remove a selected document with all of its searchable text.
 
-#### User stories
+#### Why?
 
-- As a user, I want to list and delete uploaded documents so that I can control which material the service searches.
+Users need to know what the service can search and remove information they no longer want included in answers.
 
-#### Outcome
+#### Done when
 
-Users can list uploaded documents and delete a document with all searchable data created from it.
+- `GET /api/v1/documents` returns each document's ID, filename, upload time, and section count. (`AC-4`)
+- `DELETE /api/v1/documents/{id}` removes the document and its searchable sections. (`AC-5`; `INV-2`)
+- Deleting an unknown ID returns the documented `404` response. (`AC-14`)
+- Database failures return the documented error and leave existing data unchanged. (`AC-16`)
+- Deleted text can no longer be found by later searches. (`AC-5`; `INV-2`)
 
-#### Depends on
-
-Task 2: Upload and store PDFs.
-
-#### Context
-
-This task depends on Task 2. Task 2 stores each uploaded document as small text sections, called chunks, with numeric embeddings used to find text with similar meaning. Those documents form the collection that chat will search. This task lets users manage that collection before chat relies on it.
-
-#### Constraints
-
-- Add the endpoints to the existing FastAPI service and use the PostgreSQL document and chunk records created by Task 2.
-- Keep HTTP validation and response formatting in FastAPI routes. Put list and delete ordering in an application service and PostgreSQL access in a repository.
-- Use the opaque document UUID as API identity. Treat the filename as display metadata only.
-- Do not change upload behavior from Task 2.
-- Delete the document row and rely on its database foreign-key cascade to remove chunks and embeddings.
-- Deleted chunks must not remain retrievable.
-- Return API errors as `{error: {code, message}}`.
-
-#### Acceptance criteria
-
-- `GET /api/v1/documents` returns a bare JSON array of documents with `id`, `filename`, `uploaded_at`, and `chunk_count`. (`AC-4`)
-- `DELETE /api/v1/documents/{id}` returns `200` with `{"deleted":true}` and removes the document and its related chunks. (`AC-5`; `INV-2`)
-- Deleting a missing document returns `404` with `not_found`. (`AC-14`)
-- Database failures during listing or deletion return `500` with `internal_error`; a failed deletion leaves the document and chunks intact. (`AC-16`)
-- After deletion, the document no longer appears in the list and its chunks are gone. (`AC-5`; `INV-2`)
-
-#### Design reference
-
-The [RAG chatbot design](design.md) defines the document listing/deletion API shapes and the invariant that deleting a document also removes its chunks and embeddings.
-
-#### Checks
+#### How to check
 
 ```bash
 uv run pytest
 ```
 
-Focused tests assert that listing returns a top-level JSON array without a wrapper object. Delete an unknown document ID and assert `404` with `not_found` in the documented error shape. Force database failures during listing and deletion and assert `500` with `internal_error`. After a failed deletion, query PostgreSQL and prove the document and chunks remain.
+Upload the PDF fixture, list documents, delete its returned ID, and verify that the ID and its sections are gone. Force listing and deletion failures and verify their responses and stored data.
 
-Manual smoke check: upload `tests/fixtures/test.pdf`, list documents, delete the returned ID, confirm the response is `200` with `{"deleted":true}`, then confirm the ID no longer appears in `GET /api/v1/documents`.
+#### Agent notes
+
+- Depends on: Task 2.
+- Source: [RAG chatbot design at the revision used for this example](https://github.com/owainlewis/blueprint/blob/9ec6081beeaff327a96fe60ef555ae52a504aa21/examples/rag-chatbot/design.md).
+- Use the document UUID in API paths. Never use the filename as identity.
+- Keep HTTP formatting in FastAPI routes and PostgreSQL access in a repository.
+- Rely on the database foreign-key cascade to remove stored sections.
+- Return errors as `{error: {code, message}}`.
 
 #### Out of scope
 
-Search, chat, cross-user permissions, and soft delete.
-
----
+- Search, chat, permissions, and soft deletion.
 
 ## Milestone 3: Answer questions from documents
 
-Goal: users can ask questions and get answers based on uploaded documents.
+### Task 4: Answer questions using uploaded PDFs
 
-### Task 4: Answer questions from uploaded PDFs
+#### What are we building?
 
-#### Summary
+Add an endpoint that finds relevant text in uploaded PDFs and uses that text to answer a question. Return the source text with the answer, or say clearly when the documents do not contain enough information.
 
-Stored PDFs are not useful until users can ask questions and receive answers based on their contents. This task finds the most relevant stored text, gives it to OpenAI, cites the source passages, and says clearly when the documents do not contain an answer.
+#### Why?
 
-#### User stories
+This is the useful result of the application: people can ask questions without searching every uploaded PDF by hand.
 
-- As a user, I want answers based on my uploaded PDFs so that I can use the documents without searching them by hand.
+#### Done when
 
-#### Outcome
+- `POST /api/v1/chat` accepts `{"message":"..."}` and returns an answer with its sources. Missing and empty questions return the documented validation error. (`AC-6`; `AC-13`)
+- The answer generator receives exactly the source sections returned to the caller, with at most five sections. (`AC-7`; `INV-1`)
+- Equal scores are ordered by document ID and section position. (`AC-9`) A score exactly on the relevance threshold qualifies and a lower score does not. (`AC-8`) Threshold settings accept numeric values from `0` through `1` and reject invalid values before startup. (`AC-10`)
+- When no useful text exists, the endpoint returns the fixed no-information answer with no sources. (`AC-11`) Failed uploads and deleted documents cannot affect later answers. (`AC-12`; `INV-2`; `INV-3`)
+- OpenAI and database failures return the documented errors. (`AC-22`; `AC-24`; `INV-4`)
+- The full test suite passes against PostgreSQL with pgvector while OpenAI calls are mocked. (`AC-19`)
 
-Users can ask a question and receive an answer based on uploaded PDFs, with references to the source text.
-
-#### Depends on
-
-- Task 2: Upload and store PDFs
-- Task 3: List and delete uploaded documents
-
-#### Context
-
-This task depends on Tasks 2 and 3. Task 2 stores each PDF as small text sections, called chunks, and creates a numeric embedding for each chunk. Task 3 adds the deletion endpoint used to prove that removed documents no longer affect answers. This task creates the same kind of embedding for a question and compares the numbers to find text with similar meaning. It gives the matching text to OpenAI, formats the answer and source references, and handles questions that have no useful match.
-
-#### Constraints
-
-- Add the endpoint to the existing FastAPI service and query PostgreSQL with pgvector.
-- Keep HTTP validation and response formatting in the FastAPI route. Put retrieval and answer ordering in an application service, PostgreSQL vector queries in a repository, and provider request translation in an OpenAI adapter.
-- Return each source's opaque document UUID and stable zero-based chunk position as `document_id` and `chunk_index`.
-- Use the existing `DATABASE_URL` and `OPENAI_API_KEY` settings.
-- Send only the chunks returned in `sources` to OpenAI for answer generation. Keep durable application data in PostgreSQL.
-- Return API errors as `{error: {code, message}}`.
-- Mock OpenAI calls in tests.
-- Retrieve at most 5 chunks for each question.
-- Calculate cosine similarity as `1 - (embedding <=> query_embedding)`.
-- Read the inclusive threshold from `RAG_RELEVANCE_THRESHOLD`, defaulting to `0.75`, accept `0` and `1`, and fail startup unless it is numeric and satisfies `0 <= value <= 1`.
-- Return sources by descending similarity, then document ID and chunk index for stable ties.
-- Do not add conversation history or streaming.
-
-#### Acceptance criteria
-
-- `POST /api/v1/chat` accepts a JSON body shaped as `{"message":"..."}` and returns `{answer, sources}`. (`AC-6`)
-- A missing or empty message returns `400` with `bad_request`. (`AC-13`)
-- Sources include `document_id`, `filename`, `chunk_index`, and `content`. (`AC-6`)
-- A question answerable from the fixture returns an answer based on that fixture and at least one source. (`AC-6`)
-- With more than five qualifying chunks, retrieval returns five and the mocked generator receives exactly the same ordered content returned in `sources`. (`AC-7`; `INV-1`)
-- A chunk scoring exactly `RAG_RELEVANCE_THRESHOLD` qualifies, while a lower score does not. (`AC-8`)
-- Chunks with equal similarity are ordered by document ID and then chunk index. (`AC-9`)
-- Threshold configuration accepts `0` and `1` and rejects non-numeric values, values below `0`, and values above `1` before startup. (`AC-10`)
-- If no relevant chunks are found, the endpoint returns `{"answer":"No relevant information found in uploaded documents.","sources":[]}`. (`AC-11`)
-- After a failed fixture upload or deletion of an uploaded fixture, asking about its known text returns the fixed no-information response with no sources. (`AC-12`; `INV-2`, `INV-3`)
-- OpenAI embedding or answer-generation failures during chat return `502` with `upstream_error`. (`AC-24`; `INV-4`)
-- A database failure during retrieval returns `500` with `internal_error`. (`AC-22`)
-- The full `uv run pytest` suite passes against PostgreSQL with pgvector while OpenAI calls are mocked. (`AC-19`)
-
-#### Design reference
-
-The [RAG chatbot design](design.md) covers retrieval defaults, chat response shape, source references, no-information behavior, and upstream OpenAI failure handling.
-
-#### Checks
+#### How to check
 
 ```bash
 uv run pytest
 ```
 
-Run focused tests that send the documented JSON request body, omit `message`, and send an empty `message`. Cover a database failure during retrieval. Force embedding and answer-generation failures and assert `502` with `upstream_error` in the documented error shape. Use fixed vectors with scores equal to, just below, and just above the threshold.
+Upload `tests/fixtures/test.pdf`, ask `What database is used for embeddings?`, and verify that the answer mentions PostgreSQL with pgvector and includes a source. Test empty questions, threshold boundaries, stable ordering, deleted documents, and forced OpenAI and database failures.
 
-Create more than five matching chunks. Check that the mocked answer generator receives the same first five chunks returned in the sources.
+#### Agent notes
 
-Force a fixture upload to fail, then ask about its known text. Check the fixed no-information response. Upload and delete the fixture, ask the same question, and check the same response.
-
-Test threshold settings at `0`, `1`, below `0`, above `1`, and with a non-numeric value.
-
-Manual smoke check: upload `tests/fixtures/test.pdf`, ask `What database is used for embeddings?`, and confirm the response mentions PostgreSQL with pgvector and includes at least one source.
+- Depends on: Tasks 2 and 3.
+- Source: [RAG chatbot design at the revision used for this example](https://github.com/owainlewis/blueprint/blob/9ec6081beeaff327a96fe60ef555ae52a504aa21/examples/rag-chatbot/design.md).
+- Search PostgreSQL with pgvector cosine similarity and return at most five sections.
+- Read the inclusive threshold from `RAG_RELEVANCE_THRESHOLD`. Default to `0.75`; accept numeric values from `0` through `1`.
+- Order equal scores by document ID and section position.
+- Send only returned source sections to OpenAI.
+- Return source document ID, filename, section position, and content.
+- Mock OpenAI in tests.
 
 #### Out of scope
 
-Conversation history, streaming responses, reranking, and retrieval tuning beyond the V1 defaults.
+- Conversation history, streaming, reranking, and retrieval tuning beyond the V1 defaults.
