@@ -18,11 +18,11 @@ Independent tasks may start together. Start a dependent task after every prerequ
 1. Create or reuse a branch and worktree for the task. Start independent work from the latest default branch and dependent work from its reviewed prerequisite or stacked base.
 2. Write the code.
 3. Use `/test` to prove the task works, affected failures are handled, and refactors preserve behavior.
-4. Use `/review` with a fresh subagent that did not write the code.
-5. Fix valid problems, then repeat `/test` and `/review`.
-6. Commit and push the changes.
-7. Create or update one pull request on GitHub. Include a short summary and the current proof.
-8. Move the ticket to the repository's review state, such as `In Review` or `Review`, when possible.
+4. Commit and push the changes.
+5. Create or update one pull request on GitHub. Include a short summary and the current proof, then mark it ready for review.
+6. Move the ticket to the repository's review state, such as `In Review` or `Review`, when possible.
+7. Use `/review` with a fresh subagent that did not write the code.
+8. Fix valid problems, then repeat `/test` and `/review`. Commit and push every reviewed fix before continuing.
 
 ## Phase 2: Pass the automated checks
 
@@ -36,6 +36,6 @@ Independent tasks may start together. Start a dependent task after every prerequ
 8. Repeat until all available checks pass and the automated review has no unresolved findings.
 9. Update the ticket with final proof and the pull request link when possible. Keep it in the repository's review state while the pull request is open.
 
-If the user asked you to merge the pull requests, merge them in dependency order after their automated checks pass. After each prerequisite merges, retarget its dependents to the default branch, update them to that base, and repeat `/test`, `/review`, CI, and automated review before merging them. Wait until GitHub reports each pull request as merged before marking its ticket complete when possible. Otherwise, leave it open.
+If the user asked you to merge the pull requests, merge them in dependency order after their automated checks pass, the final `/review` verdict is `Approve`, required approvals are present, and no review thread is unresolved. Explicitly naming `/issue-coordinator`, or explicitly telling its coordinator that agents may merge, is a merge request for only the issues in its supplied batch. Automatic skill selection is not merge authority. After each prerequisite merges, retarget its dependents to the default branch, update them to that base, and repeat `/test`, `/review`, CI, and automated review before merging them. Never bypass repository rules. Wait until GitHub reports each pull request as merged before marking its ticket complete when possible. Otherwise, leave it open.
 
-Continue with every task that can make progress. Stop when every task has a pull request with all available checks passing and no unresolved automated review findings. If no remaining task can move forward, explain what is needed.
+Continue with every task that can make progress. Stop when every task has a pull request with all available checks passing and no unresolved automated review findings. When merge was requested, stop only after every in-scope pull request is merged and its ticket is complete when possible. If no remaining task can move forward, explain what is needed.

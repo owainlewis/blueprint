@@ -23,7 +23,7 @@ Blueprint is a small set of instructions for AI coding. It separates deciding wh
 - Browser behavior is proven in a real browser, not by reading source.
 - If the task, design, or plan is wrong, update it before changing more code.
 - Prefer the smallest complete change. Do not mix product work with unrelated cleanup.
-- Humans review decisions and merge. Agents handle the path between them.
+- Humans review decisions and normally merge. Agents may merge only when the user explicitly delegates it. Explicitly naming `/issue-coordinator` delegates merge authority for the supplied batch after its quality gates pass; an implicit skill match does not.
 
 ## Phases
 
@@ -34,12 +34,15 @@ Blueprint is a small set of instructions for AI coding. It separates deciding wh
 - `/test`: prove acceptance criteria and failure paths affected by the change, including real-browser checks when browser-rendered behavior changes.
 - `/review`: use a fresh subagent for an independent, read-only implementation review.
 - `/improve`: inspect existing code and improve its clarity, simplicity, and structure without changing intended behavior.
+- `/issue-coordinator`: coordinate a large GitHub issue batch through separate Codex worker threads, reviewed pull requests, and gated merges.
 
 ## Workflow: Code changes
 
 For one or more code changes, follow the [`/task-to-pr` skill](skills/task-to-pr/SKILL.md). It stacks dependent work after prerequisite pull requests are open and independently approved, runs independent work at the same time when useful, and takes each task through a tested and reviewed pull request. A milestone is one possible source of tasks.
 
 Merge pull requests only when the user asks. Otherwise, leave them open.
+
+For a large GitHub issue batch that needs visible, isolated Codex sessions, use [`/issue-coordinator`](skills/issue-coordinator/SKILL.md). Explicitly naming it asks in-scope workers to merge after every required test, review, CI, approval, and mergeability gate passes. An implicit match leaves passing pull requests open. Neither mode grants deployment or release authority.
 
 Writing code is a basic agent ability, not a separate skill. Debugging and test-driven development are ways to implement a change, not separate product skills.
 
