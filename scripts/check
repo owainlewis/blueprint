@@ -11,6 +11,13 @@ for command in python3 pandoc node npm; do
     fi
 done
 
+check_environment=.cache/repository-check
+check_python="$check_environment/bin/python"
+if ! "$check_python" -c 'import yaml; assert yaml.__version__ == "6.0.3"' >/dev/null 2>&1; then
+    python3 -m venv "$check_environment"
+    "$check_python" -m pip install --disable-pip-version-check --requirement scripts/requirements.txt
+fi
+
 python3 - <<'PY'
 import re
 import subprocess
@@ -40,8 +47,8 @@ if [ ! -x skills/html-doc/node_modules/.bin/mmdc ]; then
     npm ci --prefix skills/html-doc
 fi
 
-python3 scripts/check_repo.py
+"$check_python" scripts/check_repo.py
 bash -n examples/regenerate.sh .githooks/pre-push scripts/check scripts/check_diff
-python3 -m unittest discover -s scripts/tests -v
+"$check_python" -m unittest discover -s scripts/tests -v
 python3 -m unittest discover -s skills/html-doc/tests -v
 scripts/check_diff

@@ -36,5 +36,21 @@ class MarkdownChecksTests(unittest.TestCase):
         self.assertEqual(errors, [])
 
 
+class SkillChecksTests(unittest.TestCase):
+    def test_malformed_yaml_frontmatter_is_reported(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            skill_dir = root / "skills" / "example"
+            skill_dir.mkdir(parents=True)
+            (skill_dir / "SKILL.md").write_text(
+                '---\nname: example\ndescription: "unterminated\n---\n\n# Example\n'
+            )
+            errors: list[str] = []
+
+            check_repo.check_skills(errors, root)
+
+            self.assertTrue(any("Invalid YAML frontmatter" in error for error in errors))
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -34,7 +34,7 @@ The complete check requires Python 3.11 or newer, Pandoc 3 or newer, Node.js 22.
 ./scripts/check
 ```
 
-The command installs the locked `html-doc` dependencies when needed, validates repository structure and links, checks shell syntax, and runs the renderer tests.
+The command creates an ignored Python check environment and installs the locked `html-doc` dependencies when needed. It validates skill metadata, repository structure, and links, checks shell syntax, and runs the renderer tests.
 
 When public documentation changes, also read the rendered files on GitHub. Check the README at desktop and mobile widths. Source review alone does not prove the GitHub layout works.
 

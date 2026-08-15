@@ -5,6 +5,8 @@ import re
 import sys
 from urllib.parse import unquote
 
+import yaml
+
 
 ROOT = Path(__file__).resolve().parents[1]
 IGNORED_PARTS = {".git", "node_modules"}
@@ -35,11 +37,19 @@ def check_skills(errors: list[str], root: Path = ROOT) -> None:
         if not frontmatter:
             errors.append(f"Missing YAML frontmatter: {skill.relative_to(root)}")
             continue
-        name = re.search(r'^name:\s*["\']?([^"\'\n]+)', frontmatter.group(1), re.MULTILINE)
-        description = re.search(r"^description:\s*.+", frontmatter.group(1), re.MULTILINE)
-        if not name or name.group(1).strip() != skill_dir.name:
+        try:
+            metadata = yaml.safe_load(frontmatter.group(1))
+        except yaml.YAMLError as error:
+            errors.append(f"Invalid YAML frontmatter in {skill.relative_to(root)}: {error}")
+            continue
+        if not isinstance(metadata, dict):
+            errors.append(f"YAML frontmatter must be a mapping: {skill.relative_to(root)}")
+            continue
+        name = metadata.get("name")
+        description = metadata.get("description")
+        if not isinstance(name, str) or name.strip() != skill_dir.name:
             errors.append(f"Skill name does not match directory: {skill.relative_to(root)}")
-        if not description:
+        if not isinstance(description, str) or not description.strip():
             errors.append(f"Missing skill description: {skill.relative_to(root)}")
 
 
