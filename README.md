@@ -1,10 +1,10 @@
 <div align="center">
 
-![Blueprint. Clear instructions for serious AI coding.](assets/blueprint-hero.svg)
+![Blueprint. Design. Plan. Build. Validate.](assets/blueprint-hero.svg)
 
 # Blueprint
 
-**A small set of skills that helps coding agents understand systems, make good decisions, and ship checked work.**
+**Design. Plan. Build. Validate.**
 
 [Install](#install) · [Choose a skill](#choose-a-skill) · [Read the guides](#guides) · [Contribute](CONTRIBUTING.md)
 
