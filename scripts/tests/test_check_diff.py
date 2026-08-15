@@ -31,7 +31,9 @@ class CheckDiffTests(unittest.TestCase):
         base = self.git(repository, "rev-parse", "HEAD").stdout.strip()
         return repository, base
 
-    def run_check(self, repository: Path, base: str) -> subprocess.CompletedProcess[str]:
+    def run_check(
+        self, repository: Path, base: str
+    ) -> subprocess.CompletedProcess[str]:
         environment = os.environ.copy()
         environment["CHECK_DIFF_BASE"] = base
         return subprocess.run(
@@ -55,6 +57,16 @@ class CheckDiffTests(unittest.TestCase):
 
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("trailing whitespace", result.stdout)
+
+    def test_unavailable_configured_base_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repository, _ = self.repository(directory)
+            self.git(repository, "update-ref", "refs/remotes/origin/main", "HEAD")
+
+            result = self.run_check(repository, "missing-push-base")
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("Configured diff base is unavailable", result.stderr)
 
     def test_unstaged_changes_are_checked(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
