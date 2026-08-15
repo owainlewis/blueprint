@@ -4,8 +4,8 @@
 
 Blueprint keeps shared repository policy in `AGENTS.md` and only Claude-specific setup here.
 
-Install Blueprint with `npx skills add owainlewis/blueprint`. Use `/architecture`, `/design`, `/architecture-review`, `/plan`, `/test`, `/review`, and `/improve` for one kind of engineering work. Use `/task-to-pr` to deliver one or more code changes. Use `/issue-coordinator` only in Codex to coordinate a large GitHub issue batch through separate worker threads and gated merges.
+Install Blueprint with `npx skills add owainlewis/blueprint`. Use `/architecture`, `/design`, `/architecture-review`, `/plan`, `/test`, `/review`, and `/improve` for one kind of engineering work. Use `/task-to-pr` to deliver one or more code changes. Use `/codex-issue-coordinator` only in Codex to coordinate a large GitHub issue batch through separate worker threads and gated merges.
 
-Everything you call in Blueprint is a skill. `/task-to-pr` accepts tasks, tickets, pull requests, or a milestone and creates one pull request for each task. `/issue-coordinator` is Codex-specific because it requires Codex thread and managed-worktree tools. `AGENTS.md` contains the repository rules.
+Everything you call in Blueprint is a skill. `/task-to-pr` accepts tasks, tickets, pull requests, or a milestone and creates one pull request for each task. `/codex-issue-coordinator` is Codex-specific because it requires Codex thread and managed-worktree tools. `AGENTS.md` contains the repository rules.
 
 The `/architecture-review` and `/review` phases use a fresh generic subagent. Blueprint does not require a separate reviewer agent definition.

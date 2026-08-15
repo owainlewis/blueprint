@@ -1,20 +1,21 @@
 ---
-name: issue-coordinator
+name: codex-issue-coordinator
 description: "Coordinates a large batch of GitHub issues through separate Codex worker threads, tested pull requests, review loops, and gated merges. Use when the user asks one Codex thread to manage several coding sessions or complete a parent issue, milestone, or issue batch."
 user-invocable: true
 argument-hint: "<parent issue, milestone, or issue list>"
 ---
 
-# Ultra-scale issue coordination
+# Codex Issue Coordinator
 
 Use one Codex thread as the coordinator. Give each active GitHub issue its own
 Codex worker thread, worktree, branch, and pull request. Keep implementation
 context in workers and dependency state in GitHub.
 
-Explicitly naming `/issue-coordinator`, or explicitly telling the coordinator
-that agents may merge, authorizes in-scope workers to merge their own pull
-requests after every merge gate below passes. An implicit skill match does not
-grant merge authority: run in no-merge mode unless the user's words grant it.
+Explicitly naming `/codex-issue-coordinator`, or explicitly telling the
+coordinator that agents may merge, authorizes in-scope workers to merge their
+own pull requests after every merge gate below passes. An implicit skill match
+does not grant merge authority: run in no-merge mode unless the user's words
+grant it.
 Neither mode authorizes deployment, release publication, destructive
 operations, branch-protection bypasses, or changes outside the supplied batch.
 
@@ -154,7 +155,7 @@ mark it ready for review. Only then run fresh independent /review and wait for
 CI and GitHub review. Address valid findings and repeat test and review after
 every code change.
 
-<If merge mode: The user explicitly authorized this /issue-coordinator run to
+<If merge mode: The user explicitly authorized this /codex-issue-coordinator run to
 merge this issue's pull request after every merge gate passes. Wait until
 GitHub reports the merge, update and close the issue, and return the result.>
 <If no-merge mode: Leave the passing pull request open for human merge and

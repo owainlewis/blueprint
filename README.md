@@ -19,7 +19,7 @@ Choose the first skill based on what you need.
 | Challenge a technical proposal before implementation | `/architecture-review` | Material flaws, open questions, and a verdict |
 | Split a decided feature into work for several agent runs | `/plan` | Ordered tasks in chat or tracker tickets |
 | Deliver one or more tasks | `/task-to-pr` | One tested and reviewed pull request per task |
-| Coordinate a large GitHub issue batch in Codex | `/issue-coordinator` | Issue-named worker threads, isolated pull requests, and gated merges |
+| Coordinate a large GitHub issue batch in Codex | `/codex-issue-coordinator` | Issue-named worker threads, isolated pull requests, and gated merges |
 | Prove a change works | `/test` | Acceptance criteria mapped to evidence |
 | Review an implementation change | `/review` | Findings and a pre-merge verdict from a fresh subagent |
 | Simplify existing code without changing behavior | `/improve` | Clearer, smaller, better-structured code |
@@ -52,7 +52,7 @@ flowchart TB
         Automated -->|clean| Done([Task done])
     end
 
-    Batch([Parent issue or batch]) --> Coordinator["/issue-coordinator"] --> Tasks
+    Batch([Parent issue or batch]) --> Coordinator["/codex-issue-coordinator"] --> Tasks
 ```
 
 Use `/architecture` when you need to understand or document existing code. Use `/improve` to simplify code without changing what it does. Not every change needs either skill.
@@ -74,7 +74,7 @@ The model has two layers:
 | `/review` | Independent review of an implementation's correctness, security, regressions, complexity, and proof | Findings and a verdict are reported |
 | `/improve` | Behavior-preserving simplification of existing code | Relevant checks prove behavior was preserved |
 | `/html-doc` | A static HTML reading view of a complete Markdown PRD or technical design | The browser-verified candidate atomically replaces the prior generated view |
-| `/issue-coordinator` | A large GitHub issue batch executed through visible Codex worker threads | Every issue is merged and Done, has a passing ready pull request in no-merge mode, or has a recorded human blocker |
+| `/codex-issue-coordinator` | A large GitHub issue batch executed through visible Codex worker threads | Every issue is merged and Done, has a passing ready pull request in no-merge mode, or has a recorded human blocker |
 
 Writing code is a basic agent ability, not a separate skill. Branching, committing, debugging, browser checks, and feedback are steps inside a workflow.
 
@@ -92,11 +92,11 @@ For each task, it:
 
 It leaves pull requests open unless the user asks to merge them.
 
-## Ultra-scale issue coordination
+## Codex Issue Coordinator
 
-[`skills/issue-coordinator/SKILL.md`](skills/issue-coordinator/SKILL.md) is the Codex-only workflow for a large parent issue, milestone, or issue batch. The calling thread stays clean as the coordinator. Each active issue runs in a visible Codex thread named `#<issue-number> <short title>` with its own managed worktree, branch, and pull request.
+[`skills/codex-issue-coordinator/SKILL.md`](skills/codex-issue-coordinator/SKILL.md) is the Codex-only workflow for a large parent issue, milestone, or issue batch. The calling thread stays clean as the coordinator. Each active issue runs in a visible Codex thread named `#<issue-number> <short title>` with its own managed worktree, branch, and pull request.
 
-The coordinator starts independent work up to a bounded limit and waits for prerequisite merges before starting dependent work. Workers use `/task-to-pr`, mark pull requests ready before review, address CI and review findings, and repeat proof after code changes. Explicitly naming `/issue-coordinator`, or explicitly granting merge authority, authorizes workers to merge only their in-scope pull requests after every test, review, approval, and repository gate passes. An implicit skill match leaves passing pull requests open and records dependent issues as waiting for human merge. Neither mode authorizes deployment or release publication.
+The coordinator starts independent work up to a bounded limit and waits for prerequisite merges before starting dependent work. Workers use `/task-to-pr`, mark pull requests ready before review, address CI and review findings, and repeat proof after code changes. Explicitly naming `/codex-issue-coordinator`, or explicitly granting merge authority, authorizes workers to merge only their in-scope pull requests after every test, review, approval, and repository gate passes. An implicit skill match leaves passing pull requests open and records dependent issues as waiting for human merge. Neither mode authorizes deployment or release publication.
 
 ## Install
 
@@ -144,6 +144,6 @@ For a larger system-part design, read the [Dispatch local control-plane design](
 - **Use the real surface.** Browser behavior is checked in a browser. Live PR feedback is read from the PR.
 - **Fix the original instruction.** If implementation exposes a bad requirement, update the task or design before continuing.
 - **Prefer less.** Keep the smallest complete change, shortest useful instruction, and no duplicate ways to start the same work.
-- **Keep irreversible judgment explicit.** Humans review decisions and normally merge. Agents merge only when the user explicitly delegates it, including by explicitly naming `/issue-coordinator` for a batch.
+- **Keep irreversible judgment explicit.** Humans review decisions and normally merge. Agents merge only when the user explicitly delegates it, including by explicitly naming `/codex-issue-coordinator` for a batch.
 
 Blueprint is not an issue tracker, general agent runtime, release system, or reviewer-persona library. It is a compact engineering process for capable coding agents.

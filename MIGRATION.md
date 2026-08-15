@@ -8,7 +8,8 @@
 | --- | --- |
 | No previous equivalent | `/architecture` |
 | No previous equivalent | `/html-doc` |
-| `multitask` | `/issue-coordinator` for Codex issue batches |
+| `multitask` | `/codex-issue-coordinator` for Codex issue batches |
+| `/issue-coordinator` | `/codex-issue-coordinator` |
 | Design review through `/review` | `/architecture-review` |
 | `design-doc`, `spec` | `/design` |
 | `browser-verify` | Browser proof inside `/test` |
@@ -23,7 +24,7 @@
 These are the ten skills you can call:
 
 ```text
-/architecture · /design · /architecture-review · /plan · /test · /review · /improve · /task-to-pr · /html-doc · /issue-coordinator
+/architecture · /design · /architecture-review · /plan · /test · /review · /improve · /task-to-pr · /html-doc · /codex-issue-coordinator
 ```
 
 ## Clean upgrade
@@ -36,7 +37,7 @@ These are the ten skills you can call:
    ```
 
 3. **Remove copied reviewer agents.** Delete any old Blueprint `code-reviewer` definition. The `/review` skill now launches a fresh generic subagent.
-4. **Check the result.** The `/architecture`, `/design`, `/architecture-review`, `/plan`, `/test`, `/review`, `/improve`, `/task-to-pr`, `/html-doc`, and `/issue-coordinator` skills should be available.
+4. **Check the result.** The `/architecture`, `/design`, `/architecture-review`, `/plan`, `/test`, `/review`, `/improve`, `/task-to-pr`, `/html-doc`, and `/codex-issue-coordinator` skills should be available.
 
 ## Why cleanup is manual
 
