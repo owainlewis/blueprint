@@ -1,6 +1,6 @@
 ---
 name: design
-description: "Writes a clear design for a proposed feature or system change. Use when important product or technical choices must be settled before coding. Covers behavior, interfaces, failures, risks, acceptance criteria, and tests. Use architecture to explain the current system."
+description: "Writes a clear design for a proposed feature or system change. Use when important product or technical choices must be settled before coding. Covers behavior, interfaces, failures, risks, acceptance criteria, and tests. Use architecture when the repository needs current ARCHITECTURE.md."
 user-invocable: true
 argument-hint: "<feature, problem, or brief>"
 ---

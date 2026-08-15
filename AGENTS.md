@@ -27,7 +27,7 @@ Blueprint is a small set of instructions for AI coding. It separates deciding wh
 
 ## Phases
 
-- `/architecture`: explain the verified current system in chat, or write an architecture document when asked. Stop for human review.
+- `/architecture`: create or update root `ARCHITECTURE.md` from verified implementation. Stop with the document ready for human review.
 - `/design`: decide what to build, why, and how. Stop with a proposed design.
 - `/architecture-review`: challenge a technical proposal and surface material flaws or open questions before implementation.
 - `/plan`: split decided work into ordered, agent-ready tasks. Stop before implementation.
@@ -48,8 +48,7 @@ Writing code is a basic agent ability, not a separate skill. Debugging and test-
 
 ## Outputs
 
-- A whole-system architecture document defaults to `ARCHITECTURE.md`.
-- A named subsystem uses its existing document or `docs/<subsystem>/architecture.md`.
+- Architecture documentation uses root `ARCHITECTURE.md`.
 - Designs default to `docs/<feature-slug>/design.md`.
 - Plans are returned in chat by default or published as tracker tickets when asked. They are not stored as plan documents.
 - Pull requests start with a short plain English summary. They then explain only the detail a reviewer needs.

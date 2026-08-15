@@ -13,6 +13,7 @@ This file records notable changes to Blueprint.
 
 ### Changed
 
+- `/architecture` now has one outcome: create or update root `ARCHITECTURE.md` from verified implementation. Its document guidance now follows the system's real topology, dependencies, protocols, lifecycles, and component boundaries instead of a fixed audit template.
 - Moved detailed skill and workflow guidance out of the README so the repository is easier to understand on first visit.
 - Marked the implemented `/html-doc` design accordingly and stopped committing its generated HTML reading view as repository documentation.
 - Renamed `/issue-coordinator` to `/codex-issue-coordinator` so the skill is clearly scoped to Codex and can coexist with tool-specific alternatives.
