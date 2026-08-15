@@ -26,11 +26,9 @@ That is the main installation path. Blueprint works through portable skill files
 
 Most work starts in one of these places:
 
-| You need to | Start with | You get |
-| --- | --- | --- |
-| Understand code that already exists | [`/architecture`](skills/architecture/SKILL.md) | A checked explanation of the current system |
-| Decide how a meaningful change should work | [`/design`](skills/design/SKILL.md) | A technical design ready for review |
-| Deliver a decided task | [`/task-to-pr`](skills/task-to-pr/SKILL.md) | A tested, independently reviewed pull request |
+- **Understand code that already exists.** Start with [`/architecture`](skills/architecture/SKILL.md) for a checked explanation of the current system.
+- **Decide how a meaningful change should work.** Start with [`/design`](skills/design/SKILL.md) for a technical design ready for review.
+- **Deliver a decided task.** Start with [`/task-to-pr`](skills/task-to-pr/SKILL.md) for a tested, independently reviewed pull request.
 
 Use [`/plan`](skills/plan/SKILL.md) when decided work needs splitting. Use [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md) when one Codex task must coordinate a large batch of GitHub issues.
 
