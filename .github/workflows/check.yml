@@ -16,7 +16,8 @@ concurrency:
 jobs:
   repository:
     name: Repository
-    runs-on: ubuntu-24.04
+    # Chromium's sandbox is blocked by Ubuntu 24.04's AppArmor defaults.
+    runs-on: ubuntu-22.04
     timeout-minutes: 15
     steps:
       - name: Check out the repository
