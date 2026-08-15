@@ -41,7 +41,9 @@ operations, branch-protection bypasses, or changes outside the supplied batch.
 ## Coordinator workflow
 
 1. Keep the calling thread as coordinator. Name it `#<parent> Coordinator` when
-   the batch has a parent issue.
+   the batch has a parent issue. Use `set_thread_pinned` to pin it at the start
+   of every new or resumed coordinator run, before inspecting or dispatching
+   workers.
 2. Reuse an existing active worker for the same issue. Inspect an unclear or
    interrupted worker before creating another. If the issue already has an
    open pull request, create or resume its worker on that pull request's exact
