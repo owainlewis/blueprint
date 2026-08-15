@@ -11,10 +11,16 @@ import check_repo  # noqa: E402
 
 
 class MarkdownChecksTests(unittest.TestCase):
-    def check(self, markdown: str) -> list[str]:
+    def check(
+        self, markdown: str, files: tuple[tuple[str, str], ...] = ()
+    ) -> list[str]:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "README.md").write_text(markdown)
+            for name, content in files:
+                path = root / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(content)
             errors: list[str] = []
             check_repo.check_markdown(errors, root)
             return errors
@@ -22,6 +28,10 @@ class MarkdownChecksTests(unittest.TestCase):
     def test_missing_reference_style_link_is_reported(self) -> None:
         errors = self.check("Read the [guide][details].\n\n[details]: missing.md\n")
         self.assertTrue(any("missing.md" in error for error in errors))
+
+    def test_missing_reference_definition_is_reported(self) -> None:
+        errors = self.check("Read the [guide][details].\n")
+        self.assertTrue(any("Missing reference definition" in error for error in errors))
 
     def test_indented_backtick_fence_must_close(self) -> None:
         errors = self.check("   ```python\nprint('hello')\n")
@@ -41,6 +51,19 @@ class MarkdownChecksTests(unittest.TestCase):
 
     def test_fenced_code_link_is_ignored(self) -> None:
         errors = self.check("```markdown\n[guide](missing.md)\n```\n")
+        self.assertEqual(errors, [])
+
+    def test_angle_bracket_link_preserves_spaces(self) -> None:
+        errors = self.check(
+            "Read the [guide](<docs/my guide.md>).\n",
+            (("docs/my guide.md", "fixture\n"),),
+        )
+        self.assertEqual(errors, [])
+
+    def test_ignored_cache_markdown_is_not_checked(self) -> None:
+        errors = self.check(
+            "# Readme\n", ((".cache/generated.md", "[missing](nope.md)\n"),)
+        )
         self.assertEqual(errors, [])
 
 

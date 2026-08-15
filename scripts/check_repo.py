@@ -9,8 +9,9 @@ import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
-IGNORED_PARTS = {".git", "node_modules"}
+IGNORED_PARTS = {".cache", ".git", "node_modules"}
 LINK_PATTERN = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
+REFERENCE_USE_PATTERN = re.compile(r"!?\[([^\]]+)\]\[([^\]]*)\]")
 REFERENCE_PATTERN = re.compile(
     r"^ {0,3}\[(?!\^)([^\]]+)\]:[ \t]*(?:<([^>]+)>|(\S+))",
     re.MULTILINE,
@@ -74,10 +75,36 @@ def local_targets(text: str) -> list[str]:
     visible_text = markdown_without_code(text)
     targets = LINK_PATTERN.findall(visible_text)
     targets.extend(
-        match.group(2) or match.group(3)
+        f"<{match.group(2)}>" if match.group(2) is not None else match.group(3)
         for match in REFERENCE_PATTERN.finditer(visible_text)
     )
     return targets
+
+
+def missing_reference_definitions(text: str) -> list[str]:
+    visible_text = markdown_without_code(text)
+    definitions = {
+        normalize_reference_label(match.group(1))
+        for match in REFERENCE_PATTERN.finditer(visible_text)
+    }
+    missing: list[str] = []
+    for match in REFERENCE_USE_PATTERN.finditer(visible_text):
+        label = match.group(2) or match.group(1)
+        if normalize_reference_label(label) not in definitions:
+            missing.append(label)
+    return missing
+
+
+def normalize_reference_label(label: str) -> str:
+    return " ".join(label.split()).casefold()
+
+
+def link_destination(raw_target: str) -> str:
+    target = raw_target.strip()
+    if target.startswith("<"):
+        closing = target.find(">", 1)
+        return target[1:closing] if closing != -1 else target[1:]
+    return target.split(maxsplit=1)[0]
 
 
 def markdown_without_code(text: str) -> str:
@@ -111,8 +138,13 @@ def check_markdown(errors: list[str], root: Path = ROOT) -> None:
         if has_unbalanced_fence(text):
             errors.append(f"Unbalanced fenced code block: {path.relative_to(root)}")
 
+        for label in missing_reference_definitions(text):
+            errors.append(
+                f"Missing reference definition in {path.relative_to(root)}: {label}"
+            )
+
         for raw_target in local_targets(text):
-            target = raw_target.strip().split()[0].strip("<>")
+            target = link_destination(raw_target)
             if target.startswith(("http://", "https://", "mailto:", "#")):
                 continue
             file_target = unquote(target.split("#", 1)[0].split("?", 1)[0])
