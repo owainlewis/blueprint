@@ -6,11 +6,19 @@
 
 **Design. Plan. Build. Validate.**
 
-[Install](#install) · [Choose a skill](#choose-a-skill) · [Read the guides](#guides) · [Contribute](CONTRIBUTING.md)
+[Why Blueprint](#why-blueprint) · [Install](#install) · [Choose a skill](#choose-a-skill) · [Read the guides](#guides) · [Contribute](CONTRIBUTING.md)
 
 </div>
 
 Blueprint gives capable coding agents a clear engineering process without turning every change into ceremony. It separates understanding existing code, deciding what to build, and delivering reviewed pull requests.
+
+## Why Blueprint
+
+Agents keep getting better. They need clear standards and useful workflows, not a script for every move.
+
+Blueprint turns long-standing software engineering practice into a small set of skills: understand the system, make decisions before expensive changes, keep each task focused, test the result, and review the work. The skills say what good work looks like and what evidence is needed. They leave the mechanics to the agent.
+
+The set is deliberately small. It contains the core skills its maintainer uses every day to build professional software. There is no agent framework or elaborate setup to maintain. Install the skills and use only the ones the work needs.
 
 ## Install
 
