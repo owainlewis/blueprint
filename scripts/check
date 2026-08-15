@@ -41,12 +41,7 @@ if [ ! -x skills/html-doc/node_modules/.bin/mmdc ]; then
 fi
 
 python3 scripts/check_repo.py
-bash -n examples/regenerate.sh .githooks/pre-push scripts/check
+bash -n examples/regenerate.sh .githooks/pre-push scripts/check scripts/check_diff
+python3 -m unittest discover -s scripts/tests -v
 python3 -m unittest discover -s skills/html-doc/tests -v
-
-if git rev-parse --verify origin/main >/dev/null 2>&1; then
-    base=$(git merge-base HEAD origin/main)
-    git diff --check "$base"..HEAD
-else
-    git diff --check
-fi
+scripts/check_diff

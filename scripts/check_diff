@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ -n "${CHECK_DIFF_BASE:-}" ] && git rev-parse --verify "${CHECK_DIFF_BASE}^{commit}" >/dev/null 2>&1; then
+    git diff --check "${CHECK_DIFF_BASE}"..HEAD
+elif git rev-parse --verify origin/main >/dev/null 2>&1; then
+    base=$(git merge-base HEAD origin/main)
+    git diff --check "$base"..HEAD
+else
+    git diff --check
+fi

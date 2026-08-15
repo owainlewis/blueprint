@@ -9,42 +9,69 @@ from urllib.parse import unquote
 ROOT = Path(__file__).resolve().parents[1]
 IGNORED_PARTS = {".git", "node_modules"}
 LINK_PATTERN = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
+REFERENCE_PATTERN = re.compile(
+    r"^ {0,3}\[(?!\^)([^\]]+)\]:[ \t]*(?:<([^>]+)>|(\S+))",
+    re.MULTILINE,
+)
+FENCE_PATTERN = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
 
 
-def repository_files(suffix: str) -> list[Path]:
+def repository_files(suffix: str, root: Path = ROOT) -> list[Path]:
     return sorted(
         path
-        for path in ROOT.rglob(f"*{suffix}")
+        for path in root.rglob(f"*{suffix}")
         if not IGNORED_PARTS.intersection(path.parts)
     )
 
 
-def check_skills(errors: list[str]) -> None:
-    for skill_dir in sorted(path for path in (ROOT / "skills").iterdir() if path.is_dir()):
+def check_skills(errors: list[str], root: Path = ROOT) -> None:
+    for skill_dir in sorted(path for path in (root / "skills").iterdir() if path.is_dir()):
         skill = skill_dir / "SKILL.md"
         if not skill.is_file():
-            errors.append(f"Missing skill file: {skill.relative_to(ROOT)}")
+            errors.append(f"Missing skill file: {skill.relative_to(root)}")
             continue
         text = skill.read_text()
         frontmatter = re.match(r"^---\n(.*?)\n---\n", text, re.DOTALL)
         if not frontmatter:
-            errors.append(f"Missing YAML frontmatter: {skill.relative_to(ROOT)}")
+            errors.append(f"Missing YAML frontmatter: {skill.relative_to(root)}")
             continue
         name = re.search(r'^name:\s*["\']?([^"\'\n]+)', frontmatter.group(1), re.MULTILINE)
         description = re.search(r"^description:\s*.+", frontmatter.group(1), re.MULTILINE)
         if not name or name.group(1).strip() != skill_dir.name:
-            errors.append(f"Skill name does not match directory: {skill.relative_to(ROOT)}")
+            errors.append(f"Skill name does not match directory: {skill.relative_to(root)}")
         if not description:
-            errors.append(f"Missing skill description: {skill.relative_to(ROOT)}")
+            errors.append(f"Missing skill description: {skill.relative_to(root)}")
 
 
-def check_markdown(errors: list[str]) -> None:
-    for path in repository_files(".md"):
+def has_unbalanced_fence(text: str) -> bool:
+    fence: tuple[str, int] | None = None
+    for line in text.splitlines():
+        match = FENCE_PATTERN.match(line)
+        if not match:
+            continue
+        marker = match.group(1)
+        if fence is None:
+            fence = (marker[0], len(marker))
+            continue
+        character, minimum = fence
+        if marker[0] == character and len(marker) >= minimum and not match.group(2).strip():
+            fence = None
+    return fence is not None
+
+
+def local_targets(text: str) -> list[str]:
+    targets = LINK_PATTERN.findall(text)
+    targets.extend(match.group(2) or match.group(3) for match in REFERENCE_PATTERN.finditer(text))
+    return targets
+
+
+def check_markdown(errors: list[str], root: Path = ROOT) -> None:
+    for path in repository_files(".md", root):
         text = path.read_text()
-        if sum(1 for line in text.splitlines() if line.startswith("```")) % 2:
-            errors.append(f"Unbalanced fenced code block: {path.relative_to(ROOT)}")
+        if has_unbalanced_fence(text):
+            errors.append(f"Unbalanced fenced code block: {path.relative_to(root)}")
 
-        for raw_target in LINK_PATTERN.findall(text):
+        for raw_target in local_targets(text):
             target = raw_target.strip().split()[0].strip("<>")
             if target.startswith(("http://", "https://", "mailto:", "#")):
                 continue
@@ -52,13 +79,13 @@ def check_markdown(errors: list[str]) -> None:
             if not file_target:
                 continue
             resolved = (
-                ROOT / file_target.lstrip("/")
+                root / file_target.lstrip("/")
                 if file_target.startswith("/")
                 else path.parent / file_target
             ).resolve()
             if not resolved.exists():
                 errors.append(
-                    f"Missing local link in {path.relative_to(ROOT)}: {raw_target}"
+                    f"Missing local link in {path.relative_to(root)}: {raw_target}"
                 )
 
 
