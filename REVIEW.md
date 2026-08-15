@@ -19,8 +19,8 @@ Review Blueprint as a small set of engineering instructions. Read the issue, com
 - Does each task use its own branch and worktree, with independent tasks allowed to run at the same time and dependent tasks stacked after prerequisite pull requests are open and independently approved?
 - Does it stop after configured CI and automated review instead of waiting for human feedback?
 - Does it reply to every automated review finding and resolve threads only after they are fully addressed?
-- Does it merge only when the user asks, including the explicit batch authority granted by `/issue-coordinator`?
-- Does `/issue-coordinator` use one visible Codex worker thread, worktree, branch, and pull request per GitHub issue?
+- Does it merge only when the user asks, including the explicit batch authority granted by `/codex-issue-coordinator`?
+- Does `/codex-issue-coordinator` use one visible Codex worker thread, worktree, branch, and pull request per GitHub issue?
 - Does it name workers after issue numbers, bound concurrency, wait for prerequisite merges, and keep implementation context out of the coordinator?
 - Does every worker test first, mark its pull request ready, obtain fresh approval, pass CI, resolve review feedback, and satisfy repository rules before merging?
 - Does coordinator merge authority require explicit user wording, remain limited to the supplied batch, and exclude deployment, releases, destructive actions, and unrelated pull requests?
