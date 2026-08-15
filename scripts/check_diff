@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ -n "${CHECK_DIFF_BASE:-}" ]; then
+    if ! git rev-parse --verify "${CHECK_DIFF_BASE}^{commit}" >/dev/null 2>&1; then
+        echo "Configured diff base is unavailable: ${CHECK_DIFF_BASE}" >&2
+        exit 1
+    fi
+    git diff --check "${CHECK_DIFF_BASE}"..HEAD
+elif git rev-parse --verify origin/main >/dev/null 2>&1; then
+    base=$(git merge-base HEAD origin/main)
+    git diff --check "$base"..HEAD
+fi
+
+git diff --check
+git diff --cached --check

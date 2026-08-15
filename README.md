@@ -1,149 +1,70 @@
 <div align="center">
 
+![Blueprint. Design. Plan. Build. Validate.](assets/blueprint-hero.svg)
+
 # Blueprint
 
-**A small set of instructions for AI coding.**
+**Design. Plan. Build. Validate.**
+
+[Why Blueprint](#why-blueprint) · [Install](#install) · [Choose a skill](#choose-a-skill) · [Read the guides](#guides) · [Contribute](CONTRIBUTING.md)
 
 </div>
 
-Blueprint helps agents decide what to build, make focused changes, test them, get an independent review, and deliver pull requests. Its Codex-only coordinator can run a large issue batch through isolated worker threads and gated merges.
+Blueprint gives capable coding agents a clear engineering process without turning every change into ceremony. It separates understanding existing code, deciding what to build, and delivering reviewed pull requests.
 
-## Start with the work, not the process
+## Why Blueprint
 
-Choose the first skill based on what you need.
+Agents keep getting better. They need clear standards and useful workflows, not a script for every move.
 
-| If you need to… | Start with | Result |
-| --- | --- | --- |
-| Explain, document, or audit how an implemented system works | `/architecture` | A checked explanation of how the system works now |
-| Specify a feature or change to part of a system | `/design` | A proposed technical design |
-| Challenge a technical proposal before implementation | `/architecture-review` | Material flaws, open questions, and a verdict |
-| Split a decided feature into work for several agent runs | `/plan` | Ordered tasks in chat or tracker tickets |
-| Deliver one or more tasks | `/task-to-pr` | One tested and reviewed pull request per task |
-| Coordinate a large GitHub issue batch in Codex | `/codex-issue-coordinator` | Issue-named worker threads, isolated pull requests, and gated merges |
-| Prove a change works | `/test` | Acceptance criteria mapped to evidence |
-| Review an implementation change | `/review` | Findings and a pre-merge verdict from a fresh subagent |
-| Simplify existing code without changing behavior | `/improve` | Clearer, smaller, better-structured code |
-| Make an existing PRD or design easier to read | `/html-doc` | A verified static HTML reading view |
+Blueprint turns long-standing software engineering practice into a small set of skills: understand the system, make decisions before expensive changes, keep each task focused, test the result, and review the work. The skills say what good work looks like and what evidence is needed. They leave the mechanics to the agent.
 
-Small, decided work can go straight to `/task-to-pr`. Use `/architecture` for the system as it works now. Use `/design` to write a proposal and `/architecture-review` to challenge important technical choices before implementation. The proposal may be in a design, RFC, ADR, architecture document, or issue. Use `/plan` only when the work needs splitting.
-
-## How Blueprint fits together
-
-```mermaid
-flowchart TB
-    Existing([Implemented system]) --> Architecture["/architecture"]
-    Architecture --> Current["Current architecture"]
-
-    subgraph Decide["Decide only as much as needed"]
-        Idea([Idea or problem]) --> Design["/design"]
-        Idea -->|already decided| Tasks([Tasks])
-        Current -.-> Design
-        Design --> Proposal["Technical proposal"] --> ArchitectureReview["/architecture-review"]
-        ArchitectureReview -->|findings| Design
-        ArchitectureReview -->|approved, one task| Tasks
-        ArchitectureReview -->|approved, needs splitting| Plan["/plan"] --> Tasks
-    end
-
-    subgraph Deliver["Deliver with /task-to-pr"]
-        Tasks --> Order["order and plan"] --> Task["each task"] --> Code["write code"] --> Test["test"] --> PR["ready pull request"] --> Review["subagent review"]
-        Review -->|finding| Code
-        Review -->|approved| Automated["CI + automated review"]
-        Automated -->|finding| Code
-        Automated -->|clean| Done([Task done])
-    end
-
-    Batch([Parent issue or batch]) --> Coordinator["/codex-issue-coordinator"] --> Tasks
-```
-
-Use `/architecture` when you need to understand or document existing code. Use `/improve` to simplify code without changing what it does. Not every change needs either skill.
-
-The model has two layers:
-
-1. **Repository instructions define policy.** `AGENTS.md` says what good work means in a codebase.
-2. **Skills define each kind of work.** Each skill produces one clear result and has a clear stopping point. `/task-to-pr` joins the steps needed to deliver code.
-
-## The skills
-
-| Skill | Owns | Stops when |
-| --- | --- | --- |
-| `/architecture` | A checked explanation of the current system, its rules, parts, flows, boundaries, operations, and limits | The explanation is ready for human review |
-| `/design` | A design for a proposed feature or system change | The proposed design is ready for review |
-| `/architecture-review` | Independent review of a technical proposal's goal, clarity, choices, risks, limits, and proof | Findings, open questions, and a verdict are reported |
-| `/plan` | Ordered tasks that each deliver working behavior, plus useful milestones | The work is ready to hand off |
-| `/test` | Automated checks, failure paths, and real-browser proof when relevant | Every criterion is pass, fail, or explicitly unverified |
-| `/review` | Independent review of an implementation's correctness, security, regressions, complexity, and proof | Findings and a verdict are reported |
-| `/improve` | Behavior-preserving simplification of existing code | Relevant checks prove behavior was preserved |
-| `/html-doc` | A static HTML reading view of a complete Markdown PRD or technical design | The browser-verified candidate atomically replaces the prior generated view |
-| `/codex-issue-coordinator` | A large GitHub issue batch executed through visible Codex worker threads | Every issue is merged and Done, has a passing ready pull request in no-merge mode, or has a recorded human blocker |
-
-Writing code is a basic agent ability, not a separate skill. Branching, committing, debugging, browser checks, and feedback are steps inside a workflow.
-
-## Tasks to pull requests
-
-[`skills/task-to-pr/SKILL.md`](skills/task-to-pr/SKILL.md) is the single authority for delivery. It accepts one or more tasks, tickets, pull requests, or a milestone. It stacks dependent work after prerequisite pull requests are open and independently approved, can run independent tasks at the same time, and creates one pull request for each task.
-
-For each task, it:
-
-1. creates or reuses a branch and worktree from the latest default branch or the reviewed prerequisite base;
-2. writes and tests the code;
-3. opens or updates a pull request with a short summary and proof, then marks it ready;
-4. asks a fresh subagent that did not write the code to review it;
-5. waits for configured CI and automated code review, then fixes, reviews, and replies to every finding.
-
-It leaves pull requests open unless the user asks to merge them.
-
-## Codex Issue Coordinator
-
-[`skills/codex-issue-coordinator/SKILL.md`](skills/codex-issue-coordinator/SKILL.md) is the Codex-only workflow for a large parent issue, milestone, or issue batch. The calling thread stays clean as the coordinator. Each active issue runs in a visible Codex thread named `#<issue-number> <short title>` with its own managed worktree, branch, and pull request.
-
-The coordinator starts independent work up to a bounded limit and waits for prerequisite merges before starting dependent work. Workers use `/task-to-pr`, mark pull requests ready before review, address CI and review findings, and repeat proof after code changes. Explicitly naming `/codex-issue-coordinator`, or explicitly granting merge authority, authorizes workers to merge only their in-scope pull requests after every test, review, approval, and repository gate passes. An implicit skill match leaves passing pull requests open and records dependent issues as waiting for human merge. Neither mode authorizes deployment or release publication.
+The set is deliberately small. It contains the core skills its maintainer uses every day to build professional software. There is no agent framework or elaborate setup to maintain. Install the skills and use only the ones the work needs.
 
 ## Install
 
-Install all ten skills:
+Install all ten skills with one command:
 
 ```bash
-npx skills add owainlewis/blueprint
+npx skills add \
+  owainlewis/blueprint
 ```
 
-Upgrading from the older set of skills? Follow the [migration guide](MIGRATION.md). A normal update may leave removed skills installed, so the cleanup step matters.
+That is the main installation path. Blueprint works through portable skill files, so the same repository can support Codex, Claude Code, and other compatible coding agents without separate plugin workflows.
 
-Read the [changelog](CHANGELOG.md) for notable changes.
+## Choose a skill
 
-## Repository map
+Most work starts in one of these places:
 
-```text
-skills/                 seven phase skills, one delivery workflow, one Codex coordination workflow, and one presentation skill
-AGENTS.md                portable repository policy
-CLAUDE.md                Claude Code adapter
-REVIEW.md                review standard for Blueprint itself
-MIGRATION.md             clean upgrade from the old skill set
-CHANGELOG.md             notable changes to Blueprint
-examples/                reviewed design and planning examples
-```
+- **Understand code that already exists.** Start with [`/architecture`](skills/architecture/SKILL.md) for a checked explanation of the current system.
+- **Decide how a meaningful change should work.** Start with [`/design`](skills/design/SKILL.md) for a technical design ready for review.
+- **Deliver a decided task.** Start with [`/task-to-pr`](skills/task-to-pr/SKILL.md) for a tested, independently reviewed pull request.
 
-## Examples
+Use [`/plan`](skills/plan/SKILL.md) when decided work needs splitting. Use [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md) when one Codex task must coordinate a large batch of GitHub issues.
 
-The RAG chatbot example follows one idea through the decision flow:
+Small, clear changes can go straight to `/task-to-pr`. Blueprint asks for only as much process as the work needs.
 
-1. [rough project notes](examples/input.md)
-2. [reviewed design](examples/rag-chatbot/design.md)
-3. [captured chat plan](examples/rag-chatbot/plan.md)
+## Ten focused skills
 
-For a larger system-part design, read the [Dispatch local control-plane design](examples/dispatch-control-plane/design.md).
+- **Understand:** [`/architecture`](skills/architecture/SKILL.md)
+- **Decide:** [`/design`](skills/design/SKILL.md), [`/architecture-review`](skills/architecture-review/SKILL.md), [`/plan`](skills/plan/SKILL.md)
+- **Deliver:** [`/task-to-pr`](skills/task-to-pr/SKILL.md), [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md)
+- **Check and improve:** [`/test`](skills/test/SKILL.md), [`/review`](skills/review/SKILL.md), [`/improve`](skills/improve/SKILL.md)
+- **Present:** [`/html-doc`](skills/html-doc/SKILL.md)
 
-## Principles
+Each skill owns one engineering phase or useful outcome. Repository policy stays in `AGENTS.md`. Writing code, branching, debugging, and committing remain normal agent abilities inside the delivery workflow.
 
-- **Give agents the goal and the rules.** Give agents outcomes, constraints, and proof. Trust them with local mechanics.
-- **One skill per phase or delivery outcome.** Skills share one installation and invocation model.
-- **Separate current state from proposals.** Architecture documents describe verified implemented reality. Design documents specify future changes.
-- **Keep changes reviewable.** Deliver one focused outcome and its proof. A reviewer should not need to separate unrelated work. Keep refactoring separate when it would hide the behavior change.
-- **Review choices before code.** Surface material ambiguity and ask for a simpler design when it can deliver the same result with less state, indirection, duplication, or operational work.
-- **Review implementation independently.** Check correctness and proof. Do not block on personal taste.
-- **Proof is part of the work.** Test changed behavior and affected failure paths. Test behavior that a refactor must preserve. If automated tests cannot exercise the behavior, explain why and give other evidence.
-- **Use the real surface.** Browser behavior is checked in a browser. Live PR feedback is read from the PR.
-- **Fix the original instruction.** If implementation exposes a bad requirement, update the task or design before continuing.
-- **Prefer less.** Keep the smallest complete change, shortest useful instruction, and no duplicate ways to start the same work.
-- **Keep irreversible judgment explicit.** Humans review decisions and normally merge. Agents merge only when the user explicitly delegates it, including by explicitly naming `/codex-issue-coordinator` for a batch.
+## Guides
 
-Blueprint is not an issue tracker, general agent runtime, release system, or reviewer-persona library. It is a compact engineering process for capable coding agents.
+- [Choosing the right skill](guides/choosing-a-skill.md) explains where each skill starts and stops.
+- [Common Blueprint workflows](guides/workflows.md) shows how the skills fit together for small changes, larger features, existing systems, and issue batches.
+- [Examples](examples/) contains reviewed designs and plans you can inspect or reuse.
+- [Migration guide](MIGRATION.md) explains how to remove older Blueprint skills before upgrading.
+- [Changelog](CHANGELOG.md) records notable changes.
+
+## Project
+
+Blueprint is deliberately small. It is not an issue tracker, an agent runtime, or a release system. It gives coding agents clear instructions for deciding, building, testing, and reviewing software.
+
+Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Security problems should follow [SECURITY.md](SECURITY.md).
+
+Released under the [MIT License](LICENSE).

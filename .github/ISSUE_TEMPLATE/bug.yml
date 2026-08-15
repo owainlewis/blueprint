@@ -1,0 +1,49 @@
+name: Bug report
+description: Report broken, unsafe, or contradictory Blueprint behavior.
+title: "Bug: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a problem. Please share enough detail for someone new to reproduce it.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Say what you asked the agent to do and what went wrong.
+      placeholder: The skill instructed the agent to...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should have happened?
+      description: Describe the result or boundary you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How can we reproduce it?
+      description: Include the skill name, coding tool, repository context, prompt, and relevant output. Remove secrets first.
+      placeholder: |
+        1. Install Blueprint with...
+        2. Invoke /...
+        3. Observe...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Blueprint version
+      description: Provide a release, commit SHA, or the date you installed from main.
+      placeholder: v0.2.0 or 8b842f9
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Extra context
+      description: Add logs, screenshots, links, or possible causes when they help. Do not include credentials or private code.
