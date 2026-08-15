@@ -35,6 +35,14 @@ class MarkdownChecksTests(unittest.TestCase):
         errors = self.check("~~~text\nhello\n~~~~\n")
         self.assertEqual(errors, [])
 
+    def test_inline_code_link_is_ignored(self) -> None:
+        errors = self.check("Example: `[guide](missing.md)`\n")
+        self.assertEqual(errors, [])
+
+    def test_fenced_code_link_is_ignored(self) -> None:
+        errors = self.check("```markdown\n[guide](missing.md)\n```\n")
+        self.assertEqual(errors, [])
+
 
 class SkillChecksTests(unittest.TestCase):
     def test_malformed_yaml_frontmatter_is_reported(self) -> None:

@@ -16,6 +16,7 @@ REFERENCE_PATTERN = re.compile(
     re.MULTILINE,
 )
 FENCE_PATTERN = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
+INLINE_CODE_PATTERN = re.compile(r"(`+).*?\1", re.DOTALL)
 
 
 def repository_files(suffix: str, root: Path = ROOT) -> list[Path]:
@@ -70,9 +71,38 @@ def has_unbalanced_fence(text: str) -> bool:
 
 
 def local_targets(text: str) -> list[str]:
-    targets = LINK_PATTERN.findall(text)
-    targets.extend(match.group(2) or match.group(3) for match in REFERENCE_PATTERN.finditer(text))
+    visible_text = markdown_without_code(text)
+    targets = LINK_PATTERN.findall(visible_text)
+    targets.extend(
+        match.group(2) or match.group(3)
+        for match in REFERENCE_PATTERN.finditer(visible_text)
+    )
     return targets
+
+
+def markdown_without_code(text: str) -> str:
+    visible_lines: list[str] = []
+    fence: tuple[str, int] | None = None
+    for line in text.splitlines():
+        match = FENCE_PATTERN.match(line)
+        if fence is not None:
+            character, minimum = fence
+            if (
+                match
+                and match.group(1)[0] == character
+                and len(match.group(1)) >= minimum
+                and not match.group(2).strip()
+            ):
+                fence = None
+            visible_lines.append("")
+            continue
+        if match:
+            marker = match.group(1)
+            fence = (marker[0], len(marker))
+            visible_lines.append("")
+            continue
+        visible_lines.append("" if line.startswith(("    ", "\t")) else line)
+    return INLINE_CODE_PATTERN.sub("", "\n".join(visible_lines))
 
 
 def check_markdown(errors: list[str], root: Path = ROOT) -> None:
