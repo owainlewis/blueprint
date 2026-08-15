@@ -2,17 +2,17 @@
 
 Blueprint has ten skills. You rarely need all of them for one change. Start with the result you need now.
 
-## Understand a system
+## Document an implemented system
 
-Use [`/architecture`](../skills/architecture/SKILL.md) to explain code that already exists. It checks claims against code, configuration, tests, and infrastructure. It does not propose new behavior.
+Use [`/architecture`](../skills/architecture/SKILL.md) to create or update root `ARCHITECTURE.md`. It checks claims against code, configuration, schemas, infrastructure, and tests. It documents what exists and does not propose new behavior.
 
 Good requests:
 
-- "Explain how authentication works in this repository."
-- "Audit the current payment architecture."
-- "Write an architecture document for the worker service."
+- "Create ARCHITECTURE.md for this repository."
+- "Update ARCHITECTURE.md after the new event pipeline shipped."
+- "Bring the architecture document back in line with the current code."
 
-If you are deciding how a new feature should work, use `/design` instead.
+If you only need a quick explanation, ask the agent directly. If you are deciding how a new system or feature should work, use `/design` instead.
 
 ## Decide what to build
 
@@ -50,7 +50,7 @@ Use [`/html-doc`](../skills/html-doc/SKILL.md) to turn a complete Markdown produ
 
 Ask what result you need next:
 
-- Facts about existing code: `/architecture`
+- A current root `ARCHITECTURE.md`: `/architecture`
 - A decision about future behavior: `/design`
 - A challenge to a proposal: `/architecture-review`
 - Several ready tasks: `/plan`

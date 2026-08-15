@@ -26,15 +26,15 @@ If the reviewed design needs several independent agent runs, insert `/plan` befo
 
 The design owns the shared decisions. Each planned task owns one working result and its proof.
 
-## Work in an unfamiliar system
+## Document an existing system
 
-When you need verified facts before proposing a change:
+When a repository needs a durable, verified architecture document:
 
 ```text
-existing code → /architecture → /design → review and delivery
+existing code → /architecture → ARCHITECTURE.md
 ```
 
-Architecture describes what the system does now. Design describes what should change. Keeping those documents separate prevents proposals from being mistaken for implemented behavior.
+If that understanding leads to a proposed change, continue with `/design`, review, and delivery. Architecture records what the system does now. Design decides what should change. Keeping those documents separate prevents proposals from being mistaken for implemented behavior.
 
 ## A behavior-preserving cleanup
 
@@ -66,6 +66,6 @@ Use `/test` when you need acceptance criteria mapped to evidence for an existing
 
 ## When to stop
 
-Every Blueprint skill has a stopping point. Architecture and design stop for human review. Planning stops with tasks. Testing stops with explicit pass, fail, or unverified results. Delivery stops with checked pull requests unless merge authority was given.
+Every Blueprint skill has a stopping point. Architecture stops with root `ARCHITECTURE.md`. Design stops with a proposal for review. Planning stops with tasks. Testing stops with explicit pass, fail, or unverified results. Delivery stops with checked pull requests unless merge authority was given.
 
 That boundary matters. It keeps one skill from silently making decisions owned by another phase or by a person.

@@ -35,7 +35,7 @@ That is the main installation path. Blueprint works through portable skill files
 
 Most work starts in one of these places:
 
-- **Understand code that already exists.** Start with [`/architecture`](skills/architecture/SKILL.md) for a checked explanation of the current system.
+- **Document an implemented system.** Use [`/architecture`](skills/architecture/SKILL.md) to create or update root `ARCHITECTURE.md` from verified code.
 - **Decide how a meaningful change should work.** Start with [`/design`](skills/design/SKILL.md) for a technical design ready for review.
 - **Deliver a decided task.** Start with [`/task-to-pr`](skills/task-to-pr/SKILL.md) for a tested, independently reviewed pull request.
 
@@ -45,7 +45,7 @@ Small, clear changes can go straight to `/task-to-pr`. Blueprint asks for only a
 
 ## Ten focused skills
 
-- **Understand:** [`/architecture`](skills/architecture/SKILL.md)
+- **Document:** [`/architecture`](skills/architecture/SKILL.md)
 - **Decide:** [`/design`](skills/design/SKILL.md), [`/architecture-review`](skills/architecture-review/SKILL.md), [`/plan`](skills/plan/SKILL.md)
 - **Deliver:** [`/task-to-pr`](skills/task-to-pr/SKILL.md), [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md)
 - **Check and improve:** [`/test`](skills/test/SKILL.md), [`/review`](skills/review/SKILL.md), [`/improve`](skills/improve/SKILL.md)
