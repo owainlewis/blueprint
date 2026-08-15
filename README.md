@@ -17,7 +17,8 @@ Blueprint gives capable coding agents a clear engineering process without turnin
 Install all ten skills with one command:
 
 ```bash
-npx skills add owainlewis/blueprint
+npx skills add \
+  owainlewis/blueprint
 ```
 
 That is the main installation path. Blueprint works through portable skill files, so the same repository can support Codex, Claude Code, and other compatible coding agents without separate plugin workflows.

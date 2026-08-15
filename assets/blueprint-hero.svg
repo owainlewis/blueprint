@@ -36,34 +36,16 @@
     <text x="2" y="218" fill="#c9d8f3" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="25" font-weight="450">Clear instructions for serious AI coding.</text>
   </g>
 
-  <g transform="translate(640 105)" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif">
-    <path d="M113 99H195M306 99H388" fill="none" stroke="#88a7dd" stroke-width="3" stroke-linecap="round" stroke-dasharray="5 9"/>
-    <path d="M188 91l14 8-14 8M381 91l14 8-14 8" fill="none" stroke="#88a7dd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <g transform="translate(700 82)" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif">
+    <path d="M24 40v210" fill="none" stroke="url(#accent)" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
 
-    <g>
-      <rect x="0" y="34" width="124" height="132" rx="22" fill="#0e2347" stroke="#58c7ff" stroke-width="2"/>
-      <circle cx="62" cy="74" r="19" fill="#58c7ff" opacity="0.16"/>
-      <path d="M51 74h22M62 63v22" stroke="#74d0ff" stroke-width="3" stroke-linecap="round"/>
-      <text x="62" y="122" fill="#ffffff" font-size="18" font-weight="650" text-anchor="middle">Understand</text>
-      <text x="62" y="146" fill="#91acd4" font-size="13" text-anchor="middle">what exists</text>
-    </g>
+    <circle cx="24" cy="40" r="17" fill="#0e2347" stroke="#58c7ff" stroke-width="4"/>
+    <circle cx="24" cy="145" r="17" fill="#162759" stroke="#7795ff" stroke-width="4"/>
+    <circle cx="24" cy="250" r="17" fill="#291e55" stroke="#b784ff" stroke-width="4"/>
 
-    <g>
-      <rect x="194" y="12" width="124" height="176" rx="22" fill="#162759" stroke="#7795ff" stroke-width="2"/>
-      <circle cx="256" cy="62" r="19" fill="#7795ff" opacity="0.18"/>
-      <path d="M246 63l7 7 14-17" fill="none" stroke="#9eb2ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-      <text x="256" y="116" fill="#ffffff" font-size="18" font-weight="650" text-anchor="middle">Decide</text>
-      <text x="256" y="140" fill="#a9b8e7" font-size="13" text-anchor="middle">what to change</text>
-      <text x="256" y="160" fill="#a9b8e7" font-size="13" text-anchor="middle">and why</text>
-    </g>
-
-    <g>
-      <rect x="388" y="34" width="124" height="132" rx="22" fill="#291e55" stroke="#b784ff" stroke-width="2"/>
-      <circle cx="450" cy="74" r="19" fill="#b784ff" opacity="0.17"/>
-      <path d="M439 75l8 8 15-20" fill="none" stroke="#d2b6ff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-      <text x="450" y="122" fill="#ffffff" font-size="18" font-weight="650" text-anchor="middle">Deliver</text>
-      <text x="450" y="146" fill="#bea9df" font-size="13" text-anchor="middle">checked work</text>
-    </g>
+    <text x="72" y="55" fill="#ffffff" font-size="48" font-weight="700">Understand</text>
+    <text x="72" y="160" fill="#ffffff" font-size="48" font-weight="700">Decide</text>
+    <text x="72" y="265" fill="#ffffff" font-size="48" font-weight="700">Deliver</text>
   </g>
 
   <path d="M74 370h1052" stroke="url(#accent)" stroke-width="2" stroke-linecap="round" opacity="0.75"/>
