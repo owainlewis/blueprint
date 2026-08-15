@@ -1,0 +1,40 @@
+name: Improvement proposal
+description: Suggest a clearer skill, workflow, guide, or repository experience.
+title: "Proposal: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is hard today?
+      description: Describe the real task or decision that Blueprint does not handle clearly.
+      placeholder: When I try to..., I have to...
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: What should become easier?
+      description: Describe the result a person or agent should be able to observe.
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Give one concrete example
+      description: Show a representative request, repository situation, or workflow.
+    validations:
+      required: true
+  - type: textarea
+    id: boundaries
+    attributes:
+      label: What should stay out of scope?
+      description: Name nearby work that should not be absorbed by this proposal.
+  - type: checkboxes
+    id: existing
+    attributes:
+      label: Existing guidance
+      options:
+        - label: I checked the current skills and guides for an existing path.
+          required: true

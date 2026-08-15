@@ -1,6 +1,6 @@
 # HTML PRD and design document skill
 
-> **Status:** Proposed for review
+> **Status:** Implemented
 
 ## 1. Executive summary
 

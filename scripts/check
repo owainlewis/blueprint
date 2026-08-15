@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
+cd "$root"
+
+for command in python3 pandoc node npm; do
+    if ! command -v "$command" >/dev/null 2>&1; then
+        echo "Missing required command: $command" >&2
+        exit 1
+    fi
+done
+
+python3 - <<'PY'
+import re
+import subprocess
+import sys
+
+
+def version(command: list[str]) -> tuple[int, ...]:
+    output = subprocess.run(command, check=True, capture_output=True, text=True).stdout
+    match = re.search(r"(\d+(?:\.\d+)+)", output)
+    if not match:
+        raise SystemExit(f"Could not read version from {' '.join(command)}")
+    return tuple(int(part) for part in match.group(1).split("."))
+
+
+requirements = (
+    ([sys.executable, "--version"], (3, 11), "Python 3.11 or newer"),
+    (["pandoc", "--version"], (3, 0), "Pandoc 3 or newer"),
+    (["node", "--version"], (22, 12), "Node.js 22.12 or newer"),
+)
+
+for command, minimum, label in requirements:
+    if version(command) < minimum:
+        raise SystemExit(f"{label} is required")
+PY
+
+if [ ! -x skills/html-doc/node_modules/.bin/mmdc ]; then
+    npm ci --prefix skills/html-doc
+fi
+
+python3 scripts/check_repo.py
+bash -n examples/regenerate.sh .githooks/pre-push scripts/check
+python3 -m unittest discover -s skills/html-doc/tests -v
+
+if git rev-parse --verify origin/main >/dev/null 2>&1; then
+    base=$(git merge-base HEAD origin/main)
+    git diff --check "$base"..HEAD
+else
+    git diff --check
+fi

@@ -6,11 +6,15 @@ This file records notable changes to Blueprint.
 
 ### Added
 
+- Added a lightweight README, a branded project visual, and focused guides for choosing skills and following common workflows.
+- Added contribution and security guidance, issue forms, repository checks, CI, and Dependabot configuration.
 - Added `/html-doc` to turn an existing Markdown PRD or technical design into a verified static HTML reading view with offline Mermaid diagrams, responsive layout, and print styles.
 - Added `/codex-issue-coordinator` to coordinate large GitHub issue batches through visible Codex worker threads, isolated worktrees, ready-for-review pull requests, review and CI loops, and gated agent merges.
 
 ### Changed
 
+- Moved detailed skill and workflow guidance out of the README so the repository is easier to understand on first visit.
+- Marked the implemented `/html-doc` design accordingly and stopped committing its generated HTML reading view as repository documentation.
 - Renamed `/issue-coordinator` to `/codex-issue-coordinator` so the skill is clearly scoped to Codex and can coexist with tool-specific alternatives.
 - `/plan` now writes each task as a cold handoff with a plain title, standalone summary, useful user stories, defined project terms, and enough context and proof for a new engineer to complete it.
 - `/task-to-pr` now accepts one or more tasks. It orders dependent work, can run independent tasks at the same time, and creates one pull request for each task.
