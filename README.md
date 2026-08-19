@@ -10,7 +10,7 @@
 
 </div>
 
-Blueprint gives coding agents ten focused workflows. They cover understanding
+Blueprint gives coding agents ten focused skills. They cover understanding
 existing code, deciding what to build, and delivering reviewed pull requests.
 
 ## Why Blueprint

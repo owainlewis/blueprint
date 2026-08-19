@@ -5,7 +5,7 @@ Review Blueprint as a small set of engineering instructions. Read the issue, com
 - Does the writing lead with the outcome, decision, or rule?
 - Can a new teammate understand it without already knowing Blueprint terms?
 - Does each sentence carry one main idea in short, everyday words?
-- Does each thing keep the same name throughout the text?
+- Does each concept keep the same name throughout the text?
 - Are claims tied to real names, paths, commands, limits, or effects?
 - Did the writer cut filler, repetition, sales language, fake warmth, and generic conclusions?
 - Do headings use sentence case and tell the reader what follows?
