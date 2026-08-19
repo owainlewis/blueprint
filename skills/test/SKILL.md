@@ -7,7 +7,9 @@ argument-hint: "<task, acceptance criteria, diff, branch, PR, URL, or flow>"
 
 # Test
 
-## Workflow
+Prove the behavior that matters. A passing build or a source-code reading can support the proof, but neither proves a user-visible flow.
+
+## Process
 
 1. Read the task, its source design when present, changed code, existing tests, and repository instructions. Acceptance criteria come from the task or approved design. Preserve their wording and `AC-n` or `INV-n` IDs. Never rewrite criteria to match the code.
 2. Map every acceptance criterion, cited invariant, and affected failure path to proof by ID. Test changed behavior and behavior a refactor must preserve.
@@ -21,6 +23,19 @@ argument-hint: "<task, acceptance criteria, diff, branch, PR, URL, or flow>"
    - Check console errors and failed requests during every flow.
    - Capture evidence. Reading source is not browser proof.
 8. Report each `AC-n`, `INV-n`, or task criterion as pass, fail, or unverified. Include the command, browser flow, or other evidence.
+
+## Return
+
+Report each criterion in this shape:
+
+```text
+Criterion: <ID or exact wording>
+Result: Pass / Fail / Unverified
+Evidence: <command, browser flow, or artifact>
+Gap: <what remains unknown, or None>
+```
+
+Lead with failures and unverified criteria. Do not hide them below passing checks.
 
 ## Boundaries
 

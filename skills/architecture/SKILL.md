@@ -7,13 +7,11 @@ argument-hint: "[repository or existing ARCHITECTURE.md]"
 
 # Architecture
 
-## Outcome
-
 Create or update root `ARCHITECTURE.md` so a new teammate can understand the system that exists in code today.
 
 The document should reveal the few rules that give the system its shape: where truth lives, which way dependencies point, how important work moves through the system, and which boundaries a change must preserve.
 
-## Workflow
+## Process
 
 1. Read the request, repository instructions, and any existing `ARCHITECTURE.md`.
 2. Inspect the implementation. Start with manifests, entry points, configuration, schemas, migrations, infrastructure, tests, and the code behind a few critical flows. Follow evidence rather than trying to read every file.
@@ -27,7 +25,7 @@ The document should reveal the few rules that give the system its shape: where t
 Start every document with this small common frame:
 
 ```markdown
-# <System> Architecture
+# <System> architecture
 
 ## Executive summary
 
@@ -91,3 +89,8 @@ Reread the document and check:
 6. **Separation.** Are all proposed changes kept in design documents rather than presented as implemented architecture?
 
 Correct every issue supported by repository evidence. Put anything that cannot be verified under `Verification` with the evidence needed to resolve it.
+
+## Return
+
+Report the document path, the main sources used to verify it, and any evidence
+gap that remains.

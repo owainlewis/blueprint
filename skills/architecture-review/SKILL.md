@@ -5,19 +5,20 @@ user-invocable: true
 argument-hint: "[technical proposal, design, RFC, ADR, or issue]"
 ---
 
-# Architecture Review
+# Architecture review
 
-Review a technical proposal before implementation. It may describe a large
-system change or a small implementation-level design. Review the proposed
-choices, not the document type or size.
+Find choices that could make a technical proposal wrong, unsafe, or impossible
+to prove. Review the proposed behavior and tradeoffs, not the document's size
+or format.
 
-Use one fresh subagent that did not write the proposal. Give it the complete
-review context and tell it to review directly without delegating. If you are
-that reviewer, review directly. Stay read-only.
+Use one fresh subagent that did not write the proposal. Give the reviewer the
+complete context. Tell the reviewer to work directly without delegating. If
+you are that reviewer, review directly. Stay read-only.
 
-If fresh subagents are unavailable, stop and report that independent review is blocked unless the user explicitly accepts a documented self-review.
+If fresh subagents are unavailable, stop and report that independent review is
+blocked. Continue only if the user explicitly accepts a documented self-review.
 
-## Workflow
+## Process
 
 1. Read the goal, proposal, repository instructions, relevant current code,
    tests, schemas, configuration, and linked material. Treat claims about the
@@ -33,9 +34,9 @@ If fresh subagents are unavailable, stop and report that independent review is b
    duplication, or operational work.
 5. Surface material open questions. Recommend an answer when evidence supports
    one. Do not invent questions that cannot change the design.
-6. Return findings, open questions, a short assessment, and one verdict. Do not
-   rewrite the proposal, plan the work, review implementation code, or implement
-   changes.
+6. Return findings, open questions, a short assessment, and one verdict.
+   Do not rewrite the proposal, plan the work, review implementation code, or
+   implement changes.
 
 ## Review focus
 
@@ -78,6 +79,9 @@ For each finding or open question include its location, concrete failure or
 ambiguity, impact, evidence, and the smallest correction or recommended answer.
 Report unclear wording when it prevents a new teammate from explaining,
 evaluating, or implementing the design. Omit other writing preferences.
+
+Use plain words. State the exact condition, failure, and effect. Do not hide an
+unknown behind vague language such as `may have issues` or `could be risky`.
 
 ## Verdict
 

@@ -2,8 +2,13 @@
 
 Review Blueprint as a small set of engineering instructions. Read the issue, complete diff, rendered public docs, and relevant surrounding files.
 
-- Can a new teammate understand the summary without already knowing Blueprint terms?
-- Does the writing use short sentences, everyday words, and only useful detail?
+- Does the writing lead with the outcome, decision, or rule?
+- Can a new teammate understand it without already knowing Blueprint terms?
+- Does each sentence carry one main idea in short, everyday words?
+- Does each thing keep the same name throughout the text?
+- Are claims tied to real names, paths, commands, limits, or effects?
+- Did the writer cut filler, repetition, sales language, fake warmth, and generic conclusions?
+- Do headings use sentence case and tell the reader what follows?
 - Does each skill represent one meaningful engineering phase or delivery outcome?
 - Is policy in `AGENTS.md`, with each phase and delivery workflow in its skill?
 - Does `/architecture` create or update root `ARCHITECTURE.md` from verified implementation while `/design` describes a proposed system or feature change?
@@ -32,5 +37,7 @@ Review Blueprint as a small set of engineering instructions. Read the issue, com
 - Are removed concepts handled by an explicit migration instead of compatibility clutter?
 - Can each judgment be decided from evidence? Replace vague terms such as "code health", "adequate", "robust", and "production-ready" with concrete criteria.
 - Is every sentence useful enough to compete for agent attention?
+- Can any sentence be read two ways? If so, rewrite it.
+- Does any passage sound generated instead of written for this project? If so, make it specific or cut it.
 
 Prefer the shortest wording that preserves the rule. Treat extra skills, duplicate workflows, fake reviewer roles, and steps without proof as regressions.

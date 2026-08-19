@@ -111,4 +111,7 @@ The final page must:
 - include responsive and print styles;
 - embed validated Mermaid SVG as a base64 image and retain the exact source in a disclosure.
 
-Stop when the verified candidate is finalized. Report the output path, source hash, and browser checks performed.
+## Return
+
+Stop when the verified candidate is finalized. Report the output path, source
+hash, and browser checks performed.

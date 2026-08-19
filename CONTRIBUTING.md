@@ -20,7 +20,7 @@ Small documentation corrections can go straight to a pull request.
 
 - Keep one pull request to one outcome.
 - Put repository policy in `AGENTS.md` and phase-specific behavior in the relevant skill.
-- Use short sentences and familiar words. Define project terms before using them.
+- Follow the writing standard in `AGENTS.md`. Lead with the point, use plain words, and cut filler.
 - Do not add placeholders, fake examples presented as proof, or unfinished sections.
 - Update examples and public guides when a skill change would make them inaccurate.
 
