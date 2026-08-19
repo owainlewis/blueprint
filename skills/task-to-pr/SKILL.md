@@ -60,7 +60,8 @@ After a prerequisite merges, retarget its dependents to the default branch and u
 Continue with every task that can make progress. For each task, report the pull request, tests, review verdict, CI state, and any blocker.
 
 Without merge authority, stop when every task has a pull request with all
-available checks passing and no unresolved automated review finding. Record
-required human approval or merge as the task blocker. With merge authority,
-stop when every in-scope pull request is merged and its ticket is complete when
-possible. If no task can move forward, state what is needed.
+available checks passing, a final `/review` verdict of `Approve`, and no
+unresolved automated review finding. Record required human approval or merge as
+the task blocker. With merge authority, stop when every in-scope pull request is
+merged and its ticket is complete when possible. If no task can move forward,
+state what is needed.
