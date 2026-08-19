@@ -7,13 +7,17 @@ argument-hint: "[diff, branch, commit, PR, or file path]"
 
 # Review
 
-The reviewer must be a fresh subagent that did not implement the change. Do not edit files or post comments.
+Find defects that can change the result or make the change unsafe. Do not turn personal taste into a finding.
+
+Use a fresh subagent that did not implement the change. Stay read-only. Do not edit files or post comments.
 
 ## Scope
 
 Review the implementation target named by the user. It may be a file, diff, branch, commit, pull request, or other code change on GitHub. Use `/architecture-review` for a technical proposal that has not been implemented.
 
-If the user does not name a target, review the current repository's complete local change set: commits on the current branch relative to the repository's default branch, staged changes, unstaged changes, and untracked files. Use the repository and immediate surrounding code as context. If there are no local changes, say so instead of substituting a whole-repository audit.
+If the user does not name a target, review the repository's complete local change set. Include commits on the current branch relative to the default branch, staged changes, unstaged changes, and untracked files.
+
+Use the repository and the immediate surrounding code as context. If there are no local changes, say so. Do not substitute a whole-repository audit.
 
 ## Standard
 
@@ -44,16 +48,18 @@ The verdict is independent agent evidence. It is not GitHub approval or a replac
 
 ## Code review findings
 
-For code, commit, branch, and pull request reviews, report only real bugs, customer-impacting issues, and proven simplifications introduced or exposed by the change. Check security, logic, behavior, reliability, compatibility, regressions, and affected failure paths. Inspect the immediate surrounding code needed to prove each finding. A simplification must deliver the same outcome and proof with less state, indirection, duplication, or operational work. Report it only as `Could fix`.
+Report only real bugs, customer-impacting problems, and proven simplifications introduced or exposed by the change. Check security, logic, behavior, reliability, compatibility, regressions, and affected failure paths.
+
+Inspect enough surrounding code to prove each finding. A simplification must deliver the same result and proof with less state, indirection, duplication, or operational work. Report it only as `Could fix`.
 
 Use this format for every finding:
 
 ```text
 Priority: Must fix / Should fix / Could fix
-Confidence: 0–5
+Confidence: 0 to 5
 What I found: Describe the technical problem.
 Why it matters: Explain the impact on customers, callers, or the service.
-ELI5: In one or two short sentences, state the exact condition that triggers the problem and what the customer or service experiences. Use no analogies, jargon, or acronyms.
+Trigger and effect: State the exact condition and what the customer or service experiences.
 Where: File and line.
 Suggested fix: Give a short, practical direction.
 ```
@@ -69,9 +75,9 @@ Confidence means:
 - **5:** Confirmed by reproduction, test, or direct code evidence.
 - **4:** Strong evidence with no credible alternative explanation.
 - **3:** Probable, but some runtime evidence is unavailable.
-- **0–2:** Do not report. Investigate further or mark the area unverified.
+- **0 to 2:** Do not report. Investigate further or mark the area unverified.
 
-Write so the developer can quickly understand what is broken, who it affects, and why they should care. Be concise. Do not report style preferences, theoretical concerns, or problems outside the changed code and its immediate context.
+Use plain words. State what breaks, when it breaks, and who it affects. Omit style preferences, theoretical concerns, and problems outside the change.
 
 ## Verdict
 

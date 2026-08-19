@@ -5,11 +5,11 @@ user-invocable: true
 argument-hint: "<parent issue, milestone, or issue list>"
 ---
 
-# Codex Issue Coordinator
+# Codex issue coordinator
 
-Use one Codex thread as the coordinator. Give each active GitHub issue its own
-Codex worker thread, worktree, branch, and pull request. Keep implementation
-context in workers and dependency state in GitHub.
+Use one Codex thread to coordinate a GitHub issue batch. Give each active issue
+its own worker thread, worktree, branch, and pull request. Workers hold
+implementation context. GitHub holds dependency state.
 
 Explicitly naming `/codex-issue-coordinator`, or explicitly telling the
 coordinator that agents may merge, authorizes in-scope workers to merge their
@@ -165,6 +165,12 @@ return its URL and proof.>
 Do not deploy, publish a release, bypass repository rules, or change unrelated
 work.
 ```
+
+## Return
+
+For each issue, report its worker, pull request, gate state, and blocker. State
+which issues are complete and which need human action. Do not repeat worker
+logs that do not change the result.
 
 ## Boundaries
 

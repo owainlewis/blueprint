@@ -7,7 +7,9 @@ argument-hint: "<feature, problem, or brief>"
 
 # Design
 
-## Workflow
+Settle choices that implementation must not invent. A useful design states the behavior, the main tradeoff, and the proof before code is written.
+
+## Process
 
 1. Read the request, repository instructions, relevant code, and linked material.
 2. Identify choices that would change behavior, interfaces, data, errors, security, operations, or tests.
@@ -112,3 +114,7 @@ Reread the draft once and check each category. Fix any gap you can resolve from 
 10. **Either/or acceptance criteria.** Do not allow both sides of "recovers or retains" to pass. Choose one observable behavior.
 
 Put anything you cannot resolve under Open questions and state whether it blocks task breakdown.
+
+## Return
+
+Report the design path, the main decision and its downside, each blocking question, and the result of the review pass.

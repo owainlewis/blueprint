@@ -7,7 +7,9 @@ argument-hint: "<design, brief, issue, or request>"
 
 # Plan
 
-## Workflow
+Create tasks that a new agent can finish without making product or technical decisions. Split work by working result, not by file, layer, or team boundary.
+
+## Process
 
 1. Read the source, repository instructions, and relevant code.
 2. Stop and return to design if an unresolved choice would change behavior, interfaces, data, security, scale, performance, compatibility, operations, cost, or proof.
@@ -87,3 +89,8 @@ Before returning the plan, read each task twice:
 2. Agent pass: can a fresh agent find the source, identify dependencies and fixed decisions, implement the task, and prove it without asking a product or architecture question?
 
 Delete repeated background after both passes succeed.
+
+## Return
+
+Return the ordered tasks, their dependencies, and any decision that still
+blocks implementation. Do not add a separate summary that repeats the tasks.

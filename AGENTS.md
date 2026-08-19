@@ -9,8 +9,6 @@ Blueprint is a small set of instructions for AI coding. It separates deciding wh
 - Keep current architecture separate from proposed design.
 - Review technical proposals before implementation when a wrong choice could materially affect behavior, data, security, scale, performance, compatibility, operations, cost, or proof.
 - Update an existing architecture document when code changes ownership, dependency direction, protocols, stored data, trust boundaries, deployment topology, or hard limits.
-- Start with the simplest useful explanation. Use short sentences and everyday words. Define technical terms before using them.
-- Write for a new teammate. Put detail after the main idea. Remove anything that does not help someone decide, build, test, or review the work.
 - Skip phases that add no value. Small, decided work can go straight to implementation.
 - A task is ready when a new agent can finish it without asking product or technical questions.
 - Each pull request delivers one focused outcome and its proof. A reviewer should not have to separate unrelated work to understand it.
@@ -25,6 +23,23 @@ Blueprint is a small set of instructions for AI coding. It separates deciding wh
 - Prefer the smallest complete change. Do not mix product work with unrelated cleanup.
 - Humans review decisions and normally merge. Agents may merge only when the user explicitly delegates it. Explicitly naming `/codex-issue-coordinator` delegates merge authority for the supplied batch after its quality gates pass; an implicit skill match does not.
 
+## Writing
+
+Write for a new teammate who needs to understand the point on the first read.
+
+- Lead with the outcome, decision, or rule. Put supporting detail after it.
+- Use short sentences and everyday words. Give each sentence one main idea.
+- Write instructions as direct commands. Put a condition before the step it controls.
+- Name the actor. Prefer `the parser rejects the file` to `the file is rejected`.
+- Use the same word for the same thing. Define a necessary technical term once.
+- Use real names, paths, commands, limits, and effects. Replace vague claims with facts.
+- Cut filler, repetition, sales language, fake warmth, and generic conclusions.
+- Use sentence case for headings. Use numbered lists for sequences and bullets for real lists.
+- Keep a human voice. State a judgment when the document calls for one. Keep instructions and reference text neutral.
+- Vary sentence length when it helps the prose sound natural. Do not force every point into the same shape.
+
+Before finishing, reread the text. Cut words that do no work. Fix sentences that can be read two ways. Rewrite anything that sounds generated instead of written for this project.
+
 ## Phases
 
 - `/architecture`: create or update root `ARCHITECTURE.md` from verified implementation. Stop with the document ready for human review.
@@ -36,7 +51,7 @@ Blueprint is a small set of instructions for AI coding. It separates deciding wh
 - `/improve`: inspect existing code and improve its clarity, simplicity, and structure without changing intended behavior.
 - `/codex-issue-coordinator`: coordinate a large GitHub issue batch through separate Codex worker threads, reviewed pull requests, and gated merges.
 
-## Workflow: Code changes
+## Workflow for code changes
 
 For one or more code changes, follow the [`/task-to-pr` skill](skills/task-to-pr/SKILL.md). It stacks dependent work after prerequisite pull requests are open and independently approved, runs independent work at the same time when useful, and takes each task through a tested and reviewed pull request. A milestone is one possible source of tasks.
 

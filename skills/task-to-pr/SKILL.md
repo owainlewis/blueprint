@@ -7,13 +7,19 @@ argument-hint: "<tasks, tickets, pull requests, or milestone>"
 
 # Task to PR
 
-Review the tasks you were given. Decide the order and which tasks can run at the same time. Make a short plan.
+Take each task from a decided outcome to a tested and reviewed pull request. Keep one task, branch, and pull request focused on one result.
 
-Complete each task in two phases. Keep working without waiting for the user while any task can make progress.
+Review the tasks first. Decide their order, note dependencies, and identify work that can run at the same time. Then make a short plan.
 
-Independent tasks may start together. Start a dependent task after every prerequisite has an open pull request, an independent `/review` verdict of `Approve`, and no known blocking finding. Stack dependent work on the prerequisite branch. If several unmerged prerequisites feed one task, stack those prerequisite branches in dependency order before branching the dependent task. When a prerequisite branch or pull request base changes, update every dependent branch to that reviewed state and repeat `/test` and `/review`. Retarget each stacked pull request to the default branch after its prerequisite merges, then repeat the proof against that base.
+## Order dependent work
 
-## Phase 1: Build the code
+- Start independent tasks together when useful.
+- Start a dependent task only after each prerequisite has an open pull request, an independent `/review` verdict of `Approve`, and no known blocking finding.
+- Stack dependent work on the prerequisite branch. If a task has several unmerged prerequisites, stack those branches in dependency order before creating the dependent branch.
+- When a prerequisite branch or pull request base changes, update every dependent branch to that reviewed state. Repeat `/test` and `/review`.
+- After a prerequisite merges, retarget its stacked pull requests to the default branch. Repeat the proof against that base.
+
+## Phase 1: build the code
 
 1. Create or reuse a branch and worktree for the task. Start independent work from the latest default branch and dependent work from its reviewed prerequisite or stacked base.
 2. Write the code.
@@ -24,7 +30,7 @@ Independent tasks may start together. Start a dependent task after every prerequ
 7. Use `/review` with a fresh subagent that did not write the code.
 8. Fix valid problems, then repeat `/test` and `/review`. Commit and push every reviewed fix before continuing.
 
-## Phase 2: Pass the automated checks
+## Phase 2: pass the automated checks
 
 1. Use the GitHub CLI to wait for CI and automated code review when the repository uses them.
 2. Fix failures caused by your changes and valid review findings.
@@ -36,6 +42,26 @@ Independent tasks may start together. Start a dependent task after every prerequ
 8. Repeat until all available checks pass and the automated review has no unresolved findings.
 9. Update the ticket with final proof and the pull request link when possible. Keep it in the repository's review state while the pull request is open.
 
-If the user asked you to merge the pull requests, merge them in dependency order after their automated checks pass, the final `/review` verdict is `Approve`, required approvals are present, and no review thread is unresolved. Explicitly naming `/codex-issue-coordinator`, or explicitly telling its coordinator that agents may merge, is a merge request for only the issues in its supplied batch. Automatic skill selection is not merge authority. After each prerequisite merges, retarget its dependents to the default branch, update them to that base, and repeat `/test`, `/review`, CI, and automated review before merging them. Never bypass repository rules. Wait until GitHub reports each pull request as merged before marking its ticket complete when possible. Otherwise, leave it open.
+## Merge only when asked
 
-Continue with every task that can make progress. Stop when every task has a pull request with all available checks passing and no unresolved automated review findings. When merge was requested, stop only after every in-scope pull request is merged and its ticket is complete when possible. If no remaining task can move forward, explain what is needed.
+If the user asks for merges, merge pull requests in dependency order. Before each merge, confirm that:
+
+- automated checks pass;
+- the final `/review` verdict is `Approve`;
+- required approvals are present; and
+- no review thread remains unresolved.
+
+Explicitly naming `/codex-issue-coordinator` grants merge authority only for that coordinator's issue batch. Automatic skill selection does not grant merge authority.
+
+After a prerequisite merges, retarget its dependents to the default branch and update them to that base. Repeat `/test`, `/review`, CI, and automated review before merging. Never bypass repository rules. Wait until GitHub reports the pull request as merged before marking its ticket complete when possible. If the user did not ask for merges, leave the pull request open.
+
+## Return
+
+Continue with every task that can make progress. For each task, report the pull request, tests, review verdict, CI state, and any blocker.
+
+Without merge authority, stop when every task has a pull request with all
+available checks passing, a final `/review` verdict of `Approve`, and no
+unresolved automated review finding. Record required human approval or merge as
+the task blocker. With merge authority, stop when every in-scope pull request is
+merged and its ticket is complete when possible. If no task can move forward,
+state what is needed.

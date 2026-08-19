@@ -7,7 +7,9 @@ argument-hint: "[code, files, diff, branch, or improvement focus]"
 
 # Improve
 
-## Workflow
+Make code easier to understand without changing what it does. Reduce the layers a reader must trace and the hidden state they must remember.
+
+## Process
 
 1. Identify the target from the request, current diff, or recently changed code.
 2. Read the target, its tests, and relevant surrounding code. State the behavior that must not change.
@@ -16,6 +18,10 @@ argument-hint: "[code, files, diff, branch, or improvement focus]"
 5. Make focused improvements by deleting, deduplicating, renaming, simplifying, extracting, or inlining.
 6. Preserve public interfaces, data shapes, errors, and user-visible behavior unless the user explicitly asks to change them.
 7. Run tests and checks that cover behavior the refactor can affect. Report what improved, what behavior was preserved, and the evidence.
+
+## Return
+
+State what became simpler, what behavior stayed the same, and which checks prove it. Name any behavior that remains unverified.
 
 ## Boundaries
 
