@@ -60,6 +60,8 @@ Each skill owns one engineering phase or useful outcome. Repository policy stays
 
 ## Guides
 
+- [The AI engineering lifecycle](guides/lifecycle.md) explains the process from design through release and scaling it into automated systems.
+- [Blueprint improvement plan](guides/blueprint-plan.md) describes the proposed path for skills, evaluations, teaching material, and a website.
 - [Choosing the right skill](guides/choosing-a-skill.md) explains where each skill starts and stops.
 - [Common Blueprint workflows](guides/workflows.md) shows how the skills fit together for small changes, larger features, existing systems, and issue batches.
 - [Examples](examples/) contains reviewed designs and plans you can inspect or reuse.
