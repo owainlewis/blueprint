@@ -16,7 +16,15 @@ If you only need a quick explanation, ask the agent directly. If you are decidin
 
 ## Decide what to build
 
-Use [`/design`](../skills/design/SKILL.md) when a meaningful product or technical choice must be settled before coding. It covers behavior, interfaces, failures, security, operations, and proof. It stops with a proposal ready for review.
+Use [`/design`](../skills/design/SKILL.md) when a meaningful product or technical choice must be settled before coding. It produces a compact proposal with five parts:
+
+1. Requirements: what to build, why it matters, and the scope.
+2. User experience: actions, inputs, results, and failure or recovery from the user or caller's point of view.
+3. Technical design and choices: how it works, which technologies it uses, and the reasons and tradeoffs.
+4. Acceptance and proof: testable conditions paired with checks.
+5. Open questions: unresolved decisions and whether they block work.
+
+Routine features aim for 500 to 800 words. Larger or riskier changes get the detail needed to settle their decisions. Existing stack choices and conventions are referenced; additions and changes are explained. The skill stops with the proposed design ready for review.
 
 Use [`/architecture-review`](../skills/architecture-review/SKILL.md) to challenge that proposal before implementation. This is useful when a wrong choice could affect data, security, compatibility, scale, performance, cost, or operations.
 

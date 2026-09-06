@@ -1,22 +1,21 @@
 ---
 name: design
-description: "Writes a clear design for a proposed feature or system change. Use when important product or technical choices must be settled before coding. Covers behavior, interfaces, failures, risks, acceptance criteria, and tests. Use architecture when the repository needs current ARCHITECTURE.md."
+description: "Writes a proposed design covering requirements, user experience, technical choices, and proof. Use when important product or technical choices must be settled before coding. Use architecture to document an implemented system."
 user-invocable: true
 argument-hint: "<feature, problem, or brief>"
 ---
 
 # Design
 
-Settle choices that implementation must not invent. A useful design states the behavior, the main tradeoff, and the proof before code is written.
+Decide what to build, why it matters, what the user experiences, and how it will work. Settle consequential choices so the implementing agent does not have to invent them.
 
 ## Process
 
-1. Read the request, repository instructions, relevant code, and linked material.
-2. Identify choices that would change behavior, interfaces, data, errors, security, operations, or tests.
-3. Ask blocking questions before drafting. Ask only when the answer would change the design, and recommend an answer. Record non-blocking questions and a recommended default under Open questions.
-4. Write `docs/<feature-slug>/design.md` using the numbered shape below. Keep it short and in order. Omit only sections that do not apply.
-5. Run the review pass. Fix what you can. List the rest under Open questions.
-6. Stop with the proposed design ready for review. Do not plan or implement it.
+1. Read the request, repository instructions, relevant code, and linked material. Reuse settled requirements and repository conventions.
+2. Identify missing decisions that would change behavior, interfaces, data, security, operations, or proof. Ask blocking questions before drafting, with a recommended answer. Record non-blocking questions with a recommended default.
+3. Write `docs/<feature-slug>/design.md` using the compact shape below. For a routine feature, aim for 500 to 800 words. Expand when a material decision or risk needs more explanation; completeness matters more than the word target.
+4. Run the review pass once. Fix gaps supported by the available evidence and record unresolved decisions under Open questions.
+5. Stop with a proposed design ready for review. Do not plan or implement it.
 
 ## Document shape
 
@@ -25,96 +24,56 @@ Settle choices that implementation must not invent. A useful design states the b
 
 > **Status:** Proposed for review
 
-## 1. Executive summary
-Say what is wrong today, who feels the problem, what will change, how we plan to fix it, and the main downside. Use simple words. Do not list sections or implementation details.
+## 1. Requirements: what and why
+Explain the problem, who has it, and the outcome they need. State the required capabilities, constraints, and what is out of scope. Make the value clear before introducing implementation details.
 
-## 2. Context and scope
-Describe the current behavior, why it is insufficient, what changes once this ships, and the boundary of this design.
+## 2. User experience
+Describe the system as a black box: what the user does or supplies, what they see or receive, and what happens next. Walk through the main flow and relevant empty, invalid, denied, and failed outcomes, including recovery. For a CLI, API, or library, the user can be an operator or caller. Keep internal components and algorithms in the technical design.
 
-## 3. System context
-Show where the change fits in the current system. Name the parts and outside systems it touches and the boundaries it must preserve. Include a small diagram when it makes those relationships clearer.
+## 3. Technical design and choices
+Explain how the proposed change fits the existing system. Name the changed responsibilities, interfaces, and data. Record consequential technology choices with a reason and their main tradeoff. Add the relevant detail described below.
 
-## 4. Proposed design
+## 4. Acceptance and proof
+Pair each testable condition with how it will be checked. Include affected failure paths and rules that must always hold. Reference earlier decisions instead of repeating their full definitions.
 
-### How it works
-Walk one real case from start to finish. Name the thing that arrives, what handles it, what gets written down, and what the user sees.
+| ID | Done when | How to check |
+|---|---|---|
+| AC-1 | Observable condition | Exact command, automated scenario, or manual check |
 
-### Components and responsibilities
-For each changed part, state what it owns, what it depends on, and what it does not own.
-
-### Decisions
-For each real choice, say what you chose, what you rejected, and what the choice costs. Use one short paragraph. Skip choices nobody would question.
-
-## 5. Invariants and requirements
-
-### Invariants
-List rules that must always hold as `INV-1`, `INV-2`, and so on. A reviewer checks the code against these rules, so keep them short and testable.
-
-### Requirements
-- Observable behavior and constraints.
-
-## 6. Interfaces and data
-APIs, commands, events, schemas, config, compatibility, or migration.
-
-### Naming and identity
-How every stored name or ID is created, what happens when that fails, and what happens if its source changes after data exists.
-
-## 7. Failure behavior and lifecycle
-Say what can fail, what state follows, whether the system retries, and how it recovers. Cover startup, config or state changes, work in flight, shutdown, and what happens when several things fail together.
-
-## 8. Security, privacy, and operations
-State the trust boundary, authorization checks, sensitive data handling, and operational impact. Name shared limits such as rate limits, connections, disk, memory, or cost. Say what happens at each limit.
-
-## 9. Acceptance criteria
-- `AC-1`: Testable condition that proves the work is complete.
-
-## 10. Test approach
-How each `INV-n` and `AC-n` will be proved. Cite the IDs.
-
-## 11. Risks and tradeoffs
-- Risk and mitigation.
-
-## 12. Open questions
-- Question, and whether it blocks starting work.
-
-## 13. Out of scope
-- Related work this design does not include.
+## 5. Open questions
+List unresolved decisions, the recommended answer, and whether they block planning or implementation. Write None when the design is settled.
 ```
+
+## Technical detail
+
+Include only the topics that require a decision for this change. Use short subsections when needed.
+
+- **Technology choices:** language, framework, major dependencies, storage, and deployment. For a new project, choose the core stack. For an existing project, reference established choices and explain additions or changes. Pin versions when compatibility depends on them.
+- **Structure and contracts:** changed component responsibilities and boundaries, APIs, commands, events, schemas, configuration, and migrations. Explain identifier creation and compatibility when stored names or IDs change.
+- **Failure and recovery:** what can fail, resulting state, retries and their limits, and recovery. Cover startup, changes while work is running, and shutdown when they affect the outcome.
+- **Security and operations:** trust boundaries, authorization, sensitive data, and relevant limits on scale, latency, connections, disk, memory, or cost. State what happens when an applicable limit is reached.
+
+For each meaningful choice, state the decision, why it fits the requirements, and its main cost or limitation. Mention a rejected alternative only when the comparison explains the choice. Leave easily reversible local mechanics to the implementing agent.
 
 ## Writing rules
 
-- Start with the simplest useful explanation. Write for a new teammate, not someone who already knows the project.
-- Prose is the default. Use bullets only for real lists, such as config fields, acceptance criteria, risks, and out of scope.
-- A bullet cannot carry a decision by itself. Write the reason next to it in a sentence.
-- Use plain words. Say "the process crashed" instead of "an availability event occurred". Prefer short sentences.
-- Define a term the first time you use it, or do not use it.
-- Keep current architecture and proposed behavior distinct. Link to `ARCHITECTURE.md` when it exists and say exactly which current boundary changes.
-- Give each changed component a positive and negative boundary: what it owns and what it does not own.
-- Use numbered top-level sections so reviewers can refer to stable parts of the design.
-- Once another artifact cites an `INV-n` or `AC-n`, keep that ID attached to the same rule. Do not renumber or reuse existing IDs. Give additions the next unused ID.
-- Use diagrams only when they make system context, dependency direction, data flow, or lifecycle materially clearer.
-- Prefer one clear recommendation over a list of options.
-- Record rejected options only when the tradeoff matters later.
-- Do not repeat the same fact in several sections with different wording.
-- Do not use em dashes.
+- Use plain words and define necessary terms. Do not use em dashes.
+- Give each fact one home. Requirements explain the need; user experience describes observable behavior; technical design explains implementation. Acceptance checks reference these rather than creating another copy.
+- Use prose for explanations, lists for parallel facts, and diagrams only when they clarify a relationship or flow.
+- Keep current architecture distinct from proposed behavior. Link to `ARCHITECTURE.md` when it exists and reference shared conventions instead of restating them.
+- Use `INV-n` for rules that need stable references across planning, implementation, and review. Map every invariant to proof in Acceptance and proof.
+- Keep cited `AC-n` and `INV-n` IDs attached to the same rules. Never renumber or reuse them; assign additions the next unused ID.
+- When updating an existing design, preserve linked section anchors. Do not restructure it merely to match this template.
 
 ## Review pass
 
-Reread the draft once and check each category. Fix any gap you can resolve from the available evidence.
+Check four things before returning the design:
 
-1. **Executive summary.** Can a new teammate understand the problem, outcome, approach, and main downside without reading the rest of the document?
-2. **Architecture fit.** Does the design show the current system boundary, the boundary being changed, and the owner of each new responsibility?
-3. **Names and identity.** Where does every stored identifier come from? What happens when it is missing, unclear, or changes after data exists?
-4. **Failure and recovery.** What creates a bad state? Does the system retry, how long does it wait between attempts, and can it recover without a restart? What happens when everything is bad at startup?
-5. **Security and privacy.** Where is identity established, authorization enforced, untrusted input validated, and sensitive data exposed or retained?
-6. **Shared resources.** What limited resource does the feature use? State the budget and what happens at the limit.
-7. **Timing and fairness.** Replace words such as "eventually" and "will not starve" with a bound someone can test.
-8. **Lifecycle.** Cover config reload, enable and disable behavior, work already in flight, and shutdown.
-9. **Undefined terms.** Define words that carry a specific meaning in the design.
-10. **Either/or acceptance criteria.** Do not allow both sides of "recovers or retains" to pass. Choose one observable behavior.
-
-Put anything you cannot resolve under Open questions and state whether it blocks task breakdown.
+1. Can a new teammate explain what is changing, why, and the user experience without reading the technical design?
+2. Could an implementing agent proceed without inventing a consequential product or technical decision? Are technology choices justified and compatible with the repository?
+3. Are relevant failures, data changes, trust boundaries, and operational limits explicit, with enough detail to prevent an unsafe or incompatible implementation?
+4. Does each acceptance criterion and invariant have concrete proof? Replace vague timing or alternative outcomes with one testable rule. Remove repeated background and sections that add no decisions.
 
 ## Return
 
-Report the design path, the main decision and its downside, each blocking question, and the result of the review pass.
+Report the design path, main technical decision and tradeoff, any blocking question, and the review result. Keep the response short; the design contains the detail.
