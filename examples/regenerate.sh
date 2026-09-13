@@ -1,5 +1,5 @@
 #!/bin/bash
-# Regenerate the golden design and plan examples.
+# Print prompts for creating reviewed design and plan examples.
 # Run from the repo root: ./examples/regenerate.sh
 
 set -e
@@ -21,4 +21,5 @@ echo "  architecture review findings and a verdict in chat"
 echo "  a plan in chat, or tracker tickets when requested"
 echo ""
 echo "Then copy the reviewed design and example plan into examples/$FEATURE/ and review the diff."
+echo "Keep the paired design and plan aligned when changing scope or acceptance criteria."
 echo "Input: $INPUT"
