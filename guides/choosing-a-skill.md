@@ -1,6 +1,6 @@
 # Choosing the right Blueprint skill
 
-Blueprint has ten skills. You rarely need all of them for one change. Start with the result you need now.
+Blueprint has eleven skills. You rarely need all of them for one change. Start with the result you need now.
 
 ## Document an implemented system
 
@@ -36,6 +36,8 @@ Small, decided work does not need a design or plan. Send it directly to `/task-t
 
 Use [`/task-to-pr`](../skills/task-to-pr/SKILL.md) for one or more tasks, tickets, pull requests, or a milestone. Each task gets its own branch, tests, independent review, and pull request. Pull requests remain open unless the user asks to merge them.
 
+Use [`/factory`](../skills/factory/SKILL.md) to take one GitHub issue to a pull request without supervision. It writes `PRODUCT_SPEC.md` and `TECHNICAL_SPEC.md` in `docs/<feature-slug>/`, builds the change, then waits for CI and automated reviews and fixes what they report. It never asks questions and never merges. Use `/task-to-pr` instead when you are available to answer questions, or when the work needs its own independent review.
+
 Use [`/codex-issue-coordinator`](../skills/codex-issue-coordinator/SKILL.md) for a large GitHub issue batch that needs visible Codex worker tasks. The coordinator orders dependencies and gives each active issue its own task, worktree, branch, and pull request.
 
 The coordinator is intentionally Codex-specific. The other skills are portable instructions.
@@ -63,6 +65,7 @@ Ask what result you need next:
 - A challenge to a proposal: `/architecture-review`
 - Several ready tasks: `/plan`
 - A pull request: `/task-to-pr`
+- A pull request from one GitHub issue, without supervision: `/factory`
 - Proof: `/test`
 - An independent verdict: `/review`
 - Simpler code with the same behavior: `/improve`
