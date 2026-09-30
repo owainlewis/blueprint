@@ -6,6 +6,7 @@ This file records notable changes to Blueprint.
 
 ### Added
 
+- Added `/factory` to take one GitHub issue to a pull request without supervision. It writes product and technical specs, implements them, waits for CI and automated reviews, fixes what they report for up to 3 rounds, and never merges.
 - Added a lightweight README, a branded project visual, and focused guides for choosing skills and following common workflows.
 - Added contribution and security guidance, issue forms, repository checks, CI, and Dependabot configuration.
 - Added `/html-doc` to turn an existing Markdown PRD or technical design into a verified static HTML reading view with offline Mermaid diagrams, responsive layout, and print styles.

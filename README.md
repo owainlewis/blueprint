@@ -10,7 +10,7 @@
 
 </div>
 
-Blueprint gives coding agents ten focused skills. They cover understanding
+Blueprint gives coding agents eleven focused skills. They cover understanding
 existing code, deciding what to build, and delivering reviewed pull requests.
 
 ## Why Blueprint
@@ -27,7 +27,7 @@ work needs.
 
 ## Install
 
-Install all ten skills with one command:
+Install all eleven skills with one command:
 
 ```bash
 npx skills add \
@@ -44,15 +44,15 @@ Most work starts in one of these places:
 - **Decide how a meaningful change should work.** Start with [`/design`](skills/design/SKILL.md) for a technical design ready for review.
 - **Deliver a decided task.** Start with [`/task-to-pr`](skills/task-to-pr/SKILL.md) for a tested, independently reviewed pull request.
 
-Use [`/plan`](skills/plan/SKILL.md) when decided work needs splitting. Use [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md) when one Codex task must coordinate a large batch of GitHub issues.
+Use [`/plan`](skills/plan/SKILL.md) when decided work needs splitting. Use [`/factory`](skills/factory/SKILL.md) to take one GitHub issue to a pull request without supervision. Use [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md) when one Codex task must coordinate a large batch of GitHub issues.
 
 Small, clear changes can go straight to `/task-to-pr`. Blueprint asks for only as much process as the work needs.
 
-## Ten focused skills
+## Eleven focused skills
 
 - **Document:** [`/architecture`](skills/architecture/SKILL.md)
 - **Decide:** [`/design`](skills/design/SKILL.md), [`/architecture-review`](skills/architecture-review/SKILL.md), [`/plan`](skills/plan/SKILL.md)
-- **Deliver:** [`/task-to-pr`](skills/task-to-pr/SKILL.md), [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md)
+- **Deliver:** [`/task-to-pr`](skills/task-to-pr/SKILL.md), [`/factory`](skills/factory/SKILL.md), [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md)
 - **Check and improve:** [`/test`](skills/test/SKILL.md), [`/review`](skills/review/SKILL.md), [`/improve`](skills/improve/SKILL.md)
 - **Present:** [`/html-doc`](skills/html-doc/SKILL.md)
 

@@ -49,11 +49,14 @@ Before finishing, reread the text. Cut words that do no work. Fix sentences that
 - `/test`: prove acceptance criteria and failure paths affected by the change, including real-browser checks when browser-rendered behavior changes.
 - `/review`: use a fresh subagent for an independent, read-only implementation review.
 - `/improve`: inspect existing code and improve its clarity, simplicity, and structure without changing intended behavior.
+- `/factory`: take one GitHub issue to a pull request without supervision, using CI and automated reviews as gates. Stop with the pull request open.
 - `/codex-issue-coordinator`: coordinate a large GitHub issue batch through separate Codex worker threads, reviewed pull requests, and gated merges.
 
 ## Workflow for code changes
 
 For one or more code changes, follow the [`/task-to-pr` skill](skills/task-to-pr/SKILL.md). It stacks dependent work after prerequisite pull requests are open and independently approved, runs independent work at the same time when useful, and takes each task through a tested and reviewed pull request. A milestone is one possible source of tasks.
+
+For one GitHub issue with no one available to answer questions, use [`/factory`](skills/factory/SKILL.md) instead. It relies on CI and automated reviews instead of an independent `/review`, and it never merges.
 
 Merge pull requests only when the user asks. Otherwise, leave them open.
 

@@ -46,6 +46,16 @@ existing code → /improve → focused tests
 
 Use `/task-to-pr` instead when the cleanup also changes behavior. Separate a large refactor when mixing it with product work would hide the real change.
 
+## One issue without supervision
+
+When a GitHub issue is clear and you want a pull request without watching the work:
+
+```text
+issue → /factory → specs, code, CI, automated reviews → open pull request
+```
+
+The factory fixes CI failures and review comments for up to 3 rounds, then comments on the issue with the result. A person reviews and merges the pull request.
+
 ## A large issue batch in Codex
 
 When several GitHub issues have dependencies and need isolated coding sessions:
