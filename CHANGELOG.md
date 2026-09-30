@@ -14,6 +14,7 @@ This file records notable changes to Blueprint.
 
 ### Changed
 
+- `/factory` puts the issue number in its branch name, uses a fixed worktree path, checks that new tests fail without the change, writes the pull request description in What changed, Why, and Verification sections, and skips the review wait in repositories without automated reviews.
 - `/architecture` now has one outcome: create or update root `ARCHITECTURE.md` from verified implementation. Its document guidance now follows the system's real topology, dependencies, protocols, lifecycles, and component boundaries instead of a fixed audit template.
 - Moved detailed skill and workflow guidance out of the README so the repository is easier to understand on first visit.
 - Marked the implemented `/html-doc` design accordingly and stopped committing its generated HTML reading view as repository documentation.
