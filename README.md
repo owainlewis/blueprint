@@ -55,7 +55,7 @@ Each skill owns one engineering phase or delivery outcome. Repository policy sta
 
 - [Choosing the right skill](guides/choosing-a-skill.md) explains where each skill starts and stops.
 - [Common Blueprint workflows](guides/workflows.md) shows how the skills fit together for small changes, larger features, existing systems, and issue batches.
-- [Task list example](examples/) shows system requirements, architecture, and one feature spec.
+- [Consulting CRM example](examples/) shows requirements, architecture and data flow, a feature spec, and a plan with vertical slices.
 - [Migration guide](MIGRATION.md) explains how to remove older Blueprint skills before upgrading.
 - [Changelog](CHANGELOG.md) records notable changes.
 
