@@ -6,7 +6,8 @@ This file records notable changes to Blueprint.
 
 ### Added
 
-- Added `/factory` to take one GitHub issue to a pull request without supervision. It works in its own worktree and branch, writes product and technical specs, implements them, opens a pull request that closes the issue and explains the change and its verification, waits for CI and automated reviews, fixes what they report for up to 3 rounds, and never merges.
+- Added `/requirements` for system product needs and `/spec` for one feature or major change. The spec serves as the ticket.
+- Added `/factory` for delivery through gated merge, reusing `/task-to-pr`. Explicit invocation grants scoped merge authority.
 - Added a lightweight README, a branded project visual, and focused guides for choosing skills and following common workflows.
 - Added contribution and security guidance, issue forms, repository checks, CI, and Dependabot configuration.
 - Added `/html-doc` to turn an existing Markdown PRD or technical design into a verified static HTML reading view with offline Mermaid diagrams, responsive layout, and print styles.
@@ -14,8 +15,8 @@ This file records notable changes to Blueprint.
 
 ### Changed
 
-- `/factory` puts the issue number in its branch name, uses a fixed worktree path, checks that new tests fail without the change, writes the pull request description in What changed, Why, and Verification sections, and skips the review wait in repositories without automated reviews.
-- `/architecture` now has one outcome: create or update root `ARCHITECTURE.md` from verified implementation. Its document guidance now follows the system's real topology, dependencies, protocols, lifecycles, and component boundaries instead of a fixed audit template.
+- `/factory` now requires the same tests, independent review, CI, repairs, and required approvals as `/task-to-pr`; it no longer writes separate product and technical specs.
+- `/architecture` now designs the intended system and data model, with decision status separate from implementation status. Claims about existing code still require verification.
 - Moved detailed skill and workflow guidance out of the README so the repository is easier to understand on first visit.
 - Marked the implemented `/html-doc` design accordingly and stopped committing its generated HTML reading view as repository documentation.
 - Renamed `/issue-coordinator` to `/codex-issue-coordinator` so the skill is clearly scoped to Codex and can coexist with tool-specific alternatives.
@@ -23,7 +24,7 @@ This file records notable changes to Blueprint.
 - `/task-to-pr` now accepts one or more tasks. It orders dependent work, can run independent tasks at the same time, and creates one pull request for each task.
 - Delivery now has two clear phases: build and review the code, then pass CI and automated code review.
 - Automated review findings require a reply that says what changed or why no change was needed.
-- Pull requests stay open unless the user asks the agent to merge them.
+- `/task-to-pr` leaves passing pull requests open by default. Explicit `/factory` or `/codex-issue-coordinator` use grants scoped gated merging.
 - Pull requests are marked ready before independent and GitHub review begin.
 - Explicitly naming `/codex-issue-coordinator` grants merge authority for only its supplied batch after every quality gate passes. An implicit skill match leaves passing pull requests open.
 - Dependent work now stacks on open, independently approved prerequisite pull requests instead of waiting for merge.
@@ -33,4 +34,5 @@ This file records notable changes to Blueprint.
 
 ### Removed
 
+- Replaced `/design` with `/spec`. System product requirements now belong in `/requirements`.
 - Removed the `/milestone` skill. Pass a GitHub milestone to `/task-to-pr` instead.

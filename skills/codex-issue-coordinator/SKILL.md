@@ -87,7 +87,7 @@ operations, branch-protection bypasses, or changes outside the supplied batch.
 
 Each worker owns one issue and follows this order:
 
-1. Read the issue, repository instructions, relevant design, code, tests, and
+1. Read the issue, repository instructions, relevant spec, code, tests, and
    dependency pull requests. Move the issue to In Progress when possible.
 2. Use the Codex-managed worktree. If the issue has an open pull request, reuse
    its exact head branch and pull request. Otherwise create the repository's

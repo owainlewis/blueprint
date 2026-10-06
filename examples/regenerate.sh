@@ -1,25 +1,22 @@
 #!/bin/bash
-# Print prompts for creating reviewed design and plan examples.
-# Run from the repo root: ./examples/regenerate.sh
-
+# Print prompts for the system and feature workflow.
 set -e
 
-DIR="$(cd "$(dirname "$0")" && pwd)"
-FEATURE="rag-chatbot"
-INPUT="$DIR/input.md"
+cat <<'PROMPTS'
+Use /requirements for the RAG chatbot described in examples/input.md.
+Use /architecture to design that system from REQUIREMENTS.md.
+Use /architecture-review on ARCHITECTURE.md against REQUIREMENTS.md.
+After the decisions are settled, use /spec for document ingestion and retrieval.
+Use /architecture-review on docs/document-ingestion/spec.md.
+After review, use /plan if the spec needs several delivery tasks.
 
-echo "Use Blueprint with prompts like:"
-echo ""
-echo "  Use the design skill for $FEATURE from examples/input.md"
-echo "  Use the architecture-review skill for docs/$FEATURE/design.md"
-echo "  After approval, use the plan skill for docs/$FEATURE/design.md and return the plan in chat"
-echo ""
-echo "Expected outputs:"
-echo ""
-echo "  docs/$FEATURE/design.md"
-echo "  architecture review findings and a verdict in chat"
-echo "  a plan in chat, or tracker tickets when requested"
-echo ""
-echo "Then copy the reviewed design and example plan into examples/$FEATURE/ and review the diff."
-echo "Keep the paired design and plan aligned when changing scope or acceptance criteria."
-echo "Input: $INPUT"
+Expected outputs:
+  REQUIREMENTS.md
+  ARCHITECTURE.md
+  docs/document-ingestion/spec.md
+  review verdicts and optional tasks in chat
+
+Review generated documents before adding them as examples. Preserve references
+between requirements, architecture, spec, and tasks. Applications described by
+the examples are not implemented in this repository.
+PROMPTS

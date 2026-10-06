@@ -1,29 +1,26 @@
 ---
 name: factory
-description: "Takes a GitHub issue to a pull request with passing CI in one shot, without supervision. Writes product and technical specs, implements them, and fixes CI failures and automated review comments. Use when asked to build an issue end to end without supervision."
+description: "Delivers a spec or decided task through the task-to-pr workflow and merges after all quality and approval gates pass. Explicit invocation grants merge authority for the supplied work."
 user-invocable: true
-argument-hint: "<GitHub issue number or URL>"
+argument-hint: "<spec, task, or GitHub issue>"
 ---
 
 # Factory
 
-Take the provided GitHub issue to a pull request. Do not ask the user anything.
+Deliver the supplied work through a verified merge.
 
-Work in a new git worktree at `../<repo>-<issue>`, on a new branch from the latest
-default branch. Put the issue number in the branch name, such as `42-fix-login`.
-Keep the repository's branch prefix if it has one.
+Explicitly invoking `/factory` authorizes merging only the supplied work after
+all gates pass. Automatic skill selection does not grant merge authority; leave
+the PR open unless the user explicitly authorizes merging. Deployment and release
+publication require separate authority.
 
-1. Review the provided issue and write a PRODUCT_SPEC.md and a TECHNICAL_SPEC.md
-   in `docs/<feature-slug>/`.
-2. Implement TECHNICAL_SPEC.md, with a test for each requirement in PRODUCT_SPEC.md.
-3. Run the tests and fix any failures. Check that each new test fails without
-   your change.
-4. Open a pull request. Start its description with `Closes #<issue>`, then add
-   three sections: What changed, Why, and Verification.
-5. Wait for CI with `gh pr checks --watch`. Fix any failures and push.
-6. If recent pull requests in the repository have automated reviews, wait up to
-   10 minutes for them. Fix each comment, or reply with why not. If you pushed a
-   fix, go back to step 5.
-7. Comment on the issue with the pull request link and what happened.
+## Process
 
-Stop after 3 rounds of CI or review fixes. Never weaken a test, merge, or force-push.
+1. Read the source and repository instructions. The spec is the ticket; reuse it rather than creating separate product and technical specs.
+2. Follow [`/task-to-pr`](../task-to-pr/SKILL.md), including tests, fresh independent review, CI, and the full repair loop. Pass the scoped merge authority when it exists. Keep the same quality standard.
+3. Use its merge gates. If a required approval, decision, or check is unavailable, report the blocker and leave the PR open. Never bypass a gate to finish unattended work.
+4. Confirm the merge on GitHub and update the original issue when one exists. Follow `/task-to-pr` worktree cleanup rules.
+
+## Return
+
+Report the merged PR and proof, or the open PR and exact merge blocker.

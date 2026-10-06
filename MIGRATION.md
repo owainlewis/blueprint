@@ -1,6 +1,6 @@
 # Migrate from older Blueprint skills
 
-> **Breaking change:** Blueprint now ships eleven skills. You must remove old Blueprint skill folders and copied commands by hand.
+> **Breaking change:** Blueprint now ships twelve skills. You must remove old Blueprint skill folders and copied commands by hand.
 
 ## What changed
 
@@ -12,7 +12,10 @@
 | `multitask` | `/codex-issue-coordinator` for Codex issue batches |
 | `/issue-coordinator` | `/codex-issue-coordinator` |
 | Design review through `/review` | `/architecture-review` |
-| `design-doc`, `spec` | `/design` |
+| `design-doc`, `/design`, old `spec` | `/spec` for feature changes |
+| System product needs inside `/design` | `/requirements` |
+| Existing-state-only `/architecture` | `/architecture` for intended system design and data model |
+| Unattended `/factory` leaving PRs open | `/task-to-pr`; explicit `/factory` now adds gated merging |
 | `browser-verify` | Browser proof inside `/test` |
 | `refactor` | `/improve` |
 | `branch`, `commit`, `implement`, `pr`, `pr-to-ready` | Steps inside `/task-to-pr` |
@@ -22,23 +25,27 @@
 | `milestone` | `/task-to-pr` with the milestone as input |
 | `code-reviewer` agent definition | A fresh generic subagent launched by `/review` |
 
-These are the eleven skills you can call:
+These are the twelve skills you can call:
 
 ```text
-/architecture · /design · /architecture-review · /plan · /test · /review · /improve · /task-to-pr · /factory · /html-doc · /codex-issue-coordinator
+/requirements · /architecture · /spec · /architecture-review · /plan · /test · /review · /improve · /task-to-pr · /factory · /html-doc · /codex-issue-coordinator
 ```
+
+Existing `design.md` documents remain valid sources. Rename or split them only when useful. Do not treat an old architecture document as a future design without reviewing its decisions.
+
+**Authority change:** Explicit `/factory` use now grants scoped merge authority. Remove old automations or prompts that invoke it expecting an open PR; use `/task-to-pr` instead.
 
 ## Clean upgrade
 
-1. **Remove old Blueprint skills and commands.** In the skill directory used by your coding tool, remove the old `milestone` skill and the other old Blueprint skill folders listed above. Also remove copied Blueprint `implement.md` and `task-to-pr.md` command files. Do not delete whole skill or command directories because they may contain unrelated files.
-2. **Install all eleven skills.**
+1. **Remove old Blueprint skills and commands.** In the skill directory used by your coding tool, remove the old `/design` and `milestone` skills and the other old Blueprint skill folders listed above. Also remove copied Blueprint `implement.md` and `task-to-pr.md` command files. Do not delete whole skill or command directories because they may contain unrelated files.
+2. **Install all twelve skills.**
 
    ```bash
    npx skills add owainlewis/blueprint
    ```
 
 3. **Remove copied reviewer agents.** Delete any old Blueprint `code-reviewer` definition. The `/review` skill now launches a fresh generic subagent.
-4. **Check the result.** The `/architecture`, `/design`, `/architecture-review`, `/plan`, `/test`, `/review`, `/improve`, `/task-to-pr`, `/factory`, `/html-doc`, and `/codex-issue-coordinator` skills should be available.
+4. **Check the result.** The `/requirements`, `/architecture`, `/spec`, `/architecture-review`, `/plan`, `/test`, `/review`, `/improve`, `/task-to-pr`, `/factory`, `/html-doc`, and `/codex-issue-coordinator` skills should be available.
 
 ## Why cleanup is manual
 

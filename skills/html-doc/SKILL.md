@@ -11,7 +11,8 @@ Turn one complete Markdown PRD or technical design into one verified static HTML
 
 - Accept an existing Markdown file or exact inline Markdown.
 - Support only `prd` and `design` document kinds.
-- Infer the kind only from the exact basename `prd.md` or `design.md`. Otherwise require the user or request to name it.
+- For `REQUIREMENTS.md`, pass `--kind prd`. For `ARCHITECTURE.md` or `spec.md`, pass `--kind design`.
+- Classify `prd.md` as `prd` and `design.md` as `design`. For other names, use the request or ask if the kind is unclear.
 - Do not write requirements, settle design choices, summarize missing content, or edit the source.
 - If the source is only a rough brief, use the appropriate authoring skill first.
 - Do not hand-edit generated HTML. Change the template or renderer, then regenerate.
@@ -33,7 +34,7 @@ Use `scripts/html_doc.py` from this skill directory for all generation and lifec
 
 ### 1. Read and classify the source
 
-Read the complete source. Confirm it is no larger than 2 MiB. Determine the document kind from the request or the exact basename rule.
+Read the complete source. Confirm it is no larger than 2 MiB. Determine the document kind from the request or the basename mappings above.
 
 Treat content problems separately from presentation problems. If the Markdown contradicts itself, omits a required decision, or contains an invalid diagram, report that source problem. Do not silently repair its meaning.
 
