@@ -16,7 +16,7 @@
 - Delivery includes tests, fresh independent review, CI, and repairs. `/task-to-pr` leaves passing PRs open by default; explicit `/factory` or `/codex-issue-coordinator` use grants scoped merging after all gates and required approvals pass.
 - Dependent tasks may stack on open, independently reviewed prerequisite PRs. The Codex coordinator waits for prerequisite merges instead.
 - Requirements, specs, planning, tests, and review preserve stable requirement, acceptance, and invariant IDs.
-- Replaced the legacy examples with one task-list project showing requirements, architecture, and a feature spec.
+- Replaced the legacy examples with one consulting CRM showing requirements, architecture and data flow, a data model, a feature spec, and a plan with vertical slices.
 - Removed duplicated review and setup guidance. Migration keeps upgrade instructions without repeating the skill inventory.
 
 ### Removed
