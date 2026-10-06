@@ -23,14 +23,10 @@ flowchart TB
     end
     db[(PostgreSQL)]
     member -->|Forms and navigation| browser
-    browser -->|HTTPS requests and session cookie| app
-    app -->|Sign-in redirect and code exchange| identity
-    identity -->|Verified identity| app
-    app -->|Authenticated request| rules
-    rules -->|Scoped reads and atomic writes| db
-    db -->|Rows and committed results| rules
-    rules -->|Authorized result| app
-    app -->|HTML and JSON| browser
+    browser <-->|HTTPS requests / HTML and JSON| app
+    app <-->|OIDC exchange / verified identity| identity
+    app <-->|Authenticated commands / authorized results| rules
+    rules <-->|Scoped queries / committed results| db
     classDef actor fill:#eef2ff,stroke:#4338ca,color:#1e1b4b
     classDef component fill:#f0fdfa,stroke:#0f766e,color:#134e4a
     classDef data fill:#fff7ed,stroke:#c2410c,color:#7c2d12
