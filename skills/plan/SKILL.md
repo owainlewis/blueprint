@@ -7,7 +7,7 @@ argument-hint: "<spec, brief, issue, or request>"
 
 # Plan
 
-Create tasks that a new agent can finish without making product or technical decisions. Split work by working result, not by file, layer, or team boundary.
+Create tasks that a new agent can finish without making product or technical decisions. Every task and milestone must be a vertical slice: a usable outcome that runs through the required layers and has acceptance checks. Split by working result, not by file, layer, or team boundary.
 
 ## Process
 
@@ -16,9 +16,11 @@ Create tasks that a new agent can finish without making product or technical dec
 3. Split the work into tasks that each deliver working behavior, fit one agent run, and produce one focused pull request.
 4. Keep shared contracts in one task. Do not make two tasks answer the same question independently.
 5. Separate refactoring when it would hide a behavior change.
-6. Order tasks by dependency. Add a milestone only when it creates a useful delivery or review boundary.
+6. Order tasks by dependency. Group tasks into milestones when useful. Each milestone delivers a usable end-to-end result, with acceptance checks and dependencies. Do not use milestones such as “database”, “backend”, or “frontend”.
 7. Return the plan in chat. Create tracker tickets only when the user asks. Never write a plan document.
 8. Stop after planning. Do not implement.
+
+For example, “add a task and see it after a restart” includes CLI input, validation, storage, output, and tests in one task. A later milestone could deliver “manage unfinished tasks” through add, list, and complete slices. Name the milestone's observable result and how to prove the whole result works.
 
 ## Write for two readers
 
@@ -92,5 +94,5 @@ Delete repeated background after both passes succeed.
 
 ## Return
 
-Return the ordered tasks, their dependencies, and any decision that still
+Return the ordered tasks, any useful milestones with acceptance checks, their dependencies, and any decision that still
 blocks implementation. Do not add a separate summary that repeats the tasks.

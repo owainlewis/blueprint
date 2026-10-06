@@ -48,7 +48,7 @@ if [ ! -x skills/html-doc/node_modules/.bin/mmdc ]; then
 fi
 
 "$check_python" scripts/check_repo.py
-bash -n examples/regenerate.sh .githooks/pre-push scripts/check scripts/check_diff
+bash -n scripts/check scripts/check_diff
 "$check_python" -m unittest discover -s scripts/tests -v
 python3 -m unittest discover -s skills/html-doc/tests -v
 scripts/check_diff

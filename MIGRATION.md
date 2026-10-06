@@ -6,9 +6,6 @@
 
 | Before | Now |
 | --- | --- |
-| No previous equivalent | `/architecture` |
-| No previous equivalent | `/html-doc` |
-| No previous equivalent | `/factory` |
 | `multitask` | `/codex-issue-coordinator` for Codex issue batches |
 | `/issue-coordinator` | `/codex-issue-coordinator` |
 | Design review through `/review` | `/architecture-review` |
@@ -25,12 +22,6 @@
 | `milestone` | `/task-to-pr` with the milestone as input |
 | `code-reviewer` agent definition | A fresh generic subagent launched by `/review` |
 
-These are the twelve skills you can call:
-
-```text
-/requirements · /architecture · /spec · /architecture-review · /plan · /test · /review · /improve · /task-to-pr · /factory · /html-doc · /codex-issue-coordinator
-```
-
 Existing `design.md` documents remain valid sources. Rename or split them only when useful. Do not treat an old architecture document as a future design without reviewing its decisions.
 
 **Authority change:** Explicit `/factory` use now grants scoped merge authority. Remove old automations or prompts that invoke it expecting an open PR; use `/task-to-pr` instead.
@@ -45,10 +36,8 @@ Existing `design.md` documents remain valid sources. Rename or split them only w
    ```
 
 3. **Remove copied reviewer agents.** Delete any old Blueprint `code-reviewer` definition. The `/review` skill now launches a fresh generic subagent.
-4. **Check the result.** The `/requirements`, `/architecture`, `/spec`, `/architecture-review`, `/plan`, `/test`, `/review`, `/improve`, `/task-to-pr`, `/factory`, `/html-doc`, and `/codex-issue-coordinator` skills should be available.
+4. **Check the result.** Compare installed skills with the [current skill list](README.md#twelve-focused-skills).
 
 ## Why cleanup is manual
 
 Some update commands add or replace skills but do not remove folders from an older version. Running `npx skills update` alone can therefore leave both the old and new skills installed.
-
-Use `/task-to-pr` to deliver one or more tasks. A GitHub milestone is one possible source of tasks. The skill creates one pull request for each task.

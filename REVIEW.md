@@ -1,45 +1,33 @@
 # Review Blueprint
 
-Review Blueprint as a small set of engineering instructions. Read the issue, complete diff, rendered public docs, and relevant surrounding files.
+Read the request, complete diff, relevant skills, and rendered public docs.
+Use [AGENTS.md](AGENTS.md) for repository policy. Review the changed workflow
+against its skill rather than copying every skill rule into this checklist.
 
-- Does the writing lead with the outcome, decision, or rule?
-- Can a new teammate understand it without already knowing Blueprint terms?
-- Does each sentence carry one main idea in short, everyday words?
-- Does each concept keep the same name throughout the text?
-- Are claims tied to real names, paths, commands, limits, or effects?
-- Did the writer cut filler, repetition, sales language, fake warmth, and generic conclusions?
-- Do headings use sentence case and tell the reader what follows?
-- Does each skill represent one meaningful engineering phase or delivery outcome?
-- Is policy in `AGENTS.md`, with each phase and delivery workflow in its skill?
-- Do `/requirements`, `/architecture`, and `/spec` own system product needs, intended system design and data model, and one feature change respectively?
-- Does `/architecture-review` challenge a technical proposal while `/review` checks an implementation change?
-- Does architecture review surface only questions that could materially change behavior, data, interfaces, security, scale, performance, operations, cost, compatibility, or proof?
-- Does architecture review test the goal, clarity, chosen design, failure behavior, limits, security, operations, and proof without requiring irrelevant sections?
-- Does `/architecture` have one outcome instead of mixing document generation with chat explanations, maps, reviews, or audits?
-- When a change affects ownership, dependency direction, protocols, stored data, trust boundaries, topology, or hard limits, is the intended architecture document updated with accurate implementation status?
-- Are triggers, outputs, boundaries, proof, and stop conditions clear?
-- Does the spec serve as the ticket without a duplicate work definition?
-- Does `/factory` reuse the full `/task-to-pr` test, independent review, CI, and repair loop before gated merging?
-- Is the change one focused, self-contained, reviewable outcome with its related proof?
-- Does `/task-to-pr` order one or more tasks and create one tested and independently reviewed pull request for each task?
-- Does `/task-to-pr` mark each pull request ready before independent and GitHub review begin?
-- Does each task use its own branch and worktree, with independent tasks allowed to run at the same time and dependent tasks stacked after prerequisite pull requests are open and independently approved?
-- Does it stop after configured CI and automated review instead of waiting for human feedback?
-- Does it reply to every automated review finding and resolve threads only after they are fully addressed?
-- Does it merge only when the user asks, including scoped authority granted by explicit `/factory` or `/codex-issue-coordinator` use?
-- Does `/codex-issue-coordinator` use one visible Codex worker thread, worktree, branch, and pull request per GitHub issue?
-- Does it name workers after issue numbers, bound concurrency, wait for prerequisite merges, and keep implementation context out of the coordinator?
-- Does every worker test first, mark its pull request ready, obtain fresh approval, pass CI, resolve review feedback, and satisfy repository rules before merging?
-- Does coordinator merge authority require explicit user wording, remain limited to the supplied batch, and exclude deployment, releases, destructive actions, and unrelated pull requests?
-- Does the coordinator resume an open pull request from its exact head branch and reconcile already-merged pull requests with closed issue state only after the change and proof satisfy the issue?
-- In no-merge mode, does it record dependent issues as waiting for human merge instead of dispatching from an unmerged branch or waiting indefinitely?
-- In no-merge mode, does it stop after agent-completable gates and record required human approval or merge as a blocker instead of waiting indefinitely?
-- Is browser-rendered behavior checked in a real browser?
-- Can a capable agent choose local mechanics without redundant instructions?
-- Are removed concepts handled by an explicit migration instead of compatibility clutter?
-- Can each judgment be decided from evidence? Replace vague terms such as "code health", "adequate", "robust", and "production-ready" with concrete criteria.
-- Is every sentence useful enough to compete for agent attention?
-- Can any sentence be read two ways? If so, rewrite it.
-- Does any passage sound generated instead of written for this project? If so, make it specific or cut it.
+## Check the instructions
 
-Prefer the shortest wording that preserves the rule. Treat extra skills, duplicate workflows, fake reviewer roles, and steps without proof as regressions.
+- Can a new teammate tell when the skill applies, what it produces, and when it stops?
+- Does it own one phase or delivery outcome without duplicating another skill?
+- Are commands, paths, conditions, and effects concrete and consistent?
+- Can the agent choose local mechanics without inventing product or technical decisions?
+- Are authority, dependencies, failure handling, and required proof clear?
+
+Walk representative requests through changed instructions, including a failure
+or missing-input case. Report the exact conflicting steps or missing decision,
+not a general claim that the skill is unclear.
+
+## Check the documents
+
+- Do requirements, architecture, and feature specs keep their agreed scopes?
+- Do examples follow the current workflow and distinguish proposals from implemented behavior?
+- Do guides and migration instructions agree with the skills?
+- Does the rendered Markdown keep readable headings, lists, tables, and links?
+
+## Check the proof
+
+Run the relevant repository checks. Separate automated validation, instruction
+walkthroughs, and real agent execution. None is a substitute for the others.
+
+Follow the writing rules in `AGENTS.md`. Cut repetition and instructions that
+add no decision or proof. Treat broken boundaries, duplicate workflows, and
+unsupported claims as findings. Do not block on personal taste.

@@ -18,12 +18,9 @@ existing code, deciding what to build, and delivering reviewed pull requests.
 Capable agents do not need a script for every move. They need a clear outcome,
 the constraints that matter, and proof that the work is done.
 
-Blueprint turns long-standing software engineering practice into a small set of skills: understand the system, make decisions before expensive changes, keep each task focused, test the result, and review the work. The skills say what good work looks like and what evidence is needed. They leave the mechanics to the agent.
+Define the product and architecture, specify each meaningful change, then deliver it with tests and review. Each skill gives the agent an outcome and the evidence needed to finish.
 
-The set is deliberately small. It contains the core skills its maintainer uses
-to make changes that another person can understand, test, and review. There is
-no agent framework to maintain. Install the skills and use only the ones the
-work needs.
+Use only the skills the work needs. Small, decided changes can go straight to delivery.
 
 ## Install
 
@@ -38,7 +35,7 @@ That is the main installation path. Blueprint works through portable skill files
 
 ## Choose a skill
 
-**New project:** use [`/requirements`](skills/requirements/SKILL.md) and [`/architecture`](skills/architecture/SKILL.md). Root `REQUIREMENTS.md` describes the product and its key features. Root `ARCHITECTURE.md` describes the intended technical design and data model. Maintain both as long-running project documents.
+**New project:** use [`/requirements`](skills/requirements/SKILL.md) and [`/architecture`](skills/architecture/SKILL.md). Root `REQUIREMENTS.md` describes the product and its key features. Root `ARCHITECTURE.md` describes the intended technical design, data model, and architecture and data flow diagram. Maintain both as long-running project documents.
 
 **New feature:** use [`/spec`](skills/spec/SKILL.md), then [`/task-to-pr`](skills/task-to-pr/SKILL.md) or [`/factory`](skills/factory/SKILL.md). The spec is the ticket. Both delivery skills make the code changes, test, independently review, pass CI, and repair valid findings. `/task-to-pr` leaves passing PRs open. Explicit `/factory` use adds merging after required approvals and merge gates pass.
 
@@ -58,7 +55,7 @@ Each skill owns one engineering phase or delivery outcome. Repository policy sta
 
 - [Choosing the right skill](guides/choosing-a-skill.md) explains where each skill starts and stops.
 - [Common Blueprint workflows](guides/workflows.md) shows how the skills fit together for small changes, larger features, existing systems, and issue batches.
-- [Examples](examples/) contains reviewed designs and plans you can inspect or reuse.
+- [Task list example](examples/) shows system requirements, architecture, and one feature spec.
 - [Migration guide](MIGRATION.md) explains how to remove older Blueprint skills before upgrading.
 - [Changelog](CHANGELOG.md) records notable changes.
 
