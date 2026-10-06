@@ -10,7 +10,7 @@ the source of truth. The design supports the [product requirements](REQUIREMENTS
 without a server or third-party runtime dependency.
 
 ```mermaid
-flowchart LR
+flowchart TB
     user([Local user])
     subgraph system[Task list on the user's computer]
         cli[CLI]
