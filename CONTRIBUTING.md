@@ -4,7 +4,7 @@ Blueprint stays useful by keeping its instructions small, clear, and easy to ver
 
 ## Before you start
 
-Search the [open issues](https://github.com/owainlewis/blueprint/issues) and existing skills first. For a larger change, open a proposal issue before writing code so the purpose and boundaries can be agreed.
+Search the [open issues](https://github.com/owainlewis/blueprint/issues) and existing skills first. Discuss consequential changes before implementation. An agreed request or spec can define the work; create a separate issue only when it helps tracking.
 
 A useful issue explains:
 
