@@ -10,7 +10,7 @@
 
 </div>
 
-Blueprint gives coding agents eleven focused skills. They cover understanding
+Blueprint gives coding agents twelve focused skills. They cover understanding
 existing code, deciding what to build, and delivering reviewed pull requests.
 
 ## Why Blueprint
@@ -27,7 +27,7 @@ work needs.
 
 ## Install
 
-Install all eleven skills with one command:
+Install all twelve skills with one command:
 
 ```bash
 npx skills add \
@@ -38,25 +38,21 @@ That is the main installation path. Blueprint works through portable skill files
 
 ## Choose a skill
 
-Most work starts in one of these places:
+**New project:** use [`/requirements`](skills/requirements/SKILL.md) and [`/architecture`](skills/architecture/SKILL.md). Root `REQUIREMENTS.md` describes the product and its key features. Root `ARCHITECTURE.md` describes the intended technical design and data model. Maintain both as long-running project documents.
 
-- **Document an implemented system.** Use [`/architecture`](skills/architecture/SKILL.md) to create or update root `ARCHITECTURE.md` from verified code.
-- **Decide how a meaningful change should work.** Start with [`/design`](skills/design/SKILL.md) for a technical design ready for review.
-- **Deliver a decided task.** Start with [`/task-to-pr`](skills/task-to-pr/SKILL.md) for a tested, independently reviewed pull request.
+**New feature:** use [`/spec`](skills/spec/SKILL.md), then [`/task-to-pr`](skills/task-to-pr/SKILL.md) or [`/factory`](skills/factory/SKILL.md). The spec is the ticket. Both delivery skills make the code changes, test, independently review, pass CI, and repair valid findings. `/task-to-pr` leaves passing PRs open. Explicit `/factory` use adds merging after required approvals and merge gates pass.
 
-Use [`/plan`](skills/plan/SKILL.md) when decided work needs splitting. Use [`/factory`](skills/factory/SKILL.md) to take one GitHub issue to a pull request without supervision. Use [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md) when one Codex task must coordinate a large batch of GitHub issues.
+Use [`/architecture-review`](skills/architecture-review/SKILL.md) for consequential technical decisions and [`/plan`](skills/plan/SKILL.md) when work needs splitting. Small, decided changes can go straight to delivery. Use [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md) for large GitHub issue batches across visible Codex workers.
 
-Small, clear changes can go straight to `/task-to-pr`. Blueprint asks for only as much process as the work needs.
+## Twelve focused skills
 
-## Eleven focused skills
-
-- **Document:** [`/architecture`](skills/architecture/SKILL.md)
-- **Decide:** [`/design`](skills/design/SKILL.md), [`/architecture-review`](skills/architecture-review/SKILL.md), [`/plan`](skills/plan/SKILL.md)
+- **Define:** [`/requirements`](skills/requirements/SKILL.md), [`/architecture`](skills/architecture/SKILL.md), [`/spec`](skills/spec/SKILL.md)
+- **Decide and split:** [`/architecture-review`](skills/architecture-review/SKILL.md), [`/plan`](skills/plan/SKILL.md)
 - **Deliver:** [`/task-to-pr`](skills/task-to-pr/SKILL.md), [`/factory`](skills/factory/SKILL.md), [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md)
 - **Check and improve:** [`/test`](skills/test/SKILL.md), [`/review`](skills/review/SKILL.md), [`/improve`](skills/improve/SKILL.md)
 - **Present:** [`/html-doc`](skills/html-doc/SKILL.md)
 
-Each skill owns one engineering phase or useful outcome. Repository policy stays in `AGENTS.md`. Writing code, branching, debugging, and committing remain normal agent abilities inside the delivery workflow.
+Each skill owns one engineering phase or delivery outcome. Repository policy stays in `AGENTS.md`. Writing code, branching, debugging, and committing remain normal agent abilities inside delivery.
 
 ## Guides
 

@@ -1,12 +1,13 @@
 # Blueprint repository policy
 
-Blueprint is a small set of instructions for AI coding. It separates deciding what to build from shipping code.
+Blueprint is a small set of instructions for AI coding. New projects use long-running requirements and architecture documents. New features use a spec, then `/task-to-pr` or `/factory` to make the code changes.
 
 ## Principles
 
 - Give agents outcomes, constraints, and proof. Trust them with mechanics.
 - Keep one skill per meaningful engineering phase or delivery outcome.
-- Keep current architecture separate from proposed design.
+- Requirements define the product. Architecture defines the intended system. A spec defines one feature or major change.
+- Distinguish accepted architecture from implemented behavior. Verify claims about existing code.
 - Review technical proposals before implementation when a wrong choice could materially affect behavior, data, security, scale, performance, compatibility, operations, cost, or proof.
 - Update an existing architecture document when code changes ownership, dependency direction, protocols, stored data, trust boundaries, deployment topology, or hard limits.
 - Skip phases that add no value. Small, decided work can go straight to implementation.
@@ -21,7 +22,7 @@ Blueprint is a small set of instructions for AI coding. It separates deciding wh
 - Browser behavior is proven in a real browser, not by reading source.
 - If the task, design, or plan is wrong, update it before changing more code.
 - Prefer the smallest complete change. Do not mix product work with unrelated cleanup.
-- Humans review decisions and normally merge. Agents may merge only when the user explicitly delegates it. Explicitly naming `/codex-issue-coordinator` delegates merge authority for the supplied batch after its quality gates pass; an implicit skill match does not.
+- Humans review decisions and normally merge. Agents may merge only when the user explicitly delegates it. Explicitly naming `/factory` or `/codex-issue-coordinator` delegates merge authority for the supplied work after its quality gates pass; an implicit skill match does not.
 
 ## Writing
 
@@ -42,21 +43,22 @@ Before finishing, reread the text. Cut words that do no work. Fix sentences that
 
 ## Phases
 
-- `/architecture`: create or update root `ARCHITECTURE.md` from verified implementation. Stop with the document ready for human review.
-- `/design`: decide what to build, why, and how. Stop with a proposed design.
+- `/requirements`: define system product needs in root `REQUIREMENTS.md`. Stop with requirements ready for human review.
+- `/architecture`: design the intended system and data model in root `ARCHITECTURE.md`. Stop with architecture ready for review.
+- `/spec`: define one feature or major change, its technical design, and proof. The spec is the ticket. Stop before planning or implementation.
 - `/architecture-review`: challenge a technical proposal and surface material flaws or open questions before implementation.
 - `/plan`: split decided work into ordered, agent-ready tasks. Stop before implementation.
 - `/test`: prove acceptance criteria and failure paths affected by the change, including real-browser checks when browser-rendered behavior changes.
 - `/review`: use a fresh subagent for an independent, read-only implementation review.
 - `/improve`: inspect existing code and improve its clarity, simplicity, and structure without changing intended behavior.
-- `/factory`: take one GitHub issue to a pull request without supervision, using CI and automated reviews as gates. Stop with the pull request open.
+- `/factory`: follow `/task-to-pr`, then merge the supplied work after every quality and approval gate passes when explicitly invoked.
 - `/codex-issue-coordinator`: coordinate a large GitHub issue batch through separate Codex worker threads, reviewed pull requests, and gated merges.
 
 ## Workflow for code changes
 
 For one or more code changes, follow the [`/task-to-pr` skill](skills/task-to-pr/SKILL.md). It stacks dependent work after prerequisite pull requests are open and independently approved, runs independent work at the same time when useful, and takes each task through a tested and reviewed pull request. A milestone is one possible source of tasks.
 
-For one GitHub issue with no one available to answer questions, use [`/factory`](skills/factory/SKILL.md) instead. It relies on CI and automated reviews instead of an independent `/review`, and it never merges.
+Use [`/factory`](skills/factory/SKILL.md) when explicitly asked to deliver through merge. It reuses `/task-to-pr`, including independent review, CI, and repairs. It cannot skip required approvals.
 
 Merge pull requests only when the user asks. Otherwise, leave them open.
 
@@ -66,8 +68,9 @@ Writing code is a basic agent ability, not a separate skill. Debugging and test-
 
 ## Outputs
 
-- Architecture documentation uses root `ARCHITECTURE.md`.
-- Designs default to `docs/<feature-slug>/design.md`.
+- System requirements use root `REQUIREMENTS.md`.
+- Intended system architecture and its data model use root `ARCHITECTURE.md`.
+- Feature specs default to `docs/<feature-slug>/spec.md`. A supplied issue or document may serve as the spec; do not duplicate it.
 - Plans are returned in chat by default or published as tracker tickets when asked. They are not stored as plan documents.
 - Pull requests start with a short plain English summary. They then explain only the detail a reviewer needs.
 - The checklist states the real status of tests, checks, independent review, findings, documentation, and CI.

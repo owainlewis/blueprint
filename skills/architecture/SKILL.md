@@ -1,96 +1,42 @@
 ---
 name: architecture
-description: "Creates or updates root ARCHITECTURE.md from verified implementation. Use when a repository needs current architecture documentation or a structural change made it stale. Use design for proposed systems or changes."
+description: "Designs and maintains root ARCHITECTURE.md for the intended system, including its data model and shared technical rules. Use for new systems or changes to system boundaries, ownership, storage, or deployment."
 user-invocable: true
-argument-hint: "[repository or existing ARCHITECTURE.md]"
+argument-hint: "<system, requirements, or ARCHITECTURE.md>"
 ---
 
 # Architecture
 
-Create or update root `ARCHITECTURE.md` so a new teammate can understand the system that exists in code today.
-
-The document should reveal the few rules that give the system its shape: where truth lives, which way dependencies point, how important work moves through the system, and which boundaries a change must preserve.
+Create or update root `ARCHITECTURE.md`. Design the system we intend to build.
+Keep this as a long-running system document alongside `REQUIREMENTS.md`.
+Use `/requirements` for product needs and `/spec` for a feature's technical change.
 
 ## Process
 
-1. Read the request, repository instructions, and any existing `ARCHITECTURE.md`.
-2. Inspect the implementation. Start with manifests, entry points, configuration, schemas, migrations, infrastructure, tests, and the code behind a few critical flows. Follow evidence rather than trying to read every file.
-3. Identify the load-bearing facts: the system boundary, trust boundaries, source of truth, main parts, dependency direction, important protocols or data, and the one rule a contributor must not break.
-4. Create or update root `ARCHITECTURE.md`. Preserve useful verified content from an existing document, remove stale claims, and organize the body around the system rather than a generic template.
-5. Verify each concrete claim against code, configuration, schemas, infrastructure, or executable tests. Treat existing prose as a claim, not evidence.
-6. Run the review pass and stop with the document ready for human review. Do not propose future behavior, write a design, plan work, or change implementation.
+1. Read the requirements, repository instructions, existing architecture, and relevant code, schemas, tests, and infrastructure. A new system may have no code yet.
+2. Identify the decisions that shape the system: boundaries, responsibilities, data ownership, dependencies, and quality constraints. Ask for missing consequential decisions; recommend an answer with its tradeoff when evidence supports one.
+3. Choose the simplest structure that satisfies the requirements. Compare alternatives only when they could change the choice. Explain each important decision, its reason, and its main cost.
+4. Write the architecture using the shape below. Reference requirements instead of copying them.
+5. Trace critical success and failure flows. Check ownership, contracts, data consistency, security, recovery, and measurable limits against the requirements.
+6. Stop with the architecture ready for review. Do not plan tasks or implement it.
 
 ## Document shape
 
-Start every document with this small common frame:
+- **Summary and goals:** the system, its main parts, source of truth, and the requirements driving the design.
+- **System boundary:** users, outside systems, components, and important interfaces. Add a small diagram when useful.
+- **Responsibilities and dependencies:** what each part owns, what it does not own, and which way dependencies may point.
+- **Data model:** core entities, relationships, identifiers, ownership, lifecycle, constraints, consistency rules, retention, and storage choices. Include an entity diagram when useful. Link larger schemas rather than repeating them.
+- **Runtime flows:** important execution order, data movement, transactions, side effects, failures, retries, and recovery.
+- **Security and operations:** trust boundaries, authorization, deployment, observability, resource limits, and operator recovery where they affect the design.
+- **Decisions and status:** mark decisions proposed or accepted. Separately state what is implemented, missing, or different in the current system. Acceptance does not mean implementation.
+- **Risks and proof:** unresolved decisions, assumptions, quality scenarios, and checks needed to validate the design.
 
-```markdown
-# <System> architecture
+Use only sections that help explain this system. Describe shared rules here; put feature-specific schema changes and migrations in its spec.
 
-## Executive summary
+Verify claims about existing implementation against authoritative files or runtime evidence. Label future behavior and assumptions clearly. Do not mark a proposal accepted without human approval. Give important architectural rules stable `INV-n` IDs and name their intended enforcement and proof.
 
-Explain what the system does, name its source of truth, show how its main parts work together, and state the most important architectural rule.
-
-### System architecture
-
-Show the users, outside systems, runtime parts, and data stores in one small diagram when this makes the boundary clearer.
-
-### Dependency hierarchy
-
-Show which way important dependencies point. State the rule in prose below the diagram.
-```
-
-Shape the remaining sections around the repository itself. Prefer names such as `Protocol`, `Request lifecycle`, `Event pipeline`, `Storage model`, or the real component names. Do not add sections that have nothing useful to say.
-
-For each critical flow:
-
-- walk the path in exact execution order;
-- include authentication, authorization, validation of untrusted input, persistence, side effects, response timing, cleanup, and recovery when they matter;
-- show where permissions are enforced and whether security-sensitive failures fail closed;
-- put hard limits and failure behavior beside the step they affect.
-
-For each important component, state:
-
-- what it owns;
-- its important inputs, outputs, interfaces, or stored data;
-- what it depends on;
-- the permissions it has and the trust boundaries it crosses, when relevant;
-- what it does **not** own.
-
-End with a small source map that links concepts to their authoritative files and a verification section that names the checks or tests supporting important claims. State genuine evidence gaps instead of guessing.
-
-## Writing rules
-
-- Describe implemented reality only. Use `/design` to decide future architecture or behavior.
-- Write for a new teammate who needs to change the system safely.
-- Lead with the source of truth, dependency direction, and load-bearing rules. Put detail later.
-- For each architectural invariant, name the code, schema, runtime guard, or test that enforces it.
-- Organize around runtime concepts and flows, not the directory tree.
-- Prefer exact names and execution order over broad labels such as "service layer" or "robust".
-- Keep diagrams small and useful. Use them for topology, dependency direction, or a flow that is harder to understand in prose.
-- Keep the length proportional to the system. A small repository needs a small document. A large system may need detailed protocol, lifecycle, and component sections.
-- Link to detailed API, schema, operations, or test documentation instead of copying it.
-- Do not include proposals, roadmaps, possible redesigns, or speculative limitations.
-- Do not turn the document into an exhaustive API reference, file inventory, or generated code tour.
-- Use short sentences and everyday words. Define technical and project-specific terms when first used.
-- Do not use em dashes.
-
-Update `ARCHITECTURE.md` when implementation changes ownership, dependency direction, protocols, stored data, trust boundaries, deployment topology, or hard limits.
-
-## Review pass
-
-Reread the document and check:
-
-1. **Truth.** Does every current-state claim match the working tree?
-2. **Shape.** Can a new teammate find the source of truth, system boundary, dependency direction, and critical flows quickly?
-3. **Boundaries.** Does each important part say what it owns, does not own, may access, and must not trust?
-4. **Mechanics.** Are order, data movement, failure behavior, cleanup, and limits concrete where they matter?
-5. **Maintenance.** Does the document avoid volatile detail that adds upkeep without helping someone make a safe change?
-6. **Separation.** Are all proposed changes kept in design documents rather than presented as implemented architecture?
-
-Correct every issue supported by repository evidence. Put anything that cannot be verified under `Verification` with the evidence needed to resolve it.
+Update this document when an accepted change alters ownership, dependencies, interfaces, stored data, trust boundaries, deployment, or hard limits. Preserve useful content and stable references.
 
 ## Return
 
-Report the document path, the main sources used to verify it, and any evidence
-gap that remains.
+Report the path, main decisions and tradeoffs, implementation gaps, and any blocking question.

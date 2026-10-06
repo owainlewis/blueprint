@@ -11,20 +11,22 @@ Review Blueprint as a small set of engineering instructions. Read the issue, com
 - Do headings use sentence case and tell the reader what follows?
 - Does each skill represent one meaningful engineering phase or delivery outcome?
 - Is policy in `AGENTS.md`, with each phase and delivery workflow in its skill?
-- Does `/architecture` create or update root `ARCHITECTURE.md` from verified implementation while `/design` describes a proposed system or feature change?
+- Do `/requirements`, `/architecture`, and `/spec` own system product needs, intended system design and data model, and one feature change respectively?
 - Does `/architecture-review` challenge a technical proposal while `/review` checks an implementation change?
 - Does architecture review surface only questions that could materially change behavior, data, interfaces, security, scale, performance, operations, cost, compatibility, or proof?
 - Does architecture review test the goal, clarity, chosen design, failure behavior, limits, security, operations, and proof without requiring irrelevant sections?
 - Does `/architecture` have one outcome instead of mixing document generation with chat explanations, maps, reviews, or audits?
-- When a change affects ownership, dependency direction, protocols, stored data, trust boundaries, topology, or hard limits, is the current architecture document updated?
+- When a change affects ownership, dependency direction, protocols, stored data, trust boundaries, topology, or hard limits, is the intended architecture document updated with accurate implementation status?
 - Are triggers, outputs, boundaries, proof, and stop conditions clear?
+- Does the spec serve as the ticket without a duplicate work definition?
+- Does `/factory` reuse the full `/task-to-pr` test, independent review, CI, and repair loop before gated merging?
 - Is the change one focused, self-contained, reviewable outcome with its related proof?
 - Does `/task-to-pr` order one or more tasks and create one tested and independently reviewed pull request for each task?
 - Does `/task-to-pr` mark each pull request ready before independent and GitHub review begin?
 - Does each task use its own branch and worktree, with independent tasks allowed to run at the same time and dependent tasks stacked after prerequisite pull requests are open and independently approved?
 - Does it stop after configured CI and automated review instead of waiting for human feedback?
 - Does it reply to every automated review finding and resolve threads only after they are fully addressed?
-- Does it merge only when the user asks, including the explicit batch authority granted by `/codex-issue-coordinator`?
+- Does it merge only when the user asks, including scoped authority granted by explicit `/factory` or `/codex-issue-coordinator` use?
 - Does `/codex-issue-coordinator` use one visible Codex worker thread, worktree, branch, and pull request per GitHub issue?
 - Does it name workers after issue numbers, bound concurrency, wait for prerequisite merges, and keep implementation context out of the coordinator?
 - Does every worker test first, mark its pull request ready, obtain fresh approval, pass CI, resolve review feedback, and satisfy repository rules before merging?

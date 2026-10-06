@@ -11,7 +11,7 @@ Prove the behavior that matters. A passing build or a source-code reading can su
 
 ## Process
 
-1. Read the task, its source design when present, changed code, existing tests, and repository instructions. Acceptance criteria come from the task or approved design. Preserve their wording and `AC-n` or `INV-n` IDs. Never rewrite criteria to match the code.
+1. Read the task, its source spec when present, changed code, existing tests, and repository instructions. Acceptance criteria come from the task or reviewed spec. Preserve their wording and `AC-n`, `REQ-n`, or `INV-n` IDs. Never rewrite criteria to match the code.
 2. Map every acceptance criterion, cited invariant, and affected failure path to proof by ID. Test changed behavior and behavior a refactor must preserve.
 3. If automated tests cannot exercise the affected behavior, explain why and give other evidence.
 4. Add or update focused tests where proof is missing. Assertions should fail when the changed behavior breaks.
@@ -22,7 +22,7 @@ Prove the behavior that matters. A passing build or a source-code reading can su
    - Check keyboard use when interactions changed.
    - Check console errors and failed requests during every flow.
    - Capture evidence. Reading source is not browser proof.
-8. Report each `AC-n`, `INV-n`, or task criterion as pass, fail, or unverified. Include the command, browser flow, or other evidence.
+8. Report each `AC-n`, `REQ-n`, `INV-n`, or task criterion as pass, fail, or unverified. Include the command, browser flow, or other evidence.
 
 ## Return
 

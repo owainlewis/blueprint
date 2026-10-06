@@ -1,8 +1,8 @@
 ---
 name: architecture-review
-description: "Reviews a technical proposal before implementation. Use for designs, RFCs, ADRs, architecture proposals, and issues that define how a system change should work. Finds material ambiguity and flaws in correctness, scalability, performance, security, operations, and proof."
+description: "Reviews a technical proposal before implementation. Use for system architectures, feature specs, RFCs, ADRs, and issues that define how a system change should work. Finds material ambiguity and flaws in correctness, scalability, performance, security, operations, and proof."
 user-invocable: true
-argument-hint: "[technical proposal, design, RFC, ADR, or issue]"
+argument-hint: "[architecture, spec, RFC, ADR, or issue]"
 ---
 
 # Architecture review
@@ -20,7 +20,7 @@ blocked. Continue only if the user explicitly accepts a documented self-review.
 
 ## Process
 
-1. Read the goal, proposal, repository instructions, relevant current code,
+1. Read the goal, proposal, requirements, intended architecture, repository instructions, relevant current code,
    tests, schemas, configuration, and linked material. Treat claims about the
    current system as unverified until code, tests, schemas, configuration,
    infrastructure, or relevant runtime evidence supports them.
@@ -40,7 +40,8 @@ blocked. Continue only if the user explicitly accepts a documented self-review.
 
 ## Review focus
 
-- Check fit with the current system, ownership, boundaries, interfaces, data,
+- Check fit with requirements and accepted architecture. Verify current-state claims without requiring a new system to have code.
+- Check ownership, boundaries, interfaces, data,
   compatibility, migration, rollout, and rollback.
 - Trace partial failure, retry, cancellation, concurrency, startup, shutdown,
   and recovery where they affect the proposal.

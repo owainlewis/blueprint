@@ -9,7 +9,7 @@ argument-hint: "[diff, branch, commit, PR, or file path]"
 
 Find defects that can change the result or make the change unsafe. Do not turn personal taste into a finding.
 
-Use a fresh subagent that did not implement the change. Stay read-only. Do not edit files or post comments.
+Use a fresh subagent that did not implement the change. Tell it to review directly without delegating. If you are that reviewer, review directly. Stay read-only. Do not edit files or post comments.
 
 ## Scope
 
@@ -32,13 +32,13 @@ The verdict is independent agent evidence. It is not GitHub approval or a replac
 
 ## Review order
 
-1. **Set the frame.** Give the reviewer the task, acceptance criteria and invariant IDs from its task or design, repository rules, complete diff or pull request, and test evidence. Name the user or developer affected by the change.
-2. **Take the broad view.** Read the change summary and the relevant design or ticket. Confirm that the change belongs in the system, matches the intended behavior, and delivers one reviewable outcome. Report a mismatch before reviewing details.
+1. **Set the frame.** Give the reviewer the task, acceptance criteria and invariant IDs from its task or spec, repository rules, complete diff or pull request, and test evidence. Name the user or developer affected by the change.
+2. **Take the broad view.** Read the change summary and the relevant spec or ticket. Confirm that the change belongs in the system, matches the intended behavior, and delivers one reviewable outcome. Report a mismatch before reviewing details.
 3. **Review the main behavior.** Start with the files and flows that deliver the outcome. Check behavior, failures, security boundaries, interfaces, compatibility, migrations, concurrency, and operations.
 4. **Review every human-written changed line in context.** Read enough surrounding code to judge correctness, regressions, complexity, names, comments, style, and docs. For generated files or large data, inspect the source and spot-check the output. Keep findings within the change's scope.
 5. **Review the proof.** Check that tests:
    - Cover the changed behavior and affected failure paths.
-   - Prove every cited `AC-n`, `INV-n`, or task criterion.
+   - Prove every cited `AC-n`, `REQ-n`, `INV-n`, or task criterion.
    - Assert behavior a user or caller can observe, or a documented internal contract.
    - Would fail under a broken implementation.
    - Do not copy implementation logic or hide the scenario in setup.
