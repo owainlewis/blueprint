@@ -44,10 +44,10 @@ Before finishing, reread the text. Cut words that do no work. Fix sentences that
 ## Phases
 
 - `/requirements`: define system product needs in root `REQUIREMENTS.md`. Stop with requirements ready for human review.
-- `/architecture`: design the intended system and data model in root `ARCHITECTURE.md`. Stop with architecture ready for review.
+- `/architecture`: design the intended system and data model, with an architecture and data flow diagram, in root `ARCHITECTURE.md`. Stop with architecture ready for review.
 - `/spec`: define one feature or major change, its technical design, and proof. The spec is the ticket. Stop before planning or implementation.
 - `/architecture-review`: challenge a technical proposal and surface material flaws or open questions before implementation.
-- `/plan`: split decided work into ordered, agent-ready tasks. Stop before implementation.
+- `/plan`: split decided work into ordered tasks and useful milestones. Each delivers a vertical slice with acceptance checks. Stop before implementation.
 - `/test`: prove acceptance criteria and failure paths affected by the change, including real-browser checks when browser-rendered behavior changes.
 - `/review`: use a fresh subagent for an independent, read-only implementation review.
 - `/improve`: inspect existing code and improve its clarity, simplicity, and structure without changing intended behavior.

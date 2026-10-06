@@ -35,7 +35,7 @@ That is the main installation path. Blueprint works through portable skill files
 
 ## Choose a skill
 
-**New project:** use [`/requirements`](skills/requirements/SKILL.md) and [`/architecture`](skills/architecture/SKILL.md). Root `REQUIREMENTS.md` describes the product and its key features. Root `ARCHITECTURE.md` describes the intended technical design and data model. Maintain both as long-running project documents.
+**New project:** use [`/requirements`](skills/requirements/SKILL.md) and [`/architecture`](skills/architecture/SKILL.md). Root `REQUIREMENTS.md` describes the product and its key features. Root `ARCHITECTURE.md` describes the intended technical design, data model, and architecture and data flow diagram. Maintain both as long-running project documents.
 
 **New feature:** use [`/spec`](skills/spec/SKILL.md), then [`/task-to-pr`](skills/task-to-pr/SKILL.md) or [`/factory`](skills/factory/SKILL.md). The spec is the ticket. Both delivery skills make the code changes, test, independently review, pass CI, and repair valid findings. `/task-to-pr` leaves passing PRs open. Explicit `/factory` use adds merging after required approvals and merge gates pass.
 

@@ -9,9 +9,32 @@ A Python CLI reads commands and stores tasks in one SQLite database. SQLite is
 the source of truth. The design supports the [product requirements](REQUIREMENTS.md)
 without a server or third-party runtime dependency.
 
-```text
-User → CLI → Task operations → SQLite store → Local database file
+```mermaid
+flowchart LR
+    user([Local user])
+    subgraph system[Task list on the user's computer]
+        cli[CLI]
+        operations[Task operations]
+        store[SQLite store]
+        db[(Local SQLite database)]
+    end
+    user -->|Command and title or ID| cli
+    cli -->|Parsed request| operations
+    operations -->|Validated write or query| store
+    store -->|SQL in a transaction| db
+    db -->|Rows or committed write| store
+    store -->|Saved ID or ordered tasks| operations
+    operations -->|Result or error| cli
+    cli -->|Output and exit code| user
+    classDef actor fill:#eef2ff,stroke:#4338ca,color:#1e1b4b
+    classDef component fill:#f0fdfa,stroke:#0f766e,color:#134e4a
+    classDef data fill:#fff7ed,stroke:#c2410c,color:#7c2d12
+    class user actor
+    class cli,operations,store component
+    class db data
 ```
+
+The user sends a command through the CLI and task operations to the store. Writes commit before a success result returns; reads return ordered task rows. All components and data stay on the user's computer.
 
 ## Responsibilities and dependencies
 
