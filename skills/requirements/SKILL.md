@@ -21,6 +21,8 @@ Use `/spec` for one feature and `/architecture` for system technical decisions.
 ## Document shape
 
 - **Purpose and users:** the problem, who has it, and the outcome they need.
+- **User journey:** when several capabilities need connecting, show one realistic path from the problem to the desired result.
+- **Evidence and assumptions:** link supplied research, feedback, or existing behavior that supports the problem. Label consequential assumptions and how to validate them. Do not invent evidence.
 - **Key features and scope:** the main capabilities, their value, and explicit non-goals.
 - **Requirements:** observable behavior, business rules, permissions, and user-visible failure and recovery. Define domain concepts when needed.
 - **Constraints:** required compatibility, security, privacy, operational, and performance limits. Use measurable thresholds when known; mark unknown targets as open decisions.
@@ -28,7 +30,9 @@ Use `/spec` for one feature and `/architecture` for system technical decisions.
 - **Success measures:** how to judge value after delivery, when evidence supports a measure. Keep these separate from implementation acceptance.
 - **Open decisions:** each missing answer, recommended default when justified, and its effect on further work.
 
-Update this document when the product, key features, scope, or business rules change. Keep feature implementation detail in specs.
+Use only sections that help define this product. Combine related points and omit sections that add no useful information.
+
+Update this document when the product, key features, scope, or business rules change. Keep it current; preserve feature decision history in specs. Keep feature implementation detail in specs.
 
 Keep implementation choices out of requirements. Include an imposed technology only as a stated constraint. Do not invent user research, targets, or business rules.
 

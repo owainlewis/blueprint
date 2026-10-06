@@ -11,7 +11,9 @@ Use the shortest path that gives the work enough decisions and proof.
 `REQUIREMENTS.md` describes the product, what it does at a high level, and its key
 features. `ARCHITECTURE.md` describes the intended technical design and data
 model. Refine them together and maintain them as the project changes. State
-which parts of the intended architecture are implemented.
+which parts of the intended architecture are implemented. Include relevant user
+journeys, supporting evidence, alternatives, operating expectations, and migration
+constraints. Omit sections that add no useful information.
 
 Use `/architecture-review` before implementation when a wrong technical choice
 could materially affect users, data, security, compatibility, operations, or
@@ -32,7 +34,9 @@ then merges after all gates pass.
 Use `/architecture-review` for consequential technical choices. Use `/plan` if
 the spec needs several delivery tasks. Neither is a mandatory step for every
 feature. One spec can produce several PRs. Update shared documents when the
-feature changes their rules; do not repeat them in each spec.
+feature changes their rules; do not repeat them in each spec. After delivery,
+retain the spec as decision history with its delivery status, PR links, and proof.
+Requirements and architecture stay current.
 
 ## A small, decided change
 
