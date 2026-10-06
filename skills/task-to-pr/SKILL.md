@@ -27,7 +27,7 @@ Do not create a second work definition.
 6. Fix valid findings and failures caused by the change. Reply to review findings with the fix or evidence for making no change. Resolve a thread only when fully addressed.
 7. After changing the implementation, repeat affected `/test` checks and fresh `/review`, commit, push, and wait for CI and automated review again. Update PR proof. Continue until all available checks pass and no actionable finding remains.
 8. Report a blocker when progress requires a missing decision, permission, unavailable check, or external repair. Do not weaken tests, bypass repository rules, or claim unrun checks passed.
-9. Record final proof and the PR link on the original tracker item when one exists. Leave passing PRs open for human review by default. Pending human approval is a merge blocker, not a failed implementation check.
+9. Record final proof and the PR link in the source spec or task. Update delivery status to reflect the actual result, including whether the PR is open or merged. Update the original tracker item when one exists. Leave passing PRs open for human review by default. Pending human approval is a merge blocker, not a failed implementation check.
 
 ## Dependencies
 
@@ -52,8 +52,8 @@ does not grant it. Before merging, require:
 - A ready, mergeable PR current with its required base.
 
 Merge in dependency order using the repository's preferred method. Never bypass
-branch protection. Confirm GitHub reports the merge, then update the original
-issue and project state. Remove manually created worktrees after merge or close;
+branch protection. Confirm GitHub reports the merge, then update delivery status in the source
+spec or task and update the original issue and project state. Remove manually created worktrees after merge or close;
 use the host's lifecycle tools for managed worktrees. Keep open-PR worktrees.
 Merge authority does not authorize deployment or release publication.
 

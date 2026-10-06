@@ -53,6 +53,10 @@ Preserve existing `AC-n`, `REQ-n`, and `INV-n` references. Never reuse or renumb
 
 State missing answers, recommended defaults when justified, and whether they block delivery. Write None when settled. Do not hide unknowns behind placeholders.
 
+## Lifecycle
+
+State the decision status and delivery status separately. After delivery, retain the spec as a record of the feature decisions and acceptance checks. Link delivered PRs and proof without claiming unrun checks passed. Record consequential changes made during delivery; do not erase the reasoning. Keep current product and system rules in requirements and architecture.
+
 ## Boundaries
 
 One spec may lead to several tasks and pull requests. Use `/plan` when splitting helps delivery. Small, decided fixes can use their task description and checks without a formal spec. Do not require root documents for a local change that does not need them.
