@@ -3,9 +3,12 @@ name: improve
 description: "Makes existing code easier to understand without changing behavior. Use to simplify structure, remove duplication or dead code, improve names, or remove unnecessary abstractions."
 user-invocable: true
 argument-hint: "[code, files, diff, branch, or improvement focus]"
+disable-model-invocation: true
 ---
 
 # Improve
+
+Use this skill only when the user explicitly selects it, or when an already selected Blueprint workflow requires its instructions. Do not select it from a general task match. For a required dependency, read its linked `SKILL.md` directly as part of the selected workflow; do not use a model-invoked skill command that the client blocks.
 
 Make code easier to understand without changing what it does. Reduce the layers a reader must trace and the hidden state they must remember.
 

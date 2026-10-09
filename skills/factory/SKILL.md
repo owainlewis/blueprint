@@ -3,9 +3,12 @@ name: factory
 description: "Delivers a spec or decided task through the task-to-pr workflow and merges after all quality and approval gates pass. Explicit invocation grants merge authority for the supplied work."
 user-invocable: true
 argument-hint: "<spec, task, or GitHub issue>"
+disable-model-invocation: true
 ---
 
 # Factory
+
+Use this skill only when the user explicitly selects it, or when an already selected Blueprint workflow requires its instructions. Do not select it from a general task match. For a required dependency, read its linked `SKILL.md` directly as part of the selected workflow; do not use a model-invoked skill command that the client blocks.
 
 Deliver the supplied work through a verified merge.
 

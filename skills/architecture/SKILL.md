@@ -3,9 +3,12 @@ name: architecture
 description: "Designs and maintains root ARCHITECTURE.md for the intended system, including its data model and shared technical rules. Use for new systems or changes to system boundaries, ownership, storage, or deployment."
 user-invocable: true
 argument-hint: "<system, requirements, or ARCHITECTURE.md>"
+disable-model-invocation: true
 ---
 
 # Architecture
+
+Use this skill only when the user explicitly selects it, or when an already selected Blueprint workflow requires its instructions. Do not select it from a general task match. For a required dependency, read its linked `SKILL.md` directly as part of the selected workflow; do not use a model-invoked skill command that the client blocks.
 
 Create or update root `ARCHITECTURE.md`. Design the system we intend to build.
 Keep this as a long-running system document alongside `REQUIREMENTS.md`.

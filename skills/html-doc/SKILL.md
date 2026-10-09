@@ -1,9 +1,12 @@
 ---
 name: html-doc
 description: Generates a polished, static HTML reading view from an existing Markdown PRD or technical design. Use when a user asks to render, present, visualize, or make a PRD or design document easier for humans to read in a browser.
+disable-model-invocation: true
 ---
 
 # HTML document
+
+Use this skill only when the user explicitly selects it, or when an already selected Blueprint workflow requires its instructions. Do not select it from a general task match. For a required dependency, read its linked `SKILL.md` directly as part of the selected workflow; do not use a model-invoked skill command that the client blocks.
 
 Turn one complete Markdown PRD or technical design into one verified static HTML page. Keep Markdown canonical. Change presentation, not meaning.
 

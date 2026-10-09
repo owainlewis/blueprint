@@ -3,9 +3,12 @@ name: spec
 description: "Defines one feature or major change: required behavior, technical design, failure handling, and acceptance checks. Use when consequential decisions must be settled before delivery. The spec is the ticket."
 user-invocable: true
 argument-hint: "<feature, change, issue, or brief>"
+disable-model-invocation: true
 ---
 
 # Spec
+
+Use this skill only when the user explicitly selects it, or when an already selected Blueprint workflow requires its instructions. Do not select it from a general task match. For a required dependency, read its linked `SKILL.md` directly as part of the selected workflow; do not use a model-invoked skill command that the client blocks.
 
 Write one implementation-ready specification for one coherent change.
 The spec is the ticket: its source may be `docs/<feature-slug>/spec.md`, a GitHub
