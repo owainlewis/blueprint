@@ -68,6 +68,18 @@ class MarkdownChecksTests(unittest.TestCase):
 
 
 class SkillChecksTests(unittest.TestCase):
+    def test_all_blueprint_skills_require_explicit_selection(self) -> None:
+        skills = sorted((check_repo.ROOT / "skills").glob("*/SKILL.md"))
+        self.assertEqual(len(skills), 12)
+        for skill in skills:
+            with self.subTest(skill=skill.parent.name):
+                metadata = check_repo.yaml.safe_load(skill.read_text().split("---", 2)[1])
+                self.assertIs(metadata.get("disable-model-invocation"), True)
+                policy = check_repo.yaml.safe_load(
+                    (skill.parent / "agents" / "openai.yaml").read_text()
+                )
+                self.assertIs(policy["policy"]["allow_implicit_invocation"], False)
+
     def test_malformed_yaml_frontmatter_is_reported(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

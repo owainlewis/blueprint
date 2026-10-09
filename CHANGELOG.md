@@ -12,6 +12,8 @@
 
 ### Changed
 
+- All twelve skills are opt-in, with Codex and Claude Code invocation settings. Selected workflows retain their internal skill calls; ordinary code requests no longer require `/task-to-pr`.
+
 - `/architecture` designs the intended system and data model, with decision status separate from implementation status. Claims about existing code require verification.
 - Delivery includes tests, fresh independent review, CI, and repairs. `/task-to-pr` leaves passing PRs open by default; explicit `/factory` or `/codex-issue-coordinator` use grants scoped merging after all gates and required approvals pass.
 - Dependent tasks may stack on open, independently reviewed prerequisite PRs. The Codex coordinator waits for prerequisite merges instead.

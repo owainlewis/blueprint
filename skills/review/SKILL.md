@@ -3,9 +3,12 @@ name: review
 description: "Uses a fresh agent to review an implementation change without editing it. Checks behavior, security, regressions, complexity, tests, docs, and missing proof. Use for code, PR, diff, security, second-opinion, or pre-merge reviews."
 user-invocable: true
 argument-hint: "[diff, branch, commit, PR, or file path]"
+disable-model-invocation: true
 ---
 
 # Review
+
+Use this skill only when the user explicitly selects it, or when an already selected Blueprint workflow requires its instructions. Do not select it from a general task match. For a required dependency, read its linked `SKILL.md` directly as part of the selected workflow; do not use a model-invoked skill command that the client blocks.
 
 Find defects that can change the result or make the change unsafe. Do not turn personal taste into a finding.
 

@@ -1,6 +1,6 @@
 # Blueprint repository policy
 
-Blueprint is a small set of instructions for AI coding. New projects use long-running requirements and architecture documents. New features use a spec, then `/task-to-pr` or `/factory` to make the code changes.
+Blueprint is a small set of instructions for AI coding. Blueprint skills are opt-in workflows. Use them only when explicitly selected by the user or required by an already selected Blueprint workflow.
 
 ## Principles
 
@@ -56,13 +56,15 @@ Before finishing, reread the text. Cut words that do no work. Fix sentences that
 
 ## Workflow for code changes
 
-For one or more code changes, follow the [`/task-to-pr` skill](skills/task-to-pr/SKILL.md). It stacks dependent work after prerequisite pull requests are open and independently approved, runs independent work at the same time when useful, and takes each task through a tested and reviewed pull request. A milestone is one possible source of tasks.
+For ordinary code requests, implement the smallest complete change within the agreed scope. Define acceptance checks, verify changed behavior and affected failures, review consequential changes, and follow repository delivery policy. Do not load a Blueprint skill merely because the task matches its description.
+
+When the user explicitly selects [`/task-to-pr`](skills/task-to-pr/SKILL.md), follow its full delivery workflow. A selected workflow may read the linked `SKILL.md` instructions it requires, such as `/test` and `/review`, without another user invocation. Do not use a model-invoked skill command that the client blocks. This does not grant authority beyond the selected workflow's scope.
 
 Use [`/factory`](skills/factory/SKILL.md) when explicitly asked to deliver through merge. It reuses `/task-to-pr`, including independent review, CI, and repairs. It cannot skip required approvals.
 
 Merge pull requests only when the user asks. Otherwise, leave them open.
 
-For a large GitHub issue batch that needs visible, isolated Codex sessions, use [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md). Explicitly naming it asks in-scope workers to merge after every required test, review, CI, approval, and mergeability gate passes. An implicit match leaves passing pull requests open. Neither mode grants deployment or release authority.
+Explicitly selecting [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md) asks in-scope workers to merge after every required test, review, CI, approval, and mergeability gate passes. Do not select it from an implicit task match. It does not grant deployment or release authority.
 
 Writing code is a basic agent ability, not a separate skill. Debugging and test-driven development are ways to implement a change, not separate product skills.
 

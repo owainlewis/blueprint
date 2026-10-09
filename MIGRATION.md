@@ -2,6 +2,10 @@
 
 > **Breaking change:** Blueprint now ships twelve skills. You must remove old Blueprint skill folders and copied commands by hand.
 
+## Opt-in invocation
+
+Reinstall Blueprint to receive the invocation settings. Remove any copied repository rule that forces `/task-to-pr` for every code change. Keep your repository's scope, verification, review, and delivery rules. Explicitly selected workflows still load their required skills.
+
 ## What changed
 
 | Before | Now |

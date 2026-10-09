@@ -3,9 +3,12 @@ name: requirements
 description: "Defines system product requirements: users, outcomes, capabilities, business rules, scope, and acceptance. Use for a new service or system, or a change to its product expectations."
 user-invocable: true
 argument-hint: "<system, brief, or REQUIREMENTS.md>"
+disable-model-invocation: true
 ---
 
 # Requirements
+
+Use this skill only when the user explicitly selects it, or when an already selected Blueprint workflow requires its instructions. Do not select it from a general task match. For a required dependency, read its linked `SKILL.md` directly as part of the selected workflow; do not use a model-invoked skill command that the client blocks.
 
 Create or update root `REQUIREMENTS.md`. Describe the product, what it does, and its key features. Keep this as a long-running product document.
 Use `/spec` for one feature and `/architecture` for system technical decisions.

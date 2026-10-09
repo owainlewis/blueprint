@@ -3,9 +3,12 @@ name: codex-issue-coordinator
 description: "Coordinates a large batch of GitHub issues through separate Codex worker threads, tested pull requests, review loops, and gated merges. Use when the user asks one Codex thread to manage several coding sessions or complete a parent issue, milestone, or issue batch."
 user-invocable: true
 argument-hint: "<parent issue, milestone, or issue list>"
+disable-model-invocation: true
 ---
 
 # Codex issue coordinator
+
+Use this skill only when the user explicitly selects it, or when an already selected Blueprint workflow requires its instructions. Do not select it from a general task match. For a required dependency, read its linked `SKILL.md` directly as part of the selected workflow; do not use a model-invoked skill command that the client blocks.
 
 Use one Codex thread to coordinate a GitHub issue batch. Give each active issue
 its own worker thread, worktree, branch, and pull request. Workers hold
