@@ -15,6 +15,8 @@ existing code, deciding what to build, and delivering reviewed pull requests.
 
 ## Opt-in workflows
 
+Blueprint is opt-in because general coding requests do not always need a formal engineering workflow. Automatic selection can add unnecessary documents, stopping points, and delivery steps. You choose the process; the agent handles the mechanics and still follows repository verification rules. This is a workflow choice, not a claim that skills always reduce agent quality.
+
 All twelve Blueprint skills require explicit selection. Name the skill in your request or use its command. An ordinary request such as “fix this bug” follows the agent's normal abilities and repository policy without automatically loading Blueprint.
 
 Once selected, a workflow can load its required skills. For example, `/factory` uses `/task-to-pr`, which uses `/test` and `/review`. You do not need to invoke each step. The agent reads required dependencies directly from their linked `SKILL.md` files as workflow instructions, rather than invoking a blocked skill command. Reading dependencies does not expand scope or merge authority.
