@@ -19,7 +19,7 @@ All twelve Blueprint skills require explicit selection. Name the skill in your r
 
 Once selected, a workflow can load its required skills. For example, `/factory` uses `/task-to-pr`, which uses `/test` and `/review`. You do not need to invoke each step. The agent reads required dependencies directly from their linked `SKILL.md` files as workflow instructions, rather than invoking a blocked skill command. Reading dependencies does not expand scope or merge authority.
 
-Codex uses `agents/openai.yaml` with `allow_implicit_invocation: false`. Claude Code uses `disable-model-invocation: true` in skill frontmatter. Other clients may not enforce these settings; the skill instructions also state the opt-in rule.
+Codex uses `agents/openai.yaml` with `allow_implicit_invocation: false`. Claude Code uses `disable-model-invocation: true` in skill frontmatter. Other clients may not enforce these settings. In those clients, explicitly tell the agent to use Blueprint only when selected.
 
 ## Why Blueprint
 

@@ -8,8 +8,6 @@ disable-model-invocation: true
 
 # Test
 
-Use this skill only when the user explicitly selects it, or when an already selected Blueprint workflow requires its instructions. Do not select it from a general task match. For a required dependency, read its linked `SKILL.md` directly as part of the selected workflow; do not use a model-invoked skill command that the client blocks.
-
 Prove the behavior that matters. A passing build or a source-code reading can support the proof, but neither proves a user-visible flow.
 
 ## Process

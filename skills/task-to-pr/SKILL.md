@@ -8,11 +8,11 @@ disable-model-invocation: true
 
 # Task to PR
 
-Use this skill only when the user explicitly selects it, or when an already selected Blueprint workflow requires its instructions. Do not select it from a general task match. For a required dependency, read its linked `SKILL.md` directly as part of the selected workflow; do not use a model-invoked skill command that the client blocks.
-
 Deliver each task as one focused pull request with proof. The spec is the ticket;
 accept a Markdown spec, GitHub issue, or decided task with acceptance checks.
 Do not create a second work definition.
+
+Read required skills directly from their `SKILL.md` files as instructions for this workflow. Do not invoke them through a skill command that the client blocks.
 
 ## Prepare
 

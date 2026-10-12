@@ -8,8 +8,6 @@ disable-model-invocation: true
 
 # Plan
 
-Use this skill only when the user explicitly selects it, or when an already selected Blueprint workflow requires its instructions. Do not select it from a general task match. For a required dependency, read its linked `SKILL.md` directly as part of the selected workflow; do not use a model-invoked skill command that the client blocks.
-
 Create tasks that a new agent can finish without making product or technical decisions. Every task and milestone must be a vertical slice: a usable outcome that runs through the required layers and has acceptance checks. Split by working result, not by file, layer, or team boundary.
 
 ## Process

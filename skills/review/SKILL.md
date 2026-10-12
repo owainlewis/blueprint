@@ -8,8 +8,6 @@ disable-model-invocation: true
 
 # Review
 
-Use this skill only when the user explicitly selects it, or when an already selected Blueprint workflow requires its instructions. Do not select it from a general task match. For a required dependency, read its linked `SKILL.md` directly as part of the selected workflow; do not use a model-invoked skill command that the client blocks.
-
 Find defects that can change the result or make the change unsafe. Do not turn personal taste into a finding.
 
 Use a fresh subagent that did not implement the change. Tell it to review directly without delegating. If you are that reviewer, review directly. Stay read-only. Do not edit files or post comments.

@@ -58,7 +58,7 @@ Before finishing, reread the text. Cut words that do no work. Fix sentences that
 
 For ordinary code requests, implement the smallest complete change within the agreed scope. Define acceptance checks, verify changed behavior and affected failures, review consequential changes, and follow repository delivery policy. Do not load a Blueprint skill merely because the task matches its description.
 
-When the user explicitly selects [`/task-to-pr`](skills/task-to-pr/SKILL.md), follow its full delivery workflow. A selected workflow may read the linked `SKILL.md` instructions it requires, such as `/test` and `/review`, without another user invocation. Do not use a model-invoked skill command that the client blocks. This does not grant authority beyond the selected workflow's scope.
+When the user explicitly selects [`/task-to-pr`](skills/task-to-pr/SKILL.md), follow its full delivery workflow.
 
 Use [`/factory`](skills/factory/SKILL.md) when explicitly asked to deliver through merge. It reuses `/task-to-pr`, including independent review, CI, and repairs. It cannot skip required approvals.
 

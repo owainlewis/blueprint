@@ -8,8 +8,6 @@ disable-model-invocation: true
 
 # Architecture review
 
-Use this skill only when the user explicitly selects it, or when an already selected Blueprint workflow requires its instructions. Do not select it from a general task match. For a required dependency, read its linked `SKILL.md` directly as part of the selected workflow; do not use a model-invoked skill command that the client blocks.
-
 Find choices that could make a technical proposal wrong, unsafe, or impossible
 to prove. Review the proposed behavior and tradeoffs, not the document's size
 or format.

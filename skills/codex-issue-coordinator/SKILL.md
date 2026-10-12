@@ -8,8 +8,6 @@ disable-model-invocation: true
 
 # Codex issue coordinator
 
-Use this skill only when the user explicitly selects it, or when an already selected Blueprint workflow requires its instructions. Do not select it from a general task match. For a required dependency, read its linked `SKILL.md` directly as part of the selected workflow; do not use a model-invoked skill command that the client blocks.
-
 Use one Codex thread to coordinate a GitHub issue batch. Give each active issue
 its own worker thread, worktree, branch, and pull request. Workers hold
 implementation context. GitHub holds dependency state.
@@ -21,6 +19,8 @@ does not grant merge authority: run in no-merge mode unless the user's words
 grant it.
 Neither mode authorizes deployment, release publication, destructive
 operations, branch-protection bypasses, or changes outside the supplied batch.
+
+Read required skills directly from their `SKILL.md` files as instructions for this workflow. Do not invoke them through a skill command that the client blocks.
 
 ## Preconditions
 
