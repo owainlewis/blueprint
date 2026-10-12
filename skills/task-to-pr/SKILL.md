@@ -3,6 +3,7 @@ name: task-to-pr
 description: "Delivers specs or decided tasks as tested, independently reviewed pull requests. Runs the CI and review repair loop, then leaves passing pull requests open unless merging was explicitly authorized."
 user-invocable: true
 argument-hint: "<specs, tasks, issues, PRs, or milestone>"
+disable-model-invocation: true
 ---
 
 # Task to PR
@@ -10,6 +11,8 @@ argument-hint: "<specs, tasks, issues, PRs, or milestone>"
 Deliver each task as one focused pull request with proof. The spec is the ticket;
 accept a Markdown spec, GitHub issue, or decided task with acceptance checks.
 Do not create a second work definition.
+
+Read required skills directly from their `SKILL.md` files as instructions for this workflow. Do not invoke them through a skill command that the client blocks.
 
 ## Prepare
 

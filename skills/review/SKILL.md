@@ -3,6 +3,7 @@ name: review
 description: "Uses a fresh agent to review an implementation change without editing it. Checks behavior, security, regressions, complexity, tests, docs, and missing proof. Use for code, PR, diff, security, second-opinion, or pre-merge reviews."
 user-invocable: true
 argument-hint: "[diff, branch, commit, PR, or file path]"
+disable-model-invocation: true
 ---
 
 # Review

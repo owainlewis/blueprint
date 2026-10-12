@@ -3,6 +3,7 @@ name: architecture-review
 description: "Reviews a technical proposal before implementation. Use for system architectures, feature specs, RFCs, ADRs, and issues that define how a system change should work. Finds material ambiguity and flaws in correctness, scalability, performance, security, operations, and proof."
 user-invocable: true
 argument-hint: "[architecture, spec, RFC, ADR, or issue]"
+disable-model-invocation: true
 ---
 
 # Architecture review

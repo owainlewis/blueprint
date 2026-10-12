@@ -3,6 +3,7 @@ name: spec
 description: "Defines one feature or major change: required behavior, technical design, failure handling, and acceptance checks. Use when consequential decisions must be settled before delivery. The spec is the ticket."
 user-invocable: true
 argument-hint: "<feature, change, issue, or brief>"
+disable-model-invocation: true
 ---
 
 # Spec

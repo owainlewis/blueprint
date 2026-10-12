@@ -3,6 +3,7 @@ name: factory
 description: "Delivers a spec or decided task through the task-to-pr workflow and merges after all quality and approval gates pass. Explicit invocation grants merge authority for the supplied work."
 user-invocable: true
 argument-hint: "<spec, task, or GitHub issue>"
+disable-model-invocation: true
 ---
 
 # Factory
@@ -13,6 +14,8 @@ Explicitly invoking `/factory` authorizes merging only the supplied work after
 all gates pass. Automatic skill selection does not grant merge authority; leave
 the PR open unless the user explicitly authorizes merging. Deployment and release
 publication require separate authority.
+
+Read required skills directly from their `SKILL.md` files as instructions for this workflow. Do not invoke them through a skill command that the client blocks.
 
 ## Process
 

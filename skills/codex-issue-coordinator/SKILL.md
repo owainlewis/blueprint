@@ -3,6 +3,7 @@ name: codex-issue-coordinator
 description: "Coordinates a large batch of GitHub issues through separate Codex worker threads, tested pull requests, review loops, and gated merges. Use when the user asks one Codex thread to manage several coding sessions or complete a parent issue, milestone, or issue batch."
 user-invocable: true
 argument-hint: "<parent issue, milestone, or issue list>"
+disable-model-invocation: true
 ---
 
 # Codex issue coordinator
@@ -18,6 +19,8 @@ does not grant merge authority: run in no-merge mode unless the user's words
 grant it.
 Neither mode authorizes deployment, release publication, destructive
 operations, branch-protection bypasses, or changes outside the supplied batch.
+
+Read required skills directly from their `SKILL.md` files as instructions for this workflow. Do not invoke them through a skill command that the client blocks.
 
 ## Preconditions
 

@@ -3,6 +3,7 @@ name: test
 description: "Proves that a code change meets its acceptance criteria. Uses focused automated checks and a real browser for browser-facing work. Use to test or verify a diff, branch, PR, URL, or user flow."
 user-invocable: true
 argument-hint: "<task, acceptance criteria, diff, branch, PR, URL, or flow>"
+disable-model-invocation: true
 ---
 
 # Test

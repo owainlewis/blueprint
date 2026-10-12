@@ -3,6 +3,7 @@ name: plan
 description: "Turns a reviewed spec or decided brief into ordered tasks for separate agent runs. Use for implementation tasks, tracker tickets, or useful milestones. Do not use for one coding task or its short execution outline."
 user-invocable: true
 argument-hint: "<spec, brief, issue, or request>"
+disable-model-invocation: true
 ---
 
 # Plan

@@ -3,6 +3,7 @@ name: architecture
 description: "Designs and maintains root ARCHITECTURE.md for the intended system, including its data model and shared technical rules. Use for new systems or changes to system boundaries, ownership, storage, or deployment."
 user-invocable: true
 argument-hint: "<system, requirements, or ARCHITECTURE.md>"
+disable-model-invocation: true
 ---
 
 # Architecture

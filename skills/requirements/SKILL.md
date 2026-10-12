@@ -3,6 +3,7 @@ name: requirements
 description: "Defines system product requirements: users, outcomes, capabilities, business rules, scope, and acceptance. Use for a new service or system, or a change to its product expectations."
 user-invocable: true
 argument-hint: "<system, brief, or REQUIREMENTS.md>"
+disable-model-invocation: true
 ---
 
 # Requirements
