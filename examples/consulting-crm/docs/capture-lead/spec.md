@@ -1,22 +1,36 @@
 # Capture a lead and schedule its first follow-up
 
-> Decision status: proposed teaching example. This spec is the ticket.
-> Delivery status: not implemented. The scenarios below are required proof, not test results.
+Status: Proposed. This is a teaching example and the spec is the ticket. It is
+not implemented: the checks below are required proof, not test results.
 
-## Outcome and scope
+## Problem
 
-A provisioned consultant signs in, captures a new company and contact with a
-sales opportunity, and assigns its first follow-up. After reload, colleagues in
-the workspace see the same pipeline and due items.
+A consultant who meets a potential client has nowhere shared to record the lead
+or its next step, so colleagues cannot see it and follow-ups get missed. This
+slice lets a provisioned consultant sign in, capture a company, contact, and
+opportunity, and assign the first follow-up. After reload, colleagues in the
+workspace see the same pipeline and due items.
 
-Implement [REQ-1 through REQ-4 and REQ-7](../../REQUIREMENTS.md) for this slice.
+## User stories
+
+This feature delivers [REQ-1 through REQ-4 and REQ-7](../../REQUIREMENTS.md).
+
+1. As a consultant, I want to sign in and see only my firm's records, so that our clients stay private. (REQ-1)
+2. As a consultant, I want to capture a new company, contact, and opportunity in one form, so that I can log a lead while the conversation is fresh. (REQ-2)
+3. As a firm owner, I want to see every opportunity under its stage and open its details, so that I can run the sales review. (REQ-3)
+4. As a consultant, I want to schedule a follow-up for myself or a colleague and see what is due today, so that no client is forgotten. (REQ-4)
+5. As a consultant, I want a lost response or failed save to be safe to retry, so that I never create a duplicate lead. (REQ-7)
+
+A denied, invalid, or failed request leaves records unchanged and keeps what the
+user typed. The error table under Technical design gives each case.
+
+## Technical design
+
 Follow [INV-1 through INV-4](../../ARCHITECTURE.md). The architecture does not
-change. Stage editing, manual notes, completing follow-ups, notifications,
-existing-company selection, and editing captured leads are outside scope.
-This feature deliberately creates a new company and contact each time; duplicates
-are allowed and merging them is later work.
+change. This feature deliberately creates a new company and contact each time;
+duplicates are allowed and merging them is later work.
 
-## Sign-in and views
+### Sign-in and views
 
 Include OpenID Connect sign-in and the server session rules from architecture.
 Only pre-provisioned active members can sign in. Deny others without creating
@@ -34,7 +48,7 @@ ordered by due_date then id. Show summary, assignee, date, and a link to the
 opportunity. List all workspace assignees, not just the current member. An empty
 view says “No follow-ups due”. Listing these rows never changes them.
 
-## Capture behavior and contract
+### Capture behavior and contract
 
 “New lead” opens one form: company name, contact name, optional contact email,
 and opportunity title. All names and the title follow the root trimming and
@@ -59,7 +73,7 @@ with the same key. If the user edits the values after an uncertain result, requi
 them to retry the original submission first; do not silently create a fresh key.
 Once success is confirmed, a deliberate new capture gets a fresh key.
 
-## Schedule behavior and contract
+### Schedule behavior and contract
 
 From an opportunity, “Schedule follow-up” opens a form with summary, due date,
 and assignee. Summary follows the same 1 to 120 character plain-text rules.
@@ -75,7 +89,7 @@ identical retries return 200 with that ID. The submission operation includes
 the opportunity ID, so keys cannot mix targets. Apply the same uncertain-result
 and retry behavior as capture. On success refresh the opportunity's follow-ups.
 
-## Reads, errors, and storage
+### Reads, errors, and storage
 
 `GET /api/opportunities` returns the current workspace's cards; `GET
 /api/opportunities/<id>` returns its details, activities, and open follow-ups.
@@ -103,7 +117,7 @@ non-validation errors. Browser errors never display SQL, tokens, or personal
 data from other records. Read failures show an error state, not an empty pipeline.
 All mutations enforce CSRF; rejected tokens return 403 with no writes.
 
-## Acceptance and proof
+## Acceptance
 
 No CRM test runner exists here. In its application repo, use PostgreSQL integration
 checks and browser scenarios with two workspaces, active and inactive members,
@@ -121,12 +135,17 @@ and a controllable identity provider. Add runnable commands when implemented.
 | AC-8 | Failed transactions save neither partial business rows nor submission results; follow-up retries create one activity. | Inject failures after each insert and at commit for both operations; test concurrent retries and assignment racing deactivation. Covers INV-2 through INV-4. |
 | AC-9 | Forms and views work with keyboard navigation and a narrow mobile screen. | Real browser: labeled controls, focused errors, retained values, usable cards, and no page overflow. |
 
-## Delivery and open decisions
+## Out of scope
+
+Stage editing, manual notes, completing follow-ups, notifications, selecting an
+existing company, and editing captured leads.
+
+## Open decisions
+
+None for the teaching design. Identity-provider registration and production
+operating targets are deployment inputs. No runnable app or passing feature
+checks are claimed by these documents.
 
 Split delivery only by working result, using the [sample plan](../../../README.md#sample-plan).
 The first task delivers capture from sign-in through persistence and pipeline.
 The second adds follow-ups through the opportunity and due views.
-
-The teaching design is settled. Identity-provider registration and production
-operating targets remain deployment inputs. No runnable app or passing feature
-checks are claimed by these documents.
