@@ -1,6 +1,6 @@
 ---
 name: task-to-pr
-description: "Delivers specs or decided tasks as tested, independently reviewed pull requests. Runs the CI and review repair loop, then leaves passing pull requests open unless merging was explicitly authorized."
+description: "Delivers a spec, issue, or decided task as a pull request that passes its checks, CI, and an independent review. Leaves the PR open unless merging was explicitly authorized."
 user-invocable: true
 argument-hint: "<specs, tasks, issues, PRs, or milestone>"
 disable-model-invocation: true
@@ -8,60 +8,36 @@ disable-model-invocation: true
 
 # Task to PR
 
-Deliver each task as one focused pull request with proof. The spec is the ticket;
-accept a Markdown spec, GitHub issue, or decided task with acceptance checks.
-Do not create a second work definition.
+Deliver each task as one focused pull request that passes CI and an independent review. The spec, issue, or task is the ticket; do not write another one.
 
-Read the skills this workflow uses directly from their files: [test](../test/SKILL.md), [review](../review/SKILL.md), [spec](../spec/SKILL.md), and [plan](../plan/SKILL.md). This works the same in Claude Code and Codex. Do not invoke them through a skill command.
+When a step names [test](../test/SKILL.md), [review](../review/SKILL.md), [spec](../spec/SKILL.md), or [plan](../plan/SKILL.md), read that file and follow it.
 
-## Prepare
+## Steps
 
-1. Read the source, repository instructions, relevant requirements and architecture, code, and tests. Reuse an existing branch, worktree, and pull request when continuing work.
-2. Confirm the outcome, scope, decisions, and checks are sufficient. If a consequential choice is missing, return to [spec](../spec/SKILL.md) or report the needed decision before implementing. Do not write specs for small, decided work.
-3. Split larger specs with [plan](../plan/SKILL.md) when useful. Each task delivers one working result. Identify dependencies and start independent work together when useful.
+1. Read the ticket, the repository instructions, and the code it touches. If a decision that changes behavior is missing, ask the user or return to spec. Split large work with plan.
+2. Branch from the latest default branch, or continue the existing branch and PR.
+3. Build the change with tests. Update `REQUIREMENTS.md`, `ARCHITECTURE.md`, or the spec if the change makes them wrong.
+4. Follow test until every check passes.
+5. Commit with a Conventional Commit message, push, and open the PR. Use the repository's PR template, or What, Why, What changed, Verification, and Risk if it has none.
+6. Follow review. Wait for CI and any review bot on the latest commit.
+7. Fix each real finding and failure, and reply on each review thread with the fix or the reason for no change. Go back to step 4. After three rounds on the same problem, stop and report it.
+8. Link the PR and its proof in the ticket.
 
-## Deliver and repair
+## Dependent tasks
 
-1. Create or reuse an isolated branch and worktree. Start independent work from the latest remote default branch. Follow repository naming and worktree rules.
-2. Implement the task and meaningful tests for changed behavior and affected failures. Update requirements, architecture, and the spec when the change affects them. Keep intended architecture and implementation status accurate.
-3. Follow [test](../test/SKILL.md) to run every repository check until green and prove acceptance. Fix failures before committing.
-4. Create a Conventional Commit, push, and open or update the pull request. Use the repository PR template, or What, Why, What changed, Verification, and Risk when there is none. Put screenshots and check results under Verification. Rate Risk High for database, API contract, auth, or data-deletion changes. Mark it ready for review and move a tracker ticket to Review when supported.
-5. Follow [review](../review/SKILL.md) with a reviewer that did not implement the change. Wait for configured CI and automated review on the current commit.
-6. Fix valid findings and failures caused by the change. Reply to review findings with the fix or evidence for making no change. Resolve a thread only when fully addressed.
-7. After changing the implementation, repeat the affected test checks and a fresh review round, commit, push, and wait for CI and automated review again. Update PR proof. Continue until all available checks pass and no actionable finding remains. Stop after three repair rounds that do not clear the same failure or finding, and report it as a blocker.
-8. Report a blocker when progress requires a missing decision, permission, unavailable check, or external repair. Do not weaken tests, bypass repository rules, or claim unrun checks passed.
-9. Record final proof and the PR link in the source spec or task. Update delivery status to reflect the actual result, including whether the PR is open or merged. Update the original tracker item when one exists. Leave passing PRs open for human review by default. Pending human approval is a merge blocker, not a failed implementation check.
+Start a task that depends on another once that task has an open PR with an `Approve` review. Branch from it, and update your branch when it changes or merges.
 
-## Dependencies
+## Merge
 
-Start dependent work only after each prerequisite has an open PR, a fresh
-`Approve` review, and no known blocking finding. Stack its branch on the reviewed
-prerequisite. If there are several prerequisites, combine them in dependency
-order. Keep each PR diff focused on its own task.
+Leave the PR open. Merge only when the user asks, or when `/factory` or `/codex-issue-coordinator` was invoked by name, and only when:
 
-When a prerequisite changes or merges, update dependent branches and PR bases.
-Repeat affected tests, independent review, and CI against the new base.
+- CI passes on the latest commit.
+- The latest review verdict is `Approve` and no finding is open.
+- Every approval the repository requires is given.
+- The PR is up to date with its base.
 
-## Merge only with authority
-
-Explicit `/factory` or `/codex-issue-coordinator` use grants their scoped merge
-authority. Otherwise merge only when the user asks. Automatic skill selection
-does not grant it. Before merging, require:
-
-- Complete scope and acceptance proof on the final commit.
-- Passing tests, required CI, and a fresh review verdict of `Approve`.
-- No unresolved actionable review finding or consequential decision.
-- Every repository-required approval.
-- A ready, mergeable PR current with its required base.
-
-Merge in dependency order using the repository's preferred method. Never bypass
-branch protection. Confirm GitHub reports the merge, then update delivery status in the source
-spec or task and update the original issue and project state. Remove manually created worktrees after merge or close;
-use the host's lifecycle tools for managed worktrees. Keep open-PR worktrees.
-Merge authority does not authorize deployment or release publication.
+Never bypass branch protection. After merging, update the ticket and delete any worktree you created. Merging never includes deploying or releasing.
 
 ## Return
 
-Report each PR, tests, review verdict, CI state, and blocker. Stop with passing
-PRs open unless scoped merge authority was given. In merge mode, report verified
-merges and any work that still needs human action.
+Each PR link with its check results, review verdict, CI state, and anything blocked.

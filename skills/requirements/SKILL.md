@@ -1,6 +1,6 @@
 ---
 name: requirements
-description: "Writes the product requirements document (PRD) in root REQUIREMENTS.md from a fixed template built on user stories: who the users are, what each needs to do, the business rules, and how to tell it works. Use for a new service or system, or a change to its product expectations."
+description: "Writes the product requirements document (PRD) in root REQUIREMENTS.md as user stories with checkable outcomes. Use for a new product or a change to what it should do."
 user-invocable: true
 argument-hint: "<system, brief, or REQUIREMENTS.md>"
 disable-model-invocation: true
@@ -8,15 +8,14 @@ disable-model-invocation: true
 
 # Requirements
 
-Fill in the template below in root `REQUIREMENTS.md`. It is the product requirements document (PRD) for the whole system and stays current as the product changes. Use [spec](../spec/SKILL.md) for one feature and [architecture](../architecture/SKILL.md) for technical decisions.
+Fill in this template in root `REQUIREMENTS.md`. It is the PRD for the whole product; keep it current. One feature goes in a [spec](../spec/SKILL.md), technical decisions in [architecture](../architecture/SKILL.md).
 
 ## Process
 
-1. Read the request, repository instructions, the existing `REQUIREMENTS.md`, and any research or feedback supplied. Reuse decisions already made.
-2. Ask the user about each missing product decision that could change the result. Give your recommended answer with each question. Inspect the repository for facts instead of asking.
-3. Write one user story for each thing a user needs to do. Give each a stable `REQ-n` ID and at least one "Done when" condition a person could check.
-4. Check that the stories cover denial, invalid input, and failure where users meet them, and that no two stories conflict.
-5. Stop with the document ready for review. Do not design the implementation, plan tasks, or write code.
+1. Read the request, the existing `REQUIREMENTS.md`, and any research the user gave you.
+2. Ask the user about each product decision that is missing. Give your recommended answer with each question. Look up facts in the repository instead of asking.
+3. Write one user story for each thing a user needs to do, with a `REQ-n` ID and at least one "Done when" a person could check. Include what the user sees when something fails or is denied.
+4. Stop when the document is ready for review.
 
 ## Template
 
@@ -69,9 +68,8 @@ Mark unknown targets as open decisions.>
 ## Rules
 
 - Keep existing `REQ-n` IDs. Never reuse or renumber them.
-- Write stories from the user's side. Keep implementation choices out; include an imposed technology only as a constraint.
-- Label assumptions. Never invent research, targets, or business rules.
-- Keep feature detail and acceptance tables in specs. Update this document when the product, scope, or business rules change.
+- Write from the user's side. Leave out how it will be built, unless a technology is required.
+- Label assumptions. Never invent research, targets, or rules.
 
 ## Return
 
