@@ -11,7 +11,8 @@
 
 ### Changed
 
-- The README leads with Blueprint's take, a four-step quick start, a workflow diagram, and skill tables.
+- The README leads with Blueprint's take and a four-step quick start, then groups the skills by stage: Design, Plan, Build, Verify. Verify is Test (does it work?) then Review (is it right?).
+- New [verification guide](guides/verification.md) for setting up testing and review in any repository.
 - `/architecture` is now a fill-in template with a required Mermaid diagram and a decisions table.
 - `/architecture-review` and `/plan` are shorter, in plain words. `/plan` keeps its task template.
 - `/requirements` is now a fill-in template built on user stories, each with a `REQ-n` ID and "Done when" conditions.
