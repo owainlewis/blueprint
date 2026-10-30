@@ -1,6 +1,6 @@
 ---
 name: architecture-review
-description: "Reviews a technical proposal before implementation. Use for system architectures, feature specs, RFCs, ADRs, and issues that define how a system change should work. Finds material ambiguity and flaws in correctness, scalability, performance, security, operations, and proof."
+description: "Reviews a technical proposal before any code is written: an architecture, spec, RFC, ADR, or design issue. Finds choices that would make it wrong, unsafe, or impossible to prove, and the open questions that block building it."
 user-invocable: true
 argument-hint: "[architecture, spec, RFC, ADR, or issue]"
 disable-model-invocation: true
@@ -8,90 +8,30 @@ disable-model-invocation: true
 
 # Architecture review
 
-Find choices that could make a technical proposal wrong, unsafe, or impossible
-to prove. Review the proposed behavior and tradeoffs, not the document's size
-or format.
+Find the choices that would make a design wrong, unsafe, or impossible to prove, while they are still cheap to change. Judge the decisions, not the document's length or format.
 
-Use one fresh subagent that did not write the proposal. Give the reviewer the
-complete context. Tell the reviewer to work directly without delegating. If
-you are that reviewer, review directly. Stay read-only.
+## Reviewer
 
-If fresh subagents are unavailable, stop and report that independent review is
-blocked. Continue only if the user explicitly accepts a documented self-review.
+Someone who did not write the proposal: a fresh subagent, or another agent CLI run read-only (`codex exec "<prompt>"` or `claude -p "<prompt>"`). If neither is available, say review is blocked. The reviewer changes nothing.
 
-## Process
+## Steps
 
-1. Read the goal, proposal, requirements, intended architecture, repository instructions, relevant current code,
-   tests, schemas, configuration, and linked material. Treat claims about the
-   current system as unverified until code, tests, schemas, configuration,
-   infrastructure, or relevant runtime evidence supports them.
-2. State the problem, affected user, intended outcome, success measure, scope,
-   constraints, and main tradeoff. Report any that the proposal leaves unclear.
-3. Trace one real case from input to observable outcome. Include ownership,
-   validation, state changes, side effects, response timing, failure, retry,
-   cleanup, and what the user sees where they matter.
-4. Challenge the chosen design with the review focus below. Look for a simpler
-   choice that reaches the same outcome and proof with less state, coupling,
-   duplication, or operational work.
-5. Surface material open questions. Recommend an answer when evidence supports
-   one. Do not invent questions that cannot change the design.
-6. Return findings, open questions, a short assessment, and one verdict.
-   Do not rewrite the proposal, plan the work, review implementation code, or
-   implement changes.
-
-## Review focus
-
-- Check fit with requirements and accepted architecture. Verify current-state claims without requiring a new system to have code.
-- Check ownership, boundaries, interfaces, data,
-  compatibility, migration, rollout, and rollback.
-- Trace partial failure, retry, cancellation, concurrency, startup, shutdown,
-  and recovery where they affect the proposal.
-- Check claimed scale, limited resources, latency, throughput, storage, cost,
-  dependency failure, and operator recovery only where they can change the choice.
-- Check identity, authorization, untrusted input, credentials, destructive
-  authority, and sensitive data handling.
-- Require observable acceptance criteria and proof for important rules and
-  failure paths. Do not let implementation invent user-visible behavior,
-  interfaces, data rules, security policy, or failure behavior.
-
-## Material questions
-
-Report an open question only when two capable implementations could answer it
-differently in a way that affects users, data, interfaces, security, scale,
-performance, operations, cost, compatibility, or proof.
-
-- **Blocking:** implementation should not start without the answer.
-- **Important:** the proposal should record the answer, but the reviewer can
-  recommend a safe default from available evidence.
-
-Omit questions that are stylistic, safely local to implementation, outside the
-stated scope, or speculative beyond the scale the proposal claims to support.
+1. Read the proposal, `REQUIREMENTS.md`, `ARCHITECTURE.md`, and the code, schemas, and config it touches. Check every claim about the current system against them.
+2. Write down the problem, who it affects, the intended outcome, and the main tradeoff. Flag any the proposal leaves unclear.
+3. Walk one real request from input to what the user sees, including what happens when a step fails, is retried, or runs twice at once.
+4. Check data ownership, interfaces, migrations, rollback, security (auth, untrusted input, secrets), and the scale the proposal claims.
+5. Look for a simpler design that gets the same result with less state or fewer moving parts.
+6. Check that each important rule and failure has an acceptance check.
 
 ## Findings
 
-Report only flaws that can change the design or its safety:
+Report only what could change the design:
 
-- **Blocker:** the choice is unsafe, contradicts the goal or current system, or
-  cannot recover from an important failure.
-- **Important:** the proposal permits materially different implementations or
-  leaves a meaningful risk in behavior, scale, performance, security,
-  operations, compatibility, or proof.
+- **Blocker:** unsafe, contradicts the goal or the current system, or cannot recover from a likely failure.
+- **Important:** two capable engineers could build it in ways that differ for users, data, or security.
 
-For each finding or open question include its location, concrete failure or
-ambiguity, impact, evidence, and the smallest correction or recommended answer.
-Report unclear wording when it prevents a new teammate from explaining,
-evaluating, or implementing the design. Omit other writing preferences.
-
-Use plain words. State the exact condition, failure, and effect. Do not hide an
-unknown behind vague language such as `may have issues` or `could be risky`.
+For each: where it is, what goes wrong and when, the evidence, and the smallest fix or your recommended answer. Skip wording preferences and questions that cannot change the design.
 
 ## Verdict
 
-- `Approve`: no blocker or important findings or open questions remain.
-- `Request changes`: the proposal has a fixable blocker or important finding or
-  open question.
-- `Blocked`: the review lacks required context, repository evidence, specialist
-  coverage, or an independent reviewer.
-
-State what remains unverified. Do not approve because the document is detailed
-or because every template section exists.
+End with `Approve`, `Request changes`, or `Blocked` (missing context or reviewer), then what you could not verify. A detailed document is not a reason to approve.

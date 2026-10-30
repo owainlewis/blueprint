@@ -70,7 +70,7 @@ class MarkdownChecksTests(unittest.TestCase):
 class SkillChecksTests(unittest.TestCase):
     def test_all_blueprint_skills_require_explicit_selection(self) -> None:
         skills = sorted((check_repo.ROOT / "skills").glob("*/SKILL.md"))
-        self.assertEqual(len(skills), 12)
+        self.assertEqual(len(skills), 11)
         for skill in skills:
             with self.subTest(skill=skill.parent.name):
                 metadata = check_repo.yaml.safe_load(skill.read_text().split("---", 2)[1])

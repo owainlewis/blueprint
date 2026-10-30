@@ -130,5 +130,5 @@ several delivery tasks. Compare the decisions and proof with this example,
 rather than matching its wording.
 
 In a real application repo, give the spec or a planned task to `/task-to-pr` for
-a passing open PR. Explicit `/factory` use adds merging after all gates pass.
-Do not ask either skill to implement the CRM inside Blueprint.
+a passing open PR. Add "and merge it" to have it merge once every check passes.
+Do not ask it to implement the CRM inside Blueprint.

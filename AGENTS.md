@@ -22,7 +22,7 @@ Blueprint is a small set of instructions for AI coding. Blueprint skills are opt
 - Browser behavior is proven in a real browser, not by reading source.
 - If the task, design, or plan is wrong, update it before changing more code.
 - Prefer the smallest complete change. Do not mix product work with unrelated cleanup.
-- Humans review decisions and normally merge. Agents may merge only when the user explicitly delegates it. Explicitly naming `/factory` or `/codex-issue-coordinator` delegates merge authority for the supplied work after its quality gates pass; an implicit skill match does not.
+- Humans review decisions and normally merge. Agents may merge only when the user explicitly delegates it. Explicitly naming `/codex-issue-coordinator` delegates merge authority for the supplied work after its quality gates pass; an implicit skill match does not.
 
 ## Writing
 
@@ -51,7 +51,6 @@ Before finishing, reread the text. Cut words that do no work. Fix sentences that
 - `/test`: prove acceptance criteria and failure paths affected by the change, including real-browser checks when browser-rendered behavior changes.
 - `/review`: use a fresh subagent or another agent CLI for an independent, read-only review of spec fit and correctness.
 - `/improve`: inspect existing code and improve its clarity, simplicity, and structure without changing intended behavior.
-- `/factory`: follow `/task-to-pr`, then merge the supplied work after every quality and approval gate passes when explicitly invoked.
 - `/codex-issue-coordinator`: coordinate a large GitHub issue batch through separate Codex worker threads, reviewed pull requests, and gated merges.
 
 ## Workflow for code changes
@@ -59,8 +58,6 @@ Before finishing, reread the text. Cut words that do no work. Fix sentences that
 For ordinary code requests, implement the smallest complete change within the agreed scope. Define acceptance checks, verify changed behavior and affected failures, review consequential changes, and follow repository delivery policy. Do not load a Blueprint skill merely because the task matches its description.
 
 When the user explicitly selects [`/task-to-pr`](skills/task-to-pr/SKILL.md), follow its full delivery workflow.
-
-Use [`/factory`](skills/factory/SKILL.md) when explicitly asked to deliver through merge. It reuses `/task-to-pr`, including independent review, CI, and repairs. It cannot skip required approvals.
 
 Merge pull requests only when the user asks. Otherwise, leave them open.
 

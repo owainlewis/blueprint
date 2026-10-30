@@ -24,14 +24,13 @@ proof. The review does not replace product approval.
 ## A new feature or major change
 
 ```text
-/spec → /task-to-pr or /factory
+/spec → /task-to-pr
 ```
 
 The spec is the ticket. It references the long-running system documents,
 defines the feature's behavior and technical design, and pairs acceptance with
 checks. `/task-to-pr` makes the code changes and leaves a passing PR open.
-Explicit `/factory` use makes the code changes through the same quality loop,
-then merges after all gates pass.
+Ask it to merge and it merges after all gates pass.
 
 Use `/architecture-review` for consequential technical choices. Use `/plan` if
 the spec needs several delivery tasks. Neither is a mandatory step for every
@@ -51,12 +50,12 @@ Do not write a spec or plan just to add process.
 ## Delivery through merge
 
 ```text
-spec or decided task → explicit /factory → /task-to-pr quality loop → gated merge
+spec or decided task → /task-to-pr "and merge it" → quality loop → gated merge
 ```
 
-Both delivery paths implement, test, independently review, pass CI, and repair
-valid findings. `/factory` adds merging after required approvals and merge gates
-pass. If a gate needs human action, leave the PR open and report the blocker.
+This is the same `/task-to-pr` loop: implement, test, independently review,
+pass CI, and repair valid findings. It then merges once required approvals and
+merge gates pass. If a gate needs human action, leave the PR open and report the blocker.
 
 ## A large issue batch in Codex
 

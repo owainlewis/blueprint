@@ -1,78 +1,152 @@
 <div align="center">
 
-![Blueprint. Design. Plan. Build. Validate.](assets/blueprint-hero.svg)
+![Blueprint. Design. Plan. Build. Verify.](assets/blueprint-hero.svg)
 
 # Blueprint
 
-**Design. Plan. Build. Validate.**
+**Senior engineering habits for coding agents.**
 
-[Why Blueprint](#why-blueprint) · [Install](#install) · [Choose a skill](#choose-a-skill) · [Read the guides](#guides) · [Contribute](CONTRIBUTING.md)
+Small skills for Claude Code and Codex that turn an idea into a reviewed, tested pull request.
+
+[Quick start](#quick-start) · [Our take](#our-take) · [The workflow](#design-plan-build-verify) · [Verification](guides/verification.md) · [Example](examples/)
 
 </div>
 
-Blueprint gives coding agents twelve focused skills. They cover understanding
-existing code, deciding what to build, and delivering reviewed pull requests.
+---
 
-## Opt-in workflows
+## Our take
 
-Blueprint is opt-in because general coding requests do not always need a formal engineering workflow. Automatic selection can add unnecessary documents, stopping points, and delivery steps. You choose the process; the agent handles the mechanics and still follows repository verification rules. This is a workflow choice, not a claim that skills always reduce agent quality.
+**As models get smarter, skills get simpler.**
 
-All twelve Blueprint skills require explicit selection. Name the skill in your request or use its command. An ordinary request such as “fix this bug” follows the agent's normal abilities and repository policy without automatically loading Blueprint.
+Agents already know how to write code. What they lack is the judgment that
+experienced engineers bring to a team: write down what you are building before
+you build it, prove it works, and get someone else to check it. Blueprint
+encodes those habits, drawn from years of engineering experience and working
+with some of the best engineers in the world.
 
-Once selected, a workflow can load its required skills. For example, `/factory` uses `/task-to-pr`, which uses `/test` and `/review`. You do not need to invoke each step. The agent reads required dependencies directly from their linked `SKILL.md` files as workflow instructions, rather than invoking a blocked skill command. Reading dependencies does not expand scope or merge authority.
+So each skill is short. It gives the agent three things and trusts it with the rest:
 
-Codex uses `agents/openai.yaml` with `allow_implicit_invocation: false`. Claude Code uses `disable-model-invocation: true` in skill frontmatter. Other clients may not enforce these settings. In those clients, explicitly tell the agent to use Blueprint only when selected.
+| | |
+|---|---|
+| **A template** | The shape of a good PRD, spec, or pull request. A template beats a page of instructions. |
+| **A standard of proof** | Every check passes, every acceptance criterion has a test, and the tests fail when the code is reverted. |
+| **A second pair of eyes** | A fresh reviewer, ideally a different model, checks the work against the spec before a human sees it. |
 
-## Why Blueprint
+The same skills work in Claude Code and Codex.
 
-Capable agents do not need a script for every move. They need a clear outcome,
-the constraints that matter, and proof that the work is done.
+## Quick start
 
-Define the product and architecture, specify each meaningful change, then deliver it with tests and review. Each skill gives the agent an outcome and the evidence needed to finish.
-
-Use only the skills the work needs. Small, decided changes can go straight to delivery.
-
-## Install
-
-Install all twelve skills with one command:
+**1. Install**
 
 ```bash
-npx skills add \
-  owainlewis/blueprint
+npx skills add owainlewis/blueprint
 ```
 
-That is the main installation path. Blueprint works through portable skill files, so the same repository can support Codex, Claude Code, and other compatible coding agents without separate plugin workflows.
+**2. Describe the product.** Ask your agent:
 
-## Choose a skill
+> Use /requirements for a CRM that helps a small consulting firm track leads and follow-ups.
 
-**New project:** use [`/requirements`](skills/requirements/SKILL.md) and [`/architecture`](skills/architecture/SKILL.md). Root `REQUIREMENTS.md` describes the product and its key features. Root `ARCHITECTURE.md` describes the intended technical design, data model, and architecture and data flow diagram. Maintain both as long-running project documents.
+You get `REQUIREMENTS.md`: the PRD, written as user stories with checkable outcomes.
 
-**New feature:** use [`/spec`](skills/spec/SKILL.md), then [`/task-to-pr`](skills/task-to-pr/SKILL.md) or [`/factory`](skills/factory/SKILL.md). The spec is the ticket. Both delivery skills make the code changes, test, independently review, pass CI, and repair valid findings. `/task-to-pr` leaves passing PRs open. Explicit `/factory` use adds merging after required approvals and merge gates pass.
+**3. Spec one feature.**
 
-Use [`/architecture-review`](skills/architecture-review/SKILL.md) for consequential technical decisions and [`/plan`](skills/plan/SKILL.md) when work needs splitting. Small, decided changes can go straight to delivery. Use [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md) for large GitHub issue batches across visible Codex workers.
+> Use /spec for capturing a new lead.
 
-## Twelve focused skills
+You get `docs/capture-lead/spec.md`: the user stories for that feature, a diagram, and the technical design an agent can build from.
 
-- **Define:** [`/requirements`](skills/requirements/SKILL.md), [`/architecture`](skills/architecture/SKILL.md), [`/spec`](skills/spec/SKILL.md)
-- **Decide and split:** [`/architecture-review`](skills/architecture-review/SKILL.md), [`/plan`](skills/plan/SKILL.md)
-- **Deliver:** [`/task-to-pr`](skills/task-to-pr/SKILL.md), [`/factory`](skills/factory/SKILL.md), [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md)
-- **Check and improve:** [`/test`](skills/test/SKILL.md), [`/review`](skills/review/SKILL.md), [`/improve`](skills/improve/SKILL.md)
-- **Present:** [`/html-doc`](skills/html-doc/SKILL.md)
+**4. Ship it.**
 
-Each skill owns one engineering phase or delivery outcome. Repository policy stays in `AGENTS.md`. Writing code, branching, debugging, and committing remain normal agent abilities inside delivery.
+> Use /task-to-pr for docs/capture-lead/spec.md.
+
+The agent builds it, runs every check until green, gets an independent review,
+waits for CI, fixes what comes back, and leaves a pull request ready for you.
+
+See the full result in the [consulting CRM example](examples/).
+
+## Design, plan, build, verify
+
+Blueprint follows how good engineers already work. Each skill belongs to one stage.
+
+```mermaid
+flowchart LR
+    D["Design<br/>/requirements /architecture /spec"] --> P["Plan<br/>/plan"]
+    P --> B["Build<br/>/task-to-pr"]
+    B --> T["Test<br/>does it work?"]
+    T -->|fails| B
+    T --> R["Review<br/>is it right?"]
+    R -->|findings| B
+    R --> M(["Merge"])
+    subgraph V [Verify]
+        T
+        R
+    end
+```
+
+Skip any stage the work does not need. A small, clear fix can go straight to Build.
+
+**Verify has two parts, in order.** Test asks *does it work?*: machines run
+format, lint, typecheck, tests, and browser checks. Review asks *is it right?*:
+another model, then you, check that it matches the spec, is safe, and can be
+maintained. Review starts only once tests pass. The
+[verification guide](guides/verification.md) shows how to set up both in any
+repository.
+
+### Design
+
+| Skill | Use it when | You get |
+|---|---|---|
+| [`/requirements`](skills/requirements/SKILL.md) | Starting a product or changing what it does | `REQUIREMENTS.md`, a PRD of user stories |
+| [`/architecture`](skills/architecture/SKILL.md) | Designing the system or changing its shape | `ARCHITECTURE.md` with a data flow diagram |
+| [`/spec`](skills/spec/SKILL.md) | A feature has decisions to settle first | User stories, a diagram, technical design, acceptance checks |
+| [`/architecture-review`](skills/architecture-review/SKILL.md) | A design choice is costly to get wrong | Findings and a verdict before any code |
+| [`/html-doc`](skills/html-doc/SKILL.md) | You want to share a design as a web page | A checked, static HTML view |
+
+### Plan
+
+| Skill | Use it when | You get |
+|---|---|---|
+| [`/plan`](skills/plan/SKILL.md) | A spec is too big for one pull request | Small tasks, each a working slice |
+
+### Build
+
+| Skill | Use it when | You get |
+|---|---|---|
+| [`/task-to-pr`](skills/task-to-pr/SKILL.md) | A spec or task is ready to build | A tested, reviewed pull request, left open unless you say "and merge it" |
+| [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md) | You have a batch of GitHub issues for Codex | One worker and one checked PR per issue |
+| [`/improve`](skills/improve/SKILL.md) | Code works but is hard to follow | Simpler code with the same behavior |
+
+### Verify
+
+| Skill | Use it when | You get |
+|---|---|---|
+| [`/test`](skills/test/SKILL.md) | You need to know it works | Every check green, and pass or fail for each criterion |
+| [`/review`](skills/review/SKILL.md) | You need to know it is right | Spec fit, correctness findings, and a verdict from a fresh reviewer |
+
+`/task-to-pr` runs Test and Review for you, then waits for CI.
+
+## Opt-in by design
+
+Blueprint runs only when you ask for it. "Fix this bug" gets your agent's normal
+behavior; "use /task-to-pr to fix this bug" gets the full workflow. Once you
+pick a workflow, it loads the skills it needs on its own.
+
+Claude Code honors this through `disable-model-invocation: true`, and Codex
+through `agents/openai.yaml`. Agents only merge when you ask them to, or when you
+invoke `/codex-issue-coordinator` by name.
 
 ## Guides
 
-- [Choosing the right skill](guides/choosing-a-skill.md) explains where each skill starts and stops.
-- [Common Blueprint workflows](guides/workflows.md) shows how the skills fit together for small changes, larger features, existing systems, and issue batches.
-- [Consulting CRM example](examples/) shows requirements, architecture and data flow, a feature spec, and a plan with vertical slices.
-- [Migration guide](MIGRATION.md) explains how to remove older Blueprint skills before upgrading.
-- [Changelog](CHANGELOG.md) records notable changes.
+- [Verification](guides/verification.md): set up testing and review for any repository.
+- [Choosing a skill](guides/choosing-a-skill.md): where each skill starts and stops.
+- [Workflows](guides/workflows.md): small fixes, larger features, existing systems, and issue batches.
+- [Consulting CRM example](examples/): requirements, architecture, a spec, and a plan.
+- [Migration](MIGRATION.md): upgrading from an older Blueprint.
+- [Changelog](CHANGELOG.md)
 
 ## Project
 
-Blueprint is deliberately small. It is not an issue tracker, an agent runtime, or a release system. It gives coding agents clear instructions for deciding, building, testing, and reviewing software.
-
-Contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request. Security problems should follow [SECURITY.md](SECURITY.md).
+Blueprint stays small on purpose. It is not an issue tracker, an agent runtime,
+or a release system. Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a
+pull request, and report security problems through [SECURITY.md](SECURITY.md).
 
 Released under the [MIT License](LICENSE).
