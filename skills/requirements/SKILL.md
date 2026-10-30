@@ -1,6 +1,6 @@
 ---
 name: requirements
-description: "Defines system product requirements: users, outcomes, capabilities, business rules, scope, and acceptance. Use for a new service or system, or a change to its product expectations."
+description: "Writes the product requirements document (PRD) in root REQUIREMENTS.md as user stories with checkable outcomes. Use for a new product or a change to what it should do."
 user-invocable: true
 argument-hint: "<system, brief, or REQUIREMENTS.md>"
 disable-model-invocation: true
@@ -8,35 +8,69 @@ disable-model-invocation: true
 
 # Requirements
 
-Create or update root `REQUIREMENTS.md`. Describe the product, what it does, and its key features. Keep this as a long-running product document.
-Use `/spec` for one feature and `/architecture` for system technical decisions.
+Fill in this template in root `REQUIREMENTS.md`. It is the PRD for the whole product; keep it current. One feature goes in a [spec](../spec/SKILL.md), technical decisions in [architecture](../architecture/SKILL.md).
 
 ## Process
 
-1. Read the request, repository instructions, existing requirements, and relevant evidence. Reuse decisions already made.
-2. Identify the users, problem, desired outcome, scope, and constraints. Separate stated needs from assumptions. Inspect the repo for facts; ask the user for missing product decisions that could change the result.
-3. Write the requirements using the shape below. Give each requirement a stable `REQ-n` ID. Never reuse or renumber existing IDs.
-4. Check that the requirements agree, cover relevant failure behavior, and can be tested. Record unresolved decisions and whether they block architecture or delivery.
-5. Stop with the document ready for human review. Do not design the implementation, plan tasks, or write code.
+1. Read the request, the existing `REQUIREMENTS.md`, and any research the user gave you.
+2. Ask the user about each product decision that is missing. Give your recommended answer with each question. Look up facts in the repository instead of asking.
+3. Write one user story for each thing a user needs to do, with a `REQ-n` ID and at least one "Done when" a person could check. Include what the user sees when something fails or is denied.
+4. Stop when the document is ready for review.
 
-## Document shape
+## Template
 
-- **Purpose and users:** the problem, who has it, and the outcome they need.
-- **User journey:** when several capabilities need connecting, show one realistic path from the problem to the desired result.
-- **Evidence and assumptions:** link supplied research, feedback, or existing behavior that supports the problem. Label consequential assumptions and how to validate them. Do not invent evidence.
-- **Key features and scope:** the main capabilities, their value, and explicit non-goals.
-- **Requirements:** observable behavior, business rules, permissions, and user-visible failure and recovery. Define domain concepts when needed.
-- **Constraints:** required compatibility, security, privacy, operational, and performance limits. Use measurable thresholds when known; mark unknown targets as open decisions.
-- **Acceptance:** observable conditions for the system capabilities. Leave detailed feature scenarios and checks to its spec.
-- **Success measures:** how to judge value after delivery, when evidence supports a measure. Keep these separate from implementation acceptance.
-- **Open decisions:** each missing answer, recommended default when justified, and its effect on further work.
+```markdown
+# <Product> requirements
 
-Use only sections that help define this product. Combine related points and omit sections that add no useful information.
+Status: Proposed | Accepted
 
-Update this document when the product, key features, scope, or business rules change. Keep it current; preserve feature decision history in specs. Keep feature implementation detail in specs.
+## Problem and users
 
-Keep implementation choices out of requirements. Include an imposed technology only as a stated constraint. Do not invent user research, targets, or business rules.
+<Who has the problem, what goes wrong for them today, and the outcome they need.
+Name each type of user once; the stories below use these names.>
+
+## User stories
+
+### REQ-1: <Short name>
+
+As a <user>, I want to <action>, so that <benefit>.
+
+Done when:
+- <Observable result a person could check>
+- <What the user sees when it fails or is denied>
+
+### REQ-2: <Short name>
+
+...
+
+## Business rules
+
+<Rules that hold across stories: permissions, limits, states, and what must never happen.>
+
+## Constraints
+
+<Required security, privacy, compatibility, and performance limits. Use numbers when known.
+Mark unknown targets as open decisions.>
+
+## Out of scope
+
+<What this product does not do yet.>
+
+## Success measures
+
+<How to judge value after release, when there is evidence for a measure. Otherwise "None yet".>
+
+## Open decisions
+
+<Each unanswered question, your recommended answer, and what it blocks.>
+```
+
+## Rules
+
+- Keep existing `REQ-n` IDs. Never reuse or renumber them.
+- Write from the user's side. Leave out how it will be built, unless a technology is required.
+- Label assumptions. Never invent research, targets, or rules.
 
 ## Return
 
-Report the path, decisions made, and any blocking question.
+Report the path, the decisions made, and any blocking question.

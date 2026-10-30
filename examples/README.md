@@ -7,9 +7,9 @@ without adding email sync or sales automation.
 
 Read in this order:
 
-1. [Requirements](consulting-crm/REQUIREMENTS.md): users, journey, scope, and observable product rules.
+1. [Requirements](consulting-crm/REQUIREMENTS.md): the PRD, with users, a typical journey, and user stories with `REQ-n` IDs.
 2. [Architecture](consulting-crm/ARCHITECTURE.md): intended components, data flow diagram, data model, invariants, and tradeoffs.
-3. [Capture lead spec](consulting-crm/docs/capture-lead/spec.md): sign-in, lead capture, pipeline, and the first follow-up, with contracts and acceptance checks.
+3. [Capture lead spec](consulting-crm/docs/capture-lead/spec.md): a short PRD for sign-in, lead capture, pipeline, and the first follow-up, then the technical design and acceptance checks an agent builds from.
 4. The sample plan below: two usable slices of that feature, each suitable for a focused PR.
 
 No CRM application is implemented in Blueprint. These are proposed teaching
