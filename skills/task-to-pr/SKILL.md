@@ -29,7 +29,7 @@ Start a task that depends on another once that task has an open PR with an `Appr
 
 ## Merge
 
-Leave the PR open. Merge only when the user asks, or when `/factory` or `/codex-issue-coordinator` was invoked by name, and only when:
+Leave the PR open. Merge only when the user asks (for example "/task-to-pr and merge it") or `/codex-issue-coordinator` was invoked by name, and only when:
 
 - CI passes on the latest commit.
 - The latest review verdict is `Approve` and no finding is open.

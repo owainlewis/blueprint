@@ -1,6 +1,6 @@
 # Choosing the right Blueprint skill
 
-Blueprint has twelve skills. New projects start with `/requirements` and `/architecture`, maintained as long-running documents. New features start with `/spec`, then `/task-to-pr` or `/factory`. Choose additional skills when they improve decisions or proof.
+Blueprint has eleven skills. New projects start with `/requirements` and `/architecture`, maintained as long-running documents. New features start with `/spec`, then `/task-to-pr`. Choose additional skills when they improve decisions or proof.
 
 | Result | Skill | Output |
 |---|---|---|
@@ -10,14 +10,13 @@ Blueprint has twelve skills. New projects start with `/requirements` and `/archi
 | Independent technical proposal review | [`/architecture-review`](../skills/architecture-review/SKILL.md) | Findings and verdict |
 | Several ready delivery tasks | [`/plan`](../skills/plan/SKILL.md) | Tasks in chat; tracker tickets only when asked |
 | Passing open pull requests | [`/task-to-pr`](../skills/task-to-pr/SKILL.md) | PRs with tests, independent review, CI, and repairs complete |
-| Delivery through merge | [`/factory`](../skills/factory/SKILL.md) | Verified merges, or explicit blockers |
 | Large GitHub issue batch in Codex | [`/codex-issue-coordinator`](../skills/codex-issue-coordinator/SKILL.md) | Visible workers and checked PRs |
 | Acceptance proof | [`/test`](../skills/test/SKILL.md) | Pass, fail, or unverified evidence |
 | Independent implementation review | [`/review`](../skills/review/SKILL.md) | Findings and verdict |
 | Simpler code with the same behavior | [`/improve`](../skills/improve/SKILL.md) | Focused change and preservation proof |
 | HTML reading view | [`/html-doc`](../skills/html-doc/SKILL.md) | Verified static HTML |
 
-Blueprint workflows are opt-in. See [invocation and client support](../README.md#opt-in-workflows).
+Blueprint workflows are opt-in. See [invocation and client support](../README.md#opt-in-by-design).
 
 ## System documents and feature specs
 
@@ -35,10 +34,10 @@ description and checks without formal system documents or a feature spec.
 `/task-to-pr` includes the full test, independent review, CI, and repair loop.
 It leaves passing PRs open unless the user grants merge authority.
 
-Explicit `/factory` use grants authority to merge its supplied work after all
-gates and required approvals pass. It reuses `/task-to-pr`; it does not lower the
-quality standard. Explicit `/codex-issue-coordinator` use grants the same scoped
-authority for its supplied batch. Automatic skill selection grants neither.
+Ask `/task-to-pr` to merge ("and merge it") and it merges after all gates and
+required approvals pass, with the same quality standard. Explicit
+`/codex-issue-coordinator` use grants the same scoped authority for its supplied
+batch. Automatic skill selection grants neither.
 
 Neither merge workflow authorizes deployment or release publication. Report
 missing decisions, approvals, or checks as blockers.

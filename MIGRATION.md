@@ -1,6 +1,6 @@
 # Migrate from older Blueprint skills
 
-> **Breaking change:** Blueprint now ships twelve skills. You must remove old Blueprint skill folders and copied commands by hand.
+> **Breaking change:** Blueprint now ships eleven skills. You must remove old Blueprint skill folders and copied commands by hand.
 
 ## Opt-in invocation
 
@@ -16,7 +16,7 @@ Reinstall Blueprint to receive the invocation settings. Remove any copied reposi
 | `design-doc`, `/design`, old `spec` | `/spec` for feature changes |
 | System product needs inside `/design` | `/requirements` |
 | Existing-state-only `/architecture` | `/architecture` for intended system design and data model |
-| Unattended `/factory` leaving PRs open | `/task-to-pr`; explicit `/factory` now adds gated merging |
+| `/factory` | `/task-to-pr`, asked to merge ("and merge it") |
 | `browser-verify` | Browser proof inside `/test` |
 | `refactor` | `/improve` |
 | `branch`, `commit`, `implement`, `pr`, `pr-to-ready` | Steps inside `/task-to-pr` |
@@ -28,19 +28,19 @@ Reinstall Blueprint to receive the invocation settings. Remove any copied reposi
 
 Existing `design.md` documents remain valid sources. Rename or split them only when useful. Do not treat an old architecture document as a future design without reviewing its decisions.
 
-**Authority change:** Explicit `/factory` use now grants scoped merge authority. Remove old automations or prompts that invoke it expecting an open PR; use `/task-to-pr` instead.
+**`/factory` is gone.** It only added a merge step to `/task-to-pr`. Remove the `factory` skill folder and ask `/task-to-pr` to merge instead.
 
 ## Clean upgrade
 
 1. **Remove old Blueprint skills and commands.** In the skill directory used by your coding tool, remove the old `/design` and `milestone` skills and the other old Blueprint skill folders listed above. Also remove copied Blueprint `implement.md` and `task-to-pr.md` command files. Do not delete whole skill or command directories because they may contain unrelated files.
-2. **Install all twelve skills.**
+2. **Install all eleven skills.**
 
    ```bash
    npx skills add owainlewis/blueprint
    ```
 
 3. **Remove copied reviewer agents.** Delete any old Blueprint `code-reviewer` definition. The `/review` skill now launches a fresh generic subagent.
-4. **Check the result.** Compare installed skills with the [current skill list](README.md#twelve-focused-skills).
+4. **Check the result.** Compare installed skills with the [current skill list](README.md#the-skills).
 
 ## Why cleanup is manual
 
