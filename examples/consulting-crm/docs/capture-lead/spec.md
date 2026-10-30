@@ -30,6 +30,29 @@ Follow [INV-1 through INV-4](../../ARCHITECTURE.md). The architecture does not
 change. This feature deliberately creates a new company and contact each time;
 duplicates are allowed and merging them is later work.
 
+```mermaid
+sequenceDiagram
+    actor Maya as Consultant
+    participant UI as Browser
+    participant API as Web API
+    participant DB as PostgreSQL
+    Maya->>UI: Fill in "New lead"
+    UI->>API: POST /api/leads + Idempotency-Key
+    API->>DB: Check session, membership, and key
+    API->>DB: One transaction: company, contact, opportunity, activity
+    DB-->>API: Committed IDs
+    API-->>UI: 201 with IDs (200 on identical retry)
+    UI-->>Maya: Open the opportunity
+    Maya->>UI: Schedule follow-up
+    UI->>API: POST /api/opportunities/<id>/follow-ups + key
+    API->>DB: One transaction: follow-up and activity
+    API-->>UI: 201 with follow_up_id
+    UI-->>Maya: Follow-up shows on the opportunity and the due list
+```
+
+Capture and scheduling each write in one transaction. A retry with the same key
+returns the first result instead of writing again.
+
 ### Sign-in and views
 
 Include OpenID Connect sign-in and the server session rules from architecture.
