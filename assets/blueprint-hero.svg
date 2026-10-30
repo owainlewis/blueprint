@@ -1,14 +1,40 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title description">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="440" viewBox="0 0 1200 440" role="img" aria-labelledby="title description">
   <title id="title">Blueprint</title>
-  <desc id="description">Clear instructions for serious AI coding. Design, plan, build, and validate.</desc>
+  <desc id="description">Engineering judgment for AI coding agents. Define, spec, build, prove.</desc>
 
-  <rect width="1200" height="420" rx="12" fill="#f4f1ea"/>
+  <defs>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#2c4f73" stroke-width="1"/>
+    </pattern>
+    <pattern id="grid-major" width="160" height="160" patternUnits="userSpaceOnUse">
+      <path d="M160 0H0V160" fill="none" stroke="#3a6390" stroke-width="1.4"/>
+    </pattern>
+  </defs>
 
-  <path d="M82 78v264" stroke="#426b91" stroke-width="4"/>
+  <rect width="1200" height="440" rx="14" fill="#173452"/>
+  <rect width="1200" height="440" rx="14" fill="url(#grid)" opacity="0.55"/>
+  <rect width="1200" height="440" rx="14" fill="url(#grid-major)" opacity="0.6"/>
 
-  <g transform="translate(124 0)" fill="#17191b">
-    <text x="0" y="178" font-family="Georgia, Times New Roman, serif" font-size="126" font-weight="400" letter-spacing="-5">Blueprint</text>
-    <text x="3" y="252" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="38" font-weight="450" letter-spacing="-0.4">Clear instructions for serious AI coding.</text>
-    <text x="3" y="326" fill="#426b91" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="34" font-weight="600" letter-spacing="2.2">Design. Plan. Build. Validate.</text>
+  <g font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif">
+    <text x="88" y="118" fill="#8fb4da" font-size="20" font-weight="600" letter-spacing="4">SKILLS FOR CODING AGENTS</text>
+    <text x="82" y="222" fill="#f4f1ea" font-family="Georgia, Times New Roman, serif" font-size="120" letter-spacing="-4">Blueprint</text>
+    <text x="88" y="282" fill="#dbe6f1" font-size="34" font-weight="450" letter-spacing="-0.3">Engineering judgment, written down for agents.</text>
+  </g>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="22" fill="#f4f1ea">
+    <rect x="88" y="326" width="132" height="44" rx="22" fill="none" stroke="#8fb4da" stroke-width="2"/>
+    <text x="154" y="355" text-anchor="middle">define</text>
+    <path d="M232 348h36" stroke="#8fb4da" stroke-width="2"/>
+    <path d="M262 342l8 6-8 6" fill="none" stroke="#8fb4da" stroke-width="2"/>
+    <rect x="280" y="326" width="112" height="44" rx="22" fill="none" stroke="#8fb4da" stroke-width="2"/>
+    <text x="336" y="355" text-anchor="middle">spec</text>
+    <path d="M404 348h36" stroke="#8fb4da" stroke-width="2"/>
+    <path d="M434 342l8 6-8 6" fill="none" stroke="#8fb4da" stroke-width="2"/>
+    <rect x="452" y="326" width="112" height="44" rx="22" fill="none" stroke="#8fb4da" stroke-width="2"/>
+    <text x="508" y="355" text-anchor="middle">build</text>
+    <path d="M576 348h36" stroke="#8fb4da" stroke-width="2"/>
+    <path d="M606 342l8 6-8 6" fill="none" stroke="#8fb4da" stroke-width="2"/>
+    <rect x="624" y="326" width="112" height="44" rx="22" fill="#f4f1ea"/>
+    <text x="680" y="355" text-anchor="middle" fill="#173452">prove</text>
   </g>
 </svg>

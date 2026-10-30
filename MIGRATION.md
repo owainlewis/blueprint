@@ -40,7 +40,7 @@ Existing `design.md` documents remain valid sources. Rename or split them only w
    ```
 
 3. **Remove copied reviewer agents.** Delete any old Blueprint `code-reviewer` definition. The `/review` skill now launches a fresh generic subagent.
-4. **Check the result.** Compare installed skills with the [current skill list](README.md#twelve-focused-skills).
+4. **Check the result.** Compare installed skills with the [current skill list](README.md#the-skills).
 
 ## Why cleanup is manual
 

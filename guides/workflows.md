@@ -2,7 +2,7 @@
 
 Use the shortest path that gives the work enough decisions and proof.
 
-Blueprint workflows are opt-in. See [invocation and client support](../README.md#opt-in-workflows).
+Blueprint workflows are opt-in. See [invocation and client support](../README.md#you-choose-when-blueprint-runs).
 
 ## A new project
 

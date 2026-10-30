@@ -17,7 +17,7 @@ Blueprint has twelve skills. New projects start with `/requirements` and `/archi
 | Simpler code with the same behavior | [`/improve`](../skills/improve/SKILL.md) | Focused change and preservation proof |
 | HTML reading view | [`/html-doc`](../skills/html-doc/SKILL.md) | Verified static HTML |
 
-Blueprint workflows are opt-in. See [invocation and client support](../README.md#opt-in-workflows).
+Blueprint workflows are opt-in. See [invocation and client support](../README.md#you-choose-when-blueprint-runs).
 
 ## System documents and feature specs
 
