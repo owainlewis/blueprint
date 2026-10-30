@@ -49,7 +49,7 @@ Before finishing, reread the text. Cut words that do no work. Fix sentences that
 - `/architecture-review`: challenge a technical proposal and surface material flaws or open questions before implementation.
 - `/plan`: split decided work into ordered tasks and useful milestones. Each delivers a vertical slice with acceptance checks. Stop before implementation.
 - `/test`: prove acceptance criteria and failure paths affected by the change, including real-browser checks when browser-rendered behavior changes.
-- `/review`: use a fresh subagent for an independent, read-only implementation review.
+- `/review`: use a fresh subagent or another agent CLI for an independent, read-only review of spec fit and correctness.
 - `/improve`: inspect existing code and improve its clarity, simplicity, and structure without changing intended behavior.
 - `/factory`: follow `/task-to-pr`, then merge the supplied work after every quality and approval gate passes when explicitly invoked.
 - `/codex-issue-coordinator`: coordinate a large GitHub issue batch through separate Codex worker threads, reviewed pull requests, and gated merges.
@@ -74,7 +74,6 @@ Writing code is a basic agent ability, not a separate skill. Debugging and test-
 - Intended system architecture and its data model use root `ARCHITECTURE.md`.
 - Feature specs default to `docs/<feature-slug>/spec.md`. A supplied issue or document may serve as the spec; do not duplicate it.
 - Plans are returned in chat by default or published as tracker tickets when asked. They are not stored as plan documents.
-- Pull requests start with a short plain English summary. They then explain only the detail a reviewer needs.
-- The checklist states the real status of tests, checks, independent review, findings, documentation, and CI.
+- Pull requests use What, Why, What changed, Verification, and Risk. Verification states the real status of tests, checks, screenshots, independent review, and CI. Risk names the blast radius; database, API contract, auth, and data-deletion changes are High.
 
 Exploration does not require a design, plan, or ticket. Do not create process artifacts that do not improve a decision, handoff, or proof.

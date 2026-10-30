@@ -12,23 +12,23 @@ Deliver each task as one focused pull request with proof. The spec is the ticket
 accept a Markdown spec, GitHub issue, or decided task with acceptance checks.
 Do not create a second work definition.
 
-Read required skills directly from their `SKILL.md` files as instructions for this workflow. Do not invoke them through a skill command that the client blocks.
+Read the skills this workflow uses directly from their files: [test](../test/SKILL.md), [review](../review/SKILL.md), [spec](../spec/SKILL.md), and [plan](../plan/SKILL.md). This works the same in Claude Code and Codex. Do not invoke them through a skill command.
 
 ## Prepare
 
 1. Read the source, repository instructions, relevant requirements and architecture, code, and tests. Reuse an existing branch, worktree, and pull request when continuing work.
-2. Confirm the outcome, scope, decisions, and checks are sufficient. If a consequential choice is missing, return to `/spec` or report the needed decision before implementing. Do not write specs for small, decided work.
-3. Split larger specs with `/plan` when useful. Each task delivers one working result. Identify dependencies and start independent work together when useful.
+2. Confirm the outcome, scope, decisions, and checks are sufficient. If a consequential choice is missing, return to [spec](../spec/SKILL.md) or report the needed decision before implementing. Do not write specs for small, decided work.
+3. Split larger specs with [plan](../plan/SKILL.md) when useful. Each task delivers one working result. Identify dependencies and start independent work together when useful.
 
 ## Deliver and repair
 
 1. Create or reuse an isolated branch and worktree. Start independent work from the latest remote default branch. Follow repository naming and worktree rules.
 2. Implement the task and meaningful tests for changed behavior and affected failures. Update requirements, architecture, and the spec when the change affects them. Keep intended architecture and implementation status accurate.
-3. Use `/test` to prove acceptance and affected rules. Fix failures before committing.
-4. Create a Conventional Commit, push, and open or update the pull request. Follow the repository PR template. Lead with the problem and result; include proof and the source link. Mark it ready for review and move a tracker ticket to Review when supported.
-5. Use `/review` with a fresh subagent that did not implement the change. Wait for configured CI and automated review on the current commit.
+3. Follow [test](../test/SKILL.md) to run every repository check until green and prove acceptance. Fix failures before committing.
+4. Create a Conventional Commit, push, and open or update the pull request. Use the repository PR template, or What, Why, What changed, Verification, and Risk when there is none. Put screenshots and check results under Verification. Rate Risk High for database, API contract, auth, or data-deletion changes. Mark it ready for review and move a tracker ticket to Review when supported.
+5. Follow [review](../review/SKILL.md) with a reviewer that did not implement the change. Wait for configured CI and automated review on the current commit.
 6. Fix valid findings and failures caused by the change. Reply to review findings with the fix or evidence for making no change. Resolve a thread only when fully addressed.
-7. After changing the implementation, repeat affected `/test` checks and fresh `/review`, commit, push, and wait for CI and automated review again. Update PR proof. Continue until all available checks pass and no actionable finding remains.
+7. After changing the implementation, repeat the affected test checks and a fresh review round, commit, push, and wait for CI and automated review again. Update PR proof. Continue until all available checks pass and no actionable finding remains. Stop after three repair rounds that do not clear the same failure or finding, and report it as a blocker.
 8. Report a blocker when progress requires a missing decision, permission, unavailable check, or external repair. Do not weaken tests, bypass repository rules, or claim unrun checks passed.
 9. Record final proof and the PR link in the source spec or task. Update delivery status to reflect the actual result, including whether the PR is open or merged. Update the original tracker item when one exists. Leave passing PRs open for human review by default. Pending human approval is a merge blocker, not a failed implementation check.
 
@@ -49,7 +49,7 @@ authority. Otherwise merge only when the user asks. Automatic skill selection
 does not grant it. Before merging, require:
 
 - Complete scope and acceptance proof on the final commit.
-- Passing tests, required CI, and a fresh `/review` verdict of `Approve`.
+- Passing tests, required CI, and a fresh review verdict of `Approve`.
 - No unresolved actionable review finding or consequential decision.
 - Every repository-required approval.
 - A ready, mergeable PR current with its required base.

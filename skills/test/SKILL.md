@@ -1,6 +1,6 @@
 ---
 name: test
-description: "Proves that a code change meets its acceptance criteria. Uses focused automated checks and a real browser for browser-facing work. Use to test or verify a diff, branch, PR, URL, or user flow."
+description: "Proves that a code change works: runs every repository check until green, then proves each acceptance criterion with focused tests and a real browser for browser-facing work. Use to test or verify a diff, branch, PR, URL, or user flow."
 user-invocable: true
 argument-hint: "<task, acceptance criteria, diff, branch, PR, URL, or flow>"
 disable-model-invocation: true
@@ -8,38 +8,36 @@ disable-model-invocation: true
 
 # Test
 
-Prove the behavior that matters. A passing build or a source-code reading can support the proof, but neither proves a user-visible flow.
+Prove the behavior that matters. A passing build or a reading of the source can support the proof, but neither proves a user-visible flow.
 
 ## Process
 
-1. Read the task, its source spec when present, changed code, existing tests, and repository instructions. Acceptance criteria come from the task or reviewed spec. Preserve their wording and `AC-n`, `REQ-n`, or `INV-n` IDs. Never rewrite criteria to match the code.
-2. Map every acceptance criterion, cited invariant, and affected failure path to proof by ID. Test changed behavior and behavior a refactor must preserve.
-3. If automated tests cannot exercise the affected behavior, explain why and give other evidence.
-4. Add or update focused tests where proof is missing. Assertions should fail when the changed behavior breaks.
-5. Assert behavior a user or caller can observe unless the test targets a documented internal contract. Keep setup and assertions no more complex than the scenario.
-6. Run the narrowest checks that exercise the changed behavior and affected interfaces. Run wider checks when shared behavior or interfaces changed.
-7. When browser-rendered behavior changes, start the documented app and check the required flows and affected failures in a real browser.
-   - Check desktop and mobile when layout or responsive styles changed.
+1. Read the task, its spec, the changed code, existing tests, and repository instructions. Take acceptance criteria from the task or spec with their `AC-n`, `REQ-n`, and `INV-n` IDs. Never rewrite criteria to match the code.
+2. Run every check the repository defines: format, lint, typecheck, and the test suite. Find the commands in `AGENTS.md`, `CLAUDE.md`, the README, or the project's scripts. Fix each failure the change caused and run all checks again. Stop after three rounds on the same failure and report it with the output.
+3. Map each criterion, cited invariant, and affected failure path to a proof. Include behavior a refactor must keep.
+4. Add focused tests where proof is missing. Test what a user or caller can observe through the public interface. Each assertion must fail if the changed behavior breaks; for the main new test, revert the implementation once and confirm it fails.
+5. When browser-rendered behavior changes, start the app and run the flows in a real browser with Playwright.
+   - Check desktop and mobile widths when layout changed.
    - Check keyboard use when interactions changed.
-   - Check console errors and failed requests during every flow.
-   - Capture evidence. Reading source is not browser proof.
-8. Report each `AC-n`, `REQ-n`, `INV-n`, or task criterion as pass, fail, or unverified. Include the command, browser flow, or other evidence.
+   - Check the console and network for errors during each flow.
+   - Save screenshots for the PR.
+6. If automated tests cannot reach the behavior, say why and give other evidence.
 
 ## Return
 
-Report each criterion in this shape:
+Lead with failures and unverified criteria. Report each criterion like this:
 
 ```text
 Criterion: <ID or exact wording>
 Result: Pass / Fail / Unverified
-Evidence: <command, browser flow, or artifact>
+Evidence: <command, browser flow, or screenshot>
 Gap: <what remains unknown, or None>
 ```
 
-Lead with failures and unverified criteria. Do not hide them below passing checks.
+Then list every check command you ran and its result.
 
-## Boundaries
+## Rules
 
-- Do not weaken assertions to make a change pass.
-- Do not fix unrelated failures.
-- If required browser tooling is unavailable, report the check as blocked unless the user explicitly accepts a manual exception.
+- Keep assertions as strict as the behavior requires. Fix the code, not the test.
+- Leave unrelated failures alone and report them.
+- If browser tooling is unavailable, report browser checks as blocked unless the user accepts a manual check.
