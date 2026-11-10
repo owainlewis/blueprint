@@ -16,7 +16,7 @@
 - `/architecture` is now a fill-in template with a required Mermaid diagram and a decisions table.
 - `/architecture-review` and `/plan` are shorter, in plain words. `/plan` keeps its task template.
 - `/requirements` is now a fill-in template built on user stories, each with a `REQ-n` ID and "Done when" conditions.
-- `/spec` is now a fill-in template: a short PRD for the feature (Problem, User stories) plus the Technical design an agent needs, with a diagram for the human reviewer, then Acceptance, Out of scope, and Open decisions.
+- `/spec` is now a fill-in template: a short PRD for the feature (Problem, Goals, Non-goals, User journeys in Given, When, Then form) plus the Technical design an agent needs, with a diagram for the human reviewer, then a Decisions table that names each rejected alternative, Risks and rollout, Acceptance, and Open decisions. Each acceptance row names the journey, requirement, or invariant it proves. The template is its own file, `skills/spec/references/spec.md`, with an Author, Status, and Date header.
 - `/review` runs two parts, spec fit and correctness, with bad-input probes, a revert check for new tests, and a fixed verdict block. It can use another agent CLI (`codex exec` or `claude -p`) as the independent reviewer.
 - `/test` runs every repository check until green before proving acceptance, and uses Playwright for browser checks.
 - `/task-to-pr` reads its skills by file path so it works the same in Claude Code and Codex, and stops after three repair rounds on the same failure.
