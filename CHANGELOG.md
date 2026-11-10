@@ -18,7 +18,7 @@
 - `/requirements` is now a fill-in template built on user stories, each with a `REQ-n` ID and "Done when" conditions.
 - `/spec` is now a fill-in template: a short PRD for the feature (Problem, Goals, Non-goals, User journeys in Given, When, Then form) plus the Technical design an agent needs, with a diagram for the human reviewer, then a Decisions table that names each rejected alternative, Risks and rollout, Acceptance, and Open decisions. Each acceptance row names the journey, requirement, or invariant it proves. The template is its own file, `skills/spec/references/spec.md`, with an Author, Status, and Date header.
 - `/review` runs two parts, spec fit and correctness, with bad-input probes, a revert check for new tests, and a fixed verdict block. It can use another agent CLI (`codex exec` or `claude -p`) as the independent reviewer.
-- `/test` runs every repository check until green before proving acceptance, and uses Playwright for browser checks.
+- `/test` runs every repository check until green before proving acceptance, and runs the real app the way a user would: the repository's own end-to-end tests first, otherwise a real browser, a terminal, or HTTP requests.
 - `/task-to-pr` reads its skills by file path so it works the same in Claude Code and Codex, and stops after three repair rounds on the same failure.
 - The PR template uses What, Why, What changed, Verification, and Risk.
 - All eleven skills are opt-in, with Codex and Claude Code invocation settings. Selected workflows retain their internal skill calls; ordinary code requests no longer require `/task-to-pr`.

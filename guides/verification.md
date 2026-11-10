@@ -50,7 +50,8 @@ check passed unless you ran it. List each command you ran and its result.
 ```
 
 [`/test`](../skills/test/SKILL.md) applies the same rule, proves each acceptance
-criterion, and runs browser flows in Playwright for anything visible.
+criterion, and runs the real app the way a user would for anything they can
+see or call.
 
 ### 2. CI runs the same checks
 
