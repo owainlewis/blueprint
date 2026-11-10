@@ -30,8 +30,16 @@ Report only what could change the design:
 - **Blocker:** unsafe, contradicts the goal or the current system, or cannot recover from a likely failure.
 - **Important:** two capable engineers could build it in ways that differ for users, data, or security.
 
-For each: where it is, what goes wrong and when, the evidence, and the smallest fix or your recommended answer. Skip wording preferences and questions that cannot change the design.
+For each: where it is, what goes wrong and when, the evidence, and the smallest fix or your recommended answer. Say whether you ran it, traced it through the code, or only read the proposal. Skip wording preferences and questions that cannot change the design. No findings is a valid result.
 
 ## Verdict
 
-End with `Approve`, `Request changes`, or `Blocked` (missing context or reviewer), then what you could not verify. A detailed document is not a reason to approve.
+End with this block:
+
+```text
+VERDICT: Approve | Request changes | Blocked
+UNVERIFIED: <what you could not check, or None>
+REVIEWED_AT: <commit SHA, or the proposal's date>
+```
+
+Any Blocker or Important finding means `Request changes`. Use `Blocked` when context or a reviewer is missing. A detailed document is not a reason to approve. On a later round, confirm the old findings are settled and review only what changed since `REVIEWED_AT`.

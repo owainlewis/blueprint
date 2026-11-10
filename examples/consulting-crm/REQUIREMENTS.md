@@ -1,6 +1,10 @@
 # Consulting CRM requirements
 
-Status: Proposed. This is a teaching example. No CRM is implemented here.
+* Author: Blueprint maintainers
+* Status: Proposed
+* Date: 2026-11-10
+
+This is a teaching example. No CRM is implemented here.
 
 ## Problem and users
 

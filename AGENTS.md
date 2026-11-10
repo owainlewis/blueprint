@@ -7,7 +7,7 @@ Blueprint is a small set of instructions for AI coding. Blueprint skills are opt
 - Give agents outcomes, constraints, and proof. Trust them with mechanics.
 - Keep one skill per meaningful engineering phase or delivery outcome.
 - Requirements define the product. Architecture defines the intended system. A spec defines one feature or major change.
-- Distinguish accepted architecture from implemented behavior. Verify claims about existing code.
+- Distinguish approved architecture from implemented behavior. Verify claims about existing code.
 - Review technical proposals before implementation when a wrong choice could materially affect behavior, data, security, scale, performance, compatibility, operations, cost, or proof.
 - Update an existing architecture document when code changes ownership, dependency direction, protocols, stored data, trust boundaries, deployment topology, or hard limits.
 - Skip phases that add no value. Small, decided work can go straight to implementation.

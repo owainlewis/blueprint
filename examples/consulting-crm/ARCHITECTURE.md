@@ -1,7 +1,10 @@
 # Consulting CRM architecture
 
-> Decision status: proposed teaching example.
-> Implementation status: no CRM code, infrastructure, or runtime proof exists in Blueprint.
+* Author: Blueprint maintainers
+* Status: Proposed
+* Date: 2026-11-10
+
+This is a teaching example. No CRM code, infrastructure, or runtime proof exists in Blueprint.
 
 ## Intended system
 
