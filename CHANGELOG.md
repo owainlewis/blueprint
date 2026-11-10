@@ -21,6 +21,9 @@
 - `/test` runs every repository check until green before proving acceptance, and runs the real app the way a user would: the repository's own end-to-end tests first, otherwise a real browser, a terminal, or HTTP requests.
 - `/task-to-pr` reads its skills by file path so it works the same in Claude Code and Codex, and stops after three repair rounds on the same failure.
 - The PR template uses What, Why, What changed, Verification, and Risk.
+- `/requirements` and `/architecture` keep their templates in `references/`, with the same Author, Status, and Date header as `/spec`. Status is Draft, Proposed, In Review, or Approved in all three; "Accepted" is now "Approved".
+- `/review` and `/architecture-review` say how each finding was proven and accept "no findings" as a result. `/architecture-review` ends with a fixed verdict block. `/review` derives bad inputs from the contract and no longer forbids the temporary revert it asks for.
+- `/improve` deletes first and checks that a reader can trace each important value.
 - All eleven skills are opt-in, with Codex and Claude Code invocation settings. Selected workflows retain their internal skill calls; ordinary code requests no longer require `/task-to-pr`.
 
 - `/architecture` designs the intended system and data model, with decision status separate from implementation status. Claims about existing code require verification.

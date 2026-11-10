@@ -29,7 +29,7 @@ Split decided work into tasks that each deliver something that works, end to end
 <One or two sentences on the value to a user or developer.>
 
 ### Done when
-- <Three to seven results someone can see or test. Keep AC-n and REQ-n IDs.>
+- <Three to seven results someone can see or test. Keep AC-n, J-n, and REQ-n IDs.>
 
 ### How to check
 <Exact commands, and any manual check.>

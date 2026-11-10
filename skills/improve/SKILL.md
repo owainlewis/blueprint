@@ -15,8 +15,8 @@ Make code easier to understand without changing what it does. Reduce the layers 
 1. Identify the target from the request, current diff, or recently changed code.
 2. Read the target, its tests, and relevant surrounding code. State the behavior that must not change.
 3. If that behavior lacks tests, add focused coverage and run it against the unchanged code. Commit the passing test-only change before refactoring. If automated tests cannot exercise the behavior, explain why and give other evidence.
-4. Find unnecessary complexity, duplication, dead code, weak names, awkward boundaries, and abstractions that cost more than they help.
-5. Make focused improvements by deleting, deduplicating, renaming, simplifying, extracting, or inlining.
+4. Find unnecessary complexity, duplication, dead code, weak names, awkward boundaries, and abstractions that cost more than they help. Ask of each important value: can a new reader say where it comes from and what can change it?
+5. Delete first: remove dead code and redundant checks before you reshape what is left. Then make focused improvements by deduplicating, renaming, simplifying, extracting, or inlining.
 6. Preserve public interfaces, data shapes, errors, and user-visible behavior unless the user explicitly asks to change them.
 7. Run tests and checks that cover behavior the refactor can affect. Report what improved, what behavior was preserved, and the evidence.
 

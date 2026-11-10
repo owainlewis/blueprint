@@ -1,6 +1,6 @@
 # Choosing the right Blueprint skill
 
-Blueprint has eleven skills. New projects start with `/requirements` and `/architecture`, maintained as long-running documents. New features start with `/spec`, then `/task-to-pr`. Choose additional skills when they improve decisions or proof.
+New projects start with `/requirements` and `/architecture`, maintained as long-running documents. New features start with `/spec`, then `/task-to-pr`. Choose additional skills when they improve decisions or proof.
 
 | Result | Skill | Output |
 |---|---|---|
