@@ -1,7 +1,11 @@
 # Capture a lead and schedule its first follow-up
 
-Status: Proposed. This is a teaching example and the spec is the ticket. It is
-not implemented: the checks below are required proof, not test results.
+* Author: Blueprint maintainers
+* Status: Proposed
+* Date: 2026-11-10
+
+This is a teaching example and the spec is the ticket. It is not implemented:
+the checks below are required proof, not test results.
 
 ## Problem
 
@@ -11,24 +15,86 @@ slice lets a provisioned consultant sign in, capture a company, contact, and
 opportunity, and assign the first follow-up. After reload, colleagues in the
 workspace see the same pipeline and due items.
 
-## User stories
+## Goals
+
+* A provisioned consultant can sign in and capture a company, contact, and opportunity in one step.
+* Colleagues in the same workspace see that lead in the pipeline after a reload.
+* A consultant can assign a dated follow-up, and every member sees it once it is due.
+* A retried or failed save never leaves a duplicate or partial lead.
+* No one can see or change another firm's records.
+
+## Non-goals
+
+* Editing stages or captured leads.
+* Manual notes.
+* Completing follow-ups.
+* Notifications.
+* Selecting an existing company.
+
+## User journeys
 
 This feature delivers [REQ-1 through REQ-4 and REQ-7](../../REQUIREMENTS.md).
+The error table under Technical design gives the exact response for each
+journey that goes wrong.
 
-1. As a consultant, I want to sign in and see only my firm's records, so that our clients stay private. (REQ-1)
-2. As a consultant, I want to capture a new company, contact, and opportunity in one form, so that I can log a lead while the conversation is fresh. (REQ-2)
-3. As a firm owner, I want to see every opportunity under its stage and open its details, so that I can run the sales review. (REQ-3)
-4. As a consultant, I want to schedule a follow-up for myself or a colleague and see what is due today, so that no client is forgotten. (REQ-4)
-5. As a consultant, I want a lost response or failed save to be safe to retry, so that I never create a duplicate lead. (REQ-7)
+### J-1: Sign in to the workspace (REQ-1)
 
-A denied, invalid, or failed request leaves records unchanged and keeps what the
-user typed. The error table under Technical design gives each case.
+* Given: Maya is a provisioned, active member of her firm's workspace.
+* When: she signs in through the identity provider.
+* Then: she sees her firm's pipeline and no other firm's records. Signing out ends her access.
+
+### J-2: Sign-in is denied (REQ-1)
+
+* Given: a person who is not provisioned, or whose membership is deactivated.
+* When: they sign in.
+* Then: they see "access denied". No membership is created and no records are shown.
+
+### J-3: Capture a lead (REQ-2)
+
+* Given: Maya is signed in.
+* When: she submits "New lead" with a company name, a contact name, an optional email, and an opportunity title.
+* Then: the new opportunity opens, at the lead stage and owned by her. After a reload, her colleagues see it in the pipeline.
+
+### J-4: Capture with invalid input (REQ-7)
+
+* Given: Maya is signed in.
+* When: she submits "New lead" with a missing or invalid field.
+* Then: the form keeps what she typed and focuses the first error. Nothing is saved.
+
+### J-5: Retry after an uncertain save (REQ-7)
+
+* Given: Maya submitted a lead and the response was lost.
+* When: she retries.
+* Then: exactly one lead exists and it opens. If she changes the values first, she is asked to retry the original submission.
+
+### J-6: Review the pipeline (REQ-3)
+
+* Given: a workspace with opportunities at several stages.
+* When: a member opens the pipeline and clicks a card.
+* Then: each opportunity shows under its stage and its details open. An empty stage says "No opportunities". A failed read shows an error, not an empty pipeline.
+
+### J-7: Schedule a follow-up (REQ-4)
+
+* Given: Maya has an opportunity open.
+* When: she schedules a follow-up with a summary, a due date, and an assignee.
+* Then: it shows on the opportunity. From its due date, every member sees it in the due list.
+
+### J-8: Reach for another firm's record (REQ-1)
+
+* Given: Maya belongs to one workspace.
+* When: she opens an opportunity, or picks an assignee, from another workspace.
+* Then: she sees "Opportunity not found" or an assignee error. Nothing changes and nothing about the other firm is revealed.
+
+### J-9: A save fails (REQ-7)
+
+* Given: Maya is submitting a lead or a follow-up.
+* When: the database fails during the save.
+* Then: she sees a retry message and her values are kept. No partial records are saved.
 
 ## Technical design
 
 Follow [INV-1 through INV-4](../../ARCHITECTURE.md). The architecture does not
-change. This feature deliberately creates a new company and contact each time;
-duplicates are allowed and merging them is later work.
+change.
 
 ```mermaid
 sequenceDiagram
@@ -140,28 +206,40 @@ non-validation errors. Browser errors never display SQL, tokens, or personal
 data from other records. Read failures show an error state, not an empty pipeline.
 All mutations enforce CSRF; rejected tokens return 403 with no writes.
 
+## Decisions
+
+| Decision | Chosen | Instead of | Why | Cost |
+|---|---|---|---|---|
+| Company and contact on capture | Always create new ones | Match or pick an existing company | Requirements forbid silently merging two businesses, and a picker is its own feature. | Duplicate companies until merging ships. |
+| Editing after an uncertain save | Retry the original submission first | A fresh key for the edited values | A fresh key creates a second lead when the first save did land (INV-3). | A typo cannot be fixed until the first submission is confirmed. |
+| Opportunity in another workspace | 404, the same as an absent one | 403 | A 403 confirms that the record exists in another firm (INV-1). | A member cannot tell a mistyped link from a denied one. |
+| Due dates in the past | Allowed | Reject dates before today | Consultants record overdue work after the fact. | A mistyped date goes straight onto the due list. |
+| Who the due list covers | Every assignee in the workspace | Only the current member | The firm owner reviews all open work from one list. | A longer list with no "mine" filter yet. |
+
+## Risks and rollout
+
+- Security: workspace isolation and CSRF are the main risks. AC-1 and AC-6 prove them.
+- Privacy: contact names and emails are personal data. Keep them out of diagnostic logs and error messages.
+- Migration and compatibility: none. This is the first feature, so there is no earlier data or behavior to keep.
+- Rollback: remove the feature's routes. The tables and any captured leads stay.
+
 ## Acceptance
 
 No CRM test runner exists here. In its application repo, use PostgreSQL integration
 checks and browser scenarios with two workspaces, active and inactive members,
 and a controllable identity provider. Add runnable commands when implemented.
 
-| ID | Done when | How to check |
-|---|---|---|
-| AC-1 | Only a provisioned active member can sign in; sign-out invalidates access. | Exercise provider callback validation, non-member sign-in, session expiry, sign-out, and CSRF denial. Covers REQ-1. |
-| AC-2 | One valid capture creates all linked records, a lead-stage opportunity owned by its creator, and one creation activity. Reload preserves the result. | Browser capture and reload; inspect PostgreSQL relationships and actor. Covers REQ-2, INV-2, INV-4. |
-| AC-3 | Members see the five stages and opportunity details; empty and failed reads differ. | Two members in one workspace, fresh workspace, and injected read failure; check browser views and ordering. Covers REQ-3. |
-| AC-4 | Invalid names, email, payload fields, or keys leave no lead. | Test whitespace, control characters, 120/121 character boundaries, malformed email, and unknown fields; compare rows. Covers REQ-7. |
-| AC-5 | Lost responses and concurrent identical retries return one lead; changed payload returns conflict. | Drop response after commit, retry, and race two requests with one key; assert one result and activity. Covers INV-3. |
-| AC-6 | Foreign opportunity and assignee IDs cannot disclose data or create relationships. | Two-workspace API requests and direct foreign-key violations; check status and unchanged rows. Covers INV-1. |
-| AC-7 | A follow-up saves assignee and local due date, appears on its opportunity, and joins the due list on that date. | Check past/today/future dates around workspace midnight and a daylight-saving boundary; verify list ordering. Covers REQ-4. |
-| AC-8 | Failed transactions save neither partial business rows nor submission results; follow-up retries create one activity. | Inject failures after each insert and at commit for both operations; test concurrent retries and assignment racing deactivation. Covers INV-2 through INV-4. |
-| AC-9 | Forms and views work with keyboard navigation and a narrow mobile screen. | Real browser: labeled controls, focused errors, retained values, usable cards, and no page overflow. |
-
-## Out of scope
-
-Stage editing, manual notes, completing follow-ups, notifications, selecting an
-existing company, and editing captured leads.
+| ID | Done when | Proves | How to check |
+|---|---|---|---|
+| AC-1 | Only a provisioned active member can sign in; sign-out invalidates access. | J-1, J-2, REQ-1 | Exercise provider callback validation, non-member sign-in, session expiry, sign-out, and CSRF denial. |
+| AC-2 | One valid capture creates all linked records, a lead-stage opportunity owned by its creator, and one creation activity. Reload preserves the result. | J-3, REQ-2, INV-2, INV-4 | Browser capture and reload; inspect PostgreSQL relationships and actor. |
+| AC-3 | Members see the five stages and opportunity details; empty and failed reads differ. | J-6, REQ-3 | Two members in one workspace, fresh workspace, and injected read failure; check browser views and ordering. |
+| AC-4 | Invalid names, email, payload fields, or keys leave no lead. | J-4, REQ-7 | Test whitespace, control characters, 120/121 character boundaries, malformed email, and unknown fields; compare rows. |
+| AC-5 | Lost responses and concurrent identical retries return one lead; changed payload returns conflict. | J-5, INV-3 | Drop response after commit, retry, and race two requests with one key; assert one result and activity. |
+| AC-6 | Foreign opportunity and assignee IDs cannot disclose data or create relationships. | J-8, INV-1 | Two-workspace API requests and direct foreign-key violations; check status and unchanged rows. |
+| AC-7 | A follow-up saves assignee and local due date, appears on its opportunity, and joins the due list on that date. | J-7, REQ-4 | Check past/today/future dates around workspace midnight and a daylight-saving boundary; verify list ordering. |
+| AC-8 | Failed transactions save neither partial business rows nor submission results; follow-up retries create one activity. | J-9, INV-2 through INV-4 | Inject failures after each insert and at commit for both operations; test concurrent retries and assignment racing deactivation. |
+| AC-9 | Forms and views work with keyboard navigation and a narrow mobile screen. | J-3, J-6, J-7 | Real browser: labeled controls, focused errors, retained values, usable cards, and no page overflow. |
 
 ## Open decisions
 

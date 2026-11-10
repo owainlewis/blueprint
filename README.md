@@ -52,7 +52,7 @@ You get `REQUIREMENTS.md`: the PRD, written as user stories with checkable outco
 
 > Use /spec for capturing a new lead.
 
-You get `docs/capture-lead/spec.md`: the user stories for that feature, a diagram, and the technical design an agent can build from.
+You get `docs/capture-lead/spec.md`: the user journeys for that feature, a diagram, the technical design an agent can build from, and the decisions behind it.
 
 **4. Ship it.**
 
@@ -97,7 +97,7 @@ repository.
 |---|---|---|
 | [`/requirements`](skills/requirements/SKILL.md) | Starting a product or changing what it does | `REQUIREMENTS.md`, a PRD of user stories |
 | [`/architecture`](skills/architecture/SKILL.md) | Designing the system or changing its shape | `ARCHITECTURE.md` with a data flow diagram |
-| [`/spec`](skills/spec/SKILL.md) | A feature has decisions to settle first | User stories, a diagram, technical design, acceptance checks |
+| [`/spec`](skills/spec/SKILL.md) | A feature has decisions to settle first | User journeys, a diagram, technical design, decisions, acceptance checks |
 | [`/architecture-review`](skills/architecture-review/SKILL.md) | A design choice is costly to get wrong | Findings and a verdict before any code |
 | [`/html-doc`](skills/html-doc/SKILL.md) | You want to share a design as a web page | A checked, static HTML view |
 
