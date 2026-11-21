@@ -13,15 +13,15 @@ Show that each acceptance criterion passes. Reading the code is not proof.
 ## Steps
 
 1. Run every check the repository has: format, lint, typecheck, and tests. The commands are in `AGENTS.md`, `CLAUDE.md`, the README, or the project's scripts. Fix what the change broke and run them all again. After three rounds on the same failure, stop and report it.
-2. List each acceptance criterion (`AC-n`, `J-n`, `REQ-n`, `INV-n`) from the ticket, word for word.
-3. Point each criterion to a test that proves it. Where none exists, write one that calls the public interface. Revert the code once to confirm the main new test fails.
+2. List each acceptance criterion from the ticket, spec, or request, word for word (keeping any `AC-n`, `J-n`, `REQ-n`, or `INV-n` IDs when present).
+3. Point each criterion to a test that proves it. Where none exists, write one that calls the public interface. Revert the code once to confirm the main new test fails, then restore it.
 4. If a user can see or call the change, run the real app the way they would. Use the repository's own end-to-end tests or scripts if it has them. Otherwise use a real browser for a web page, a terminal for a command-line tool, and HTTP requests for an API.
 5. For a web page, check desktop and mobile widths, keyboard use, and console errors.
 6. Save the evidence for the PR: screenshots, terminal output, or responses.
 
 ## Return
 
-Failures and unverified criteria first:
+Failures and unverified criteria first, in plain, simplified technical English:
 
 ```text
 Criterion: <ID or exact wording>

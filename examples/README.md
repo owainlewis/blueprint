@@ -13,9 +13,10 @@ Read in this order:
 4. The sample plan below: two usable slices of that feature, each suitable for a focused PR.
 
 No CRM application is implemented in Blueprint. These are proposed teaching
-documents, not evidence that the feature's checks pass. In its application repo,
-`REQUIREMENTS.md` and `ARCHITECTURE.md` would live at the root. They stay current;
-the feature spec retains decisions and delivery proof.
+documents, not evidence that the feature's checks pass. In a real application
+repo, `REQUIREMENTS.md` and `ARCHITECTURE.md` are optional root documents—a
+feature spec can stand on its own. When root documents exist, they stay current
+while the feature spec retains decisions and delivery proof.
 
 ## Sample plan
 

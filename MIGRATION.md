@@ -1,6 +1,6 @@
 # Migrate from older Blueprint skills
 
-> **Breaking change:** Blueprint now ships eleven skills. You must remove old Blueprint skill folders and copied commands by hand.
+> **Breaking change:** Blueprint now ships twelve skills. You must remove old Blueprint skill folders and copied commands by hand.
 
 ## Opt-in invocation
 
@@ -19,7 +19,7 @@ Reinstall Blueprint to receive the invocation settings. Remove any copied reposi
 | `/factory` | `/task-to-pr`, asked to merge ("and merge it") |
 | `browser-verify` | Browser proof inside `/test` |
 | `refactor` | `/improve` |
-| `branch`, `commit`, `implement`, `pr`, `pr-to-ready` | Steps inside `/task-to-pr` |
+| `branch`, `commit`, `implement`, `pr-to-ready` | Steps inside `/task-to-pr` (`/pr` is standalone and also used by `/task-to-pr`) |
 | `task-to-pr` | `/task-to-pr`, now for one or more tasks |
 | `debug`, `tdd` | Techniques used while implementing |
 | `goal-design` | Ordinary instructions or a project-specific workflow |
@@ -33,7 +33,7 @@ Existing `design.md` documents remain valid sources. Rename or split them only w
 ## Clean upgrade
 
 1. **Remove old Blueprint skills and commands.** In the skill directory used by your coding tool, remove the old `/design` and `milestone` skills and the other old Blueprint skill folders listed above. Also remove copied Blueprint `implement.md` and `task-to-pr.md` command files. Do not delete whole skill or command directories because they may contain unrelated files.
-2. **Install all eleven skills.**
+2. **Install all twelve skills.**
 
    ```bash
    npx skills add owainlewis/blueprint

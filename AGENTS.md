@@ -6,7 +6,7 @@ Blueprint is a small set of instructions for AI coding. Blueprint skills are opt
 
 - Give agents outcomes, constraints, and proof. Trust them with mechanics.
 - Keep one skill per meaningful engineering phase or delivery outcome.
-- Requirements define the product. Architecture defines the intended system. A spec defines one feature or major change.
+- Requirements (`REQUIREMENTS.md`) and system architecture (`ARCHITECTURE.md`) are optional project-level documents. A feature spec stands on its own and defines both that feature's requirements and its technical design.
 - Distinguish approved architecture from implemented behavior. Verify claims about existing code.
 - Review technical proposals before implementation when a wrong choice could materially affect behavior, data, security, scale, performance, compatibility, operations, cost, or proof.
 - Update an existing architecture document when code changes ownership, dependency direction, protocols, stored data, trust boundaries, deployment topology, or hard limits.
@@ -26,7 +26,7 @@ Blueprint is a small set of instructions for AI coding. Blueprint skills are opt
 
 ## Writing
 
-Write for a new teammate who needs to understand the point on the first read.
+Write in plain, simplified technical English for a new teammate who needs to understand the point on the first read.
 
 - Lead with the outcome, decision, or rule. Put supporting detail after it.
 - Use short sentences and everyday words. Give each sentence one main idea.
@@ -43,14 +43,15 @@ Before finishing, reread the text. Cut words that do no work. Fix sentences that
 
 ## Phases
 
-- `/requirements`: define system product needs in root `REQUIREMENTS.md`. Stop with requirements ready for human review.
-- `/architecture`: design the intended system and data model, with an architecture and data flow diagram, in root `ARCHITECTURE.md`. Stop with architecture ready for review.
-- `/spec`: define one feature or major change, its technical design, and proof. The spec is the ticket. Stop before planning or implementation.
+- `/requirements`: optional product-wide PRD in root `REQUIREMENTS.md` (useful when product requirements are kept separate from feature specs). Stop with requirements ready for human review.
+- `/architecture`: optional project-level intended system and data model, with an architecture and data flow diagram, in root `ARCHITECTURE.md`. Stop with architecture ready for review.
+- `/spec`: define one feature or major change—both its requirements and its technical design—after interviewing the user on unresolved choices. The spec is the ticket. Stop before planning or implementation.
 - `/architecture-review`: challenge a technical proposal and surface material flaws or open questions before implementation.
-- `/plan`: split decided work into ordered tasks and useful milestones. Each delivers a vertical slice with acceptance checks. Stop before implementation.
+- `/plan`: split decided work into ordered vertical slices and tracker tickets (GitHub, Linear, Jira, or chat) with acceptance checks. Stop before implementation.
+- `/pr`: write and open or update a pull request from the branch diff with plain summary, visual change shape, verification proof, and merge risk.
 - `/test`: prove acceptance criteria and failure paths affected by the change, including real-browser checks when browser-rendered behavior changes.
-- `/review`: use a fresh subagent or another agent CLI for an independent, read-only review of spec fit and correctness.
-- `/improve`: inspect existing code and improve its clarity, simplicity, and structure without changing intended behavior.
+- `/review`: use a fresh subagent or another agent CLI for an independent, read-only review of spec fit, correctness, and design standards.
+- `/improve`: inspect existing code and simplify its structure without changing intended behavior.
 - `/codex-issue-coordinator`: coordinate a large GitHub issue batch through separate Codex worker threads, reviewed pull requests, and gated merges.
 
 ## Workflow for code changes
@@ -67,10 +68,10 @@ Writing code is a basic agent ability, not a separate skill. Debugging and test-
 
 ## Outputs
 
-- System requirements use root `REQUIREMENTS.md`.
-- Intended system architecture and its data model use root `ARCHITECTURE.md`.
-- Feature specs default to `docs/<feature-slug>/spec.md`. A supplied issue or document may serve as the spec; do not duplicate it.
-- Plans are returned in chat by default or published as tracker tickets when asked. They are not stored as plan documents.
-- Pull requests use What, Why, What changed, Verification, and Risk. Verification states the real status of tests, checks, screenshots, independent review, and CI. Risk names the blast radius; database, API contract, auth, and data-deletion changes are High.
+- Optional system requirements use root `REQUIREMENTS.md`.
+- Optional project-level system architecture and its data model use root `ARCHITECTURE.md`.
+- Feature specs default to `docs/<feature-slug>/spec.md` and work with or without root system documents. A supplied issue or document may serve as the spec; do not duplicate it.
+- Plans are returned in chat by default or published as tracker tickets (GitHub, Linear, Jira, or local Markdown) after preview and approval.
+- Pull requests use `/pr` (What, Why, What changed, optional Where to look closely, Verification, and Risk). Verification states the real status of tests, checks, screenshots, independent review, CI, and anything not verified. Risk names blast radius and reversibility; database, API contract, auth, and data-deletion changes are High.
 
 Exploration does not require a design, plan, or ticket. Do not create process artifacts that do not improve a decision, handoff, or proof.

@@ -82,9 +82,9 @@ The agent that wrote the code is the worst one to review it. Once tests pass,
 run a reviewer with a clean context, ideally a different model:
 
 - **Blueprint:** [`/review`](../skills/review/SKILL.md) checks the change
-  against the spec, runs bad inputs through it, and reverts the code to confirm
-  the new tests would catch a regression. Run it with `codex exec` if Claude
-  wrote the code, or `claude -p` if Codex did.
+  against the spec, runs bad inputs through it, and checks design and repository
+  standards without mutating your working tree. Run it with `codex exec` if
+  Claude wrote the code, or `claude -p` if Codex did.
 - **Claude Code built-ins:** `/code-review` for bugs and `/security-review` for
   security holes on the current branch.
 
@@ -114,9 +114,11 @@ By now the PR passes every check and has two independent reviews. Your job is
 the part agents are worst at: is this the right change, and is the risk
 acceptable?
 
-Use a PR template so every PR answers that up front. Blueprint's
-[template](../.github/pull_request_template.md) asks for What, Why, What
-changed, Verification (commands, results, screenshots), and Risk (database,
-API contract, auth, and data-deletion changes are High).
+Use [`/pr`](../skills/pr/SKILL.md) or a PR template so every PR answers that up
+front. Blueprint's [template](../.github/pull_request_template.md) asks for
+What, Why, What changed (with a visual for multi-part changes), Where to look
+closely, Verification (commands, results, screenshots, and anything not
+verified), and Risk (blast radius and reversibility; database, API contract,
+auth, and data-deletion changes are High).
 
 Merge it yourself, or tell `/task-to-pr` to merge once every check passes.
