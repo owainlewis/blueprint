@@ -16,7 +16,8 @@ Write a pull request a reviewer can understand in under a minute. Write in plain
 2. Check the diff for stray debug logs, unintended files, or out-of-scope edits. Flag or clean them before opening.
 3. Write the PR title and body using the repository's PR template, or the template below if it has none.
 4. Link any completed issue (`Closes #...`, Linear ID, or Jira key).
-5. Push the branch and open or update the PR (mark it draft if checks or review are not yet green), unless the user only asked for the text. Never merge.
+5. If the change includes UI that benefits from visual proof, capture screenshots (do not commit temporary image files) and attach them with `gh pr create --attach` or `gh pr edit --attach` (for example `--attach './shot.png#Alt text'`, or reference `![alt](./shot.png)` in the body so `gh` rewrites the path to the uploaded asset).
+6. Push the branch and open or update the PR, unless the user only asked for the text. Open as a draft if local checks have not passed yet; otherwise open or mark it ready for review. Never merge.
 
 ## Template
 

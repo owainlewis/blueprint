@@ -18,7 +18,7 @@ When a step names [spec](../spec/SKILL.md), [plan](../plan/SKILL.md), [test](../
 2. Branch from the latest default branch, or continue the existing branch and PR.
 3. Build one behavior at a time with tests against the public interface (write or run a failing test for each behavior before or alongside implementing it). Update `ARCHITECTURE.md`, `REQUIREMENTS.md`, or the spec only if present and made wrong by the change.
 4. Follow test until every check passes.
-5. Commit with a Conventional Commit message, then follow pr to push and open or update the pull request.
+5. Commit with a Conventional Commit message, then follow pr to push, open or update the pull request, and mark it ready for review.
 6. Follow review. Wait for CI and any review bot on the latest commit.
 7. Fix each real finding and failure, and reply on each review thread with the fix or the reason for no change. Go back to step 4. After three rounds on the same problem, stop and report it.
 8. Link the PR and its proof in the ticket.
@@ -31,6 +31,7 @@ Start a task that depends on another once that task has an open PR with an `Appr
 
 Leave the PR open. Merge only when the user asks (for example "/task-to-pr and merge it") or `/codex-issue-coordinator` was invoked by name, and only when:
 
+- The PR is ready for review, not draft.
 - CI passes on the latest commit.
 - The latest review verdict is `Approve` and no `Must fix` finding is open.
 - Every approval the repository requires is given.
