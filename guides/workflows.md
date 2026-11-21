@@ -2,20 +2,15 @@
 
 Use the shortest path that gives the work enough decisions and proof.
 
-Blueprint workflows are opt-in. See [invocation and client support](../README.md#opt-in-workflows).
+Blueprint workflows are opt-in. See [invocation and client support](../README.md#opt-in-by-design).
 
-## A new project
+## A new project (optional system docs)
 
 ```text
-/requirements + /architecture → long-running system documents
+/architecture (and optionally /requirements) → project-level system documents
 ```
 
-`REQUIREMENTS.md` describes the product, what it does at a high level, and its key
-features. `ARCHITECTURE.md` describes the intended technical design and data
-model. Refine them together and maintain them as the project changes. State
-which parts of the intended architecture are implemented. Include relevant user
-journeys, supporting evidence, alternatives, operating expectations, and migration
-constraints. Omit sections that add no useful information.
+`ARCHITECTURE.md` describes the intended system, boundaries, data model, and invariants for the project. `REQUIREMENTS.md` is optional—add it when a product manager or larger team wants a standalone product PRD separate from feature specs. Neither document is required to use `/spec` or `/task-to-pr`. State which parts of the intended architecture are implemented. Omit sections that add no useful information.
 
 Use `/architecture-review` before implementation when a wrong technical choice
 could materially affect users, data, security, compatibility, operations, or
@@ -27,10 +22,11 @@ proof. The review does not replace product approval.
 /spec → /task-to-pr
 ```
 
-The spec is the ticket. It references the long-running system documents,
-defines the feature's behavior and technical design, and pairs acceptance with
-checks. `/task-to-pr` makes the code changes and leaves a passing PR open.
-Ask it to merge and it merges after all gates pass.
+The spec is the ticket. It defines the feature's requirements and technical
+design, pairs acceptance with checks, and links to `ARCHITECTURE.md` or
+`REQUIREMENTS.md` only when those files exist. `/task-to-pr` builds the change,
+opens the PR through `/pr`, and leaves a passing PR open. Ask it to merge and
+it merges after all gates pass.
 
 Use `/architecture-review` for consequential technical choices. Use `/plan` if
 the spec needs several delivery tasks. Neither is a mandatory step for every
@@ -67,11 +63,12 @@ Independent issues may run together. Dependent issues wait for prerequisite
 merges. Explicit invocation grants merge authority only for the supplied batch;
 an implicit match leaves passing PRs open.
 
-## Improvement, testing, and review
+## Improvement, testing, PRs, and review
 
 Use `/improve` for a behavior-preserving cleanup. Use `/test` to prove acceptance
-and failure paths, including real-browser checks for browser behavior. Use
-`/review` for a fresh agent's read-only implementation review.
+and failure paths, including real-browser checks for browser behavior. Use `/pr`
+to open or tighten a pull request description from the branch diff. Use `/review`
+for a fresh agent's read-only implementation review.
 
 ## Stop conditions
 

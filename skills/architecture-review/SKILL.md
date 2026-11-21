@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 # Architecture review
 
-Find the choices that would make a design wrong, unsafe, or impossible to prove, while they are still cheap to change. Judge the decisions, not the document's length or format.
+Find the choices that would make a design wrong, unsafe, or impossible to prove, while they are still cheap to change. Judge the decisions, not the document's length or format. Write findings in plain, simplified technical English.
 
 ## Reviewer
 
@@ -16,7 +16,7 @@ Someone who did not write the proposal: a fresh subagent, or another agent CLI r
 
 ## Steps
 
-1. Read the proposal, `REQUIREMENTS.md`, `ARCHITECTURE.md`, and the code, schemas, and config it touches. Check every claim about the current system against them.
+1. Read the proposal and the code, schemas, and config it touches. Read `ARCHITECTURE.md` and `REQUIREMENTS.md` if present. Check every claim about the current system against the code.
 2. Write down the problem, who it affects, the intended outcome, and the main tradeoff. Flag any the proposal leaves unclear.
 3. Walk one real request from input to what the user sees, including what happens when a step fails, is retried, or runs twice at once.
 4. Check data ownership, interfaces, migrations, rollback, security (auth, untrusted input, secrets), and the scale the proposal claims.

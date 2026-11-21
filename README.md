@@ -42,24 +42,23 @@ The same skills work in Claude Code and Codex.
 npx skills add owainlewis/blueprint
 ```
 
-**2. Describe the product.** Ask your agent:
-
-> Use /requirements for a CRM that helps a small consulting firm track leads and follow-ups.
-
-You get `REQUIREMENTS.md`: the PRD, written as user stories with checkable outcomes.
-
-**3. Spec one feature.**
+**2. Spec one feature.** Ask your agent:
 
 > Use /spec for capturing a new lead.
 
-You get `docs/capture-lead/spec.md`: the user journeys for that feature, a diagram, the technical design an agent can build from, and the decisions behind it.
+The agent reads the codebase, interviews you on open choices, and writes `docs/capture-lead/spec.md`: the feature's requirements and user journeys, a diagram, the technical design an agent can build from, and the decisions behind it. (For a brand-new product or a separate PM doc, `/requirements` and `/architecture` are optional project-level documents.)
+
+**3. Split large work (optional).**
+
+> Use /plan for docs/capture-lead/spec.md.
+
+You get ordered vertical slices sized for one PR each—returned in chat or published to GitHub Issues, Linear, or Jira after you approve the preview.
 
 **4. Ship it.**
 
 > Use /task-to-pr for docs/capture-lead/spec.md.
 
-The agent builds it, runs every check until green, gets an independent review,
-waits for CI, fixes what comes back, and leaves a pull request ready for you.
+The agent builds it, runs every check until green, opens a crisp pull request via `/pr`, gets an independent review, waits for CI, fixes what comes back, and leaves the PR ready for you.
 
 See the full result in the [consulting CRM example](examples/).
 
@@ -69,8 +68,8 @@ Blueprint follows how good engineers already work. Each skill belongs to one sta
 
 ```mermaid
 flowchart LR
-    D["Design<br/>/requirements /architecture /spec"] --> P["Plan<br/>/plan"]
-    P --> B["Build<br/>/task-to-pr"]
+    D["Design<br/>/spec (/architecture, /requirements)"] --> P["Plan<br/>/plan"]
+    P --> B["Build<br/>/task-to-pr /pr"]
     B --> T["Test<br/>does it work?"]
     T -->|fails| B
     T --> R["Review<br/>is it right?"]
@@ -95,9 +94,9 @@ repository.
 
 | Skill | Use it when | You get |
 |---|---|---|
-| [`/requirements`](skills/requirements/SKILL.md) | Starting a product or changing what it does | `REQUIREMENTS.md`, a PRD of user stories |
-| [`/architecture`](skills/architecture/SKILL.md) | Designing the system or changing its shape | `ARCHITECTURE.md` with a data flow diagram |
-| [`/spec`](skills/spec/SKILL.md) | A feature has decisions to settle first | User journeys, a diagram, technical design, decisions, acceptance checks |
+| [`/spec`](skills/spec/SKILL.md) | A feature has decisions to settle first | Feature requirements, user journeys, diagram, technical design, testing seams, and acceptance checks |
+| [`/architecture`](skills/architecture/SKILL.md) | Designing a project's system shape *(optional)* | Project-level `ARCHITECTURE.md` with a data flow diagram and invariants |
+| [`/requirements`](skills/requirements/SKILL.md) | Keeping a product PRD separate from feature specs *(optional)* | Root `REQUIREMENTS.md`, a PRD of user stories |
 | [`/architecture-review`](skills/architecture-review/SKILL.md) | A design choice is costly to get wrong | Findings and a verdict before any code |
 | [`/html-doc`](skills/html-doc/SKILL.md) | You want to share a design as a web page | A checked, static HTML view |
 
@@ -105,24 +104,25 @@ repository.
 
 | Skill | Use it when | You get |
 |---|---|---|
-| [`/plan`](skills/plan/SKILL.md) | A spec is too big for one pull request | Small tasks, each a working slice |
+| [`/plan`](skills/plan/SKILL.md) | A spec is too big for one pull request | Ordered vertical slices in chat, or GitHub, Linear, or Jira tickets |
 
 ### Build
 
 | Skill | Use it when | You get |
 |---|---|---|
 | [`/task-to-pr`](skills/task-to-pr/SKILL.md) | A spec or task is ready to build | A tested, reviewed pull request, left open unless you say "and merge it" |
-| [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md) | You have a batch of GitHub issues for Codex | One worker and one checked PR per issue |
+| [`/pr`](skills/pr/SKILL.md) | Opening or tightening a pull request on a branch | A concise PR with change shape, verification proof, and merge risk |
 | [`/improve`](skills/improve/SKILL.md) | Code works but is hard to follow | Simpler code with the same behavior |
+| [`/codex-issue-coordinator`](skills/codex-issue-coordinator/SKILL.md) | You have a batch of GitHub issues for Codex | One worker and one checked PR per issue |
 
 ### Verify
 
 | Skill | Use it when | You get |
 |---|---|---|
 | [`/test`](skills/test/SKILL.md) | You need to know it works | Every check green, and pass or fail for each criterion |
-| [`/review`](skills/review/SKILL.md) | You need to know it is right | Spec fit, correctness findings, and a verdict from a fresh reviewer |
+| [`/review`](skills/review/SKILL.md) | You need to know it is right | Spec fit, correctness, design standards, and a verdict from a fresh reviewer |
 
-`/task-to-pr` runs Test and Review for you, then waits for CI.
+`/task-to-pr` runs Test, PR, and Review for you, then waits for CI.
 
 ## Opt-in by design
 
