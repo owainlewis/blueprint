@@ -31,7 +31,7 @@ Split decided work into vertical slices that each deliver working behavior, end 
 <1–2 sentences on the value to a user or developer.>
 
 ### Done when
-- <3–7 observable or testable results. Keep AC-n, J-n, and REQ-n IDs when present.>
+- <3–7 results a person could check in the running app or with a command. Keep AC-n, J-n, and REQ-n IDs when present.>
 
 ### How to check
 <Exact commands, and any manual or browser check.>
@@ -51,6 +51,7 @@ Split decided work into vertical slices that each deliver working behavior, end 
 - Write in plain, simplified technical English. Keep every ticket short, concrete, and free of filler.
 - A human should understand the task from the title and first two sections alone. Keep IDs and implementation detail out of them.
 - Say what happens, not jargon: "sending the same event twice creates one reply", not "prove idempotency".
+- Each Done when line names an action and what you see. "Moving a reel to a new status moves it to that column, and it stays there after a refresh" belongs. "Looks better" does not.
 - Aim for 250 to 500 words per task. If a task needs more, split it.
 - A task is ready when a fresh agent can finish it without asking a product or design question.
 
